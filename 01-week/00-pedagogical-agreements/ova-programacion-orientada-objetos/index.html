@@ -1,0 +1,750 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description"
+      content="OVA - Programación Orientada a Objetos (Ingeniería Mecatrónica, CORHUILA). Ruta de aprendizaje interactiva de 16 semanas con actividades, recursos y evaluación." />
+    <meta name="theme-color" content="#00A050" />
+    <title>OVA · Programación Orientada a Objetos · CORHUILA</title>
+
+    <link rel="preload" href="src/css/styles.css" as="style" />
+    <link rel="stylesheet" href="src/css/styles.css" />
+    <link rel="icon" href="src/img/icons/hash.svg" type="image/svg+xml" />
+  </head>
+  <!-- ========== MODAL: CONFIRMAR REINICIO DE PROGRESO ========== -->
+
+  <body>
+    <div class="modal" id="confirmReset" role="dialog" aria-modal="true"
+      aria-labelledby="confirmResetTitle" aria-describedby="confirmResetDesc"
+      hidden>
+
+      <div class="modal__backdrop" id="confirmResetBackdrop"
+        aria-hidden="true"></div>
+
+      <div class="modal__card" role="document">
+
+        <h3 class="modal__title" id="confirmResetTitle">Reiniciar progreso</h3>
+        <p class="modal__desc" id="confirmResetDesc">
+          Esto borrará todas las semanas marcadas como “Hecha” en este
+          dispositivo.
+          Esta acción no se puede deshacer.
+        </p>
+
+        <div class="modal__actions">
+          <button class="btn btn--ghost" type="button" id="confirmResetCancel">
+            Cancelar
+          </button>
+          <button class="btn btn--danger" type="button" id="confirmResetOk">
+            Sí, reiniciar
+          </button>
+        </div>
+      </div>
+    </div>
+    <a class="skiplink" href="#contenido">Saltar al contenido</a>
+
+    <!-- ========== HEADER / NAVBAR ========== -->
+    <header class="topbar" role="banner">
+      <div class="container topbar__inner">
+        <div class="brand">
+          <img class="brand__logo" src="src/img/corhuila-logo.png"
+            alt="Logo CORHUILA" width="56" height="48" loading="eager" />
+          <div class="brand__txt">
+            <div class="brand__kicker">Corporación Universitaria del Huila</div>
+            <div class="brand__name">OVA · Programación Orientada a
+              Objetos</div>
+          </div>
+        </div>
+
+        <button class="btn btn--ghost topbar__menu" type="button" id="btnMenu"
+          aria-expanded="false" aria-controls="menuMobile"
+          aria-label="Abrir menú de navegación">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path d="M3 12h18M3 6h18M3 18h18" />
+          </svg>
+          <span>Menú</span>
+        </button>
+      </div>
+
+      <div class="menu-mobile" id="menuMobile" hidden>
+        <div class="container menu-mobile__inner">
+          <a href="#overview" data-tab="ini">Inicio</a>
+          <a href="#justificacion" data-tab="just">Justificación</a>
+          <a href="#objetivos" data-tab="obj">Objetivos</a>
+          <a href="#ruta" data-tab="ruta">Ruta</a>
+          <!-- <a href="#quiz" data-tab="quiz">Quiz</a> -->
+          <a href="#evaluacion" data-tab="eval">Evaluación</a>
+          <a href="#recursos" data-tab="rec">Recursos</a>
+        </div>
+      </div>
+
+      <div class="scrollbar" aria-hidden="true">
+        <div class="scrollbar__fill" id="scrollFill"></div>
+      </div>
+    </header>
+
+    <!-- ========== MAIN CONTENT ========== -->
+    <main id="contenido" class="main">
+
+      <!-- TABS PRINCIPALES GAMIFICADAS -->
+      <nav class="main-tabs" role="tablist" aria-label="Navegación OVA">
+        <button class="main-tab is-active" id="tab-ini" role="tab"
+          aria-selected="true" aria-controls="panel-ini" tabindex="0"
+          data-tab="ini">
+          <span class="main-tab__icon"><img src="src/img/icons/hash.svg" alt
+              width="20" height="20"></span>
+          <span>Inicio</span>
+        </button>
+        <button class="main-tab" id="tab-just" role="tab" aria-selected="false"
+          aria-controls="panel-just" tabindex="-1" data-tab="just">
+          <span class="main-tab__icon"><img src="src/img/icons/tree.svg" alt
+              width="20" height="20"></span>
+          <span>Justificación</span>
+        </button>
+        <button class="main-tab" id="tab-obj" role="tab" aria-selected="false"
+          aria-controls="panel-obj" tabindex="-1" data-tab="obj">
+          <span class="main-tab__icon"><img src="src/img/icons/array.svg" alt
+              width="20" height="20"></span>
+          <span>Objetivos</span>
+        </button>
+        <button class="main-tab" id="tab-ruta" role="tab" aria-selected="false"
+          aria-controls="panel-ruta" tabindex="-1" data-tab="ruta">
+          <span class="main-tab__icon"><img src="src/img/icons/linkedlist.svg"
+              alt width="20" height="20"></span>
+          <span>Ruta</span>
+          <span class="main-tab__badge" id="badgeTabRuta"
+            title="Insignias">🏅</span>
+        </button>
+
+        <button class="main-tab" id="tab-eval" role="tab" aria-selected="false"
+          aria-controls="panel-eval" tabindex="-1" data-tab="eval">
+          <span class="main-tab__icon"><img src="src/img/icons/graph.svg" alt
+              width="20" height="20"></span>
+          <span>Evaluación</span>
+        </button>
+        <button class="main-tab" id="tab-rec" role="tab" aria-selected="false"
+          aria-controls="panel-rec" tabindex="-1" data-tab="rec">
+          <span class="main-tab__icon"><img src="src/img/icons/hash.svg" alt
+              width="20" height="20"></span>
+          <span>Recursos</span>
+        </button>
+      </nav>
+
+      <!-- PANEL: INICIO -->
+      <section class="main-tab-panel" id="panel-ini" role="tabpanel"
+        aria-labelledby="tab-ini">
+        <!-- HERO SECTION -->
+        <section class="hero" id="overview" aria-labelledby="heroTitle">
+          <div class="hero__bg" aria-hidden="true">
+            <img src="src/img/patterns/grid.svg" alt width="1200"
+              height="260" />
+          </div>
+          <div class="container hero__inner">
+            <div class="hero__left">
+              <p class="pill">Ingeniería Mecatrónica · Presencial</p>
+              <h1 id="heroTitle">Programación Orientada a Objetos</h1>
+              <p class="lead">
+                Aprende a diseñar e implementar soluciones de software bajo el
+                paradigma orientado a objetos.
+                Esta OVA te guía paso a paso con actividades prácticas, recursos
+                y evaluación continua.
+              </p>
+
+              <div class="meta-grid" role="list"
+                aria-label="Información del curso">
+                <div class="meta" role="listitem">
+                  <span class="meta__k">Código</span>
+                  <span class="meta__v">82759</span>
+                </div>
+                <div class="meta" role="listitem">
+                  <span class="meta__k">Créditos</span>
+                  <span class="meta__v">9</span>
+                </div>
+                <div class="meta" role="listitem">
+                  <span class="meta__k">Acompañamiento</span>
+                  <span class="meta__v">48 h</span>
+                </div>
+                <div class="meta" role="listitem">
+                  <span class="meta__k">Trabajo Autónomo</span>
+                  <span class="meta__v">96 h</span>
+                </div>
+                <div class="meta" role="listitem">
+                  <span class="meta__k">Total</span>
+                  <span class="meta__v">144 h</span>
+                </div>
+                <div class="meta" role="listitem">
+                  <span class="meta__k">Metodología</span>
+                  <span class="meta__v">Teórico-Práctico</span>
+                </div>
+              </div>
+
+              <div class="cta-row">
+                <a class="btn btn--primary" href="#ruta" id="btnStartRuta">
+
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <polygon points="5 3 19 12 5 21 5 3" />
+                  </svg>
+                  Iniciar ruta
+                </a>
+                <button class="btn btn--soft" type="button" id="btnReset"
+                  aria-label="Reiniciar todo el progreso del curso">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <path d="M1 4v6h6M23 20v-6h-6" />
+                    <path
+                      d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4-4.64 4.36A9 9 0 0 1 3.51 15" />
+                  </svg>
+                  Reiniciar progreso
+                </button>
+              </div>
+
+              <div class="progress-card" aria-label="Progreso del curso">
+                <div class="progress__top">
+                  <span class="progress__label">Tu progreso</span>
+                  <span class="progress__value" id="progressTxt">0%</span>
+                </div>
+                <div class="progress__bar" role="progressbar" aria-valuemin="0"
+                  aria-valuemax="100" aria-valuenow="0"
+                  aria-label="Porcentaje de semanas completadas">
+                  <div class="progress__fill" id="progressFill"></div>
+                </div>
+                <div class="progress__stats" id="progressStats">0 de 16 semanas
+                  completadas</div>
+              </div>
+            </div>
+
+            <div class="hero__right" aria-hidden="true">
+              <div class="hero-visual">
+                <img
+                  class="hero-visual__img"
+                  src="src/img/Imagen1.png"
+                  alt="Ilustración de programación orientada a objetos"
+                  width="520"
+                  height="520"
+                  loading="eager"
+                  decoding="async" />
+              </div>
+            </div>
+
+            <!-- Se eliminó el encabezado institucional duplicado del hero -->
+          </div>
+        </section>
+
+      </section>
+
+      <!-- PANEL: JUSTIFICACIÓN -->
+      <section class="main-tab-panel" id="panel-just" role="tabpanel"
+        aria-labelledby="tab-just" hidden>
+        <section class="section" id="justificacion" aria-labelledby="justTitle">
+          <div class="container">
+            <div class="section__hd">
+              <h2 id="justTitle">Justificación</h2>
+              <p class="muted">¿Por qué esta asignatura es fundamental en tu
+                formación como ingeniero?</p>
+            </div>
+
+            <div class="grid-1">
+              <article class="card">
+
+                <h3 class="card__title">Contexto</h3>
+                <p class="card__sub">
+                  La Programación Orientada a Objetos (POO) es un pilar de la
+                  ingeniería de software moderna por su enfoque modular,
+                  reutilizable y mantenible. Esta asignatura fortalece en el
+                  estudiante la capacidad de modelar problemas reales mediante
+                  clases, objetos y relaciones, aplicando principios como
+                  abstracción, encapsulamiento, herencia y polimorfismo.
+                  Se promueve el uso de buenas prácticas y herramientas
+                  contemporáneas para garantizar calidad, escalabilidad y
+                  mantenibilidad del código.
+                </p>
+              </article>
+
+            </div>
+
+            <div class="grid-1">
+              <article class="card">
+
+                <h3 class="card__title">Resultado de Aprendizaje de Asignatura
+                  (RAA):</h3>
+                <p class="card__sub">
+                  Construye soluciones de software aplicando los principios de
+                  la POO, utilizando técnicas, herramientas y buenas prácticas
+                  contemporáneas con criterios de calidad, integración y
+                  mantenibilidad.
+                </p>
+              </article>
+
+            </div>
+
+          </div>
+        </section>
+
+      </section>
+
+      <!-- PANEL: OBJETIVOS -->
+      <section class="main-tab-panel" id="panel-obj" role="tabpanel"
+        aria-labelledby="tab-obj" hidden>
+        <section class="section section--alt" id="objetivos"
+          aria-labelledby="objTitle">
+          <div class="container">
+            <div class="section__hd">
+              <h2 id="objTitle">Objetivos</h2>
+              <p class="muted">Claridad de propósito: qué vas a lograr al
+                finalizar este curso.</p>
+            </div>
+            <div class="grid-1">
+              <article class="card">
+
+                <h3 class="card__title">Objetivo General</h3>
+                <p class="card__sub">
+                  Desarrollar competencias para diseñar e implementar soluciones
+                  de software bajo el paradigma orientado a objetos, aplicando
+                  buenas prácticas, patrones y herramientas modernas que
+                  favorezcan la calidad del producto y del proceso.
+                </p>
+              </article>
+
+            </div>
+            <div class="grid-1">
+              <article class="card">
+
+                <h3 class="card__title">Objetivos Específicos</h3>
+                <p class="card__sub">
+                  <ul class="list" style="margin-top:16px; padding-left:20px;">
+                    <li>Comprender los fundamentos de la POO y su rol en el
+                      ciclo de vida del software.</li>
+                    <li>Implementar clases, objetos, atributos, métodos y
+                      constructores.</li>
+                    <li>Aplicar herencia, polimorfismo, composición, abstracción
+                      e interfaces.</li>
+                    <li>Integrar estructuras de datos y manejo de archivos en
+                      aplicaciones orientadas a objetos.</li>
+                    <li>Adoptar buenas prácticas de programación, pruebas y
+                      documentación del código.</li>
+                  </ul>
+                </p>
+              </article>
+
+            </div>
+
+            <div class="callout">
+
+              <div class="callout__body">
+                <strong>Enfoque práctico:</strong> cada tema se acompaña de una
+                actividad (foro, quiz, taller o proyecto)
+                para aterrizar conceptos y reforzar el aprendizaje con
+                ejercicios aplicados.
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </section>
+
+      <!-- PANEL: RUTA -->
+      <section class="main-tab-panel" id="panel-ruta" role="tabpanel"
+        aria-labelledby="tab-ruta" hidden>
+        <section class="section" id="ruta" aria-labelledby="rutaTitle">
+          <div class="container">
+            <div class="section__hd">
+              <h2 id="rutaTitle">Ruta de Aprendizaje</h2>
+              <p class="muted">
+                16 semanas de contenido estructurado. Marca cada semana como
+                completada para ver tu avance.
+              </p>
+            </div>
+
+            <div class="filters" role="toolbar"
+              aria-label="Filtrar actividades por tipo">
+              <button class="btn btn--chip is-active" type="button"
+                data-filter="all" aria-pressed="true">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="2" aria-hidden="true">
+                  <rect x="3" y="3" width="7" height="7" />
+                  <rect x="14" y="3" width="7" height="7" />
+                  <rect x="14" y="14" width="7" height="7" />
+                  <rect x="3" y="14" width="7" height="7" />
+                </svg>
+                Todo
+              </button>
+              <button class="btn btn--chip" type="button" data-filter="foro"
+                aria-pressed="false">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="2" aria-hidden="true">
+                  <path
+                    d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                </svg>
+                Foros
+              </button>
+              <button class="btn btn--chip" type="button" data-filter="taller"
+                aria-pressed="false">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="2" aria-hidden="true">
+                  <path
+                    d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z" />
+                </svg>
+                Talleres
+              </button>
+              <button class="btn btn--chip" type="button" data-filter="quiz"
+                aria-pressed="false">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="2" aria-hidden="true">
+                  <circle cx="12" cy="12" r="10" />
+                  <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+                  <line x1="12" y1="17" x2="12.01" y2="17" />
+                </svg>
+                Quizzes
+              </button>
+              <!-- <button class="btn btn--chip" type="button" data-filter="parcial" aria-pressed="false">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+              <polyline points="14 2 14 8 20 8"/>
+              <line x1="16" y1="13" x2="8" y2="13"/>
+              <line x1="16" y1="17" x2="8" y2="17"/>
+              <polyline points="10 9 9 9 8 9"/>
+            </svg>
+            Parciales
+          </button> -->
+              <button class="btn btn--chip" type="button" data-filter="proyecto"
+                aria-pressed="false">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="2" aria-hidden="true">
+                  <path
+                    d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
+                </svg>
+                Parciales y Proyectos
+              </button>
+            </div>
+
+            <div class="accordion" id="sessions" role="region"
+              aria-label="Listado de semanas del curso"></div>
+            <!-- NOTA: El parcial de la semana 15 y la certificación de la semana 14 deben estar reflejados en los datos de las sesiones y en los tags/filtrado. Si no aparecen, deben agregarse en window.__COURSE_DATA__ o en el renderizado JS. -->
+
+          </div>
+        </section>
+
+      </section>
+
+      <!-- PANEL: EVALUACIÓN -->
+      <section class="main-tab-panel" id="panel-eval" role="tabpanel"
+        aria-labelledby="tab-eval" hidden>
+        <section class="section" id="evaluacion" aria-labelledby="evalTitle">
+          <div class="container">
+            <div class="section__hd">
+              <h2 id="evalTitle">Acuerdos Pedagógicos y Momentos de
+                Evaluación</h2>
+              <p class="muted">
+                La evaluación se distribuye en tres cortes académicos, cada uno
+                con momentos y porcentajes definidos. No se detallan actividades
+                específicas, solo los acuerdos y porcentajes.
+              </p>
+            </div>
+
+            <!-- Tabla integrada de evaluación -->
+            <div class="eval-block">
+              <table class="eval-table">
+                <thead>
+                  <tr>
+                    <th>Corte</th>
+                    <th>Momento</th>
+                    <th>Porcentaje</th>
+                    <th>Fechas clave</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <!-- Primer Corte -->
+                  <tr class="corte-row">
+                    <td rowspan="4"><strong>Primer Corte</strong><br><span
+                        class="eval-block__periodo">(02-feb-2026 a
+                        14-mar-2026)</span></td>
+                    <td>AUTOEVALUACIÓN</td><td>2%</td>
+                    <td rowspan="4"><strong>Parcial:</strong>
+                      05-mar-2026<br><strong>Socialización:</strong>
+                      12-mar-2026<br><span
+                        style="color:var(--brand-green-dark)">Primer reporte de
+                        notas (30%)</span></td>
+                  </tr>
+                  <tr><td>COEVALUACIÓN</td><td>3%</td></tr>
+                  <tr><td>HETEROEVALUACIÓN</td><td>25%</td></tr>
+                  <tr><td>Parcial</td><td>70%</td></tr>
+
+                  <!-- Segundo Corte -->
+                  <tr class="corte-row">
+                    <td rowspan="4"><strong>Segundo Corte</strong><br><span
+                        class="eval-block__periodo">(14-mar-2026 a
+                        25-abr-2026)</span></td>
+                    <td>AUTOEVALUACIÓN</td><td>2%</td>
+                    <td rowspan="4"><strong>Parcial:</strong>
+                      16-abr-2026<br><strong>Socialización:</strong>
+                      23-abr-2026<br><span
+                        style="color:var(--brand-green-dark)">Segundo reporte de
+                        notas (30%)</span></td>
+                  </tr>
+                  <tr><td>COEVALUACIÓN</td><td>3%</td></tr>
+                  <tr><td>HETEROEVALUACIÓN</td><td>25%</td></tr>
+                  <tr><td>Examen – Parcial</td><td>70%</td></tr>
+
+                  <!-- Tercer Corte -->
+                  <tr class="corte-row">
+                    <td rowspan="6"><strong>Tercer Corte</strong><br><span
+                        class="eval-block__periodo">(25-abr-2026 a
+                        30-may-2026)</span></td>
+                    <td>AUTOEVALUACIÓN</td><td>2%</td>
+                    <td rowspan="6"><strong>Parcial:</strong>
+                      21-may-2026<br><strong>Socialización:</strong>
+                      28-may-2026<br><span
+                        style="color:var(--brand-green-dark)">Tercer corte o
+                        reporte de notas (40%)</span><br><strong>Nota:</strong>
+                      El Examen – Parcial corresponde al parcial de la semana
+                      15.</td>
+                  </tr>
+                  <tr><td>COEVALUACIÓN</td><td>3%</td></tr>
+                  <tr><td>HETEROEVALUACIÓN</td><td>15%</td></tr>
+                  <tr><td>Proyecto Final</td><td>10%</td></tr>
+                  <tr><td>Certificación</td><td>10%</td></tr>
+                  <tr><td>Examen – Parcial</td><td>60%</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="callout">
+
+              <div class="callout__body">
+                <strong>Nota:</strong> Los porcentajes y momentos de evaluación
+                están sujetos a los acuerdos pedagógicos institucionales y
+                pueden ser ajustados según lineamientos de la facultad.
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </section>
+
+      <!-- PANEL: RECURSOS -->
+      <section class="main-tab-panel" id="panel-rec" role="tabpanel"
+        aria-labelledby="tab-rec" hidden>
+        <section class="section section--alt" id="recursos"
+          aria-labelledby="recTitle">
+          <div class="container">
+            <div class="section__hd">
+              <h2 id="recTitle">Recursos de Apoyo</h2>
+              <p class="muted">Bibliografía institucional y material
+                complementario para profundizar en cada tema.</p>
+            </div>
+
+            <div class="grid-2">
+              <article class="card">
+
+                <h3 class="card__title">Biblioteca Digital CORHUILA</h3>
+                <p class="card__sub">Recursos disponibles en la plataforma
+                  institucional.</p>
+
+                <details class="details">
+                  <summary>Ver bibliografía institucional (1 título)</summary>
+                  <ul class="refs">
+                    <li>
+                      <strong>Somerville, I. (2011).</strong>
+                      <em>Ingeniería de software</em> (9.ª ed.). Pearson
+                      Education.
+                    </li>
+                  </ul>
+                </details>
+              </article>
+
+              <article class="card">
+
+                <h3 class="card__title">Bibliografía Complementaria</h3>
+                <p class="card__sub">Recursos externos recomendados para ampliar
+                  conocimientos.</p>
+
+                <details class="details">
+                  <summary>Ver bibliografía complementaria (1 título)</summary>
+                  <ul class="refs">
+                    <li>
+                      <strong>Gamma, E., Helm, R., Johnson, R., &amp; Vlissides,
+                        J. (2009).</strong>
+                      <em>Patrones de diseño.</em> Pearson Addison Wesley.
+                    </li>
+                  </ul>
+                </details>
+              </article>
+            </div>
+
+            <div class="resources-extra">
+              <h3>Recursos interactivos sobre Programación Orientada a
+                Objetos</h3>
+              <div class="resource-cards">
+                <a href="https://docs.oracle.com/javase/tutorial/"
+                  target="_blank" rel="noopener" class="resource-card">
+                  <div class="resource-card__icon" aria-hidden="true">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                      stroke="currentColor" stroke-width="2">
+                      <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+                      <line x1="3" y1="9" x2="21" y2="9" />
+                      <line x1="9" y1="21" x2="9" y2="9" />
+                    </svg>
+                  </div>
+                  <div class="resource-card__content">
+                    <strong>Java Tutorials (Oracle)</strong>
+                    <span>Tutoriales oficiales de Java (POO, colecciones,
+                      excepciones, IO).</span>
+                  </div>
+                </a>
+              </div>
+            </div>
+
+            <div class="footnote">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <circle cx="12" cy="12" r="10" />
+                <path d="M12 16v-4M12 8h.01" />
+              </svg>
+              <span>Esta OVA está diseñada para uso académico institucional.
+                Todos los derechos de los materiales bibliográficos pertenecen a
+                sus respectivos autores y editoriales.</span>
+            </div>
+          </div>
+        </section>
+      </section>
+    </main>
+
+    <!-- ========== FOOTER ========== -->
+    <footer class="footer" role="contentinfo">
+      <div class="container footer__inner">
+        <div class="footer__brand">
+          <img src="src/img/corhuila-logo.png" alt width="40" height="34"
+            loading="lazy" />
+          <div>
+            <div class="footer__title">CORHUILA · Ingeniería Mecatrónica</div>
+            <div class="footer__small">OVA · Programación Orientada a Objetos ·
+              Versión 2.0</div>
+          </div>
+        </div>
+        <div class="footer__info">
+          <div class="footer__small">
+            Objeto Virtual de Aprendizaje — Funciona completamente offline
+          </div>
+          <div class="footer__small">
+            Programa: Ingeniería Mecatrónica · Facultad de Ingeniería
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <!-- NO JAVASCRIPT WARNING -->
+    <noscript>
+      <div class="noscript" role="alert">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <path
+            d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
+          <line x1="12" y1="9" x2="12" y2="13" />
+          <line x1="12" y1="17" x2="12.01" y2="17" />
+        </svg>
+        <span>Esta OVA requiere JavaScript para mostrar las interacciones
+          (acordeones, quiz y progreso).</span>
+      </div>
+    </noscript>
+
+    <!-- ========== DATA ========== -->
+    <script>
+  window.__COURSE_DATA__ = {
+    "meta": {
+      "facultad": "Ingeniería",
+      "programa": "Ingeniería Mecatrónica",
+      "curso": "Programación Orientada a Objetos",
+      "codigo": "82759",
+      "creditos": "9",
+      "modalidad": "Presencial",
+      "horas": { "acompanamiento": 48, "autonoma": 96, "total": 144 },
+      "metodologia": "Teórico-Práctico",
+      "periodo": "I",
+      "nivel": "Pregrado"
+    },
+
+    "raa": "Construye soluciones de software aplicando los principios de la POO, utilizando técnicas, herramientas y buenas prácticas contemporáneas con criterios de calidad, integración y mantenibilidad.",
+
+    "sessions": [
+      { "semana": 1, "tema": "Introducción a la POO y entorno de desarrollo en Java", "acompanamiento": "Presentación del curso y entorno: IntelliJ IDEA / Eclipse / NetBeans / VS Code; JDK, JVM, estructura de paquetes", "h_acomp": 3, "autonoma": "Foro: ¿Cómo transforma la POO la forma de programar?", "h_auto": 6 },
+
+      { "semana": 2, "tema": "Clases y objetos en Java", "acompanamiento": "Creación de clases y objetos, ejemplos prácticos", "h_acomp": 3, "autonoma": "Ejercicios de definición de clases y objetos", "h_auto": 6 },
+
+      { "semana": 3, "tema": "Atributos, métodos y encapsulamiento", "acompanamiento": "Práctica con modificadores de acceso (public, private, protected) y uso de getters y setters", "h_acomp": 3, "autonoma": "Taller: diseño de clases con métodos y atributos bien encapsulados", "h_auto": 6 },
+
+      { "semana": 4, "tema": "Constructores y representación de objetos", "acompanamiento": "Uso de constructores, método toString() y sobrecarga de constructores", "h_acomp": 3, "autonoma": "Quiz: Sintaxis de clases y constructores en Java", "h_auto": 6 },
+
+      { "semana": 5, "tema": "Parcial Corte 1", "acompanamiento": "Evaluación teórico-práctica (Corte 1)", "h_acomp": 4, "autonoma": "Desarrollo del parcial y retroalimentación", "h_auto": 8 },
+
+      { "semana": 6, "tema": "Herencia en Java", "acompanamiento": "Herencia simple, uso de super()", "h_acomp": 3, "autonoma": "Foro: ¿Qué problemas resuelve la herencia?", "h_auto": 6 },
+
+      { "semana": 7, "tema": "Polimorfismo y sobreescritura de métodos", "acompanamiento": "Ejercicios prácticos de polimorfismo dinámico", "h_acomp": 3, "autonoma": "Desarrollo de métodos con comportamiento polimórfico usando referencias del tipo padre", "h_auto": 6 },
+
+      { "semana": 8, "tema": "Clases abstractas e interfaces", "acompanamiento": "Taller: implementación con clases abstractas e interfaces", "h_acomp": 3, "autonoma": "Taller: modelar jerarquía con clases abstractas, interfaces y clases concretas", "h_auto": 6 },
+
+      { "semana": 9, "tema": "Composición y modularización del código", "acompanamiento": "Relación de objetos y diseño orientado a componentes", "h_acomp": 3, "autonoma": "Quiz: Diferencias entre herencia y composición", "h_auto": 6 },
+
+      { "semana": 10, "tema": "Parcial Corte 2", "acompanamiento": "Evaluación teórico-práctica (Corte 2)", "h_acomp": 4, "autonoma": "Desarrollo del parcial y retroalimentación", "h_auto": 8 },
+
+      { "semana": 11, "tema": "Manejo de errores y excepciones", "acompanamiento": "Uso de try, catch, throw, throws, finally", "h_acomp": 3, "autonoma": "Foro: ¿Por qué es clave capturar excepciones correctamente?", "h_auto": 6 },
+
+      { "semana": 12, "tema": "Colecciones y estructuras de datos", "acompanamiento": "List, Map, Set y sus implementaciones", "h_acomp": 3, "autonoma": "Implementar inventario básico usando Map (HashMap) en clases", "h_auto": 6 },
+
+      { "semana": 13, "tema": "Lectura y escritura de archivos en Java", "acompanamiento": "Taller con archivos .txt y .csv", "h_acomp": 3, "autonoma": "Taller: crear y guardar objetos en archivos de texto", "h_auto": 6 },
+
+      { "semana": 14, "tema": "Buenas prácticas de programación en Java y refactorización", "acompanamiento": "Revisión de código y uso de herramientas de análisis estático en Java (Checkstyle, SonarLint)", "h_acomp": 3, "autonoma": "Quiz: Identificación de errores comunes de estilo y refactorización", "h_auto": 6 },
+
+      { "semana": 15, "tema": "Parcial Corte 3", "acompanamiento": "Evaluación teórico-práctica (Corte 3)", "h_acomp": 4, "autonoma": "Desarrollo del parcial y retroalimentación", "h_auto": 8 },
+
+      { "semana": 16, "tema": "Retroalimentación y cierre del curso", "acompanamiento": "Asesoría final, revisión de notas y cierre", "h_acomp": 3, "autonoma": "Actividad de cierre", "h_auto": 6 }
+    ],
+
+    "evaluation": {
+      "Primer corte": [
+        {
+          "raa": "Construye soluciones de software aplicando los principios de la POO, utilizando técnicas, herramientas y buenas prácticas contemporáneas con criterios de calidad, integración y mantenibilidad.",
+          "evidencias": "Parcial corte 1.",
+          "estrategia": "HETEROEVALUACIÓN",
+          "tecnicas": "Parcial teórico-práctico",
+          "momento": "Primer corte",
+          "porcentaje": "30%"
+        }
+      ],
+      "Segundo corte": [
+        {
+          "raa": "Construye soluciones de software aplicando los principios de la POO, utilizando técnicas, herramientas y buenas prácticas contemporáneas con criterios de calidad, integración y mantenibilidad.",
+          "evidencias": "Parcial corte 2.",
+          "estrategia": "HETEROEVALUACIÓN",
+          "tecnicas": "Parcial teórico-práctico",
+          "momento": "Segundo corte",
+          "porcentaje": "30%"
+        }
+      ],
+      "Tercer corte": [
+        {
+          "raa": "Construye soluciones de software aplicando los principios de la POO, utilizando técnicas, herramientas y buenas prácticas contemporáneas con criterios de calidad, integración y mantenibilidad.",
+          "evidencias": "Parcial corte 3.",
+          "estrategia": "HETEROEVALUACIÓN",
+          "tecnicas": "Parcial teórico-práctico",
+          "momento": "Tercer corte",
+          "porcentaje": "40%"
+        }
+      ]
+    },
+
+    "quiz": [
+      { "id": "q1", "t": "¿Qué principio de la POO permite ocultar los detalles internos y exponer solo lo necesario?", "opts": ["Herencia", "Encapsulamiento", "Polimorfismo", "Sobrecarga"], "ok": 1, "tip": "El encapsulamiento protege el estado interno y controla el acceso mediante métodos.", "week": 1 },
+      { "id": "q2", "t": "¿Qué palabra clave se usa en Java para llamar al constructor o miembro de la clase padre?", "opts": ["this", "super", "extends", "implements"], "ok": 1, "tip": "super permite invocar miembros y constructores de la superclase.", "week": 2 },
+      { "id": "q3", "t": "¿Qué característica permite que un método tenga diferentes comportamientos según el objeto?", "opts": ["Encapsulamiento", "Polimorfismo", "Abstracción", "Composición"], "ok": 1, "tip": "El polimorfismo permite invocar el mismo método con implementaciones diferentes.", "week": 3 },
+      { "id": "q4", "t": "¿Cuál es una ventaja principal de usar interfaces en Java?", "opts": ["Permiten herencia múltiple de implementación", "Permiten definir contratos sin implementación", "Reemplazan a las clases abstractas", "Evitan el uso de excepciones"], "ok": 1, "tip": "Las interfaces definen contratos que las clases implementan.", "week": 4 },
+      { "id": "q5", "t": "¿Qué bloque se ejecuta siempre, haya o no excepción?", "opts": ["try", "catch", "throw", "finally"], "ok": 3, "tip": "finally se ejecuta siempre para liberar recursos o cerrar flujos.", "week": 11 }
+    ]
+  };
+</script>
+
+    <script src="src/js/lib/tiny.js"></script>
+    <script src="src/js/app.js"></script>
+  </body>
+</html>
