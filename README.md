@@ -1,4 +1,4 @@
-# 🎯 Programación y Diseño Orientado a Objetos
+# 🎯 Programación Orientada a Objetos
 
 > *"La programación orientada a objetos ofrece una forma sostenible de escribir código espagueti"* — Paul Graham
 
@@ -8,19 +8,23 @@
 
 | 📌 **Aspecto**       | 📝 **Detalle**                          |
 |----------------------|-----------------------------------------|
-| 🎓 **Programa**      | Ingeniería de Sistemas                  |
-| 📚 **Asignatura**    | Programación y Diseño Orientado a Objetos|
-| 🔢 **Créditos**      | 3                                       |
-| 📅 **Semestre**      | III                                     |
-| ⏰ **Horas Semanales** | 3 (TP: Teórico-Práctica)              |
-| 📂 **Área**          | Básicas Profesionales                   |
-| ✅ **Prerrequisito** | Análisis de Algoritmos                  |
+| 🎓 **Programa**      | Ingeniería Mecatrónica                  |
+| 📚 **Asignatura**    | Programación Orientada a Objetos        |
+| 🔢 **Código**        | 82759                                   |
+| 🔢 **Créditos**      | 9                                       |
+| 📅 **Periodo Académico** | I                                   |
+| ⏰ **Horas (Acompañamiento)** | 48                              |
+| 🧑‍💻 **Horas (Autónomas)**    | 96                              |
+| 🧾 **Total horas**   | 144                                     |
+| 🏫 **Modalidad**     | Presencial                              |
+| 🧪 **Metodología**   | Teórico–Práctico                        |
+| ✅ **Prerrequisito** | No aplica                               |
 
 ---
 
 ## 🎯 Objetivo General
 
-Desarrollar competencias en el **paradigma de programación orientada a objetos**, aplicando principios de diseño y patrones para crear software modular y reutilizable.
+Desarrollar competencias para diseñar e implementar soluciones de software bajo el **paradigma orientado a objetos**, aplicando buenas prácticas, patrones y herramientas modernas que favorezcan la calidad del producto y del proceso.
 
 ---
 
@@ -28,14 +32,9 @@ Desarrollar competencias en el **paradigma de programación orientada a objetos*
 
 | # | 📘 Unidad | 🕐 Semanas |
 |:-:|-----------|:----------:|
-| 1 | Introducción a POO | 2 |
-| 2 | Clases y objetos | 3 |
-| 3 | Encapsulamiento y abstracción | 2 |
-| 4 | Herencia | 3 |
-| 5 | Polimorfismo | 3 |
-| 6 | Interfaces y clases abstractas | 2 |
-| 7 | Patrones de diseño básicos | 3 |
-
+| 1 | Unidad 1: Fundamentos de la Programación Orientada a Objetos | 4 |
+| 2 | Unidad 2: Principios de diseño y modularidad | 4 |
+| 3 | Unidad 3: Aplicación práctica de la POO en Java | 4 |
 ---
 
 ## 📬 Contacto
