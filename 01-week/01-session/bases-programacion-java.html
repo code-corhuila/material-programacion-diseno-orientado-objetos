@@ -1,0 +1,1520 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bases de Programación en Java - Ciclos, Condicionales y Arreglos | Ingeniería de Sistemas</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --primary-color: #1e3c72;
+    --secondary-color: #2a5298;
+    --accent-color: #ff6b6b;
+    --light-bg: #f8f9fa;
+    --dark-text: #2c3e50;
+    --border-color: #e0e0e0;
+    --success-color: #27ae60;
+    --warning-color: #f39c12;
+    --info-color: #3498db;
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+    line-height: 1.6;
+    color: var(--dark-text);
+    background-color: #fff;
+}
+
+/* Header */
+.main-header {
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+    color: white;
+    padding: 0;
+}
+
+.top-bar {
+    background-color: rgba(0, 0, 0, 0.1);
+    padding: 20px 0;
+    text-align: center;
+}
+
+.brand-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.brand-name {
+    font-size: 18px;
+    font-weight: 500;
+    letter-spacing: 1px;
+    margin: 5px 0;
+}
+
+.main-nav {
+    background-color: rgba(0, 0, 0, 0.2);
+    padding: 15px 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.main-nav ul {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0;
+}
+
+.main-nav a {
+    color: white;
+    text-decoration: none;
+    padding: 12px 20px;
+    display: block;
+    font-size: 14px;
+    font-weight: 500;
+    transition: background-color 0.3s;
+    border-bottom: 3px solid transparent;
+}
+
+.main-nav a:hover,
+.main-nav a.active {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-bottom-color: var(--accent-color);
+}
+
+/* Container */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Main Content */
+.main-content {
+    padding: 50px 0;
+}
+
+section {
+    margin-bottom: 40px;
+}
+
+h1 {
+    color: var(--primary-color);
+    font-size: 2.5em;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+h2 {
+    color: var(--secondary-color);
+    font-size: 2em;
+    margin-bottom: 25px;
+    border-left: 5px solid var(--accent-color);
+    padding-left: 15px;
+}
+
+h3 {
+    color: var(--primary-color);
+    font-size: 1.5em;
+    margin-top: 25px;
+    margin-bottom: 15px;
+}
+
+h4 {
+    color: var(--secondary-color);
+    font-size: 1.2em;
+    margin-bottom: 10px;
+}
+
+/* Hero Section */
+.hero-section {
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+    color: white;
+    padding: 60px 40px;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.hero-section h1 {
+    color: white;
+    margin-bottom: 20px;
+}
+
+.lead {
+    font-size: 1.2em;
+    line-height: 1.8;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+/* Divider */
+.divider {
+    border: none;
+    border-top: 2px solid var(--border-color);
+    margin: 40px 0;
+}
+
+.divider-thick {
+    border: none;
+    border-top: 3px solid var(--accent-color);
+    margin: 50px 0;
+}
+
+/* Definition Box */
+.definition-box {
+    background-color: #e8f4f8;
+    border-left: 5px solid var(--secondary-color);
+    padding: 20px;
+    margin: 20px 0;
+    border-radius: 5px;
+    font-size: 1.05em;
+}
+
+/* Reflection Box */
+.reflection-box {
+    background-color: #fff3cd;
+    border-left: 5px solid var(--warning-color);
+    padding: 20px;
+    margin: 20px 0;
+    border-radius: 5px;
+}
+
+.reflection-box h4 {
+    color: #856404;
+    margin-bottom: 10px;
+}
+
+.reflection-box p {
+    color: #856404;
+    line-height: 1.7;
+}
+
+.reflection-box ul {
+    margin-left: 20px;
+    color: #856404;
+}
+
+/* Info Box */
+.info-box {
+    background-color: #d1ecf1;
+    border-left: 5px solid var(--info-color);
+    padding: 20px;
+    margin: 20px 0;
+    border-radius: 5px;
+}
+
+.info-box h4 {
+    color: #0c5460;
+    margin-bottom: 10px;
+}
+
+.info-box p {
+    color: #0c5460;
+    line-height: 1.7;
+}
+
+/* Comparison Cards */
+.comparison-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    margin: 30px 0;
+}
+
+.card {
+    background: white;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
+.card h3,
+.card h4 {
+    color: var(--secondary-color);
+    margin-top: 0;
+}
+
+/* Strategy Grid */
+.strategy-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    margin: 30px 0;
+}
+
+.strategy-box {
+    background-color: var(--light-bg);
+    padding: 20px;
+    border-radius: 8px;
+    border-left: 4px solid var(--secondary-color);
+}
+
+.strategy-box h5 {
+    color: var(--secondary-color);
+    margin-bottom: 15px;
+}
+
+.strategy-box ul {
+    list-style-position: inside;
+    margin-left: 10px;
+}
+
+.strategy-box li {
+    margin-bottom: 8px;
+}
+
+/* Tables */
+.table-responsive {
+    overflow-x: auto;
+    margin: 30px 0;
+}
+
+.styled-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.styled-table thead tr {
+    background-color: var(--secondary-color);
+    color: white;
+    text-align: left;
+    font-weight: 500;
+}
+
+.styled-table th,
+.styled-table td {
+    padding: 15px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.styled-table tbody tr:hover {
+    background-color: var(--light-bg);
+}
+
+.styled-table tbody tr:nth-child(odd) {
+    background-color: #fafafa;
+}
+
+/* Code Blocks */
+pre {
+    background-color: #2d2d2d;
+    color: #f8f8f2;
+    padding: 20px;
+    border-radius: 8px;
+    overflow-x: auto;
+    margin: 20px 0;
+    font-family: 'Courier New', monospace;
+    font-size: 0.95em;
+    line-height: 1.5;
+}
+
+code {
+    font-family: 'Courier New', monospace;
+    background-color: #f4f4f4;
+    padding: 2px 6px;
+    border-radius: 3px;
+    color: var(--primary-color);
+}
+
+pre code {
+    background-color: transparent;
+    color: #f8f8f2;
+    padding: 0;
+}
+
+/* Diagram Box */
+.diagram-box {
+    background-color: #f0f8ff;
+    border: 2px solid var(--info-color);
+    padding: 30px;
+    margin: 30px 0;
+    border-radius: 8px;
+    text-align: center;
+    font-family: 'Courier New', monospace;
+    overflow-x: auto;
+}
+
+.diagram-box pre {
+    background-color: transparent;
+    color: var(--dark-text);
+    margin: 0;
+    padding: 0;
+    font-size: 0.9em;
+}
+
+/* Case Study Section */
+.case-study-section {
+    background-color: var(--light-bg);
+    padding: 40px;
+    border-radius: 10px;
+    margin: 40px 0;
+}
+
+.case-header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.case-header h2 {
+    border-left: none;
+    padding-left: 0;
+    margin-bottom: 10px;
+}
+
+.case-header h3 {
+    color: var(--accent-color);
+    font-size: 1.3em;
+}
+
+.scenario-box {
+    background: white;
+    border-left: 4px solid var(--accent-color);
+    padding: 20px;
+    margin: 20px 0;
+    border-radius: 5px;
+}
+
+.scenario-box h4 {
+    color: var(--secondary-color);
+    margin-top: 0;
+}
+
+/* Footer */
+.main-footer {
+    background: var(--primary-color);
+    color: white;
+    text-align: center;
+    padding: 40px 0;
+    margin-top: 50px;
+}
+
+.main-footer p {
+    margin: 8px 0;
+    font-size: 0.95em;
+}
+
+.main-footer ul {
+    list-style: none;
+    margin-top: 20px;
+}
+
+.main-footer li {
+    margin: 8px 0;
+}
+
+.main-footer a {
+    color: #fff9e6;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s;
+}
+
+.main-footer a:hover {
+    color: var(--accent-color);
+}
+
+/* Scroll to Top Button */
+#scrollTopBtn {
+    display: none;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: var(--secondary-color);
+    color: white;
+    border: none;
+    padding: 15px 20px;
+    font-size: 18px;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    z-index: 99;
+    transition: background-color 0.3s;
+}
+
+#scrollTopBtn:hover {
+    background-color: var(--accent-color);
+}
+
+/* Lists */
+ul, ol {
+    margin: 15px 0;
+    margin-left: 30px;
+}
+
+li {
+    margin: 8px 0;
+    line-height: 1.7;
+}
+
+/* Links */
+a {
+    color: var(--secondary-color);
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+a:hover {
+    color: var(--accent-color);
+    text-decoration: underline;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    h1 {
+        font-size: 1.8em;
+    }
+    
+    h2 {
+        font-size: 1.5em;
+    }
+    
+    .hero-section {
+        padding: 40px 20px;
+    }
+    
+    .main-nav ul {
+        flex-direction: column;
+    }
+    
+    .main-nav a {
+        padding: 10px 15px;
+        font-size: 13px;
+    }
+    
+    .comparison-cards {
+        grid-template-columns: 1fr;
+    }
+    
+    .strategy-grid {
+        grid-template-columns: 1fr;
+    }
+}
+    </style>
+</head>
+<body>
+
+    <header class="main-header">
+        <div class="top-bar">
+            <div class="container brand-container">
+                <img src="https://raw.githubusercontent.com/code-corhuila/material-mineria-datos/b3725d694125ab35294ddfe415a327bc1445d32c/01-week/01-session/LOGO%20CORHUILA%20BLANCO%20PNG%20(2).png" alt="Logo Corhuila" class="logo-corhuila" style="max-width: 120px; height: auto; margin-bottom: 15px;">
+                <h1 class="brand-name" style="color: white;">Bases de Programación en Java</h1>
+                <p style="color: white;">Ingeniería de Sistemas</p>
+            </div>
+        </div>
+        <nav class="main-nav">
+            <div class="container">
+                <ul>
+                    <li><a href="#introduccion">Introducción</a></li>
+                    <li><a href="#variables">Variables y Tipos</a></li>
+                    <li><a href="#condicionales">Condicionales</a></li>
+                    <li><a href="#ciclos">Ciclos</a></li>
+                    <li><a href="#arreglos">Arreglos</a></li>
+                    <li><a href="#ejercicios">Ejercicios</a></li>
+                    <li><a href="#mejores-practicas">Mejores Prácticas</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container main-content">
+
+        <section id="introduccion" class="hero-section">
+            <h1>Bases de Programación en Java</h1>
+            <p class="lead">Domina los fundamentos de Java: variables, tipos de datos, condicionales, ciclos y arreglos. Estos conceptos son la base para cualquier programa que escribas en Java y en la mayoría de lenguajes de programación.</p>
+        </section>
+
+        <hr class="divider">
+
+        <section id="variables">
+            <h2>1. Variables y Tipos de Datos</h2>
+            <p>Una variable es un contenedor para almacenar valores. En Java, todas las variables deben tener un tipo de dato declarado.</p>
+            
+            <blockquote class="definition-box">
+                <strong>Variable:</strong> Un espacio en memoria que almacena un valor. Debe tener un nombre único, un tipo de dato y un valor inicial.
+            </blockquote>
+
+            <h3>Tipos de Datos Primitivos</h3>
+            <div class="table-responsive">
+                <table class="styled-table">
+                    <thead>
+                        <tr>
+                            <th>Tipo</th>
+                            <th>Tamaño</th>
+                            <th>Rango</th>
+                            <th>Ejemplo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>byte</strong></td>
+                            <td>1 byte</td>
+                            <td>-128 a 127</td>
+                            <td>byte edad = 25;</td>
+                        </tr>
+                        <tr>
+                            <td><strong>short</strong></td>
+                            <td>2 bytes</td>
+                            <td>-32,768 a 32,767</td>
+                            <td>short year = 2026;</td>
+                        </tr>
+                        <tr>
+                            <td><strong>int</strong></td>
+                            <td>4 bytes</td>
+                            <td>-2 billones a 2 billones</td>
+                            <td>int cantidad = 1000;</td>
+                        </tr>
+                        <tr>
+                            <td><strong>long</strong></td>
+                            <td>8 bytes</td>
+                            <td>Muy grande</td>
+                            <td>long id = 123456789L;</td>
+                        </tr>
+                        <tr>
+                            <td><strong>float</strong></td>
+                            <td>4 bytes</td>
+                            <td>Decimales de 6-7 dígitos</td>
+                            <td>float precio = 19.99f;</td>
+                        </tr>
+                        <tr>
+                            <td><strong>double</strong></td>
+                            <td>8 bytes</td>
+                            <td>Decimales de 15 dígitos</td>
+                            <td>double pi = 3.14159;</td>
+                        </tr>
+                        <tr>
+                            <td><strong>boolean</strong></td>
+                            <td>1 bit</td>
+                            <td>true o false</td>
+                            <td>boolean activo = true;</td>
+                        </tr>
+                        <tr>
+                            <td><strong>char</strong></td>
+                            <td>2 bytes</td>
+                            <td>Un carácter Unicode</td>
+                            <td>char letra = 'A';</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>Declaración e Inicialización</h3>
+            <pre><code>// Declaración sin inicialización
+int numero;
+
+// Declaración e inicialización
+int numero = 10;
+String nombre = "Juan";
+double precio = 99.99;
+boolean activo = true;
+
+// Múltiples variables del mismo tipo
+int x = 5, y = 10, z = 15;
+
+// Conversión de tipos (casting)
+int entero = 10;
+double decimal = entero; // Conversión automática (widening)
+
+double pi = 3.14;
+int numero = (int) pi; // Conversión manual (narrowing) - resultado: 3</code></pre>
+
+            <div class="reflection-box">
+                <h4>💡 Convenciones de Nombres</h4>
+                <ul>
+                    <li><strong>camelCase:</strong> nombreVariable (usado para variables)</li>
+                    <li><strong>UPPER_CASE:</strong> CONSTANTE_FINAL (usado para constantes)</li>
+                    <li>Usa nombres descriptivos: <code>edad</code> en lugar de <code>a</code></li>
+                    <li>No uses caracteres especiales excepto guion bajo</li>
+                    <li>No empieces con números</li>
+                </ul>
+            </div>
+        </section>
+
+        <hr class="divider-thick">
+
+        <section id="condicionales" class="case-study-section">
+            <div class="case-header">
+                <h2>2. Condicionales (if, else, switch)</h2>
+                <h3>Tomando Decisiones en tu Código</h3>
+            </div>
+
+            <p>Los condicionales permiten que tu programa ejecute diferentes bloques de código dependiendo de una condición.</p>
+
+            <blockquote class="definition-box">
+                <strong>Condicional:</strong> Estructura de control que ejecuta código diferente dependiendo de si una condición es verdadera o falsa.
+            </blockquote>
+
+            <h3>Operadores de Comparación</h3>
+            <div class="table-responsive">
+                <table class="styled-table">
+                    <thead>
+                        <tr>
+                            <th>Operador</th>
+                            <th>Significado</th>
+                            <th>Ejemplo</th>
+                            <th>Resultado</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>==</strong></td>
+                            <td>Igual a</td>
+                            <td>5 == 5</td>
+                            <td>true</td>
+                        </tr>
+                        <tr>
+                            <td><strong>!=</strong></td>
+                            <td>No igual a</td>
+                            <td>5 != 3</td>
+                            <td>true</td>
+                        </tr>
+                        <tr>
+                            <td><strong>&gt;</strong></td>
+                            <td>Mayor que</td>
+                            <td>10 > 5</td>
+                            <td>true</td>
+                        </tr>
+                        <tr>
+                            <td><strong>&lt;</strong></td>
+                            <td>Menor que</td>
+                            <td>3 < 8</td>
+                            <td>true</td>
+                        </tr>
+                        <tr>
+                            <td><strong>&gt;=</strong></td>
+                            <td>Mayor o igual que</td>
+                            <td>5 >= 5</td>
+                            <td>true</td>
+                        </tr>
+                        <tr>
+                            <td><strong>&lt;=</strong></td>
+                            <td>Menor o igual que</td>
+                            <td>3 <= 5</td>
+                            <td>true</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>Operadores Lógicos</h3>
+            <div class="table-responsive">
+                <table class="styled-table">
+                    <thead>
+                        <tr>
+                            <th>Operador</th>
+                            <th>Significado</th>
+                            <th>Ejemplo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>&amp;&amp;</strong></td>
+                            <td>AND (y)</td>
+                            <td>edad > 18 && edad < 65</td>
+                        </tr>
+                        <tr>
+                            <td><strong>||</strong></td>
+                            <td>OR (o)</td>
+                            <td>dia == "sábado" || dia == "domingo"</td>
+                        </tr>
+                        <tr>
+                            <td><strong>!</strong></td>
+                            <td>NOT (no)</td>
+                            <td>!activo</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>if - else - else if</h3>
+            <pre><code>// if simple
+if (edad >= 18) {
+    System.out.println("Eres mayor de edad");
+}
+
+// if - else
+if (calificacion >= 3.0) {
+    System.out.println("Aprobado");
+} else {
+    System.out.println("Reprobado");
+}
+
+// if - else if - else
+if (edad < 13) {
+    System.out.println("Eres un niño");
+} else if (edad < 18) {
+    System.out.println("Eres un adolescente");
+} else if (edad < 65) {
+    System.out.println("Eres adulto");
+} else {
+    System.out.println("Eres adulto mayor");
+}
+
+// Operadores lógicos
+if (edad >= 18 && tieneLicencia) {
+    System.out.println("Puedes conducir");
+}
+
+if (esEstudiante || esJubilado) {
+    System.out.println("Tienes descuento");
+}</code></pre>
+
+            <h3>Operador Ternario</h3>
+            <p>Forma corta de if-else para asignar valores.</p>
+            <pre><code>// Sintaxis: condición ? valor_si_verdadero : valor_si_falso
+
+int edad = 20;
+String mensaje = (edad >= 18) ? "Mayor de edad" : "Menor de edad";
+System.out.println(mensaje); // Mayor de edad
+
+int numero = 5;
+String tipo = (numero % 2 == 0) ? "Par" : "Impar";
+System.out.println(tipo); // Impar</code></pre>
+
+            <h3>switch - case</h3>
+            <p>Alternativa a if-else cuando comparas una variable con múltiples valores.</p>
+            <pre><code>int dia = 3;
+String nombreDia;
+
+switch (dia) {
+    case 1:
+        nombreDia = "Lunes";
+        break;
+    case 2:
+        nombreDia = "Martes";
+        break;
+    case 3:
+        nombreDia = "Miércoles";
+        break;
+    case 4:
+        nombreDia = "Jueves";
+        break;
+    case 5:
+        nombreDia = "Viernes";
+        break;
+    case 6:
+        nombreDia = "Sábado";
+        break;
+    case 7:
+        nombreDia = "Domingo";
+        break;
+    default:
+        nombreDia = "Día inválido";
+}
+
+System.out.println(nombreDia); // Miércoles
+
+// Con String
+String calificacion = "A";
+
+switch (calificacion) {
+    case "A" -> System.out.println("Excelente");
+    case "B" -> System.out.println("Bueno");
+    case "C" -> System.out.println("Aceptable");
+    case "D" -> System.out.println("Deficiente");
+    case "F" -> System.out.println("Reprobado");
+    default -> System.out.println("Calificación inválida");
+}</code></pre>
+
+            <div class="reflection-box">
+                <h4>💡 Cuándo Usar switch vs if</h4>
+                <ul>
+                    <li><strong>if-else:</strong> Cuando tienes condiciones complejas o rangos</li>
+                    <li><strong>switch:</strong> Cuando comparas una variable con valores específicos</li>
+                </ul>
+            </div>
+        </section>
+
+        <hr class="divider-thick">
+
+        <section id="ciclos" class="case-study-section">
+            <div class="case-header">
+                <h2>3. Ciclos (Loops)</h2>
+                <h3>Repitiendo Código Eficientemente</h3>
+            </div>
+
+            <p>Los ciclos permiten ejecutar el mismo código múltiples veces sin escribirlo una y otra vez.</p>
+
+            <blockquote class="definition-box">
+                <strong>Ciclo:</strong> Estructura de control que repite un bloque de código mientras una condición sea verdadera.
+            </blockquote>
+
+            <h3>Ciclo while</h3>
+            <p>Repite mientras una condición sea verdadera.</p>
+            <pre><code>// Contar del 1 al 5
+int contador = 1;
+while (contador <= 5) {
+    System.out.println("Número: " + contador);
+    contador++; // Incremento
+}
+
+// Leer números hasta que sea 0
+Scanner sc = new Scanner(System.in);
+int numero = -1;
+while (numero != 0) {
+    System.out.print("Ingresa un número (0 para salir): ");
+    numero = sc.nextInt();
+    if (numero != 0) {
+        System.out.println("Ingresaste: " + numero);
+    }
+}</code></pre>
+
+            <h3>Ciclo do-while</h3>
+            <p>Ejecuta el código al menos una vez, luego verifica la condición.</p>
+            <pre><code>// Se ejecuta al menos una vez
+int contador = 1;
+do {
+    System.out.println("Número: " + contador);
+    contador++;
+} while (contador <= 5);
+
+// Menú que se repite
+int opcion;
+do {
+    System.out.println("\n=== MENÚ ===");
+    System.out.println("1. Opción 1");
+    System.out.println("2. Opción 2");
+    System.out.println("0. Salir");
+    System.out.print("Elige una opción: ");
+    opcion = sc.nextInt();
+    
+    switch (opcion) {
+        case 1 -> System.out.println("Seleccionaste opción 1");
+        case 2 -> System.out.println("Seleccionaste opción 2");
+        case 0 -> System.out.println("Saliendo...");
+        default -> System.out.println("Opción inválida");
+    }
+} while (opcion != 0);</code></pre>
+
+            <h3>Ciclo for</h3>
+            <p>El ciclo más común. Repite un número específico de veces.</p>
+            <pre><code>// for simple
+for (int i = 1; i <= 5; i++) {
+    System.out.println("Número: " + i);
+}
+
+// Cuenta regresiva
+for (int i = 10; i >= 1; i--) {
+    System.out.println(i);
+}
+
+// Tabla de multiplicar
+int tabla = 5;
+for (int i = 1; i <= 10; i++) {
+    System.out.println(tabla + " x " + i + " = " + (tabla * i));
+}
+
+// Múltiples incrementos
+for (int i = 0; i <= 20; i += 2) {
+    System.out.print(i + " ");
+}
+
+// Variables múltiples
+for (int i = 0, j = 10; i < j; i++, j--) {
+    System.out.println("i: " + i + ", j: " + j);
+}</code></pre>
+
+            <h3>for-each (Enhanced for)</h3>
+            <p>Itera sobre cada elemento de un arreglo o colección.</p>
+            <pre><code>int[] numeros = {10, 20, 30, 40, 50};
+
+// for-each
+for (int num : numeros) {
+    System.out.println(num);
+}
+
+// Con String
+String[] frutas = {"Manzana", "Plátano", "Naranja"};
+for (String fruta : frutas) {
+    System.out.println(fruta);
+}</code></pre>
+
+            <h3>break y continue</h3>
+            <pre><code>// break: sale del ciclo
+for (int i = 1; i <= 10; i++) {
+    if (i == 5) {
+        break; // Sale cuando i es 5
+    }
+    System.out.println(i); // Imprime: 1, 2, 3, 4
+}
+
+// continue: salta la iteración actual
+for (int i = 1; i <= 5; i++) {
+    if (i == 3) {
+        continue; // Salta cuando i es 3
+    }
+    System.out.println(i); // Imprime: 1, 2, 4, 5
+}
+
+// Buscar un número
+int[] numeros = {10, 20, 30, 40, 50};
+int buscado = 30;
+boolean encontrado = false;
+
+for (int num : numeros) {
+    if (num == buscado) {
+        encontrado = true;
+        break; // Encontrado, sale del ciclo
+    }
+}
+
+System.out.println(encontrado ? "Encontrado" : "No encontrado");</code></pre>
+
+            <div class="reflection-box">
+                <h4>⭐ Cuándo usar cada ciclo</h4>
+                <ul>
+                    <li><strong>for:</strong> Cuando sabes cuántas veces repetir</li>
+                    <li><strong>while:</strong> Cuando no sabes cuántas veces (condición variable)</li>
+                    <li><strong>do-while:</strong> Cuando necesitas ejecutar al menos una vez</li>
+                    <li><strong>for-each:</strong> Cuando itera sobre todos los elementos</li>
+                </ul>
+            </div>
+        </section>
+
+        <hr class="divider-thick">
+
+        <section id="arreglos" class="case-study-section">
+            <div class="case-header">
+                <h2>4. Arreglos (Arrays)</h2>
+                <h3>Almacenando Múltiples Valores</h3>
+            </div>
+
+            <p>Un arreglo es una estructura de datos que almacena múltiples valores del mismo tipo en posiciones contiguas de memoria.</p>
+
+            <blockquote class="definition-box">
+                <strong>Arreglo:</strong> Colección ordenada de elementos del mismo tipo, accesible por índice (posición). El índice comienza en 0.
+            </blockquote>
+
+            <h3>Declaración e Inicialización</h3>
+            <pre><code>// Declaración y asignación de tamaño
+int[] numeros = new int[5]; // Arreglo de 5 enteros (valores por defecto: 0)
+
+// Declaración e inicialización con valores
+int[] calificaciones = {85, 92, 78, 88, 95};
+String[] nombres = {"Juan", "María", "Pedro"};
+
+// Acceder a elementos
+System.out.println(numeros[0]); // Primer elemento
+System.out.println(calificaciones[2]); // Tercer elemento (índice 2)
+
+// Modificar elemento
+numeros[0] = 10;
+calificaciones[1] = 100;
+
+// Longitud del arreglo
+System.out.println(numeros.length); // 5
+System.out.println(calificaciones.length); // 5</code></pre>
+
+            <h3>Iteración sobre Arreglos</h3>
+            <pre><code>int[] numeros = {10, 20, 30, 40, 50};
+
+// Con for tradicional
+for (int i = 0; i < numeros.length; i++) {
+    System.out.println("Índice " + i + ": " + numeros[i]);
+}
+
+// Con for-each
+for (int num : numeros) {
+    System.out.println(num);
+}
+
+// Con while
+int i = 0;
+while (i < numeros.length) {
+    System.out.println(numeros[i]);
+    i++;
+}</code></pre>
+
+            <h3>Operaciones Comunes</h3>
+            <pre><code>int[] numeros = {10, 25, 15, 30, 20};
+
+// Suma de todos los elementos
+int suma = 0;
+for (int num : numeros) {
+    suma += num;
+}
+System.out.println("Suma: " + suma); // 100
+
+// Promedio
+double promedio = suma / (double) numeros.length;
+System.out.println("Promedio: " + promedio);
+
+// Máximo
+int maximo = numeros[0];
+for (int num : numeros) {
+    if (num > maximo) {
+        maximo = num;
+    }
+}
+System.out.println("Máximo: " + maximo); // 30
+
+// Mínimo
+int minimo = numeros[0];
+for (int num : numeros) {
+    if (num < minimo) {
+        minimo = num;
+    }
+}
+System.out.println("Mínimo: " + minimo); // 10
+
+// Buscar elemento
+int buscado = 25;
+boolean encontrado = false;
+for (int num : numeros) {
+    if (num == buscado) {
+        encontrado = true;
+        break;
+    }
+}
+System.out.println("¿" + buscado + " está en el arreglo?: " + encontrado);</code></pre>
+
+            <h3>Arreglos Multidimensionales</h3>
+            <p>Arreglos de arreglos (como una matriz o tabla).</p>
+            <pre><code>// Matriz 3x3
+int[][] matriz = new int[3][3];
+
+// Matriz con valores
+int[][] matriz = {
+    {1, 2, 3},
+    {4, 5, 6},
+    {7, 8, 9}
+};
+
+// Acceder a elementos
+System.out.println(matriz[0][0]); // 1
+System.out.println(matriz[1][1]); // 5
+System.out.println(matriz[2][2]); // 9
+
+// Modificar elemento
+matriz[0][1] = 10;
+
+// Iterar matriz
+for (int i = 0; i < matriz.length; i++) {
+    for (int j = 0; j < matriz[i].length; j++) {
+        System.out.print(matriz[i][j] + " ");
+    }
+    System.out.println();
+}
+
+// Con for-each
+for (int[] fila : matriz) {
+    for (int valor : fila) {
+        System.out.print(valor + " ");
+    }
+    System.out.println();
+}</code></pre>
+
+            <h3>Copiar Arreglos</h3>
+            <pre><code>int[] original = {1, 2, 3, 4, 5};
+
+// Copiar con bucle
+int[] copia = new int[original.length];
+for (int i = 0; i < original.length; i++) {
+    copia[i] = original[i];
+}
+
+// Copiar con System.arraycopy()
+int[] copia2 = new int[original.length];
+System.arraycopy(original, 0, copia2, 0, original.length);
+
+// Copiar con Arrays.copyOf()
+int[] copia3 = Arrays.copyOf(original, original.length);</code></pre>
+
+            <div class="reflection-box">
+                <h4>⚠️ Errores Comunes</h4>
+                <ul>
+                    <li><strong>ArrayIndexOutOfBoundsException:</strong> Acceder a un índice que no existe</li>
+                    <li><strong>NullPointerException:</strong> Intentar usar un arreglo sin inicializar</li>
+                    <li>Olvidar que los índices comienzan en 0, no en 1</li>
+                </ul>
+            </div>
+        </section>
+
+        <hr class="divider">
+
+        <section id="ejercicios">
+            <h2>5. Ejercicios Prácticos</h2>
+            <p>Practica los conceptos aprendidos con estos ejercicios.</p>
+
+            <h3>Ejercicio 1: Calculadora de Calificaciones</h3>
+            <div class="scenario-box">
+                <h4>Requisito:</h4>
+                <p>Crea un programa que lea 5 calificaciones y muestre:</p>
+                <ul>
+                    <li>El promedio</li>
+                    <li>La calificación más alta</li>
+                    <li>La calificación más baja</li>
+                    <li>Cuántas calificaciones están arriba del promedio</li>
+                </ul>
+            </div>
+
+            <h4>Solución:</h4>
+            <pre><code>import java.util.Scanner;
+
+public class CalculadoraCalificaciones {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        double[] calificaciones = new double[5];
+        
+        // Leer calificaciones
+        for (int i = 0; i < calificaciones.length; i++) {
+            System.out.print("Ingresa calificación " + (i + 1) + ": ");
+            calificaciones[i] = sc.nextDouble();
+        }
+        
+        // Calcular promedio
+        double suma = 0;
+        for (double cal : calificaciones) {
+            suma += cal;
+        }
+        double promedio = suma / calificaciones.length;
+        
+        // Encontrar máximo
+        double maximo = calificaciones[0];
+        for (double cal : calificaciones) {
+            if (cal > maximo) {
+                maximo = cal;
+            }
+        }
+        
+        // Encontrar mínimo
+        double minimo = calificaciones[0];
+        for (double cal : calificaciones) {
+            if (cal < minimo) {
+                minimo = cal;
+            }
+        }
+        
+        // Contar arriba del promedio
+        int arriba = 0;
+        for (double cal : calificaciones) {
+            if (cal > promedio) {
+                arriba++;
+            }
+        }
+        
+        // Mostrar resultados
+        System.out.println("\n=== RESULTADOS ===");
+        System.out.printf("Promedio: %.2f%n", promedio);
+        System.out.printf("Máxima: %.2f%n", maximo);
+        System.out.printf("Mínima: %.2f%n", minimo);
+        System.out.println("Arriba del promedio: " + arriba);
+    }
+}</code></pre>
+
+            <h3>Ejercicio 2: Matriz de Multiplicación</h3>
+            <div class="scenario-box">
+                <h4>Requisito:</h4>
+                <p>Crea un programa que genere la tabla de multiplicación del 1 al 10 en una matriz.</p>
+            </div>
+
+            <h4>Solución:</h4>
+            <pre><code>public class TablaMultiplicacion {
+    public static void main(String[] args) {
+        int[][] tabla = new int[10][10];
+        
+        // Generar tabla
+        for (int i = 0; i < tabla.length; i++) {
+            for (int j = 0; j < tabla[i].length; j++) {
+                tabla[i][j] = (i + 1) * (j + 1);
+            }
+        }
+        
+        // Mostrar tabla
+        System.out.println("TABLA DE MULTIPLICACIÓN");
+        System.out.print("  |");
+        for (int i = 1; i <= 10; i++) {
+            System.out.printf("%4d", i);
+        }
+        System.out.println("\n──┼" + "─".repeat(40));
+        
+        for (int i = 0; i < tabla.length; i++) {
+            System.out.printf("%2d|", i + 1);
+            for (int j = 0; j < tabla[i].length; j++) {
+                System.out.printf("%4d", tabla[i][j]);
+            }
+            System.out.println();
+        }
+    }
+}</code></pre>
+
+            <h3>Ejercicio 3: Sistema de Votación</h3>
+            <div class="scenario-box">
+                <h4>Requisito:</h4>
+                <p>Crea un programa que cuente votos para 3 candidatos y muestre el ganador.</p>
+            </div>
+
+            <h4>Solución:</h4>
+            <pre><code>import java.util.Scanner;
+
+public class SistemaVotacion {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        
+        String[] candidatos = {"Candidato A", "Candidato B", "Candidato C"};
+        int[] votos = new int[3];
+        
+        System.out.println("=== SISTEMA DE VOTACIÓN ===\n");
+        
+        // Menú de votación
+        int opcion;
+        do {
+            System.out.println("\nOpciones:");
+            for (int i = 0; i < candidatos.length; i++) {
+                System.out.println((i + 1) + ". " + candidatos[i]);
+            }
+            System.out.println("0. Finalizar votación");
+            
+            System.out.print("Vota por un candidato: ");
+            opcion = sc.nextInt();
+            
+            if (opcion > 0 && opcion <= candidatos.length) {
+                votos[opcion - 1]++;
+                System.out.println("✓ Voto registrado");
+            } else if (opcion != 0) {
+                System.out.println("❌ Opción inválida");
+            }
+            
+        } while (opcion != 0);
+        
+        // Mostrar resultados
+        System.out.println("\n=== RESULTADOS ===");
+        int totalVotos = 0;
+        for (int voto : votos) {
+            totalVotos += voto;
+        }
+        
+        for (int i = 0; i < candidatos.length; i++) {
+            double porcentaje = (totalVotos > 0) ? (votos[i] * 100.0 / totalVotos) : 0;
+            System.out.printf("%s: %d votos (%.1f%%)%n", candidatos[i], votos[i], porcentaje);
+        }
+        
+        // Ganador
+        int maxVotos = votos[0];
+        int ganador = 0;
+        for (int i = 1; i < votos.length; i++) {
+            if (votos[i] > maxVotos) {
+                maxVotos = votos[i];
+                ganador = i;
+            }
+        }
+        
+        System.out.println("\n🏆 GANADOR: " + candidatos[ganador]);
+    }
+}</code></pre>
+        </section>
+
+        <hr class="divider">
+
+        <section id="mejores-practicas">
+            <h2>6. Mejores Prácticas</h2>
+            <p>Sigue estas recomendaciones para escribir código Java limpio y eficiente.</p>
+
+            <div class="strategy-grid">
+                <div class="strategy-box">
+                    <h5>Nombres Descriptivos</h5>
+                    <p>Usa nombres que expliquen qué contiene la variable.</p>
+                </div>
+                <div class="strategy-box">
+                    <h5>Validación de Datos</h5>
+                    <p>Verifica que los datos sean válidos antes de usarlos.</p>
+                </div>
+                <div class="strategy-box">
+                    <h5>Evita Variables Globales</h5>
+                    <p>Usa variables locales cuando sea posible.</p>
+                </div>
+                <div class="strategy-box">
+                    <h5>Comentarios Útiles</h5>
+                    <p>Comenta por qué, no qué (el código ya dice qué).</p>
+                </div>
+                <div class="strategy-box">
+                    <h5>DRY (Don't Repeat Yourself)</h5>
+                    <p>No repitas código, crea funciones reutilizables.</p>
+                </div>
+                <div class="strategy-box">
+                    <h5>Manejo de Excepciones</h5>
+                    <p>Prevé y maneja errores que pueden ocurrir.</p>
+                </div>
+            </div>
+
+            <h3>Ejemplo: Código Bueno vs Malo</h3>
+            
+            <h4>❌ Malo</h4>
+            <pre><code>int a = 10;
+int b = 20;
+int c = a + b;
+System.out.println(c);
+
+if (a > b) {
+    System.out.println("a es mayor");
+} else {
+    System.out.println("b es mayor");
+}</code></pre>
+
+            <h4>✅ Bueno</h4>
+            <pre><code>int numeroUno = 10;
+int numeroDos = 20;
+int suma = numeroUno + numeroDos;
+System.out.println("La suma es: " + suma);
+
+if (numeroUno > numeroDos) {
+    System.out.println(numeroUno + " es mayor que " + numeroDos);
+} else {
+    System.out.println(numeroDos + " es mayor que " + numeroUno);
+}</code></pre>
+
+            <div class="reflection-box">
+                <h4>💡 Checklist para tu Código</h4>
+                <ul>
+                    <li>¿Los nombres de variables son claros y descriptivos?</li>
+                    <li>¿El código es fácil de leer (bien indentado)?</li>
+                    <li>¿Validé las entradas del usuario?</li>
+                    <li>¿Manejo posibles excepciones?</li>
+                    <li>¿Evité código repetido?</li>
+                    <li>¿Agregué comentarios donde es necesario?</li>
+                    <li>¿Probé el código con diferentes casos?</li>
+                </ul>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="main-footer">
+        <div class="container">
+            <h3>Bases de Programación en Java - Ingeniería de Sistemas</h3>
+            <p><strong>Creado por:</strong> Ing. Julian Quimbayo Castro</p>
+            <p>Última actualización: Febrero 2026</p>
+            <p>Este material es de uso educativo y está diseñado para estudiantes de Ingeniería de Sistemas.</p>
+            <p style="margin-top: 20px; font-size: 0.9em; opacity: 0.9;">© Corporación Universitaria de Huila - Corhuila</p>
+        </div>
+    </footer>
+
+    <button id="scrollTopBtn" title="Volver arriba">↑</button>
+
+    <script>
+document.addEventListener('DOMContentLoaded', function() {
+    setupScrollButton();
+    setupNavigation();
+    setupSmoothScroll();
+    highlightActiveSection();
+});
+
+function setupScrollButton() {
+    const scrollBtn = document.getElementById('scrollTopBtn');
+
+    window.addEventListener('scroll', function() {
+        if (document.documentElement.scrollTop > 300 || document.body.scrollTop > 300) {
+            scrollBtn.style.display = 'block';
+        } else {
+            scrollBtn.style.display = 'none';
+        }
+    });
+
+    scrollBtn.addEventListener('click', function() {
+        document.documentElement.scrollTop = 0;
+        document.body.scrollTop = 0;
+    });
+}
+
+function setupSmoothScroll() {
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        });
+    });
+}
+
+function setupNavigation() {
+    const navLinks = document.querySelectorAll('.main-nav a');
+    window.addEventListener('scroll', highlightActiveSection);
+}
+
+function highlightActiveSection() {
+    const navLinks = document.querySelectorAll('.main-nav a');
+    let current = '';
+
+    const sections = document.querySelectorAll('section');
+    sections.forEach(section => {
+        const sectionTop = section.offsetTop;
+        if (pageYOffset >= sectionTop - 200) {
+            current = section.getAttribute('id');
+        }
+    });
+
+    navLinks.forEach(link => {
+        link.classList.remove('active');
+        if (link.getAttribute('href') === `#${current}`) {
+            link.classList.add('active');
+        }
+    });
+}
+
+document.querySelectorAll('pre').forEach(pre => {
+    const button = document.createElement('button');
+    button.textContent = '📋 Copiar';
+    button.style.cssText = `
+        position: absolute;
+        right: 10px;
+        top: 10px;
+        padding: 8px 12px;
+        background-color: #27ae60;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 12px;
+        opacity: 0;
+        transition: opacity 0.3s;
+        z-index: 10;
+    `;
+
+    pre.style.position = 'relative';
+    pre.appendChild(button);
+
+    pre.addEventListener('mouseenter', () => {
+        button.style.opacity = '1';
+    });
+
+    pre.addEventListener('mouseleave', () => {
+        button.style.opacity = '0';
+    });
+
+    button.addEventListener('click', () => {
+        const code = pre.innerText;
+        navigator.clipboard.writeText(code).then(() => {
+            const originalText = button.textContent;
+            button.textContent = '✅ Copiado!';
+            setTimeout(() => {
+                button.textContent = originalText;
+            }, 2000);
+        });
+    });
+});
+    </script>
+</body>
+</html>
