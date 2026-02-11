@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Roadmap del semestre - Programacion Orientada a Objetos - CORHUILA">
+    <title>Programacion Orientada a Objetos | Roadmap Semestre</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- ===== HEADER ===== -->
+    <header class="header">
+        <div class="container header__inner">
+            <div class="header__brand">
+                <span class="header__icon">🐍</span>
+                <div>
+                    <h1 class="header__title">Programacion Orientada a Objetos</h1>
+                    <span class="header__subtitle">CORHUILA · Ingenieria de Sistemas · III Semestre</span>
+                </div>
+            </div>
+            <nav class="header__nav">
+                <a href="#hero">Inicio</a>
+                <a href="#progreso">Progreso</a>
+                <a href="#tecnologias">Stack</a>
+                <a href="#metodologia">Metodologia</a>
+                <a href="#roadmap">Roadmap</a>
+                <a href="#evaluacion">Evaluacion</a>
+                <a href="#badges">Logros</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- ===== HERO ===== -->
+    <section id="hero" class="hero">
+        <div class="container hero__inner">
+            <div class="hero__content">
+                <span class="hero__badge">9 Creditos · 144 Horas · III Semestre</span>
+                <h2 class="hero__title">Programacion Orientada a Objetos</h2>
+                <p class="hero__lead">
+                    Desarrolla competencias para disenar e implementar soluciones de software bajo el paradigma orientado a objetos.
+                    Domina clases, objetos, herencia, polimorfismo y buenas practicas de programacion con Python.
+                </p>
+                <div class="hero__stats">
+                    <div class="stat">
+                        <span class="stat__value" id="statWeeks">0</span>
+                        <span class="stat__label">Semanas</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat__value" id="statBadges">0</span>
+                        <span class="stat__label">Badges</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat__value" id="statProgress">0%</span>
+                        <span class="stat__label">Progreso</span>
+                    </div>
+                </div>
+                <div class="hero__actions">
+                    <a href="#roadmap" class="btn btn--primary">🚀 Iniciar Ruta</a>
+                    <button class="btn btn--secondary" id="btnReset">🔄 Reiniciar</button>
+                </div>
+            </div>
+            <div class="hero__visual">
+                <div class="hero__card">
+                    <div class="hero__card-icon">🐍</div>
+                    <div class="hero__card-text">
+                        <span>Python & POO</span>
+                        <small>Clases · Herencia · Polimorfismo · Patrones</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== PROGRESO ===== -->
+    <section id="progreso" class="progress-section">
+        <div class="container">
+            <div class="progress-card">
+                <div class="progress-card__header">
+                    <h3>📊 Tu Progreso en el Semestre</h3>
+                    <span class="progress-card__value" id="progressValue">0%</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-bar__fill" id="progressFill"></div>
+                </div>
+                <p class="progress-card__text" id="progressText">0 de 15 semanas completadas</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== TECNOLOGIAS ===== -->
+    <section id="tecnologias" class="tecnologias">
+        <div class="container">
+            <div class="section-header">
+                <h2>🛠️ Stack Tecnologico</h2>
+                <p>Tecnologias y herramientas que dominaras durante el curso</p>
+            </div>
+            <div class="tech-grid">
+                <div class="tech-card">
+                    <span class="tech-card__icon">🐍</span>
+                    <h4>Python</h4>
+                    <p>Clases, Objetos, Modulos</p>
+                </div>
+                <div class="tech-card">
+                    <span class="tech-card__icon">🧬</span>
+                    <h4>POO</h4>
+                    <p>Herencia, Polimorfismo</p>
+                </div>
+                <div class="tech-card">
+                    <span class="tech-card__icon">📦</span>
+                    <h4>Encapsulamiento</h4>
+                    <p>Atributos, Metodos</p>
+                </div>
+                <div class="tech-card">
+                    <span class="tech-card__icon">🎨</span>
+                    <h4>Abstraccion</h4>
+                    <p>ABC, Interfaces</p>
+                </div>
+                <div class="tech-card">
+                    <span class="tech-card__icon">📁</span>
+                    <h4>Archivos</h4>
+                    <p>TXT, CSV, JSON</p>
+                </div>
+                <div class="tech-card">
+                    <span class="tech-card__icon">✅</span>
+                    <h4>Buenas Practicas</h4>
+                    <p>PEP8, Pylint, Black</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== METODOLOGIA ===== -->
+    <section id="metodologia" class="metodologia">
+        <div class="container">
+            <div class="section-header">
+                <h2>📋 Metodologia de Trabajo</h2>
+                <p>Ruta de aprendizaje con acompanamiento docente y trabajo autonomo</p>
+            </div>
+            <div class="metodo-grid">
+                <div class="metodo-card metodo-card--weekly">
+                    <div class="metodo-card__header">
+                        <div class="metodo-card__icon">👨‍🏫</div>
+                        <div>
+                            <h3 class="metodo-card__title">Clase (Acompanamiento)</h3>
+                            <span class="metodo-card__subtitle">3 horas semanales presenciales</span>
+                        </div>
+                    </div>
+                    <div class="metodo-card__content">
+                        <p>Sesion presencial donde se presentan los conceptos teoricos y se realizan ejercicios practicos guiados.</p>
+                        <ul class="metodo-card__list">
+                            <li>Exposicion de conceptos de POO</li>
+                            <li>Desarrollo guiado de clases en Python</li>
+                            <li>Debugging y troubleshooting</li>
+                            <li>Code review en vivo</li>
+                            <li>Retroalimentacion inmediata</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="metodo-card metodo-card--planning">
+                    <div class="metodo-card__header">
+                        <div class="metodo-card__icon">📝</div>
+                        <div>
+                            <h3 class="metodo-card__title">Trabajo Autonomo</h3>
+                            <span class="metodo-card__subtitle">6 horas semanales independientes</span>
+                        </div>
+                    </div>
+                    <div class="metodo-card__content">
+                        <p>Actividades de refuerzo y profundizacion que el estudiante realiza de forma independiente.</p>
+                        <ul class="metodo-card__list">
+                            <li>Talleres de implementacion</li>
+                            <li>Foros de discusion tecnica</li>
+                            <li>Quizzes de autoevaluacion</li>
+                            <li>Desarrollo de mini-proyectos</li>
+                            <li>Ejercicios de refactorizacion</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== ROADMAP ===== -->
+    <section id="roadmap" class="roadmap">
+        <div class="container">
+            <div class="section-header">
+                <h2>🗺️ Roadmap del Semestre</h2>
+                <p>Haz clic en cada semana para marcarla como completada</p>
+            </div>
+
+            <!-- Filtros -->
+            <div class="filters">
+                <button class="filter-btn active" data-filter="all">📋 Todas</button>
+                <button class="filter-btn" data-filter="parcial">⭐ Parciales</button>
+                <button class="filter-btn" data-filter="pending">⏳ Pendientes</button>
+                <button class="filter-btn" data-filter="completed">✅ Completadas</button>
+            </div>
+
+            <!-- Container del roadmap -->
+            <div id="roadmapContainer"></div>
+        </div>
+    </section>
+
+    <!-- ===== EVALUACION ===== -->
+    <section id="evaluacion" class="evaluacion">
+        <div class="container">
+            <div class="section-header">
+                <h2>📝 Sistema de Evaluacion</h2>
+                <p>Distribucion de notas por cortes academicos</p>
+            </div>
+            <div class="eval-grid">
+                <div class="eval-card eval-card--corte1">
+                    <div class="eval-card__header">
+                        <span class="eval-card__badge">Corte 1</span>
+                        <span class="eval-card__percentage">30%</span>
+                    </div>
+                    <h4>Fundamentos POO y Python</h4>
+                    <p>Semanas 1-5</p>
+                    <ul class="eval-card__list">
+                        <li>Autoevaluacion: 2%</li>
+                        <li>Coevaluacion: 3%</li>
+                        <li>Heteroevaluacion: 25%</li>
+                        <li>Parcial: 70%</li>
+                    </ul>
+                    <span class="eval-card__date">📅 Parcial: Semana 5</span>
+                </div>
+                <div class="eval-card eval-card--corte2">
+                    <div class="eval-card__header">
+                        <span class="eval-card__badge">Corte 2</span>
+                        <span class="eval-card__percentage">30%</span>
+                    </div>
+                    <h4>Herencia, Polimorfismo y Abstraccion</h4>
+                    <p>Semanas 6-10</p>
+                    <ul class="eval-card__list">
+                        <li>Autoevaluacion: 2%</li>
+                        <li>Coevaluacion: 3%</li>
+                        <li>Heteroevaluacion: 25%</li>
+                        <li>Parcial: 70%</li>
+                    </ul>
+                    <span class="eval-card__date">📅 Parcial: Semana 10</span>
+                </div>
+                <div class="eval-card eval-card--corte3">
+                    <div class="eval-card__header">
+                        <span class="eval-card__badge">Corte 3</span>
+                        <span class="eval-card__percentage">40%</span>
+                    </div>
+                    <h4>Aplicacion Practica y Proyecto</h4>
+                    <p>Semanas 11-15</p>
+                    <ul class="eval-card__list">
+                        <li>Autoevaluacion: 2%</li>
+                        <li>Coevaluacion: 3%</li>
+                        <li>Heteroevaluacion: 15%</li>
+                        <li>Proyecto Final: 10%</li>
+                        <li>Certificacion: 10%</li>
+                        <li>Parcial: 50%</li>
+                    </ul>
+                    <span class="eval-card__date">📅 Parcial: Semana 15</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== BADGES ===== -->
+    <section id="badges" class="badges">
+        <div class="container">
+            <div class="section-header">
+                <h2>🏆 Sistema de Logros</h2>
+                <p>Desbloquea badges completando semanas del roadmap</p>
+            </div>
+            <div id="badgesContainer" class="badges-grid"></div>
+        </div>
+    </section>
+
+    <!-- ===== FOOTER ===== -->
+    <footer class="footer">
+        <div class="container footer__inner">
+            <div class="footer__brand">
+                <span class="footer__icon">🐍</span>
+                <div>
+                    <span class="footer__title">Programacion Orientada a Objetos</span>
+                    <span class="footer__subtitle">CORHUILA · 2026-1</span>
+                </div>
+            </div>
+            <div class="footer__info">
+                <p>Ingenieria de Sistemas · Facultad de Ingenieria</p>
+                <p>Roadmap Gamificado v2.0</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ===== MODALS ===== -->
+    <div class="modal" id="resetModal">
+        <div class="modal__content">
+            <h3>🔄 Reiniciar Progreso</h3>
+            <p>¿Estas seguro de que deseas reiniciar todo tu progreso? Esta accion no se puede deshacer.</p>
+            <div class="modal__actions">
+                <button class="btn btn--secondary" id="modalCancel">Cancelar</button>
+                <button class="btn btn--danger" id="modalConfirm">Si, reiniciar</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="badgeModal">
+        <div class="modal__content modal__content--badge">
+            <div class="badge-unlock">
+                <span class="badge-unlock__icon" id="badgeModalIcon">🏆</span>
+                <h3 id="badgeModalTitle">¡Badge Desbloqueado!</h3>
+                <p id="badgeModalDesc">Has completado un logro importante</p>
+                <button class="btn btn--primary" id="badgeModalClose">¡Genial!</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== SCROLL TOP ===== -->
+    <button class="scroll-top" id="scrollTopBtn" aria-label="Volver arriba">
+        <span>↑</span>
+    </button>
+
+    <script src="js/app.js"></script>
+</body>
+</html>
