@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Semana 14: Buenas prácticas de programación en Java y refactorización | Programación Orientada a Objetos</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <header class="main-header">
+        <div class="top-bar">
+            <div class="container brand-container">
+                <span class="brand-name">Programación Orientada a Objetos</span><br>
+                <span class="brand-name">Semana 14: Buenas prácticas de programación en Java y refactorización</span>
+            </div>
+        </div>
+
+        <!-- IMPORTANTE: 5 links = 5 secciones (para que el JS marque bien el activo) -->
+        <nav class="main-nav">
+            <div class="container">
+                <ul>
+                    <li><a href="#introduccion" class="active">Inicio</a></li>
+                    <li><a href="#fundamentos">Buenas prácticas</a></li>
+                    <li><a href="#ecosistema">Code Smells</a></li>
+                    <li><a href="#planificacion">Refactorización</a></li>
+                    <li><a href="#foro">Actividad Práctica</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container main-content">
+
+        <section id="introduccion" class="hero-section">
+            <h1>Semana 14: Buenas prácticas de programación en Java y refactorización</h1>
+            <p class="lead">
+                En esta semana aprenderás a escribir código más <strong>limpio, mantenible y profesional</strong>.
+                Verás buenas prácticas en Java (nombres, estructura, encapsulamiento, validación, modularidad),
+                reconocerás <strong>code smells</strong> (señales de código “enfermo”) y aplicarás técnicas de
+                <strong>refactorización</strong> para mejorar el diseño sin cambiar el comportamiento.
+            </p>
+        </section>
+
+        <hr class="divider">
+
+        <section id="fundamentos">
+            <h2>1. Buenas prácticas en Java: escribir código que otros (y tú) puedan mantener</h2>
+            <p>
+                Programar no es solo “hacer que funcione”. En proyectos reales, el código se lee y se modifica más veces
+                de las que se escribe. Por eso, las buenas prácticas apuntan a que tu código sea:
+                <strong>entendible</strong>, <strong>predecible</strong>, <strong>fácil de cambiar</strong> y <strong>difícil de romper</strong>.
+            </p>
+
+            <blockquote class="definition-box">
+                <strong>Buenas prácticas:</strong> conjunto de reglas y hábitos que mejoran la calidad del software:
+                legibilidad, estructura, control de errores, modularidad y consistencia.
+            </blockquote>
+
+            <h3>1.1. Nombres claros (la práctica más rentable)</h3>
+            <p>
+                Un buen nombre reduce la necesidad de comentarios y evita malentendidos. Reglas recomendadas:
+            </p>
+
+            <div class="table-responsive">
+                <table class="styled-table">
+                    <thead>
+                        <tr>
+                            <th>Elemento</th>
+                            <th>Recomendación</th>
+                            <th>Ejemplo bueno</th>
+                            <th>Ejemplo malo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Clases</strong></td>
+                            <td>Sustantivos, PascalCase</td>
+                            <td><code>Producto</code>, <code>PedidoService</code></td>
+                            <td><code>clase1</code>, <code>manejador</code></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Métodos</strong></td>
+                            <td>Verbos, camelCase</td>
+                            <td><code>calcularTotal()</code>, <code>agregarItem()</code></td>
+                            <td><code>hacer()</code>, <code>m()</code></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Variables</strong></td>
+                            <td>Significado claro</td>
+                            <td><code>precioUnitario</code>, <code>cantidad</code></td>
+                            <td><code>x</code>, <code>dato1</code></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Constantes</strong></td>
+                            <td>MAYÚSCULA + guiones bajos</td>
+                            <td><code>IVA_POR_DEFECTO</code></td>
+                            <td><code>iva</code>, <code>k</code></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>1.2. Estructura básica de proyecto (paquetes y responsabilidades)</h3>
+            <p>
+                A este nivel, una estructura simple y muy útil es separar por paquetes:
+            </p>
+
+            <blockquote class="definition-box">
+                <strong>model:</strong> entidades (Producto, Pedido, Usuario)<br>
+                <strong>service:</strong> lógica/operaciones (PedidoService, InventarioService)<br>
+                <strong>persistence:</strong> archivos/DB (ArchivoProductos)<br>
+                <strong>app:</strong> Main/App para ejecutar y probar
+            </blockquote>
+
+            <p>
+                Esto evita mezclar todo en una sola clase y ayuda a que cada parte tenga un propósito claro.
+            </p>
+
+            <h3>1.3. Encapsulamiento y control del estado</h3>
+            <p>
+                En POO, una clase debe proteger su estado interno. Por eso:
+            </p>
+            <ul>
+                <li>Usa <strong>atributos privados</strong>.</li>
+                <li>Ofrece <strong>métodos</strong> con intención (no “exponer todo”).</li>
+                <li>Valida datos en constructores y métodos públicos.</li>
+                <li>Evita “setters” indiscriminados si rompen reglas del objeto.</li>
+            </ul>
+
+            <h4>Ejemplo: proteger invariantes (reglas del objeto)</h4>
+            <pre><code class="language-java">public class Cuenta {
+    private double saldo;
+
+    public Cuenta(double saldoInicial) {
+        if (saldoInicial &lt; 0) {
+            throw new IllegalArgumentException("Saldo inicial inválido.");
+        }
+        this.saldo = saldoInicial;
+    }
+
+    public void depositar(double monto) {
+        if (monto &lt;= 0) {
+            throw new IllegalArgumentException("Monto inválido.");
+        }
+        saldo += monto;
+    }
+
+    public void retirar(double monto) {
+        if (monto &lt;= 0) {
+            throw new IllegalArgumentException("Monto inválido.");
+        }
+        if (monto &gt; saldo) {
+            throw new IllegalStateException("Fondos insuficientes.");
+        }
+        saldo -= monto;
+    }
+
+    public double getSaldo() {
+        return saldo;
+    }
+}</code></pre>
+
+            <p>
+                Observa: no existe <code>setSaldo()</code>, porque permitiría romper la regla (por ejemplo, saldo negativo).
+            </p>
+
+            <h3>1.4. Manejo de null y validación defensiva</h3>
+            <p>
+                Dos reglas prácticas que previenen muchos errores:
+            </p>
+            <ul>
+                <li><strong>Validar entradas</strong> (null, vacíos, rangos) en los bordes del sistema (constructores, métodos públicos).</li>
+                <li><strong>Evitar propagar null</strong> y manejarlo temprano para no generar <code>NullPointerException</code>.</li>
+            </ul>
+
+            <h4>Ejemplo: validación simple</h4>
+            <pre><code class="language-java">public void agregarProducto(Producto p) {
+    if (p == null) {
+        throw new IllegalArgumentException("Producto inválido (null).");
+    }
+    // ...
+}</code></pre>
+
+            <h3>1.5. Comentarios: cuándo sí y cuándo no</h3>
+            <p>
+                Un comentario no debe explicar lo obvio. Debe explicar <strong>por qué</strong> se hace algo, no “qué” hace el código
+                (eso debería ser claro por nombres).
+            </p>
+
+            <div class="comparison-cards">
+                <div class="card qc-card">
+                    <h3>Comentario malo</h3>
+                    <ul>
+                        <li>Repite el código</li>
+                        <li>No aporta intención</li>
+                    </ul>
+                    <p><code>// suma a y b</code></p>
+                </div>
+                <div class="card qa-card">
+                    <h3>Comentario útil</h3>
+                    <ul>
+                        <li>Explica una decisión</li>
+                        <li>Da contexto o restricción</li>
+                    </ul>
+                    <p><code>// Regla de negocio: descuento máximo 50% para evitar valores negativos</code></p>
+                </div>
+            </div>
+        </section>
+
+        <section id="ecosistema">
+            <h2>2. Code smells: señales de que tu código necesita mejorar</h2>
+            <p>
+                Un <strong>code smell</strong> no es necesariamente un “bug”, pero sí es una señal de que el diseño está mal
+                o se está volviendo difícil de mantener. Identificar estos olores te ayuda a mejorar antes de que el proyecto sea inmanejable.
+            </p>
+
+            <blockquote class="definition-box">
+                <strong>Code smell:</strong> síntoma de un problema de diseño. No rompe el programa ahora,
+                pero aumenta la probabilidad de errores y dificulta el mantenimiento.
+            </blockquote>
+
+            <h3>2.1. Smells comunes en proyectos de estudiantes (y cómo reconocerlos)</h3>
+            <div class="table-responsive">
+                <table class="styled-table">
+                    <thead>
+                        <tr>
+                            <th>Code smell</th>
+                            <th>Cómo se ve</th>
+                            <th>Por qué es malo</th>
+                            <th>Refactor típico</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Método largo</strong></td>
+                            <td>Un método de 80–200 líneas</td>
+                            <td>Difícil de leer/probar</td>
+                            <td>Extraer métodos (<em>Extract Method</em>)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Clase “Dios”</strong></td>
+                            <td>Una clase lo hace todo</td>
+                            <td>Acoplamiento alto</td>
+                            <td>Dividir en clases (SRP)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Duplicación</strong></td>
+                            <td>El mismo bloque repetido</td>
+                            <td>Si cambias uno, olvidas otro</td>
+                            <td>Extraer método / reutilizar</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Nombres pobres</strong></td>
+                            <td><code>x</code>, <code>dato</code>, <code>hacer()</code></td>
+                            <td>Confunde la intención</td>
+                            <td>Renombrar con intención</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Magic numbers</strong></td>
+                            <td><code>0.19</code>, <code>50</code> sin explicación</td>
+                            <td>Reglas ocultas</td>
+                            <td>Constantes (<code>static final</code>)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Condicionales complejos</strong></td>
+                            <td>Muchos <code>if</code> anidados</td>
+                            <td>Difícil de seguir</td>
+                            <td>Guard clauses / polimorfismo</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>2.2. Ejemplo de “código con olor”: un método enorme</h3>
+            <p>
+                Observa este ejemplo: funciona, pero es difícil de entender y mantener (muchas responsabilidades en un mismo método).
+            </p>
+
+            <pre><code class="language-java">public double calcularFactura(double subtotal, boolean aplicarIva, boolean aplicarDescuento, int tipoCliente) {
+    double total = subtotal;
+
+    if (subtotal &lt;= 0) {
+        return 0;
+    }
+
+    // descuento
+    if (aplicarDescuento) {
+        if (tipoCliente == 1) { // VIP
+            total = total - (total * 0.20);
+        } else if (tipoCliente == 2) { // frecuente
+            total = total - (total * 0.10);
+        } else {
+            total = total - (total * 0.05);
+        }
+    }
+
+    // IVA
+    if (aplicarIva) {
+        total = total + (total * 0.19);
+    }
+
+    // redondeo raro
+    total = Math.round(total * 100.0) / 100.0;
+    return total;
+}</code></pre>
+
+            <p>
+                Problemas:
+            </p>
+            <ul>
+                <li>“Magic numbers” (<code>0.19</code>, <code>0.20</code>, etc.).</li>
+                <li>Demasiadas decisiones y reglas en un solo método.</li>
+                <li>TipoCliente como número sin significado (1,2,3).</li>
+            </ul>
+
+            <p>
+                Esto se puede mejorar con refactorización: constantes, extraer métodos, y reemplazar “códigos” por enums.
+            </p>
+        </section>
+
+        <section id="planificacion">
+            <h2>3. Refactorización: mejorar el diseño sin cambiar el resultado</h2>
+            <p>
+                Refactorizar significa cambiar la estructura interna del código sin alterar lo que el programa hace desde afuera.
+                El objetivo es que el código sea más fácil de entender, extender y probar.
+            </p>
+
+            <blockquote class="definition-box">
+                <strong>Refactorización:</strong> mejora del código (estructura) sin cambiar su comportamiento observable.
+                Se hace en pasos pequeños y verificables.
+            </blockquote>
+
+            <h3>3.1. Técnicas de refactorización más útiles en este curso</h3>
+            <div class="table-responsive">
+                <table class="styled-table">
+                    <thead>
+                        <tr>
+                            <th>Técnica</th>
+                            <th>Qué hace</th>
+                            <th>Cuándo usarla</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Extract Method</strong></td>
+                            <td>Extrae un bloque a un método con nombre</td>
+                            <td>Cuando un método es largo o mezcla pasos</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Rename</strong></td>
+                            <td>Mejora nombres (clases/métodos/variables)</td>
+                            <td>Cuando los nombres no dicen intención</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Introduce Constant</strong></td>
+                            <td>Reemplaza números/strings “mágicos”</td>
+                            <td>Cuando hay reglas ocultas (IVA, límites)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Replace Magic Numbers</strong></td>
+                            <td>Igual que arriba pero más general</td>
+                            <td>Cuando el valor se repite o es regla</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Split Class</strong></td>
+                            <td>Divide una clase grande en varias</td>
+                            <td>Cuando una clase hace demasiado</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Guard Clauses</strong></td>
+                            <td>Reduce if anidados con retornos tempranos</td>
+                            <td>Cuando hay condicionales complejos</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>3.2. Refactor paso a paso del ejemplo anterior</h3>
+            <p>
+                Vamos a mejorar el método de factura aplicando tres mejoras: constantes, enum y extracción de métodos.
+            </p>
+
+            <h4>Paso 1: reemplazar tipoCliente por enum</h4>
+            <pre><code class="language-java">public enum TipoCliente {
+    VIP,
+    FRECUENTE,
+    NORMAL
+}</code></pre>
+
+            <h4>Paso 2: introducir constantes (reglas visibles)</h4>
+            <pre><code class="language-java">public class FacturacionConstantes {
+    public static final double IVA = 0.19;
+    public static final double DESC_VIP = 0.20;
+    public static final double DESC_FRECUENTE = 0.10;
+    public static final double DESC_NORMAL = 0.05;
+
+    private FacturacionConstantes() { }
+}</code></pre>
+
+            <h4>Paso 3: extraer métodos y simplificar</h4>
+            <pre><code class="language-java">public class FacturacionService {
+
+    public double calcularTotal(double subtotal, boolean aplicarIva, boolean aplicarDescuento, TipoCliente tipoCliente) {
+        if (subtotal &lt;= 0) {
+            return 0;
+        }
+
+        double total = subtotal;
+
+        if (aplicarDescuento) {
+            total = aplicarDescuento(total, tipoCliente);
+        }
+
+        if (aplicarIva) {
+            total = aplicarIva(total);
+        }
+
+        return redondear2(total);
+    }
+
+    private double aplicarDescuento(double base, TipoCliente tipo) {
+        double porcentaje;
+        switch (tipo) {
+            case VIP:
+                porcentaje = FacturacionConstantes.DESC_VIP;
+                break;
+            case FRECUENTE:
+                porcentaje = FacturacionConstantes.DESC_FRECUENTE;
+                break;
+            default:
+                porcentaje = FacturacionConstantes.DESC_NORMAL;
+                break;
+        }
+        return base - (base * porcentaje);
+    }
+
+    private double aplicarIva(double base) {
+        return base + (base * FacturacionConstantes.IVA);
+    }
+
+    private double redondear2(double valor) {
+        return Math.round(valor * 100.0) / 100.0;
+    }
+}</code></pre>
+
+            <p>
+                ¿Qué mejoró?
+            </p>
+            <ul>
+                <li>Ahora el código se lee como una historia: validar → descuento → IVA → redondear.</li>
+                <li>Las reglas ya no están ocultas: IVA y descuentos son constantes.</li>
+                <li><code>TipoCliente</code> ya no es “1,2,3”: ahora es un concepto con nombre.</li>
+                <li>Si cambian reglas, se cambia un método o una constante, no un método gigante.</li>
+            </ul>
+
+            <h3>3.3. Checklist de calidad (útil para revisar tus trabajos)</h3>
+            <ul>
+                <li>¿Los nombres expresan intención? (clases, métodos, variables)</li>
+                <li>¿Las clases tienen responsabilidades claras?</li>
+                <li>¿Hay números mágicos o strings repetidos?</li>
+                <li>¿El método más largo se puede dividir en 2–4 métodos?</li>
+                <li>¿Validas entradas y manejas errores con mensajes claros?</li>
+                <li>¿Tu código está modularizado por paquetes?</li>
+            </ul>
+
+            <h3>3.4. Recomendaciones prácticas (hábitos diarios)</h3>
+            <div class="strategy-grid">
+                <div class="strategy-box qa-box">
+                    <h5>Hábitos recomendados</h5>
+                    <ul>
+                        <li>Formatea el código (Ctrl+Alt+L / “Reformat Code” en IDEs).</li>
+                        <li>Extrae métodos cuando el bloque pasa 15–20 líneas.</li>
+                        <li>Haz commits pequeños (si trabajas con Git).</li>
+                        <li>Prueba después de cada refactor (ejecuta App).</li>
+                    </ul>
+                </div>
+                <div class="strategy-box qc-box">
+                    <h5>Cosas a evitar</h5>
+                    <ul>
+                        <li>Refactor masivo sin probar (rompes todo y no sabes dónde).</li>
+                        <li>Optimización prematura sin necesidad.</li>
+                        <li>Clases con muchos atributos no relacionados.</li>
+                        <li>“Arreglar” un bug metiendo try/catch por todas partes.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <hr class="divider-thick">
+
+        <section id="foro" class="case-study-section">
+            <div class="case-header">
+                <h2>Actividad práctica de la semana (no obligatoria)</h2>
+            </div>
+
+            <div class="scenario-box">
+                <h4>1. Contexto</h4>
+                <p>
+                    Te entregan un código que “funciona” pero está desordenado: tiene métodos largos, duplicación y números mágicos.
+                    Tu tarea será <strong>refactorizarlo</strong> sin cambiar el resultado final. La idea es demostrar que sabes:
+                    detectar code smells, aplicar buenas prácticas y mejorar la estructura manteniendo el comportamiento.
+                </p>
+                <ol>
+                    <li>Analiza el código base y lista mínimo 4 <strong>code smells</strong> encontrados.</li>
+                    <li>Aplica al menos 3 técnicas: <strong>Extract Method</strong>, <strong>Introduce Constant</strong>, <strong>Rename</strong>.</li>
+                    <li>Organiza en paquetes: <code>model</code>, <code>service</code>, <code>app</code> (si aplica).</li>
+                    <li>Asegura que el resultado (salida) sea el mismo antes y después.</li>
+                </ol>
+            </div>
+
+            <h3>2. Código base (para refactorizar)</h3>
+            <p>
+                Copia este código en tu proyecto tal como está y ejecútalo. Luego refactoriza.
+            </p>
+
+            <pre><code class="language-java">public class AppRefactor {
+    public static void main(String[] args) {
+        double s = 500000;
+        boolean iv = true;
+        boolean d = true;
+        int t = 1;
+
+        double total = s;
+
+        if (s &lt;= 0) {
+            System.out.println("Total: 0");
+            return;
+        }
+
+        if (d) {
+            if (t == 1) {
+                total = total - (total * 0.20);
+            } else if (t == 2) {
+                total = total - (total * 0.10);
+            } else {
+                total = total - (total * 0.05);
+            }
+        }
+
+        if (iv) {
+            total = total + (total * 0.19);
+        }
+
+        total = Math.round(total * 100.0) / 100.0;
+
+        System.out.println("Total: " + total);
+    }
+}</code></pre>
+
+            <h3>3. Requerimientos del ejercicio</h3>
+            <div class="table-responsive">
+                <table class="styled-table">
+                    <thead>
+                        <tr>
+                            <th>Requisito</th>
+                            <th>Qué debes hacer</th>
+                            <th>Condición</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Detectar olores</strong></td>
+                            <td>Identificar mínimo 4 code smells</td>
+                            <td>Lista escrita (breve)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Refactorizar</strong></td>
+                            <td>Aplicar mínimo 3 técnicas de refactor</td>
+                            <td>Debe compilar y ejecutar</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Constantes</strong></td>
+                            <td>Eliminar números mágicos</td>
+                            <td>IVA y descuentos como constantes</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Enum</strong></td>
+                            <td>Reemplazar <code>int t</code> por <code>enum</code></td>
+                            <td>VIP/FRECUENTE/NORMAL</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Salida igual</strong></td>
+                            <td>La salida final debe ser la misma</td>
+                            <td>Mismo total calculado</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>4. Entregables</h3>
+            <div class="table-responsive">
+                <table class="styled-table">
+                    <thead>
+                        <tr>
+                            <th>Entregable</th>
+                            <th>Qué incluye</th>
+                            <th>Formato sugerido</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Código refactorizado</strong></td>
+                            <td>Proyecto final con el código limpio y organizado.</td>
+                            <td>.zip o repositorio</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Lista de code smells</strong></td>
+                            <td>Mínimo 4, con explicación corta.</td>
+                            <td>Texto / Markdown</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Evidencia de salida</strong></td>
+                            <td>Salida antes y después (misma).</td>
+                            <td>Captura o texto</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="reflection-box">
+                <h4>Criterios de evaluación (referencia)</h4>
+                <p>
+                    Se revisará: (1) claridad de nombres y estructura, (2) eliminación de números mágicos,
+                    (3) uso de enums/constantes, (4) división en métodos, (5) orden por paquetes,
+                    (6) que el comportamiento no cambie.
+                </p>
+            </div>
+
+           
+        </section>
+
+    </main>
+
+    <footer class="main-footer">
+        <div class="container">
+            <p>Material docente para: Programación Orientada a Objetos</p>
+            <p>Semana 14 · Buenas prácticas de programación en Java y refactorización · Ingeniería Mecatrónica</p>
+            <p>© 2026 CORHUILA</p>
+        </div>
+    </footer>
+
+    <button id="scrollTopBtn" title="Volver arriba">↑</button>
+
+    <script src="js/script.js"></script>
+</body>
+</html>
