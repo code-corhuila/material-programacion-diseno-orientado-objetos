@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Semana 9: Composición y modularización del código | Programación Orientada a Objetos</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <header class="main-header">
+        <div class="top-bar">
+            <div class="container brand-container">
+                <span class="brand-name">Programación Orientada a Objetos</span><br>
+                <span class="brand-name">Semana 9: Composición y modularización del código</span>
+            </div>
+        </div>
+
+        <!-- IMPORTANTE: 5 links = 5 secciones (para que el JS marque bien el activo) -->
+        <nav class="main-nav">
+            <div class="container">
+                <ul>
+                    <li><a href="#introduccion" class="active">Inicio</a></li>
+                    <li><a href="#fundamentos">Composición (tiene-un)</a></li>
+                    <li><a href="#ecosistema">Agregación y diseño</a></li>
+                    <li><a href="#planificacion">Modularización</a></li>
+                    <li><a href="#foro">Actividad Práctica</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container main-content">
+
+        <section id="introduccion" class="hero-section">
+            <h1>Semana 9: Composición y modularización del código</h1>
+            <p class="lead">
+                En esta semana aprenderás a construir sistemas más mantenibles aplicando <strong>composición</strong>
+                (“tiene-un”) para evitar herencias forzadas, y a organizar tu programa mediante <strong>modularización</strong>:
+                separar responsabilidades en clases, paquetes y componentes con límites claros. Estos conceptos son clave
+                para escribir software real, donde el código crece y debe seguir siendo entendible, escalable y fácil de cambiar.
+            </p>
+        </section>
+
+        <hr class="divider">
+
+        <section id="fundamentos">
+            <h2>1. Composición: relación “tiene-un” (HAS-A)</h2>
+            <p>
+                En POO, no todo se resuelve con herencia. Hay relaciones donde una clase <strong>contiene</strong> a otra
+                o <strong>usa</strong> a otra como parte de su funcionamiento. Esto es <strong>composición</strong>:
+                un objeto está construido a partir de otros objetos.
+            </p>
+
+            <blockquote class="definition-box">
+                <strong>Composición (HAS-A):</strong> relación “tiene-un”. Una clase tiene otras clases como atributos.<br>
+                Ejemplo: una <em>Orden</em> tiene <em>Items</em>; un <em>Carro</em> tiene un <em>Motor</em>.
+            </blockquote>
+
+            <h3>1.1. Herencia vs composición (decisión de diseño)</h3>
+            <p>
+                Una regla práctica muy usada es: <strong>“prefiere composición sobre herencia”</strong> cuando la relación no sea claramente “es-un”.
+                Esto reduce acoplamiento y hace tu código más flexible.
+            </p>
+
+            <div class="table-responsive">
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Pregunta</th>
+                            <th>Si la respuesta es “sí”</th>
+                            <th>Recomendación</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>¿Puedes decir “X es un Y” sin que suene forzado?</td>
+                            <td>Relación natural de familia</td>
+                            <td><strong>Herencia</strong></td>
+                        </tr>
+                        <tr>
+                            <td>¿Puedes decir “X tiene un Y” (parte/colabora)?</td>
+                            <td>Relación de partes o dependencia</td>
+                            <td><strong>Composición</strong></td>
+                        </tr>
+                        <tr>
+                            <td>¿Cambiar el “Y” debería ser fácil sin tocar X?</td>
+                            <td>Necesitas flexibilidad</td>
+                            <td><strong>Composición</strong> (ideal)</td>
+                        </tr>
+                        <tr>
+                            <td>¿La jerarquía se vuelve profunda o confusa?</td>
+                            <td>Se está forzando herencia</td>
+                            <td><strong>Composición</strong> (replantear)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>1.2. Ejemplo claro: Carro “tiene un” Motor</h3>
+            <p>
+                Un error típico sería intentar heredar así:
+                <code>class Carro extends Motor</code> (eso es incorrecto, porque un carro NO es un motor).
+                Lo correcto es composición: un carro tiene un motor como parte.
+            </p>
+
+            <h4>Clase Motor</h4>
+            <pre><code class="language-java">package com.corhuila.poo.semana9;
+
+public class Motor {
+    private int cilindraje;
+    private boolean encendido;
+
+    public Motor(int cilindraje) {
+        if (cilindraje &lt; 50) {
+            throw new IllegalArgumentException("Cilindraje inválido (mínimo 50cc).");
+        }
+        this.cilindraje = cilindraje;
+        this.encendido = false;
+    }
+
+    public int getCilindraje() {
+        return cilindraje;
+    }
+
+    public boolean isEncendido() {
+        return encendido;
+    }
+
+    public void encender() {
+        encendido = true;
+    }
+
+    public void apagar() {
+        encendido = false;
+    }
+
+    public String estado() {
+        return "Motor{cilindraje=" + cilindraje + ", encendido=" + encendido + "}";
+    }
+}</code></pre>
+
+            <h4>Clase Carro (compone un Motor)</h4>
+            <pre><code class="language-java">package com.corhuila.poo.semana9;
+
+public class Carro {
+    private String placa;
+    private Motor motor; // composición: Carro TIENE un Motor
+
+    public Carro(String placa, Motor motor) {
+        if (placa == null || placa.trim().isEmpty()) {
+            throw new IllegalArgumentException("Placa inválida.");
+        }
+        if (motor == null) {
+            throw new IllegalArgumentException("El carro debe tener un motor.");
+        }
+        this.placa = placa.trim().toUpperCase();
+        this.motor = motor;
+    }
+
+    public String getPlaca() {
+        return placa;
+    }
+
+    public Motor getMotor() {
+        return motor;
+    }
+
+    public void encenderCarro() {
+        motor.encender(); // delegación: Carro delega la tarea al Motor
+    }
+
+    public void apagarCarro() {
+        motor.apagar();
+    }
+
+    public String ficha() {
+        return "Carro{placa='" + placa + "', " + motor.estado() + "}";
+    }
+}</code></pre>
+
+            <h4>App: usar composición</h4>
+            <pre><code class="language-java">package com.corhuila.poo.semana9;
+
+public class App {
+    public static void main(String[] args) {
+        Motor m = new Motor(1600);
+        Carro c = new Carro("abc123", m);
+
+        System.out.println(c.ficha());
+        c.encenderCarro();
+        System.out.println("Luego de encender: " + c.ficha());
+    }
+}</code></pre>
+
+            <p>
+                Aquí se ve un concepto importante: <strong>delegación</strong>. El carro no “hace” lo del motor internamente;
+                simplemente delega al motor la responsabilidad de encenderse y apagarse.
+            </p>
+
+            <h3>1.3. Beneficios prácticos de composición</h3>
+            <ul>
+                <li><strong>Flexibilidad:</strong> puedes cambiar el motor por otro sin cambiar toda la clase Carro (en proyectos reales).</li>
+                <li><strong>Menos acoplamiento:</strong> evita jerarquías forzadas y dependencias rígidas.</li>
+                <li><strong>Responsabilidades claras:</strong> cada clase se enfoca en lo suyo.</li>
+                <li><strong>Escalabilidad:</strong> el sistema crece agregando piezas, no “rompiendo” herencias.</li>
+            </ul>
+        </section>
+
+        <section id="ecosistema">
+            <h2>2. Agregación vs composición: relación y ciclo de vida</h2>
+            <p>
+                En algunos textos se diferencia entre <strong>composición</strong> y <strong>agregación</strong>.
+                En términos prácticos para Java, ambas implican “tiene-un”, pero la diferencia suele estar en el <strong>ciclo de vida</strong>:
+                si la “parte” depende totalmente del “todo” o si puede existir por separado.
+            </p>
+
+            <blockquote class="definition-box">
+                <strong>Composición (fuerte):</strong> la parte no tiene sentido sin el todo (su ciclo de vida depende del todo).<br>
+                <strong>Agregación (débil):</strong> la parte puede existir por separado y ser compartida o reutilizada.
+            </blockquote>
+
+            <h3>2.1. Ejemplo mental rápido</h3>
+            <div class="table-responsive">
+                <table class="styled-table">
+                    <thead>
+                        <tr>
+                            <th>Relación</th>
+                            <th>Tipo</th>
+                            <th>Ejemplo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Pedido → DetallePedido</strong></td>
+                            <td>Composición (fuerte)</td>
+                            <td>Si eliminas el pedido, sus detalles ya no tienen sentido.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Equipo → Jugador</strong></td>
+                            <td>Agregación (débil)</td>
+                            <td>El jugador existe aunque cambie de equipo.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Curso → Estudiante</strong></td>
+                            <td>Agregación (débil)</td>
+                            <td>El estudiante existe independientemente de un curso.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <p>
+                En Java, esto se refleja más en cómo diseñas tu código: quién crea los objetos, quién los destruye, si se comparten,
+                si se validan como obligatorios, etc. No hay una palabra reservada distinta para “agregación”, es más una decisión de diseño.
+            </p>
+
+            <h3>2.2. Composición con listas: Pedido con Items</h3>
+            <p>
+                Un caso muy común es que una clase contenga una colección de objetos. Ejemplo: un pedido contiene varios items.
+            </p>
+
+            <h4>ItemPedido</h4>
+            <pre><code class="language-java">package com.corhuila.poo.semana9;
+
+public class ItemPedido {
+    private String nombreProducto;
+    private int cantidad;
+    private double precioUnitario;
+
+    public ItemPedido(String nombreProducto, int cantidad, double precioUnitario) {
+        if (nombreProducto == null || nombreProducto.trim().isEmpty()) {
+            throw new IllegalArgumentException("Producto inválido.");
+        }
+        if (cantidad &lt;= 0) {
+            throw new IllegalArgumentException("Cantidad inválida.");
+        }
+        if (precioUnitario &lt;= 0) {
+            throw new IllegalArgumentException("Precio inválido.");
+        }
+        this.nombreProducto = nombreProducto.trim();
+        this.cantidad = cantidad;
+        this.precioUnitario = precioUnitario;
+    }
+
+    public double subtotal() {
+        return cantidad * precioUnitario;
+    }
+
+    @Override
+    public String toString() {
+        return "ItemPedido{producto='" + nombreProducto + "', cantidad=" + cantidad + ", unit=" + precioUnitario + ", subtotal=" + subtotal() + "}";
+    }
+}</code></pre>
+
+            <h4>Pedido (compone items)</h4>
+            <pre><code class="language-java">package com.corhuila.poo.semana9;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class Pedido {
+    private String codigo;
+    private List&lt;ItemPedido&gt; items;
+
+    public Pedido(String codigo) {
+        if (codigo == null || codigo.trim().isEmpty()) {
+            throw new IllegalArgumentException("Código inválido.");
+        }
+        this.codigo = codigo.trim().toUpperCase();
+        this.items = new ArrayList&lt;&gt;();
+    }
+
+    public void agregarItem(ItemPedido item) {
+        if (item == null) {
+            throw new IllegalArgumentException("Item inválido.");
+        }
+        items.add(item);
+    }
+
+    public double total() {
+        double suma = 0;
+        for (ItemPedido it : items) {
+            suma += it.subtotal();
+        }
+        return suma;
+    }
+
+    public String resumen() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Pedido{codigo='").append(codigo).append("'}\n");
+        sb.append("Items:\n");
+        for (ItemPedido it : items) {
+            sb.append(" - ").append(it.toString()).append("\n");
+        }
+        sb.append("TOTAL = ").append(total());
+        return sb.toString();
+    }
+}</code></pre>
+
+            <p>
+                Observa cómo <code>Pedido</code> encapsula su lista y expone métodos con intención:
+                <code>agregarItem()</code> y <code>total()</code>. Así mantienes el control del estado interno.
+            </p>
+        </section>
+
+        <section id="planificacion">
+            <h2>3. Modularización del código: separar responsabilidades para crecer sin caos</h2>
+            <p>
+                A medida que tu programa crece, meter todo en una sola clase (o en un solo archivo) se vuelve inmanejable.
+                La <strong>modularización</strong> consiste en dividir el sistema en partes con responsabilidades claras:
+                clases, paquetes, componentes y capas.
+            </p>
+
+            <blockquote class="definition-box">
+                <strong>Modularización:</strong> organizar el código en módulos (clases/paquetes) con responsabilidades claras,
+                reduciendo acoplamiento y aumentando cohesión.
+            </blockquote>
+
+            <h3>3.1. Principio clave: una clase, una responsabilidad</h3>
+            <p>
+                Una forma simple de modularizar es aplicar una versión básica del principio SRP (Single Responsibility Principle):
+                cada clase debería tener una responsabilidad principal.
+            </p>
+
+            <div class="comparison-cards">
+                <div class="card qc-card">
+                    <h3>Clase “Dios” (mala práctica)</h3>
+                    <ul>
+                        <li>Una clase hace TODO: entradas, cálculos, impresión, validación, datos.</li>
+                        <li>Difícil de leer y probar.</li>
+                        <li>Cualquier cambio puede romper todo.</li>
+                    </ul>
+                </div>
+                <div class="card qa-card">
+                    <h3>Clases pequeñas (buena práctica)</h3>
+                    <ul>
+                        <li>Separar: modelo, lógica, utilidades, UI/console.</li>
+                        <li>Más fácil de mantener.</li>
+                        <li>Reutilizable y testeable.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3>3.2. Paquetes en Java: ordenar por “módulos”</h3>
+            <p>
+                Un paquete (<code>package</code>) es una forma de agrupar clases relacionadas. En proyectos reales,
+                es común organizar por “dominio” o “módulo” (por ejemplo: pedidos, usuarios, pagos).
+            </p>
+
+            <div class="table-responsive">
+                <table class="styled-table">
+                    <thead>
+                        <tr>
+                            <th>Paquete</th>
+                            <th>Qué contiene</th>
+                            <th>Ejemplo de clases</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>model</code></td>
+                            <td>Clases de datos (entidades)</td>
+                            <td><code>Pedido</code>, <code>ItemPedido</code>, <code>Producto</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>service</code></td>
+                            <td>Lógica/operaciones sobre el modelo</td>
+                            <td><code>PedidoService</code>, <code>CalculoService</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>app</code></td>
+                            <td>Punto de entrada y pruebas (main)</td>
+                            <td><code>App</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>utils</code></td>
+                            <td>Utilidades genéricas</td>
+                            <td><code>Validaciones</code>, <code>Formato</code></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>3.3. Mini-ejemplo de modularización: separar “modelo” y “servicio”</h3>
+            <p>
+                Vamos a imaginar que el cálculo del total y descuentos crece. En vez de llenar <code>Pedido</code> de reglas complejas,
+                podemos modularizar creando un servicio.
+            </p>
+
+            <h4>PedidoService (ejemplo simple)</h4>
+            <pre><code class="language-java">package com.corhuila.poo.semana9.service;
+
+import com.corhuila.poo.semana9.Pedido;
+
+public class PedidoService {
+
+    public double calcularDescuento(Pedido pedido, double porcentaje) {
+        if (pedido == null) {
+            throw new IllegalArgumentException("Pedido inválido.");
+        }
+        if (porcentaje &lt; 0 || porcentaje &gt; 50) {
+            throw new IllegalArgumentException("Porcentaje inválido (0 a 50).");
+        }
+        return pedido.total() * (porcentaje / 100.0);
+    }
+
+    public double totalConDescuento(Pedido pedido, double porcentaje) {
+        return pedido.total() - calcularDescuento(pedido, porcentaje);
+    }
+}</code></pre>
+
+            <p>
+                ¿Qué ganaste?
+            </p>
+            <ul>
+                <li><strong>Cohesión:</strong> Pedido se enfoca en mantener items y total básico; el servicio en reglas de negocio.</li>
+                <li><strong>Separación:</strong> si cambian reglas de descuento, modificas el servicio, no el modelo.</li>
+                <li><strong>Reutilización:</strong> varios lugares pueden usar el mismo servicio.</li>
+            </ul>
+
+            <h3>3.4. Señales de que necesitas modularizar</h3>
+            <ul>
+                <li>Una clase supera fácilmente 300–400 líneas y hace muchas cosas distintas.</li>
+                <li>Ves métodos con nombres “hacerTodo”, “procesarGeneral”, “gestionar” sin claridad.</li>
+                <li>La clase necesita demasiados atributos para manejar varios conceptos diferentes.</li>
+                <li>Haces cambios en un lugar y se rompen cosas sin relación.</li>
+            </ul>
+
+            <h3>3.5. Buenas prácticas de modularización para este nivel</h3>
+            <div class="strategy-grid">
+                <div class="strategy-box qa-box">
+                    <h5>Recomendaciones</h5>
+                    <ul>
+                        <li>Usa paquetes para separar “model”, “service”, “app”.</li>
+                        <li>Aplica encapsulamiento: no expongas listas directamente.</li>
+                        <li>Prefiere composición: construye objetos con otros objetos.</li>
+                        <li>Escribe métodos con intención (no genéricos).</li>
+                    </ul>
+                </div>
+                <div class="strategy-box qc-box">
+                    <h5>Errores comunes</h5>
+                    <ul>
+                        <li>Crear demasiados paquetes sin necesidad (sobre-ingeniería).</li>
+                        <li>Romper encapsulamiento devolviendo la lista interna sin control.</li>
+                        <li>Hacer herencia por conveniencia (cuando era “tiene-un”).</li>
+                        <li>Clases que dependen de demasiadas otras sin razón (acoplamiento alto).</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <hr class="divider-thick">
+
+        <section id="foro" class="case-study-section">
+            <div class="case-header">
+                <h2>Actividad práctica de la semana (no obligatoria)</h2>
+            </div>
+
+            <div class="scenario-box">
+                <h4>1. Contexto</h4>
+                <p>
+                    Vas a construir un mini-sistema de <strong>carrito de compras</strong> aplicando composición y modularización.
+                    Un carrito contiene varios productos (items) y el cálculo total se hará a través de un servicio.
+                    El objetivo es que el código quede organizado en clases pequeñas con responsabilidades claras.
+                </p>
+                <ol>
+                    <li>Crear clases: <strong>Producto</strong>, <strong>ItemCarrito</strong>, <strong>Carrito</strong>.</li>
+                    <li>Aplicar composición: <code>Carrito</code> tiene una lista de <code>ItemCarrito</code>.</li>
+                    <li>Crear <strong>CarritoService</strong> para calcular total con descuento y total con IVA.</li>
+                    <li>Organizar el proyecto en paquetes: <code>model</code>, <code>service</code>, <code>app</code>.</li>
+                    <li>Probar en <strong>App</strong> agregando items y mostrando totales.</li>
+                </ol>
+            </div>
+
+            <h3>2. Requerimientos del ejercicio</h3>
+            <div class="table-responsive">
+                <table class="styled-table">
+                    <thead>
+                        <tr>
+                            <th>Elemento</th>
+                            <th>Requisito</th>
+                            <th>Reglas sugeridas</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Producto</strong></td>
+                            <td>Atributos: <code>codigo</code>, <code>nombre</code>, <code>precio</code></td>
+                            <td>Precio &gt; 0, textos no vacíos</td>
+                        </tr>
+                        <tr>
+                            <td><strong>ItemCarrito</strong></td>
+                            <td>Atributos: <code>producto</code>, <code>cantidad</code>; método <code>subtotal()</code></td>
+                            <td>Cantidad &gt; 0</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Carrito</strong></td>
+                            <td>Lista privada de items; método <code>agregarItem()</code>; método <code>total()</code></td>
+                            <td>No exponer la lista sin control</td>
+                        </tr>
+                        <tr>
+                            <td><strong>CarritoService</strong></td>
+                            <td>Métodos: <code>aplicarDescuento()</code>, <code>calcularIVA()</code>, <code>totalFinal()</code></td>
+                            <td>Descuento 0–50%, IVA 0–19%</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Paquetes</strong></td>
+                            <td><code>model</code>, <code>service</code>, <code>app</code></td>
+                            <td>Estructura clara</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>3. Entregables</h3>
+            <div class="table-responsive">
+                <table class="styled-table">
+                    <thead>
+                        <tr>
+                            <th>Entregable</th>
+                            <th>Qué incluye</th>
+                            <th>Formato sugerido</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Código fuente</strong></td>
+                            <td>Proyecto organizado por paquetes y ejecutable.</td>
+                            <td>.zip o repositorio</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Salida en consola</strong></td>
+                            <td>Carrito con 3 items + total, descuento, IVA, total final.</td>
+                            <td>Texto o captura</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Explicación breve</strong></td>
+                            <td>
+                                12–18 líneas: ¿dónde aplicaste composición? ¿cómo modularizaste? ¿qué clase quedó con qué responsabilidad?
+                            </td>
+                            <td>Texto / Markdown</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="reflection-box">
+                <h4>Criterios de evaluación (referencia)</h4>
+                <p>
+                    Se revisará: (1) uso correcto de composición, (2) encapsulamiento de la colección,
+                    (3) separación en paquetes, (4) servicio para reglas de cálculo, (5) claridad y pruebas en consola.
+                </p>
+            </div>
+
+            
+        </section>
+
+    </main>
+
+    <footer class="main-footer">
+        <div class="container">
+            <p>Material docente para: Programación Orientada a Objetos</p>
+            <p>Semana 9 · Composición y modularización del código · Ingeniería Mecatrónica</p>
+            <p>© 2026 CORHUILA</p>
+        </div>
+    </footer>
+
+    <button id="scrollTopBtn" title="Volver arriba">↑</button>
+
+    <script src="js/script.js"></script>
+</body>
+</html>

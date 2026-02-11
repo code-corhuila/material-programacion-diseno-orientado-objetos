@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Semana 1: Introducción a la POO y entorno de desarrollo en Java | Programación Orientada a Objetos</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <header class="main-header">
+        <div class="top-bar">
+            <div class="container brand-container">
+                <span class="brand-name">Programación Orientada a Objetos</span><br>
+                <span class="brand-name">Semana 1: Introducción a la POO y entorno de desarrollo en Java</span>
+            </div>
+        </div>
+
+        <!-- IMPORTANTE: 5 links = 5 secciones (para que el JS marque bien el activo) -->
+        <nav class="main-nav">
+            <div class="container">
+                <ul>
+                    <li><a href="#introduccion" class="active">Inicio</a></li>
+                    <li><a href="#fundamentos">Fundamentos POO</a></li>
+                    <li><a href="#ecosistema">Entorno Java</a></li>
+                    <li><a href="#planificacion">Primeros pasos</a></li>
+                    <li><a href="#foro">Actividad Práctica</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container main-content">
+
+        <section id="introduccion" class="hero-section">
+            <h1>Semana 1: Introducción a la POO y entorno de desarrollo en Java</h1>
+            <p class="lead">
+                En esta primera semana construiremos la base del curso: comprenderás qué es la Programación Orientada a Objetos (POO),
+                por qué es el paradigma dominante en la industria y cómo se traduce en Java mediante clases, objetos, atributos y métodos.
+                Además, dejarás listo tu entorno de desarrollo para programar de forma correcta y profesional.
+            </p>
+        </section>
+
+        <hr class="divider">
+
+        <section id="fundamentos">
+            <h2>1. Fundamentos de la Programación Orientada a Objetos (POO)</h2>
+            <p>
+                La POO es un paradigma de programación que propone construir software modelando el mundo real (o el dominio del problema)
+                mediante <strong>objetos</strong> que tienen <strong>estado</strong> (datos) y <strong>comportamiento</strong> (acciones).
+                En lugar de pensar el programa como una lista de instrucciones sueltas, se organiza como un conjunto de entidades que
+                colaboran entre sí.
+            </p>
+
+            <blockquote class="definition-box">
+                <strong>Objeto:</strong> una entidad con identidad propia que combina <strong>datos</strong> (estado) y <strong>métodos</strong> (comportamiento).<br>
+                <strong>Clase:</strong> un “molde” o plantilla que define cómo serán los objetos: qué datos tendrán y qué acciones podrán realizar.
+            </blockquote>
+
+            <h3>1.1. ¿Por qué existe la POO?</h3>
+            <p>
+                A medida que un sistema crece, la complejidad aumenta: más reglas, más módulos, más cambios. La POO aparece como una forma
+                de organizar el código para que sea más <strong>mantenible</strong>, <strong>reutilizable</strong> y <strong>comprensible</strong>.
+                En sistemas reales, lo más costoso no es “programar una vez”, sino <strong>mantener y evolucionar</strong> el software durante años.
+            </p>
+
+            <div class="table-responsive">
+                <table class="styled-table">
+                    <thead>
+                        <tr>
+                            <th>Necesidad en software</th>
+                            <th>Cómo ayuda la POO</th>
+                            <th>Ejemplo práctico</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Organizar la complejidad</strong></td>
+                            <td>Divide el sistema en objetos con responsabilidades claras.</td>
+                            <td>En un sistema de compras: <em>Producto</em>, <em>Carrito</em>, <em>Pago</em>.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Reutilizar código</strong></td>
+                            <td>Permite crear clases reutilizables y extender comportamientos.</td>
+                            <td>Un <em>Vehículo</em> base y sus variantes: <em>Carro</em>, <em>Moto</em>.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Reducir errores</strong></td>
+                            <td>Encapsula datos para protegerlos y controlar cambios mediante métodos.</td>
+                            <td>No permitir saldo negativo en una <em>CuentaBancaria</em>.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Facilitar cambios</strong></td>
+                            <td>Modifica una clase sin romper todo el sistema (si el diseño es correcto).</td>
+                            <td>Cambiar la lógica de descuento sin tocar otras partes.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>1.2. POO vs. programación estructurada (visión clara)</h3>
+            <p>
+                No significa que la programación estructurada sea “mala”: de hecho, la POO se apoya en ella (condicionales, ciclos, funciones).
+                La diferencia está en <strong>cómo organizamos</strong> el sistema. Mira la comparación:
+            </p>
+
+            <div class="table-responsive">
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Aspecto</th>
+                            <th>Estructurada (procedimental)</th>
+                            <th>Orientada a Objetos</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Organización</strong></td>
+                            <td>Funciones/procedimientos que procesan datos.</td>
+                            <td>Objetos que encapsulan datos y métodos.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Enfoque</strong></td>
+                            <td>“¿Qué pasos debo ejecutar?”</td>
+                            <td>“¿Qué entidades existen y qué hacen?”</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Datos</strong></td>
+                            <td>Frecuentemente globales o pasados entre funciones.</td>
+                            <td>Protegidos dentro del objeto (encapsulación).</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Escalabilidad</strong></td>
+                            <td>Puede complicarse en sistemas grandes por acoplamiento.</td>
+                            <td>Mejor organización para sistemas con muchas reglas.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>1.3. Los 4 pilares de la POO (vista general, con sentido)</h3>
+            <p>
+                Durante la materia profundizaremos en estos pilares. Por ahora, necesitas comprender qué significan y por qué importan.
+                No se trata de “memorizar definiciones”, sino de entender cómo mejoran tu diseño.
+            </p>
+
+            <div class="comparison-cards">
+                <div class="card qa-card">
+                    <h3>Encapsulación</h3>
+                    <ul>
+                        <li>Proteger el estado interno del objeto.</li>
+                        <li>Acceder/modificar datos solo mediante métodos controlados.</li>
+                        <li>Evita cambios inválidos (reglas del negocio).</li>
+                    </ul>
+                    <p>
+                        <strong>Idea clave:</strong> “No toques mis datos directamente; usa mis métodos”.
+                    </p>
+                </div>
+
+                <div class="card qc-card">
+                    <h3>Abstracción</h3>
+                    <ul>
+                        <li>Modelar lo esencial y ocultar detalles innecesarios.</li>
+                        <li>Definir qué hace una entidad, no cómo lo hace internamente.</li>
+                        <li>Ayuda a pensar en “responsabilidades”.</li>
+                    </ul>
+                    <p>
+                        <strong>Idea clave:</strong> trabajar con conceptos claros del dominio.
+                    </p>
+                </div>
+            </div>
+
+            <div class="comparison-cards">
+                <div class="card qa-card">
+                    <h3>Herencia</h3>
+                    <ul>
+                        <li>Crear clases nuevas basadas en clases existentes.</li>
+                        <li>Reutiliza atributos y métodos comunes.</li>
+                        <li>Permite especialización (general → específico).</li>
+                    </ul>
+                    <p>
+                        <strong>Idea clave:</strong> “Un Carro ES un Vehículo” (relación “es-un”).
+                    </p>
+                </div>
+
+                <div class="card qc-card">
+                    <h3>Polimorfismo</h3>
+                    <ul>
+                        <li>Una misma operación puede comportarse distinto según el objeto.</li>
+                        <li>Permite escribir código general que funciona con múltiples tipos.</li>
+                        <li>Es clave para diseño flexible y extensible.</li>
+                    </ul>
+                    <p>
+                        <strong>Idea clave:</strong> “Mismo método, diferentes comportamientos”.
+                    </p>
+                </div>
+            </div>
+
+            <h3>1.4. Primer modelo mental: “clase” y “objeto” en un ejemplo real</h3>
+            <p>
+                Supongamos que queremos modelar una <strong>CuentaBancaria</strong>. En la vida real, una cuenta tiene datos (saldo, número)
+                y acciones (depositar, retirar). En POO, eso se convierte en una clase con atributos y métodos.
+            </p>
+
+            <blockquote class="definition-box">
+                <strong>Clase CuentaBancaria:</strong> define qué es una cuenta en nuestro sistema.<br>
+                <strong>Objeto cuentaDeAna:</strong> es una cuenta específica con un saldo específico.
+            </blockquote>
+
+            <p><strong>Ejemplo (Java):</strong></p>
+            <pre><code class="language-java">public class CuentaBancaria {
+    private String numero;
+    private double saldo;
+
+    public CuentaBancaria(String numero, double saldoInicial) {
+        this.numero = numero;
+        this.saldo = saldoInicial;
+    }
+
+    public void depositar(double monto) {
+        if (monto &lt;= 0) {
+            System.out.println("El monto a depositar debe ser mayor a 0.");
+            return;
+        }
+        saldo += monto;
+    }
+
+    public void retirar(double monto) {
+        if (monto &lt;= 0) {
+            System.out.println("El monto a retirar debe ser mayor a 0.");
+            return;
+        }
+        if (monto &gt; saldo) {
+            System.out.println("Fondos insuficientes.");
+            return;
+        }
+        saldo -= monto;
+    }
+
+    public double getSaldo() {
+        return saldo;
+    }
+}</code></pre>
+
+            <p>
+                Observa lo importante: el <strong>saldo</strong> está <strong>encapsulado</strong> (private). Nadie debería cambiarlo haciendo
+                <code>saldo = -999</code> desde afuera. Solo se modifica mediante <code>depositar</code> y <code>retirar</code>, donde
+                aplicamos reglas de negocio.
+            </p>
+
+            <p><strong>Uso desde un programa principal:</strong></p>
+            <pre><code class="language-java">public class App {
+    public static void main(String[] args) {
+        CuentaBancaria cuenta = new CuentaBancaria("ACC-001", 500);
+
+        cuenta.depositar(200);
+        cuenta.retirar(100);
+        cuenta.retirar(1000); // fondos insuficientes
+
+        System.out.println("Saldo final: " + cuenta.getSaldo());
+    }
+}</code></pre>
+        </section>
+
+        <section id="ecosistema">
+            <h2>2. Entorno de desarrollo en Java (JDK, JVM, IDE y ejecución)</h2>
+            <p>
+                Para trabajar correctamente en Java necesitas entender qué se instala y qué hace cada componente. Muchas confusiones
+                comunes vienen de no diferenciar <strong>JDK</strong>, <strong>JRE</strong> y <strong>JVM</strong>.
+            </p>
+
+            <blockquote class="definition-box">
+                <strong>JVM (Java Virtual Machine):</strong> ejecuta el bytecode (.class) en cualquier sistema operativo.<br>
+                <strong>JRE (Java Runtime Environment):</strong> JVM + librerías necesarias para ejecutar programas Java.<br>
+                <strong>JDK (Java Development Kit):</strong> JRE + herramientas de desarrollo (compilador <code>javac</code>, depurador, etc.).<br>
+                <strong>Conclusión:</strong> para programar necesitas <strong>JDK</strong>.
+            </blockquote>
+
+            <h3>2.1. ¿Cómo se ejecuta un programa Java realmente?</h3>
+            <p>
+                Java no se ejecuta directamente como “código fuente”. El proceso típico es:
+            </p>
+
+            <div class="table-responsive">
+                <table class="styled-table">
+                    <thead>
+                        <tr>
+                            <th>Etapa</th>
+                            <th>Qué ocurre</th>
+                            <th>Archivo resultante</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>1) Escribir código</strong></td>
+                            <td>Creas clases en archivos fuente.</td>
+                            <td><code>.java</code></td>
+                        </tr>
+                        <tr>
+                            <td><strong>2) Compilar</strong></td>
+                            <td>El compilador traduce .java a bytecode.</td>
+                            <td><code>.class</code></td>
+                        </tr>
+                        <tr>
+                            <td><strong>3) Ejecutar</strong></td>
+                            <td>La JVM interpreta/ejecuta el bytecode.</td>
+                            <td>Programa corriendo</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <p><strong>Ejemplo por consola (sin IDE):</strong></p>
+            <pre><code>javac App.java
+java App</code></pre>
+
+            <p>
+                En un IDE (IntelliJ/Eclipse/VS Code), este proceso ocurre “por detrás”, pero sigue siendo el mismo.
+                Entenderlo te ayuda a depurar errores de configuración y a comprender cómo funciona el lenguaje.
+            </p>
+
+            <h3>2.2. Instalación y verificación del JDK (pasos prácticos)</h3>
+            <p>
+                Instala un <strong>JDK reciente</strong> (preferiblemente una versión LTS). Luego verifica en la terminal:
+            </p>
+
+            <pre><code>java -version
+javac -version</code></pre>
+
+            <p>
+                Si estos comandos no funcionan, normalmente significa que:
+                (1) el JDK no está instalado, o (2) la variable <strong>PATH</strong> no apunta a la carpeta bin del JDK.
+            </p>
+
+            <h3>2.3. IDE recomendado y por qué</h3>
+            <p>
+                Puedes programar Java con varios entornos, pero para aprender POO con buenas prácticas (proyectos, paquetes, depuración,
+                refactorización), un IDE completo acelera el aprendizaje.
+            </p>
+
+            <div class="table-responsive">
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Herramienta</th>
+                            <th>Ventajas</th>
+                            <th>Recomendación de uso</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>IntelliJ IDEA</strong></td>
+                            <td>Excelente para Java, refactorizaciones y debugging, muy didáctico.</td>
+                            <td>Ideal para el curso (Community Edition es suficiente).</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Eclipse</strong></td>
+                            <td>Robusto, clásico en academia e industria, muchos plugins.</td>
+                            <td>Buena alternativa si ya lo conoces.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>VS Code</strong></td>
+                            <td>Ligero, requiere extensiones, funciona bien con proyectos simples.</td>
+                            <td>Útil si tu equipo es limitado, pero exige más configuración.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>2.4. Estructura mínima de un proyecto Java (conceptos que debes dominar)</h3>
+            <p>
+                Incluso en proyectos pequeños, Java promueve organización por <strong>paquetes (packages)</strong>.
+                Un paquete agrupa clases relacionadas y evita conflictos de nombres.
+            </p>
+
+            <blockquote class="definition-box">
+                <strong>Convención de paquetes:</strong> se recomienda usar formato tipo dominio invertido.<br>
+                Ejemplo: <code>com.corhuila.poo.semana1</code>
+            </blockquote>
+
+            <p><strong>Estructura típica:</strong></p>
+            <pre><code>mi-proyecto/
+  src/
+    com/
+      corhuila/
+        poo/
+          semana1/
+            App.java
+            CuentaBancaria.java</code></pre>
+
+            <p>
+                Esta estructura te prepara para proyectos más grandes donde tendrás múltiples clases y responsabilidades.
+            </p>
+        </section>
+
+        <section id="planificacion">
+            <h2>3. Primeros pasos en Java orientado a objetos (con buenas prácticas)</h2>
+            <p>
+                En esta sección unimos las ideas: escribiremos un programa simple, pero organizado como se trabaja en POO:
+                clases separadas, responsabilidades claras y uso correcto de atributos/métodos.
+            </p>
+
+            <h3>3.1. La clase principal y el método main</h3>
+            <p>
+                En Java, el punto de entrada de un programa de consola es el método:
+                <code>public static void main(String[] args)</code>.
+                Desde ahí puedes crear objetos y ejecutar la lógica inicial.
+            </p>
+
+            <pre><code class="language-java">package com.corhuila.poo.semana1;
+
+public class App {
+    public static void main(String[] args) {
+        System.out.println("Bienvenido a POO en Java");
+    }
+}</code></pre>
+
+            <h3>3.2. Reglas básicas de diseño (que aplicaremos todo el curso)</h3>
+            <div class="strategy-grid">
+                <div class="strategy-box qa-box">
+                    <h5>Reglas de oro para empezar</h5>
+                    <ul>
+                        <li><strong>Una clase = una responsabilidad principal</strong> (no mezcles todo en App).</li>
+                        <li><strong>Atributos privados</strong> y acceso mediante métodos.</li>
+                        <li><strong>Nombres claros</strong> (CuentaBancaria, depositar, retirar).</li>
+                        <li><strong>Validar datos</strong> en el lugar correcto (en el método, no “afuera”).</li>
+                    </ul>
+                </div>
+                <div class="strategy-box qc-box">
+                    <h5>Errores comunes del inicio</h5>
+                    <ul>
+                        <li>Hacer todo en <code>main</code> (se vuelve inmantenible rápido).</li>
+                        <li>Usar variables públicas para todo (pierdes control del estado).</li>
+                        <li>No modelar el dominio (terminas con “código spaghetti”).</li>
+                        <li>Copiar y pegar lógica repetida en vez de encapsularla.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3>3.3. Ejemplo guiado: clase Mascota (estado + comportamiento)</h3>
+            <p>
+                Vamos a modelar una <strong>Mascota</strong>. Este ejemplo es intencionalmente simple, porque el objetivo es dominar
+                la idea de “objeto con estado y acciones”.
+            </p>
+
+            <pre><code class="language-java">package com.corhuila.poo.semana1;
+
+public class Mascota {
+    private String nombre;
+    private String especie;
+    private int energia; // 0 a 100
+
+    public Mascota(String nombre, String especie) {
+        this.nombre = nombre;
+        this.especie = especie;
+        this.energia = 50; // energía inicial por defecto
+    }
+
+    public void comer(int cantidad) {
+        if (cantidad &lt;= 0) {
+            System.out.println("La cantidad debe ser mayor a 0.");
+            return;
+        }
+        energia = Math.min(100, energia + cantidad);
+        System.out.println(nombre + " comió. Energía: " + energia);
+    }
+
+    public void jugar(int minutos) {
+        if (minutos &lt;= 0) {
+            System.out.println("Los minutos deben ser mayor a 0.");
+            return;
+        }
+        energia = Math.max(0, energia - minutos);
+        System.out.println(nombre + " jugó. Energía: " + energia);
+    }
+
+    public String resumen() {
+        return "Mascota{nombre='" + nombre + "', especie='" + especie + "', energia=" + energia + "}";
+    }
+}</code></pre>
+
+            <p><strong>Uso desde App:</strong></p>
+            <pre><code class="language-java">package com.corhuila.poo.semana1;
+
+public class App {
+    public static void main(String[] args) {
+        Mascota m = new Mascota("Luna", "Perro");
+
+        System.out.println(m.resumen());
+        m.comer(30);
+        m.jugar(20);
+        System.out.println(m.resumen());
+    }
+}</code></pre>
+
+            <p>
+                Nota cómo la energía se mantiene consistente gracias a:
+                <strong>encapsulación</strong> (private) + <strong>métodos</strong> que aplican reglas
+                (límites 0–100). Esto es POO: el objeto cuida su estado.
+            </p>
+
+            <h3>3.4. Qué debes dominar al finalizar esta semana</h3>
+            <div class="table-responsive">
+                <table class="styled-table">
+                    <thead>
+                        <tr>
+                            <th>Competencia</th>
+                            <th>Qué significa</th>
+                            <th>Cómo lo evidencias</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Diferenciar clase y objeto</strong></td>
+                            <td>Entender plantilla vs instancia real.</td>
+                            <td>Creas 2 objetos de la misma clase con estados distintos.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Encapsular atributos</strong></td>
+                            <td>Usar private y controlar cambios con métodos.</td>
+                            <td>No modificas atributos desde afuera; usas métodos.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Configurar el entorno</strong></td>
+                            <td>JDK instalado y proyecto ejecutando sin errores.</td>
+                            <td>Evidencias <code>java -version</code> y ejecución en IDE.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Separar responsabilidades</strong></td>
+                            <td>No concentrar todo en main.</td>
+                            <td>Tienes clases separadas para el modelo y la ejecución.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <hr class="divider-thick">
+
+        <section id="foro" class="case-study-section">
+            <div class="case-header">
+                <h2>Actividad práctica de la semana (no obligatoria)</h2>
+            </div>
+
+            <div class="scenario-box">
+                <h4>1. Contexto</h4>
+                <p>
+                    Vas a preparar tu entorno de trabajo y a construir tu primer mini-programa orientado a objetos en Java.
+                    El objetivo no es hacer “algo enorme”, sino demostrar que sabes <strong>modelar una entidad</strong> como clase,
+                    crear objetos y ejecutar métodos que controlan el estado.
+                </p>
+
+                <ol>
+                    <li>Instala y verifica el <strong>JDK</strong> (comandos <code>java -version</code> y <code>javac -version</code>).</li>
+                    <li>Crea un proyecto en tu IDE con un paquete (ej.: <code>com.corhuila.poo.semana1</code>).</li>
+                    <li>Implementa el mini-programa <strong>“Gestor de Tareas”</strong> (clases + ejecución).</li>
+                </ol>
+            </div>
+
+            <h3>2. Requerimientos del mini-programa “Gestor de Tareas”</h3>
+            <p>
+                Vas a construir dos clases: <strong>Tarea</strong> y <strong>App</strong>.
+            </p>
+
+            <div class="table-responsive">
+                <table class="styled-table">
+                    <thead>
+                        <tr>
+                            <th>Clase</th>
+                            <th>Qué debe incluir</th>
+                            <th>Reglas</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Tarea</strong></td>
+                            <td>
+                                Atributos: <code>titulo</code>, <code>descripcion</code>, <code>completada</code>.<br>
+                                Métodos: <code>marcarComoHecha()</code>, <code>marcarComoPendiente()</code>, <code>resumen()</code>.
+                            </td>
+                            <td>
+                                Los atributos deben ser <strong>private</strong>. El resumen debe mostrar el estado.
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>App</strong></td>
+                            <td>
+                                Crear al menos 3 objetos <code>Tarea</code> y ejecutar métodos sobre ellos.
+                            </td>
+                            <td>
+                                Debe imprimirse en consola el estado antes y después de cambios.
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>3. Entregables</h3>
+            <div class="table-responsive">
+                <table class="styled-table">
+                    <thead>
+                        <tr>
+                            <th>Entregable</th>
+                            <th>Qué incluye</th>
+                            <th>Formato sugerido</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Evidencia de entorno</strong></td>
+                            <td>Captura o copia del resultado de <code>java -version</code> y <code>javac -version</code>.</td>
+                            <td>Imagen / PDF</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Código fuente</strong></td>
+                            <td>Proyecto con clases <code>Tarea</code> y <code>App</code> ejecutables.</td>
+                            <td>Carpeta comprimida (.zip) o repositorio</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Salida en consola</strong></td>
+                            <td>Pruebas: imprimir estados antes/después de completar tareas.</td>
+                            <td>Texto / Captura</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="reflection-box">
+                <h4>Criterios de evaluación (referencia)</h4>
+                <p>
+                    Esta actividad no es obligatoria, pero si la realizas te ayudará a fortalecer la base del curso.
+                    Se revisará principalmente: (1) entorno configurado, (2) uso correcto de clases/objetos,
+                    (3) encapsulación (private), (4) claridad del código y nombres, (5) evidencias de ejecución.
+                </p>
+            </div>
+
+            
+        </section>
+
+    </main>
+
+    <footer class="main-footer">
+        <div class="container">
+            <p>Material docente para: Programación Orientada a Objetos</p>
+            <p>Semana 1 · Introducción a la POO y entorno de desarrollo en Java · Ingeniería Mecatrónica</p>
+            <p>© 2026 CORHUILA</p>
+        </div>
+    </footer>
+
+    <button id="scrollTopBtn" title="Volver arriba">↑</button>
+
+    <script src="js/script.js"></script>
+</body>
+</html>

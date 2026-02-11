@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Semana 13: Lectura y escritura de archivos en Java | Programación Orientada a Objetos</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <header class="main-header">
+        <div class="top-bar">
+            <div class="container brand-container">
+                <span class="brand-name">Programación Orientada a Objetos</span><br>
+                <span class="brand-name">Semana 13: Lectura y escritura de archivos en Java</span>
+            </div>
+        </div>
+
+        <!-- IMPORTANTE: 5 links = 5 secciones (para que el JS marque bien el activo) -->
+        <nav class="main-nav">
+            <div class="container">
+                <ul>
+                    <li><a href="#introduccion" class="active">Inicio</a></li>
+                    <li><a href="#fundamentos">Conceptos y rutas</a></li>
+                    <li><a href="#ecosistema">IO vs NIO.2</a></li>
+                    <li><a href="#planificacion">Patrones y buenas prácticas</a></li>
+                    <li><a href="#foro">Actividad Práctica</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container main-content">
+
+        <section id="introduccion" class="hero-section">
+            <h1>Semana 13: Lectura y escritura de archivos en Java</h1>
+            <p class="lead">
+                En esta semana aprenderás a trabajar con <strong>archivos</strong> para guardar y recuperar información.
+                Verás cómo manejar rutas de forma correcta, cómo leer y escribir texto (y nociones básicas de binario),
+                cómo evitar errores comunes con <strong>try-with-resources</strong> y cómo diseñar un flujo simple de
+                persistencia de datos para tus programas (por ejemplo: guardar inventario, usuarios, registros, etc.).
+            </p>
+        </section>
+
+        <hr class="divider">
+
+        <section id="fundamentos">
+            <h2>1. Conceptos clave: archivos, rutas y streams</h2>
+            <p>
+                Un archivo es un recurso externo: existe fuera de tu programa, en el sistema operativo.
+                Por eso trabajar con archivos se relaciona con errores externos (no depende solo de tu código):
+                el archivo puede no existir, no tener permisos, estar bloqueado, o la ruta puede estar mal escrita.
+            </p>
+
+            <blockquote class="definition-box">
+                <strong>Archivo:</strong> recurso persistente almacenado en disco (texto o binario).<br>
+                <strong>Ruta (path):</strong> ubicación del archivo en el sistema (carpetas + nombre).<br>
+                <strong>Stream:</strong> flujo de datos de entrada o salida (leer/escribir).
+            </blockquote>
+
+            <h3>1.1. Rutas: absolutas vs relativas</h3>
+            <p>
+                Una ruta puede ser:
+            </p>
+
+            <div class="table-responsive">
+                <table class="styled-table">
+                    <thead>
+                        <tr>
+                            <th>Tipo</th>
+                            <th>Qué significa</th>
+                            <th>Ejemplo Windows</th>
+                            <th>Ejemplo Linux/Mac</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Absoluta</strong></td>
+                            <td>Incluye el camino completo desde la raíz</td>
+                            <td><code>C:\Users\Karol\Desktop\datos.txt</code></td>
+                            <td><code>/home/karol/datos.txt</code></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Relativa</strong></td>
+                            <td>Parte desde el directorio donde se ejecuta el proyecto</td>
+                            <td><code>data/datos.txt</code></td>
+                            <td><code>data/datos.txt</code></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <p>
+                En proyectos académicos, suele recomendarse usar rutas relativas para que el proyecto sea portable
+                (no dependa del computador). Por ejemplo, crear una carpeta <code>data/</code> dentro del proyecto.
+            </p>
+
+            <h3>1.2. ¿Qué es IO en Java? (la idea sin complicarse)</h3>
+            <p>
+                Java maneja lectura/escritura mediante flujos:
+            </p>
+            <ul>
+                <li><strong>InputStream / Reader:</strong> para leer datos.</li>
+                <li><strong>OutputStream / Writer:</strong> para escribir datos.</li>
+            </ul>
+
+            <p>
+                Diferencia básica:
+            </p>
+            <ul>
+                <li><strong>Reader/Writer:</strong> texto (caracteres).</li>
+                <li><strong>InputStream/OutputStream:</strong> binario (bytes).</li>
+            </ul>
+
+            <h3>1.3. Errores típicos al trabajar con archivos</h3>
+            <div class="table-responsive">
+                <table class="styled-table">
+                    <thead>
+                        <tr>
+                            <th>Problema</th>
+                            <th>Qué pasa</th>
+                            <th>Cómo prevenir</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Archivo no existe</td>
+                            <td><code>FileNotFoundException</code></td>
+                            <td>Verificar con <code>Files.exists()</code> o crear antes</td>
+                        </tr>
+                        <tr>
+                            <td>Permisos insuficientes</td>
+                            <td><code>AccessDeniedException</code> (NIO)</td>
+                            <td>Elegir rutas permitidas / ejecutar con permisos</td>
+                        </tr>
+                        <tr>
+                            <td>Ruta mal escrita</td>
+                            <td>No se encuentra el archivo</td>
+                            <td>Usar <code>Paths.get()</code>, evitar concatenar strings</td>
+                        </tr>
+                        <tr>
+                            <td>No cerrar recursos</td>
+                            <td>Fugas/archivos bloqueados</td>
+                            <td>Usar <strong>try-with-resources</strong></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section id="ecosistema">
+            <h2>2. IO clásico vs NIO.2 (Files/Paths): dos enfoques para archivos</h2>
+            <p>
+                En Java existen dos “familias” populares para manejar archivos:
+            </p>
+            <ul>
+                <li><strong>java.io</strong> (IO clásico): FileReader, BufferedReader, FileWriter, etc.</li>
+                <li><strong>java.nio.file</strong> (NIO.2): Files, Paths, Path, StandardOpenOption (más moderno y cómodo).</li>
+            </ul>
+
+            <h3>2.1. Lectura de texto con IO clásico (BufferedReader)</h3>
+            <p>
+                El patrón típico para leer un archivo de texto línea por línea es:
+            </p>
+
+            <pre><code class="language-java">import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+
+public class LecturaIO {
+    public static void main(String[] args) {
+        String ruta = "data/notas.txt";
+
+        try (BufferedReader br = new BufferedReader(new FileReader(ruta))) {
+            String linea;
+            while ((linea = br.readLine()) != null) {
+                System.out.println(linea);
+            }
+        } catch (IOException ex) {
+            System.out.println("Error leyendo archivo: " + ex.getMessage());
+        }
+    }
+}</code></pre>
+
+            <p>
+                Puntos importantes:
+            </p>
+            <ul>
+                <li><strong>BufferedReader</strong> mejora rendimiento (lee por bloques, no carácter por carácter).</li>
+                <li><strong>try-with-resources</strong> cierra el recurso automáticamente.</li>
+                <li><strong>IOException</strong> cubre varios problemas de lectura.</li>
+            </ul>
+
+            <h3>2.2. Escritura de texto con IO clásico (FileWriter + BufferedWriter)</h3>
+            <p>
+                Para escribir texto, también se recomienda buffer:
+            </p>
+
+            <pre><code class="language-java">import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+
+public class EscrituraIO {
+    public static void main(String[] args) {
+        String ruta = "data/notas.txt";
+
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(ruta, true))) { // true = append
+            bw.write("Nueva línea guardada");
+            bw.newLine();
+        } catch (IOException ex) {
+            System.out.println("Error escribiendo archivo: " + ex.getMessage());
+        }
+    }
+}</code></pre>
+
+            <p>
+                Detalles clave:
+            </p>
+            <ul>
+                <li>El <code>FileWriter(ruta, true)</code> permite <strong>append</strong> (no sobrescribe; agrega al final).</li>
+                <li>Si no usas <code>true</code>, sobrescribe el archivo completo.</li>
+            </ul>
+
+            <h3>2.3. NIO.2: Files y Paths (forma moderna y muy práctica)</h3>
+            <p>
+                NIO.2 simplifica muchas tareas. Con <code>Paths.get()</code> obtienes un <code>Path</code> y con <code>Files</code>
+                haces operaciones comunes como leer todas las líneas, escribir, verificar existencia, crear carpetas, etc.
+            </p>
+
+            <h4>a) Verificar/crear carpeta</h4>
+            <pre><code class="language-java">import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
+public class CrearCarpeta {
+    public static void main(String[] args) {
+        Path carpeta = Paths.get("data");
+
+        try {
+            if (!Files.exists(carpeta)) {
+                Files.createDirectories(carpeta);
+                System.out.println("Carpeta creada: " + carpeta.toAbsolutePath());
+            } else {
+                System.out.println("Carpeta ya existe.");
+            }
+        } catch (IOException ex) {
+            System.out.println("No se pudo crear carpeta: " + ex.getMessage());
+        }
+    }
+}</code></pre>
+
+            <h4>b) Leer todas las líneas</h4>
+            <pre><code class="language-java">import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.List;
+
+public class LeerTodoNIO {
+    public static void main(String[] args) {
+        Path ruta = Paths.get("data/notas.txt");
+
+        try {
+            List&lt;String&gt; lineas = Files.readAllLines(ruta);
+            for (String l : lineas) {
+                System.out.println(l);
+            }
+        } catch (IOException ex) {
+            System.out.println("Error leyendo: " + ex.getMessage());
+        }
+    }
+}</code></pre>
+
+            <h4>c) Escribir líneas (sobrescribir o agregar)</h4>
+            <pre><code class="language-java">import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
+import java.util.Arrays;
+
+public class EscribirNIO {
+    public static void main(String[] args) {
+        Path ruta = Paths.get("data/notas.txt");
+
+        try {
+            Files.write(ruta,
+                    Arrays.asList("Línea 1", "Línea 2"),
+                    StandardOpenOption.CREATE,
+                    StandardOpenOption.APPEND);
+        } catch (IOException ex) {
+            System.out.println("Error escribiendo: " + ex.getMessage());
+        }
+    }
+}</code></pre>
+
+            <p>
+                Aquí:
+            </p>
+            <ul>
+                <li><code>CREATE</code>: crea el archivo si no existe.</li>
+                <li><code>APPEND</code>: agrega al final.</li>
+                <li>Si quisieras sobrescribir, usarías <code>TRUNCATE_EXISTING</code> o simplemente <code>Files.write(...)</code> sin APPEND.</li>
+            </ul>
+
+            <h3>2.4. Lectura/escritura binaria (noción básica)</h3>
+            <p>
+                Para archivos binarios (imágenes, PDFs, etc.), NIO.2 facilita leer y escribir bytes.
+                En este curso basta con comprender la idea:
+            </p>
+
+            <pre><code class="language-java">import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
+public class BinarioNIO {
+    public static void main(String[] args) {
+        Path origen = Paths.get("data/archivo.bin");
+        Path destino = Paths.get("data/copia.bin");
+
+        try {
+            byte[] bytes = Files.readAllBytes(origen);
+            Files.write(destino, bytes);
+            System.out.println("Copia binaria OK.");
+        } catch (IOException ex) {
+            System.out.println("Error: " + ex.getMessage());
+        }
+    }
+}</code></pre>
+
+            <p>
+                Para la mayoría de ejercicios académicos de POO, trabajarás principalmente con texto (CSV simple o líneas).
+            </p>
+        </section>
+
+        <section id="planificacion">
+            <h2>3. Patrones de uso y buenas prácticas para persistir datos</h2>
+            <p>
+                Leer y escribir archivos no es solo “hacer que funcione”. Lo importante es hacerlo de forma mantenible:
+                decidir un formato simple, separar responsabilidades (modelo vs persistencia), validar, y manejar errores sin dañar datos.
+            </p>
+
+            <h3>3.1. Formatos sencillos: líneas y CSV simple</h3>
+            <p>
+                Un formato muy usado en ejercicios es guardar cada registro en una línea, separando campos con coma (<strong>CSV simple</strong>).
+                Ejemplo de archivo <code>productos.csv</code>:
+            </p>
+
+            <blockquote class="definition-box">
+                P-01,Teclado,180000<br>
+                P-02,Mouse,95000<br>
+                P-03,Audífonos,120000
+            </blockquote>
+
+            <p>
+                Ventajas:
+            </p>
+            <ul>
+                <li>Fácil de leer y escribir sin librerías externas.</li>
+                <li>Se puede abrir en Excel.</li>
+                <li>Se puede parsear con <code>split(",")</code>.</li>
+            </ul>
+
+            <h3>3.2. Separar responsabilidades: Persistencia en una clase aparte</h3>
+            <p>
+                Evita poner lectura/escritura dentro del modelo <code>Producto</code>.
+                Lo más limpio es crear un componente responsable del archivo, por ejemplo:
+                <code>ProductoFileRepository</code> o <code>ArchivoProductos</code>.
+            </p>
+
+            <div class="comparison-cards">
+                <div class="card qc-card">
+                    <h3>Mala práctica</h3>
+                    <ul>
+                        <li><code>Producto</code> leyendo archivos y manejando rutas</li>
+                        <li>Mezcla responsabilidades</li>
+                        <li>Dificulta pruebas y mantenimiento</li>
+                    </ul>
+                </div>
+                <div class="card qa-card">
+                    <h3>Buena práctica</h3>
+                    <ul>
+                        <li>Modelo (Producto) separado de persistencia (ArchivoProductos)</li>
+                        <li>Código más claro y modular</li>
+                        <li>Fácil de cambiar el formato más adelante</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3>3.3. Ejemplo completo: guardar y cargar productos (CSV simple)</h3>
+
+            <h4>Modelo: Producto</h4>
+            <pre><code class="language-java">package com.corhuila.poo.semana13.model;
+
+public class Producto {
+    private String codigo;
+    private String nombre;
+    private double precio;
+
+    public Producto(String codigo, String nombre, double precio) {
+        if (codigo == null || codigo.trim().isEmpty()) {
+            throw new IllegalArgumentException("Código inválido.");
+        }
+        if (nombre == null || nombre.trim().isEmpty()) {
+            throw new IllegalArgumentException("Nombre inválido.");
+        }
+        if (precio &lt;= 0) {
+            throw new IllegalArgumentException("Precio inválido.");
+        }
+        this.codigo = codigo.trim().toUpperCase();
+        this.nombre = nombre.trim();
+        this.precio = precio;
+    }
+
+    public String getCodigo() { return codigo; }
+    public String getNombre() { return nombre; }
+    public double getPrecio() { return precio; }
+
+    public String toCsvLine() {
+        return codigo + "," + nombre + "," + precio;
+    }
+
+    public static Producto fromCsvLine(String line) {
+        String[] parts = line.split(",");
+        if (parts.length != 3) {
+            throw new IllegalArgumentException("Línea CSV inválida: " + line);
+        }
+        String codigo = parts[0].trim();
+        String nombre = parts[1].trim();
+        double precio = Double.parseDouble(parts[2].trim());
+        return new Producto(codigo, nombre, precio);
+    }
+
+    @Override
+    public String toString() {
+        return "Producto{codigo='" + codigo + "', nombre='" + nombre + "', precio=" + precio + "}";
+    }
+}</code></pre>
+
+            <h4>Persistencia: ArchivoProductos (NIO.2)</h4>
+            <pre><code class="language-java">package com.corhuila.poo.semana13.persistence;
+
+import com.corhuila.poo.semana13.model.Producto;
+
+import java.io.IOException;
+import java.nio.file.*;
+import java.util.ArrayList;
+import java.util.List;
+
+public class ArchivoProductos {
+    private final Path ruta;
+
+    public ArchivoProductos(String rutaRelativa) {
+        this.ruta = Paths.get(rutaRelativa);
+    }
+
+    public void asegurarDirectorio() throws IOException {
+        Path parent = ruta.getParent();
+        if (parent != null && !Files.exists(parent)) {
+            Files.createDirectories(parent);
+        }
+    }
+
+    public void guardar(List&lt;Producto&gt; productos) throws IOException {
+        asegurarDirectorio();
+        List&lt;String&gt; lineas = new ArrayList&lt;&gt;();
+        for (Producto p : productos) {
+            lineas.add(p.toCsvLine());
+        }
+        Files.write(ruta, lineas, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+    }
+
+    public List&lt;Producto&gt; cargar() throws IOException {
+        List&lt;Producto&gt; productos = new ArrayList&lt;&gt;();
+        if (!Files.exists(ruta)) {
+            return productos; // si no existe, devolvemos lista vacía (decisión de diseño)
+        }
+        List&lt;String&gt; lineas = Files.readAllLines(ruta);
+        for (String l : lineas) {
+            if (l == null || l.trim().isEmpty()) continue;
+            productos.add(Producto.fromCsvLine(l));
+        }
+        return productos;
+    }
+}</code></pre>
+
+            <h4>App: cargar, agregar y guardar</h4>
+            <pre><code class="language-java">package com.corhuila.poo.semana13.app;
+
+import com.corhuila.poo.semana13.model.Producto;
+import com.corhuila.poo.semana13.persistence.ArchivoProductos;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.ArrayList;
+
+public class App {
+    public static void main(String[] args) {
+        ArchivoProductos repo = new ArchivoProductos("data/productos.csv");
+
+        try {
+            List&lt;Producto&gt; productos = repo.cargar();
+            System.out.println("Productos cargados: " + productos.size());
+
+            // Si está vacío, agregamos algunos
+            if (productos.isEmpty()) {
+                productos = new ArrayList&lt;&gt;();
+                productos.add(new Producto("P-01", "Teclado", 180000));
+                productos.add(new Producto("P-02", "Mouse", 95000));
+            }
+
+            // Agregar uno nuevo
+            productos.add(new Producto("P-03", "Audífonos", 120000));
+
+            // Guardar
+            repo.guardar(productos);
+
+            System.out.println("Guardado OK. Total productos: " + productos.size());
+            for (Producto p : productos) {
+                System.out.println(" - " + p);
+            }
+
+        } catch (IOException ex) {
+            System.out.println("Error de archivo: " + ex.getMessage());
+        } catch (Exception ex) {
+            System.out.println("Error de datos: " + ex.getMessage());
+        }
+    }
+}</code></pre>
+
+            <p>
+                Este ejemplo muestra un patrón realista: persistencia en archivo, formato simple, manejo de errores separado
+                (archivo vs datos).
+            </p>
+
+            <h3>3.4. Buenas prácticas recomendadas</h3>
+            <div class="strategy-grid">
+                <div class="strategy-box qa-box">
+                    <h5>Haz esto</h5>
+                    <ul>
+                        <li>Usa rutas relativas (ej. carpeta <code>data/</code>) para portabilidad.</li>
+                        <li>Usa <strong>try-with-resources</strong> en IO clásico o <code>Files</code> en NIO.2.</li>
+                        <li>Separa modelo vs persistencia (clase “repo/archivo”).</li>
+                        <li>Define un formato simple y consistente (líneas o CSV).</li>
+                        <li>Maneja errores: archivo (IO) y datos (parseo) por separado.</li>
+                    </ul>
+                </div>
+                <div class="strategy-box qc-box">
+                    <h5>Evita esto</h5>
+                    <ul>
+                        <li>Concatenar rutas a mano con <code>\"\\\"</code> o <code>\"/\"</code> (mejor <code>Paths.get</code>).</li>
+                        <li>No cerrar recursos (o confiar en el GC).</li>
+                        <li>Guardar datos sin validarlos (corrompe el archivo).</li>
+                        <li>Capturar <code>Exception</code> y no hacer nada (oculta errores).</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <hr class="divider-thick">
+
+        <section id="foro" class="case-study-section">
+            <div class="case-header">
+                <h2>Actividad práctica de la semana (no obligatoria)</h2>
+            </div>
+
+            <div class="scenario-box">
+                <h4>1. Contexto</h4>
+                <p>
+                    Vas a ampliar el mini-sistema de inventario de semanas anteriores para que los productos se guarden en un archivo.
+                    El sistema deberá <strong>cargar</strong> productos al iniciar y <strong>guardar</strong> al final, usando un formato CSV simple.
+                    El objetivo es demostrar persistencia básica: que los datos no se pierdan al cerrar el programa.
+                </p>
+                <ol>
+                    <li>Crear o reutilizar la clase <strong>Producto</strong>.</li>
+                    <li>Crear la clase <strong>ArchivoProductos</strong> con métodos <code>cargar()</code> y <code>guardar(lista)</code>.</li>
+                    <li>En <strong>App</strong>, cargar el archivo al inicio, mostrar productos, agregar uno nuevo y guardar.</li>
+                    <li>Manejar errores: si el archivo no existe, iniciar con lista vacía y crear al guardar.</li>
+                    <li>Probar ejecutando dos veces: la segunda ejecución debe mostrar datos guardados.</li>
+                </ol>
+            </div>
+
+            <h3>2. Requerimientos del ejercicio</h3>
+            <div class="table-responsive">
+                <table class="styled-table">
+                    <thead>
+                        <tr>
+                            <th>Elemento</th>
+                            <th>Requisito</th>
+                            <th>Reglas sugeridas</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Archivo</strong></td>
+                            <td>Ruta: <code>data/productos.csv</code></td>
+                            <td>Crear carpeta si no existe</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Formato</strong></td>
+                            <td>CSV simple: <code>codigo,nombre,precio</code> por línea</td>
+                            <td>Ignorar líneas vacías</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Persistencia</strong></td>
+                            <td><code>cargar()</code> devuelve lista; <code>guardar()</code> sobrescribe el archivo</td>
+                            <td>Usar <code>TRUNCATE_EXISTING</code> o equivalente</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Manejo de errores</strong></td>
+                            <td>Si el archivo no existe, iniciar con lista vacía</td>
+                            <td>No romper el programa por ese caso</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Prueba</strong></td>
+                            <td>Ejecutar 2 veces y evidenciar que los datos permanecen</td>
+                            <td>Capturas o salida en consola</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>3. Entregables</h3>
+            <div class="table-responsive">
+                <table class="styled-table">
+                    <thead>
+                        <tr>
+                            <th>Entregable</th>
+                            <th>Qué incluye</th>
+                            <th>Formato sugerido</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Código fuente</strong></td>
+                            <td>Clases + App ejecutable con lectura y escritura de archivo.</td>
+                            <td>.zip o repositorio</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Archivo generado</strong></td>
+                            <td>Archivo <code>data/productos.csv</code> con al menos 4 productos.</td>
+                            <td>Adjunto o captura</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Salida en consola</strong></td>
+                            <td>Antes (cargar) y después (guardar) + listado.</td>
+                            <td>Texto o captura</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Explicación breve</strong></td>
+                            <td>
+                                12–18 líneas: ¿por qué usar ruta relativa? ¿cómo separaste modelo y persistencia?
+                                ¿cómo manejaste el caso de archivo inexistente?
+                            </td>
+                            <td>Texto / Markdown</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="reflection-box">
+                <h4>Criterios de evaluación (referencia)</h4>
+                <p>
+                    Se revisará: (1) uso correcto de IO (preferiblemente NIO.2), (2) try-with-resources o cierre correcto,
+                    (3) formato consistente, (4) manejo del caso “archivo no existe”, (5) modularización (modelo vs persistencia).
+                </p>
+            </div>
+
+           
+        </section>
+
+    </main>
+
+    <footer class="main-footer">
+        <div class="container">
+            <p>Material docente para: Programación Orientada a Objetos</p>
+            <p>Semana 13 · Lectura y escritura de archivos en Java · Ingeniería Mecatrónica</p>
+            <p>© 2026 CORHUILA</p>
+        </div>
+    </footer>
+
+    <button id="scrollTopBtn" title="Volver arriba">↑</button>
+
+    <script src="js/script.js"></script>
+</body>
+</html>

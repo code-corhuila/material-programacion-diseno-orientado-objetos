@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Semana 1: Fundamentos y planificación de proyectos móviles | Programación Móvil</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <header class="main-header">
+        <div class="top-bar">
+            <div class="container brand-container">
+                <span class="brand-name">Programación Móvil</span><br>
+                <span class="brand-name">Semana 1: Fundamentos y planificación de proyectos móviles</span>
+            </div>
+        </div>
+
+        <!-- IMPORTANTE: 5 links = 5 secciones (para que el JS marque bien el activo) -->
+        <nav class="main-nav">
+            <div class="container">
+                <ul>
+                    <li><a href="#introduccion" class="active">Inicio</a></li>
+                    <li><a href="#fundamentos">Fundamentos</a></li>
+                    <li><a href="#ecosistema">Ecosistema móvil</a></li>
+                    <li><a href="#planificacion">Planificación</a></li>
+                    <li><a href="#foro" >Actividad Práctica</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container main-content">
+
+        <section id="introduccion" class="hero-section">
+            <h1>Semana 1: Fundamentos y planificación de proyectos móviles</h1>
+            <p class="lead">
+                En esta primera semana construiremos el “mapa del territorio”: qué es una app móvil, cómo se organiza un proyecto,
+                qué decisiones clave se toman al inicio y cómo planificar un MVP (producto mínimo viable) con enfoque ágil.
+            </p>
+        </section>
+
+        <hr class="divider">
+
+        <section id="fundamentos">
+            <h2>1. Fundamentos del desarrollo móvil</h2>
+            <p>
+                Antes de programar pantallas o conectar servicios, necesitamos un lenguaje común sobre
+                <strong>apps móviles, plataformas, frameworks, APIs y ciclo de vida de desarrollo</strong>.
+            </p>
+
+            <blockquote class="definition-box">
+                <strong>Aplicación móvil:</strong> software diseñado para ejecutarse en dispositivos móviles (Android/iOS),
+                que interactúa con hardware (sensores, cámara, GPS) y servicios (internet, APIs).<br>
+                <strong>Proyecto móvil:</strong> proceso planificado para construir una app (producto) con objetivos,
+                alcance, entregables, recursos y fechas, usando una metodología (ágil o tradicional).
+            </blockquote>
+
+            <p>
+                Un proyecto móvil normalmente combina varios componentes: interfaz (UI), lógica (negocio),
+                consumo de servicios (APIs), almacenamiento local y publicación en tiendas (release).
+            </p>
+
+            <h3>1.1. Componentes típicos de una app móvil</h3>
+            <div class="table-responsive">
+                <table class="styled-table">
+                    <thead>
+                        <tr>
+                            <th>Componente</th>
+                            <th>¿Qué hace?</th>
+                            <th>Ejemplo en una app universitaria</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Interfaz (UI)</strong></td>
+                            <td>Pantallas, navegación, formularios, diseño responsive.</td>
+                            <td>Login, listado de eventos, detalle del evento.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Lógica de negocio</strong></td>
+                            <td>Reglas, validaciones, estado, flujos.</td>
+                            <td>Validar cupos, confirmar inscripción, generar ticket.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Consumo de APIs</strong></td>
+                            <td>Comunicación con backend (REST/GraphQL) y servicios externos.</td>
+                            <td>Consultar eventos, registrar asistencia, notificar cambios.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Almacenamiento local</strong></td>
+                            <td>Persistencia offline/caché (SQLite, preferencias, archivos).</td>
+                            <td>Guardar sesión, eventos favoritos, datos sin conexión.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Release y distribución</strong></td>
+                            <td>Empaquetado, firmas, versiones, publicación.</td>
+                            <td>Subir APK/AAB o IPA a tienda, notas de versión.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>1.2. Roles clave en un proyecto móvil</h3>
+            <div class="comparison-cards">
+                <div class="card qa-card">
+                    <h3>Equipo de producto</h3>
+                    <ul>
+                        <li><strong>Product Owner / Cliente:</strong> define objetivos, alcance y prioridades.</li>
+                        <li><strong>UX/UI:</strong> diseña flujos, prototipos, interacción y accesibilidad.</li>
+                        <li><strong>Enfoque:</strong> valor para el usuario, claridad del alcance, experiencia.</li>
+                    </ul>
+                </div>
+                <div class="card qc-card">
+                    <h3>Equipo técnico</h3>
+                    <ul>
+                        <li><strong>Desarrollo:</strong> construye la app, integra APIs, maneja estados y pantallas.</li>
+                        <li><strong>QA:</strong> prueba funcionalidades, rendimiento, compatibilidad y errores.</li>
+                        <li><strong>Enfoque:</strong> calidad, estabilidad, seguridad y entrega continua.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="ecosistema">
+            <h2>2. Ecosistema móvil: nativo, híbrido y PWA</h2>
+            <p>
+                Una de las primeras decisiones del proyecto es el enfoque tecnológico. No hay una “mejor” opción universal:
+                depende del presupuesto, tiempos, equipo y necesidades (GPS, cámara, rendimiento, offline, etc.).
+            </p>
+
+            <div class="table-responsive">
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Aspecto</th>
+                            <th>Nativo (Android/iOS)</th>
+                            <th>Híbrido (Flutter/React Native/Ionic)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Rendimiento</strong></td>
+                            <td>Muy alto (acceso directo a SDKs).</td>
+                            <td>Alto (depende del framework y del caso).</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Tiempo de desarrollo</strong></td>
+                            <td>Mayor (2 bases de código si es multi-plataforma).</td>
+                            <td>Menor (una base de código para Android e iOS).</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Acceso a hardware</strong></td>
+                            <td>Completo y más estable.</td>
+                            <td>Muy bueno; a veces requiere plugins/bridges.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Mantenimiento</strong></td>
+                            <td>Separado por plataforma.</td>
+                            <td>Centralizado en gran medida.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Casos recomendados</strong></td>
+                            <td>Apps críticas, alto rendimiento, UX nativa específica.</td>
+                            <td>Apps de negocio, prototipos rápidos, equipos web.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+           
+        </section>
+
+        <section id="planificacion">
+            <h2>3. Planificación de proyectos móviles (enfoque ágil)</h2>
+            <p>
+                Planificar no es “adivinar el futuro”, sino crear un plan flexible que permita entregar valor pronto
+                y aprender rápido. En móvil, el alcance suele crecer, por eso el <strong>MVP</strong> y el backlog son esenciales.
+            </p>
+
+            <h3>3.1. Artefactos mínimos para iniciar bien</h3>
+            <div class="table-responsive">
+                <table class="styled-table">
+                    <thead>
+                        <tr>
+                            <th>Artefacto</th>
+                            <th>¿Para qué sirve?</th>
+                            <th>Ejemplo (App universitaria)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Objetivo del producto</strong></td>
+                            <td>Alinea al equipo con el “para qué”.</td>
+                            <td>Facilitar inscripción y asistencia a eventos con QR.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Alcance + fuera de alcance</strong></td>
+                            <td>Evita “meter de todo” desde el inicio.</td>
+                            <td>Incluye: eventos + QR. No incluye: pagos en la semana 1.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>User stories</strong></td>
+                            <td>Define necesidades desde el punto de vista del usuario.</td>
+                            <td>“Como estudiante, quiero ver eventos por fecha para planear.”</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Prototipo (wireframe)</strong></td>
+                            <td>Valida flujo antes de programar.</td>
+                            <td>Login → Home → Detalle evento → Inscripción.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>MVP</strong></td>
+                            <td>Primera versión funcional con valor real.</td>
+                            <td>Ver eventos + inscribirse + QR de asistencia.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>3.2. Estrategias de planificación (rápidas y útiles)</h3>
+            <div class="strategy-grid">
+                <div class="strategy-box qa-box">
+                    <h5>Planificación ágil (recomendada)</h5>
+                    <ul>
+                        <li><strong>Backlog:</strong> lista priorizada de historias.</li>
+                        <li><strong>Sprints:</strong> entregas cortas (1–2 semanas).</li>
+                        <li><strong>Revisión:</strong> mostrar avances y ajustar.</li>
+                        <li><strong>Métrica:</strong> valor entregado + feedback.</li>
+                    </ul>
+                </div>
+                <div class="strategy-box qc-box">
+                    <h5>Control de riesgos desde el inicio</h5>
+                    <ul>
+                        <li><strong>Riesgo técnico:</strong> cámara/GPS/offline → prototipo temprano.</li>
+                        <li><strong>Riesgo de alcance:</strong> definir “fuera de alcance”.</li>
+                        <li><strong>Riesgo de tiempo:</strong> MVP realista + priorización MoSCoW.</li>
+                        <li><strong>Riesgo de calidad:</strong> pruebas básicas por feature.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <hr class="divider-thick">
+<section id="foro" class="case-study-section">
+  <div class="case-header">
+    <h2>Actividad práctica de la semana</h2>
+  </div>
+
+  <div class="scenario-box">
+    <h4>1. Contexto</h4>
+    <p>
+      Durante el curso desarrollarás un <strong>proyecto móvil</strong> para entregar al final. En esta primera semana
+      no vas a programar todavía: vas a <strong>definir la base</strong> del proyecto para evitar problemas de alcance,
+      falta de claridad y cambios innecesarios más adelante.
+    </p>
+    <ol>
+      <li>Elige una idea de aplicación (problema real + usuarios claros).</li>
+      <li>Define el <strong>MVP</strong> (mínimo funcional viable) y lo que queda <strong>fuera de alcance</strong>.</li>
+      <li>Identifica riesgos iniciales y una ruta de trabajo simple por semanas.</li>
+    </ol>
+  </div>
+
+  <h3>2. Entregables</h3>
+  <div class="table-responsive">
+    <table class="styled-table">
+      <thead>
+        <tr>
+          <th>Entregable</th>
+          <th>Qué incluye</th>
+          <th>Formato sugerido</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Mapa del Proyecto (1 página)</strong></td>
+          <td>Problema, usuarios, objetivo, propuesta de valor y alcance general.</td>
+          <td>PDF / Documento / Markdown</td>
+        </tr>
+        <tr>
+          <td><strong>MVP + Fuera de alcance</strong></td>
+          <td>3–6 funcionalidades del MVP + 3 funcionalidades que NO se harán aún.</td>
+          <td>Lista / Tabla</td>
+        </tr>
+        <tr>
+          <td><strong>Top 5 funcionalidades</strong></td>
+          <td>Priorización simple (Must/Should/Could) para orientar el trabajo.</td>
+          <td>Lista</td>
+        </tr>
+        <tr>
+          <td><strong>Riesgos iniciales</strong></td>
+          <td>3 riesgos (técnicos o de alcance) + cómo los mitigarías.</td>
+          <td>Tabla</td>
+        </tr>
+        <tr>
+          <td><strong>Ruta de trabajo (muy básica)</strong></td>
+          <td>Plan de 4 semanas: qué lograrás cada semana (alto nivel).</td>
+          <td>Tabla / Lista</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="reflection-box">
+    <h4>Criterios de evaluación</h4>
+    <p>
+      Esta actividad práctica no es obligatoria...
+    </p>
+  </div>
+
+  <h3>3. Plantillas rápidas</h3>
+
+  <h4>3.1. Mapa del proyecto (plantilla)</h4>
+  <blockquote class="definition-box">
+    <strong>Nombre del proyecto:</strong> …<br>
+    <strong>Problema que resuelve:</strong> …<br>
+    <strong>Usuarios objetivo:</strong> …<br>
+    <strong>Objetivo:</strong> …<br>
+    <strong>Propuesta de valor (1 frase):</strong> …<br>
+    <strong>Plataforma objetivo:</strong> Android / iOS / Ambas<br>
+  </blockquote>
+
+  <h4>3.2. MVP y fuera de alcance (plantilla)</h4>
+  <div class="table-responsive">
+    <table class="comparison-table">
+      <thead>
+        <tr>
+          <th>MVP (se hace)</th>
+          <th>Fuera de alcance (no se hace aún)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Funcionalidad 1</td>
+          <td>Funcionalidad A</td>
+        </tr>
+        <tr>
+          <td>Funcionalidad 2</td>
+          <td>Funcionalidad B</td>
+        </tr>
+        <tr>
+          <td>Funcionalidad 3</td>
+          <td>Funcionalidad C</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h4>3.3. Riesgos y mitigación (plantilla)</h4>
+  <div class="table-responsive">
+    <table class="styled-table">
+      <thead>
+        <tr>
+          <th>Riesgo</th>
+          <th>Tipo</th>
+          <th>Mitigación</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Ej: Alcance muy grande</td>
+          <td>Alcance</td>
+          <td>Definir MVP y dejar extras fuera de alcance.</td>
+        </tr>
+        <tr>
+          <td>Ej: Uso de cámara/GPS</td>
+          <td>Técnico</td>
+          <td>Probar permiso y prototipo temprano.</td>
+        </tr>
+        <tr>
+          <td>Ej: Tiempo limitado</td>
+          <td>Gestión</td>
+          <td>Priorizar Must y planificar por entregas semanales.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+
+    </main>
+
+    <footer class="main-footer">
+        <div class="container">
+            <p>Material docente para: Programación Móvil</p>
+            <p>Semana 1 · Fundamentos y planificación de proyectos móviles · Ingeniería de Sistemas</p>
+            <p>© 2026 CORHUILA</p>
+        </div>
+    </footer>
+
+    <button id="scrollTopBtn" title="Volver arriba">↑</button>
+
+    <script src="js/script.js"></script>
+</body>
+</html>

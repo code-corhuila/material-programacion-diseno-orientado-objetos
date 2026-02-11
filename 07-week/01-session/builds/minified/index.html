@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Semana 7: Polimorfismo y sobreescritura de métodos | Programación Orientada a Objetos</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <header class="main-header">
+        <div class="top-bar">
+            <div class="container brand-container">
+                <span class="brand-name">Programación Orientada a Objetos</span><br>
+                <span class="brand-name">Semana 7: Polimorfismo y sobreescritura de métodos</span>
+            </div>
+        </div>
+
+        <!-- IMPORTANTE: 5 links = 5 secciones (para que el JS marque bien el activo) -->
+        <nav class="main-nav">
+            <div class="container">
+                <ul>
+                    <li><a href="#introduccion" class="active">Inicio</a></li>
+                    <li><a href="#fundamentos">Polimorfismo</a></li>
+                    <li><a href="#ecosistema">Sobreescritura</a></li>
+                    <li><a href="#planificacion">Diseño y buenas prácticas</a></li>
+                    <li><a href="#foro">Actividad Práctica</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container main-content">
+
+        <section id="introduccion" class="hero-section">
+            <h1>Semana 7: Polimorfismo y sobreescritura de métodos</h1>
+            <p class="lead">
+                En esta semana aprenderás a construir sistemas flexibles y extensibles usando <strong>polimorfismo</strong>:
+                la capacidad de tratar objetos de distintas clases como si fueran del mismo tipo base, mientras cada uno
+                responde de forma diferente. Para lograrlo en Java, dominarás la <strong>sobreescritura de métodos</strong>
+                con <code>@Override</code> y entenderás qué ocurre realmente cuando un método se ejecuta en tiempo de ejecución.
+            </p>
+        </section>
+
+        <hr class="divider">
+
+        <section id="fundamentos">
+            <h2>1. Polimorfismo: “un mismo tipo, múltiples comportamientos”</h2>
+            <p>
+                El polimorfismo es un pilar central de la POO. La idea es que una referencia de un tipo base
+                (por ejemplo, una clase padre) pueda apuntar a objetos de clases hijas, y que al invocar un método
+                se ejecute el comportamiento correspondiente al objeto real.
+            </p>
+
+            <blockquote class="definition-box">
+                <strong>Polimorfismo:</strong> capacidad de usar una referencia de un tipo general (padre)
+                para trabajar con objetos de tipos específicos (hijos), permitiendo que un mismo método
+                se comporte de formas distintas según el objeto real.
+            </blockquote>
+
+            <h3>1.1. ¿Qué se gana con polimorfismo?</h3>
+            <p>
+                Principalmente: <strong>código más genérico</strong>, <strong>menos duplicación</strong> y <strong>facilidad para extender</strong>
+                el sistema. En vez de hacer condicionales enormes (<code>if</code>/<code>switch</code>) por cada tipo, delegas el comportamiento
+                al objeto correcto.
+            </p>
+
+            <div class="table-responsive">
+                <table class="styled-table">
+                    <thead>
+                        <tr>
+                            <th>Problema típico</th>
+                            <th>Sin polimorfismo</th>
+                            <th>Con polimorfismo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Procesar varios tipos de pago</td>
+                            <td><code>if(tipo == "TARJETA")...</code></td>
+                            <td><code>pago.procesar()</code> y cada pago define su lógica</td>
+                        </tr>
+                        <tr>
+                            <td>Calcular área de figuras</td>
+                            <td><code>switch(tipoFigura)</code></td>
+                            <td><code>figura.area()</code> y cada figura la calcula</td>
+                        </tr>
+                        <tr>
+                            <td>Mostrar resumen por tipo</td>
+                            <td>Muchos <code>if</code> con casts</td>
+                            <td><code>obj.resumen()</code> y cada clase lo adapta</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>1.2. Polimorfismo en Java: referencia padre apuntando a objeto hijo</h3>
+            <p>
+                Este es el caso más importante y el que usarás constantemente:
+            </p>
+            <pre><code class="language-java">TipoPadre ref = new TipoHijo();</code></pre>
+
+            <p>
+                La referencia es del tipo padre, pero el objeto real es del tipo hijo. Esto permite almacenar distintos hijos
+                en una misma lista del tipo base, por ejemplo: <code>List&lt;Vehiculo&gt;</code> con carros y motos.
+            </p>
+
+            <h3>1.3. Ejemplo base: Figura → Círculo y Rectángulo</h3>
+            <p>
+                Usaremos un ejemplo clásico porque muestra polimorfismo con mucha claridad: diferentes figuras calculan su área
+                de forma distinta, pero todas se “tratan” como <code>Figura</code>.
+            </p>
+
+            <h4>Clase base: Figura</h4>
+            <pre><code class="language-java">package com.corhuila.poo.semana7;
+
+public class Figura {
+    public double area() {
+        // Implementación por defecto (genérica).
+        // En la práctica, esta lógica será redefinida por las subclases.
+        return 0;
+    }
+
+    public String nombre() {
+        return "Figura";
+    }
+}</code></pre>
+
+            <p>
+                Nota: hoy no profundizamos en clases abstractas (eso puede venir después). Por eso usamos una implementación base simple.
+                Lo importante aquí es la idea de “método que podrá comportarse distinto”.
+            </p>
+
+            <h4>Subclase: Circulo</h4>
+            <pre><code class="language-java">package com.corhuila.poo.semana7;
+
+public class Circulo extends Figura {
+    private double radio;
+
+    public Circulo(double radio) {
+        if (radio &lt;= 0) {
+            throw new IllegalArgumentException("El radio debe ser mayor a 0.");
+        }
+        this.radio = radio;
+    }
+
+    @Override
+    public double area() {
+        return Math.PI * radio * radio;
+    }
+
+    @Override
+    public String nombre() {
+        return "Círculo";
+    }
+}</code></pre>
+
+            <h4>Subclase: Rectangulo</h4>
+            <pre><code class="language-java">package com.corhuila.poo.semana7;
+
+public class Rectangulo extends Figura {
+    private double base;
+    private double altura;
+
+    public Rectangulo(double base, double altura) {
+        if (base &lt;= 0 || altura &lt;= 0) {
+            throw new IllegalArgumentException("Base y altura deben ser mayores a 0.");
+        }
+        this.base = base;
+        this.altura = altura;
+    }
+
+    @Override
+    public double area() {
+        return base * altura;
+    }
+
+    @Override
+    public String nombre() {
+        return "Rectángulo";
+    }
+}</code></pre>
+
+            <p>
+                Aquí aparece el corazón del tema: <strong>misma firma de método</strong> (<code>area()</code> y <code>nombre()</code>),
+                pero cada clase lo resuelve distinto.
+            </p>
+        </section>
+
+        <section id="ecosistema">
+            <h2>2. Sobreescritura de métodos (Override): “cambiar el comportamiento heredado”</h2>
+            <p>
+                La <strong>sobreescritura</strong> (override) ocurre cuando una subclase redefine un método heredado del padre
+                manteniendo el mismo nombre, parámetros y tipo de retorno (compatible). Esto permite que el método sea “polimórfico”.
+            </p>
+
+            <blockquote class="definition-box">
+                <strong>Sobreescritura (Override):</strong> redefinir un método heredado en una subclase con la misma firma.<br>
+                Se recomienda usar <code>@Override</code> para que el compilador valide que realmente estás sobrescribiendo.
+            </blockquote>
+
+            <h3>2.1. ¿Qué valida <code>@Override</code>?</h3>
+            <p>
+                <code>@Override</code> es una anotación que ayuda a evitar errores. Por ejemplo, si escribes mal el nombre del método o los parámetros,
+                Java te avisará que no estás sobrescribiendo nada.
+            </p>
+
+            <div class="strategy-grid">
+                <div class="strategy-box qa-box">
+                    <h5>Ventajas de usar @Override</h5>
+                    <ul>
+                        <li>Evita errores por typos (por ejemplo <code>areaa()</code>).</li>
+                        <li>Evita cambios de firma accidental (parámetros distintos).</li>
+                        <li>Hace el código más legible: deja claro que estás redefiniendo comportamiento.</li>
+                    </ul>
+                </div>
+                <div class="strategy-box qc-box">
+                    <h5>Errores comunes sin @Override</h5>
+                    <ul>
+                        <li>Crear un método “nuevo” sin querer (no sobrescribe al del padre).</li>
+                        <li>Luego, cuando llamas desde referencia padre, se ejecuta el del padre y no entiendes por qué.</li>
+                        <li>El bug se vuelve difícil de detectar.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3>2.2. Despacho dinámico: ¿qué método se ejecuta realmente?</h3>
+            <p>
+                En polimorfismo, Java decide qué método ejecutar en <strong>tiempo de ejecución</strong> según el tipo real del objeto,
+                no según el tipo de la referencia.
+            </p>
+
+            <blockquote class="definition-box">
+                <strong>Despacho dinámico:</strong> cuando llamas <code>ref.area()</code>, Java busca el método sobrescrito en la clase real
+                del objeto apuntado por <code>ref</code>.
+            </blockquote>
+
+            <h3>2.3. Ejemplo práctico: lista de Figura con objetos diferentes</h3>
+            <p>
+                Aquí verás el polimorfismo “en acción”: una lista de <code>Figura</code> contiene diferentes subtipos, pero el método
+                invocado se resuelve correctamente en cada caso.
+            </p>
+
+            <pre><code class="language-java">package com.corhuila.poo.semana7;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class App {
+    public static void main(String[] args) {
+        List&lt;Figura&gt; figuras = new ArrayList&lt;&gt;();
+
+        figuras.add(new Circulo(3));
+        figuras.add(new Rectangulo(4, 2));
+        figuras.add(new Circulo(1.5));
+
+        for (Figura f : figuras) {
+            System.out.println(f.nombre() + " - área: " + f.area());
+        }
+    }
+}</code></pre>
+
+            <p>
+                Aunque el tipo de <code>f</code> en el ciclo es <code>Figura</code>, se ejecuta el <code>area()</code> de <code>Circulo</code>
+                o <code>Rectangulo</code> según corresponda.
+            </p>
+
+            <h3>2.4. Diferencia importante: Sobrecarga vs Sobreescritura</h3>
+            <p>
+                Muchas personas confunden estos conceptos. Debes tenerlos claros:
+            </p>
+
+            <div class="table-responsive">
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Concepto</th>
+                            <th>Qué es</th>
+                            <th>Cuándo ocurre</th>
+                            <th>Ejemplo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Sobrecarga (Overload)</strong></td>
+                            <td>Mismo nombre, diferentes parámetros</td>
+                            <td>En la misma clase (o heredado), en compilación</td>
+                            <td><code>imprimir()</code>, <code>imprimir(String)</code></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Sobreescritura (Override)</strong></td>
+                            <td>Misma firma, redefinición en subclase</td>
+                            <td>Entre padre e hijo, en ejecución</td>
+                            <td><code>area()</code> en <code>Circulo</code></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section id="planificacion">
+            <h2>3. Diseño y buenas prácticas con polimorfismo</h2>
+            <p>
+                El polimorfismo es poderoso, pero requiere buen diseño. Aquí aprenderás cuándo usarlo, cómo evitar código frágil
+                y qué prácticas te hacen escribir POO más limpia.
+            </p>
+
+            <h3>3.1. Evitar condicionales por tipo (anti-patrón)</h3>
+            <p>
+                Un síntoma de mal diseño es tener muchas condiciones preguntando por el tipo:
+                <code>if (obj instanceof Circulo) ...</code>. A veces es inevitable, pero en general se considera un anti-patrón.
+                Lo correcto es que cada objeto “sepa” cómo comportarse.
+            </p>
+
+            <div class="comparison-cards">
+                <div class="card qc-card">
+                    <h3>Mal enfoque</h3>
+                    <ul>
+                        <li>Muchos <code>if</code> o <code>switch</code> por tipo.</li>
+                        <li>Cuando agregas una nueva subclase, debes modificar el código central.</li>
+                        <li>Alta probabilidad de errores al crecer.</li>
+                    </ul>
+                </div>
+                <div class="card qa-card">
+                    <h3>Buen enfoque</h3>
+                    <ul>
+                        <li>Un método común en el padre (mismo nombre).</li>
+                        <li>Cada subclase lo implementa según su necesidad.</li>
+                        <li>Agregar una nueva subclase no rompe el código existente.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3>3.2. Reglas de la sobreescritura en Java (las que sí debes recordar)</h3>
+            <div class="table-responsive">
+                <table class="styled-table">
+                    <thead>
+                        <tr>
+                            <th>Regla</th>
+                            <th>Qué significa</th>
+                            <th>Ejemplo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Misma firma</strong></td>
+                            <td>Nombre y parámetros deben coincidir.</td>
+                            <td><code>area()</code> en padre e hijo</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Retorno compatible</strong></td>
+                            <td>Puede ser el mismo o uno compatible (covariante).</td>
+                            <td><code>Figura</code> → <code>Circulo</code> (avanzado)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>No reduce visibilidad</strong></td>
+                            <td>No puedes hacer un método <code>public</code> en padre y <code>private</code> en hijo.</td>
+                            <td>De <code>public</code> a <code>protected/public</code> sí, a <code>private</code> no.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Usar @Override</strong></td>
+                            <td>Recomendado siempre para evitar errores.</td>
+                            <td><code>@Override</code> sobre el método</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>3.3. Buenas prácticas para este tema</h3>
+            <div class="strategy-grid">
+                <div class="strategy-box qa-box">
+                    <h5>Haz esto</h5>
+                    <ul>
+                        <li>Define un método común en la clase base con un propósito claro.</li>
+                        <li>Sobrescribe ese método en cada subclase con <code>@Override</code>.</li>
+                        <li>Trabaja con listas del tipo base para aprovechar polimorfismo.</li>
+                        <li>Mantén responsabilidades claras por clase.</li>
+                    </ul>
+                </div>
+                <div class="strategy-box qc-box">
+                    <h5>Evita esto</h5>
+                    <ul>
+                        <li>Llenar el código de <code>instanceof</code> para decidir comportamientos.</li>
+                        <li>Crear jerarquías solo para “usar polimorfismo” sin razón.</li>
+                        <li>Sobrescribir métodos sin respetar reglas de validación del dominio.</li>
+                        <li>Usar nombres de métodos diferentes en cada subclase (rompe el objetivo).</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <hr class="divider-thick">
+
+        <section id="foro" class="case-study-section">
+            <div class="case-header">
+                <h2>Actividad práctica de la semana (no obligatoria)</h2>
+            </div>
+
+            <div class="scenario-box">
+                <h4>1. Contexto</h4>
+                <p>
+                    Vas a construir un mini-sistema para calcular el costo de envío de diferentes tipos de paquetes usando polimorfismo.
+                    Todos los envíos comparten información base, pero cada tipo calcula el costo de manera distinta.
+                    El objetivo es evitar condicionales por tipo y permitir que cada clase implemente su lógica mediante
+                    <strong>sobreescritura</strong>.
+                </p>
+                <ol>
+                    <li>Crear una clase base <strong>Envio</strong> con método <code>calcularCosto()</code>.</li>
+                    <li>Crear al menos 3 subclases: <strong>EnvioEstandar</strong>, <strong>EnvioExpress</strong>, <strong>EnvioInternacional</strong>.</li>
+                    <li>Sobrescribir <code>calcularCosto()</code> en cada subclase con <code>@Override</code>.</li>
+                    <li>En <strong>App</strong>, crear una lista de <code>Envio</code> y sumar costos polimórficamente.</li>
+                </ol>
+            </div>
+
+            <h3>2. Requerimientos del ejercicio</h3>
+            <div class="table-responsive">
+                <table class="styled-table">
+                    <thead>
+                        <tr>
+                            <th>Clase</th>
+                            <th>Debe incluir</th>
+                            <th>Reglas sugeridas</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Envio (base)</strong></td>
+                            <td>
+                                Atributos privados: <code>codigo</code>, <code>pesoKg</code>.<br>
+                                Constructor + getters/setters con validaciones.<br>
+                                Método <code>calcularCosto()</code> (base) y <code>resumen()</code>.
+                            </td>
+                            <td>Peso &gt; 0, código no vacío.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>EnvioEstandar</strong></td>
+                            <td>Sobrescribir <code>calcularCosto()</code>.</td>
+                            <td>Costo = 8000 + (pesoKg * 2000)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>EnvioExpress</strong></td>
+                            <td>Sobrescribir <code>calcularCosto()</code>.</td>
+                            <td>Costo = 15000 + (pesoKg * 3500)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>EnvioInternacional</strong></td>
+                            <td>
+                                Atributo adicional: <code>paisDestino</code>.<br>
+                                Sobrescribir <code>calcularCosto()</code>.
+                            </td>
+                            <td>Costo = 30000 + (pesoKg * 6000)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>App</strong></td>
+                            <td>Lista de <code>Envio</code>, imprimir resumen y total.</td>
+                            <td>Sin <code>if</code> por tipo para calcular costos.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>3. Entregables</h3>
+            <div class="table-responsive">
+                <table class="styled-table">
+                    <thead>
+                        <tr>
+                            <th>Entregable</th>
+                            <th>Qué incluye</th>
+                            <th>Formato sugerido</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Código fuente</strong></td>
+                            <td>Clases del paquete (ej.: <code>com.corhuila.poo.semana7</code>) y ejecución correcta.</td>
+                            <td>.zip o repositorio</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Salida en consola</strong></td>
+                            <td>Impresión de cada envío con su costo y el total.</td>
+                            <td>Texto o captura</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Explicación breve</strong></td>
+                            <td>
+                                12–18 líneas: ¿dónde aplicaste polimorfismo? ¿qué método sobrescribiste y por qué?
+                                ¿qué pasaría si agregas un nuevo tipo de envío?
+                            </td>
+                            <td>Texto / Markdown</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="reflection-box">
+                <h4>Criterios de evaluación (referencia)</h4>
+                <p>
+                    Se revisará: (1) uso correcto de herencia y referencias del tipo base, (2) sobreescritura con <code>@Override</code>,
+                    (3) ausencia de condicionales por tipo para calcular costo, (4) claridad de la solución y pruebas en consola.
+                </p>
+            </div>
+
+           
+        </section>
+
+    </main>
+
+    <footer class="main-footer">
+        <div class="container">
+            <p>Material docente para: Programación Orientada a Objetos</p>
+            <p>Semana 7 · Polimorfismo y sobreescritura de métodos · Ingeniería Mecatrónica</p>
+            <p>© 2026 CORHUILA</p>
+        </div>
+    </footer>
+
+    <button id="scrollTopBtn" title="Volver arriba">↑</button>
+
+    <script src="js/script.js"></script>
+</body>
+</html>

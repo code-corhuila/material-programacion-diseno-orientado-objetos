@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Semana 2: Clases y objetos en Java | Programación Orientada a Objetos</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <header class="main-header">
+        <div class="top-bar">
+            <div class="container brand-container">
+                <span class="brand-name">Programación Orientada a Objetos</span><br>
+                <span class="brand-name">Semana 2: Clases y objetos en Java</span>
+            </div>
+        </div>
+
+        <!-- IMPORTANTE: 5 links = 5 secciones (para que el JS marque bien el activo) -->
+        <nav class="main-nav">
+            <div class="container">
+                <ul>
+                    <li><a href="#introduccion" class="active">Inicio</a></li>
+                    <li><a href="#fundamentos">Conceptos base</a></li>
+                    <li><a href="#ecosistema">Clase vs Objeto</a></li>
+                    <li><a href="#planificacion">Construcción en Java</a></li>
+                    <li><a href="#foro">Actividad Práctica</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container main-content">
+
+        <section id="introduccion" class="hero-section">
+            <h1>Semana 2: Clases y objetos en Java</h1>
+            <p class="lead">
+                En esta semana aprenderás a pensar “en objetos”: entenderás con claridad la diferencia entre <strong>clase</strong> y
+                <strong>objeto</strong>, cómo se crean instancias en Java y cómo organizar un proyecto con varias clases.
+                El objetivo es que puedas modelar entidades simples sin entrar todavía en detalles profundos de atributos,
+                métodos y encapsulación (eso se abordará en la semana 3).
+            </p>
+        </section>
+
+        <hr class="divider">
+
+        <section id="fundamentos">
+            <h2>1. Conceptos base: ¿qué es una clase y qué es un objeto?</h2>
+            <p>
+                En Programación Orientada a Objetos (POO), una <strong>clase</strong> define una “plantilla” y un <strong>objeto</strong>
+                es una “instancia” creada a partir de esa plantilla. Una analogía muy útil:
+            </p>
+
+            <blockquote class="definition-box">
+                <strong>Clase</strong> = Plano / molde / receta (define cómo será algo).<br>
+                <strong>Objeto</strong> = Instancia real creada con ese molde (algo que existe en memoria con identidad propia).<br>
+                <strong>Instanciar</strong> = Crear un objeto a partir de una clase (usando <code>new</code>).
+            </blockquote>
+
+            <h3>1.1. ¿Por qué “clase” y “objeto” son el centro de la POO?</h3>
+            <p>
+                Porque permiten modelar el dominio del problema de manera ordenada. En vez de tener un solo archivo con todo el código,
+                dividimos el sistema en partes: cada clase representa una entidad (o responsabilidad) y los objetos son los que “viven”
+                en la ejecución del programa.
+            </p>
+
+            <div class="table-responsive">
+                <table class="styled-table">
+                    <thead>
+                        <tr>
+                            <th>En la vida real</th>
+                            <th>En POO</th>
+                            <th>Ejemplo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Tipo de entidad</td>
+                            <td><strong>Clase</strong></td>
+                            <td>“Producto”, “Cliente”, “Reserva”</td>
+                        </tr>
+                        <tr>
+                            <td>Entidad específica</td>
+                            <td><strong>Objeto</strong></td>
+                            <td>Producto #1, Cliente “María”, Reserva #204</td>
+                        </tr>
+                        <tr>
+                            <td>Crear una entidad</td>
+                            <td><strong>Instanciar</strong></td>
+                            <td><code>new Producto(...)</code></td>
+                        </tr>
+                        <tr>
+                            <td>Conjunto de entidades</td>
+                            <td><strong>Colección</strong> (más adelante)</td>
+                            <td>Lista de productos, lista de reservas</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>1.2. Identidad, estado y comportamiento (sin entrar en detalle aún)</h3>
+            <p>
+                Todo objeto tiene tres ideas importantes. En esta semana nos enfocaremos en las dos primeras de forma conceptual,
+                porque el detalle de estado (atributos), comportamiento (métodos) y protección (encapsulación) se desarrolla
+                a profundidad en la semana 3.
+            </p>
+
+            <div class="comparison-cards">
+                <div class="card qa-card">
+                    <h3>Identidad</h3>
+                    <ul>
+                        <li>Un objeto es “ese objeto”, único en memoria.</li>
+                        <li>Dos objetos pueden parecer iguales, pero ser diferentes instancias.</li>
+                        <li>En Java, una variable puede apuntar (referenciar) a un objeto.</li>
+                    </ul>
+                </div>
+                <div class="card qc-card">
+                    <h3>Estado y comportamiento</h3>
+                    <ul>
+                        <li><strong>Estado:</strong> datos que describen al objeto (veremos en semana 3).</li>
+                        <li><strong>Comportamiento:</strong> acciones del objeto (veremos en semana 3).</li>
+                        <li>Hoy nos centraremos en cómo “existir” como objeto y cómo se crea.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="ecosistema">
+            <h2>2. Clase vs Objeto (con ejemplos claros en Java)</h2>
+            <p>
+                Para comprenderlo bien, es clave no mezclar estos conceptos:
+                <strong>la clase es código</strong>, el <strong>objeto es memoria</strong>.
+                Una clase por sí sola no “hace nada” hasta que se crean objetos a partir de ella.
+            </p>
+
+            <h3>2.1. Una clase mínima en Java</h3>
+            <p>
+                Una clase puede existir incluso sin atributos y métodos, aunque en la práctica casi siempre tendrá.
+                En esta semana lo importante es que veas la estructura básica:
+            </p>
+
+            <pre><code class="language-java">package com.corhuila.poo.semana2;
+
+public class Libro {
+    // (En semana 3 veremos atributos y métodos en detalle)
+}</code></pre>
+
+            <h3>2.2. Crear objetos (instancias) con <code>new</code></h3>
+            <p>
+                Para que exista un objeto, Java necesita reservar memoria. Eso ocurre cuando usas:
+                <code>new NombreDeLaClase()</code>.
+            </p>
+
+            <pre><code class="language-java">package com.corhuila.poo.semana2;
+
+public class App {
+    public static void main(String[] args) {
+        Libro l1 = new Libro(); // objeto 1
+        Libro l2 = new Libro(); // objeto 2
+
+        System.out.println(l1);
+        System.out.println(l2);
+    }
+}</code></pre>
+
+            <p>
+                Aunque <code>l1</code> y <code>l2</code> son del mismo tipo (<code>Libro</code>), son <strong>objetos diferentes</strong>.
+                En consola verás algo parecido a <code>com.corhuila.poo.semana2.Libro@1a2b3c</code>, que representa la referencia
+                del objeto (una forma de identificarlo en memoria).
+            </p>
+
+            <h3>2.3. Variables de referencia (muy importante para evitar errores)</h3>
+            <p>
+                En Java, cuando haces <code>Libro l1 = new Libro();</code>, la variable <code>l1</code> NO “contiene” el objeto como tal.
+                <strong>Contiene una referencia</strong> (una dirección/identificador) que apunta al objeto.
+            </p>
+
+            <blockquote class="definition-box">
+                <strong>Referencia:</strong> variable que apunta a un objeto en memoria.<br>
+                Si dos referencias apuntan al mismo objeto, entonces están “viendo” el mismo objeto.
+            </blockquote>
+
+            <p><strong>Ejemplo: dos referencias al mismo objeto</strong></p>
+            <pre><code class="language-java">package com.corhuila.poo.semana2;
+
+public class App {
+    public static void main(String[] args) {
+        Libro l1 = new Libro();
+        Libro l2 = l1; // l2 apunta al MISMO objeto que l1
+
+        System.out.println(l1);
+        System.out.println(l2); // imprimen algo muy similar (misma referencia)
+    }
+}</code></pre>
+
+            <p>
+                Este concepto será fundamental cuando trabajes con listas de objetos, actualizaciones y comparaciones.
+                Muchos errores de principiantes vienen de no entender que una variable puede apuntar al mismo objeto que otra.
+            </p>
+
+            <h3>2.4. El valor <code>null</code>: referencia sin objeto</h3>
+            <p>
+                En Java, una referencia puede existir sin apuntar a ningún objeto. En ese caso vale <code>null</code>.
+                Si intentas usar una referencia <code>null</code> como si fuera un objeto, ocurre el famoso error:
+                <strong>NullPointerException</strong>.
+            </p>
+
+            <pre><code class="language-java">package com.corhuila.poo.semana2;
+
+public class App {
+    public static void main(String[] args) {
+        Libro libro = null;
+
+        // Cuidado: libro no apunta a ningún objeto.
+        // En semana 3 verás cómo evitar estos errores con validaciones y buenas prácticas.
+        System.out.println(libro);
+    }
+}</code></pre>
+
+            <div class="strategy-grid">
+                <div class="strategy-box qc-box">
+                    <h5>Buenas prácticas desde ya</h5>
+                    <ul>
+                        <li>Evita dejar referencias en <code>null</code> si puedes inicializarlas.</li>
+                        <li>Antes de usar un objeto, asegúrate de que exista (no sea <code>null</code>).</li>
+                        <li>Si algo “no existe”, decide si <code>null</code> es adecuado o si necesitas otro enfoque (más adelante).</li>
+                    </ul>
+                </div>
+                <div class="strategy-box qa-box">
+                    <h5>Errores típicos</h5>
+                    <ul>
+                        <li>Creer que <code>l2 = l1</code> crea un objeto nuevo (no lo crea).</li>
+                        <li>Confundir “tipo” (Libro) con “instancia” (new Libro()).</li>
+                        <li>No entender por qué dos variables cambian “juntas” (porque apuntan al mismo objeto).</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="planificacion">
+            <h2>3. Construcción en Java: organizar clases, paquetes y ejecución</h2>
+            <p>
+                En proyectos reales, no se trabaja con una sola clase. Incluso un programa pequeño debería estar organizado:
+                una clase principal (<code>App</code>) y clases de modelo (por ejemplo, <code>Libro</code>, <code>Autor</code>, etc.).
+                Esto se logra mediante <strong>paquetes</strong>.
+            </p>
+
+            <h3>3.1. Paquetes (packages): qué son y por qué se usan</h3>
+            <p>
+                Un paquete es una forma de agrupar clases relacionadas. Además de ordenar, ayuda a evitar conflictos cuando dos clases
+                tienen el mismo nombre en diferentes partes del proyecto.
+            </p>
+
+            <blockquote class="definition-box">
+                <strong>Paquete:</strong> un “contenedor lógico” de clases.<br>
+                Ejemplo: <code>com.corhuila.poo.semana2</code> agrupa todo lo que trabajas en esta semana.
+            </blockquote>
+
+            <p><strong>Estructura típica:</strong></p>
+            <pre><code>src/
+  com/
+    corhuila/
+      poo/
+        semana2/
+          App.java
+          Libro.java</code></pre>
+
+            <h3>3.2. Flujo típico para crear objetos en un programa</h3>
+            <p>
+                En la mayoría de programas (a nivel básico), el flujo inicia en <code>main</code>:
+                <strong>se crean objetos</strong> y luego se ejecuta una lógica inicial sobre ellos.
+                Por ahora nos interesa dominar el patrón:
+            </p>
+
+            <div class="table-responsive">
+                <table class="styled-table">
+                    <thead>
+                        <tr>
+                            <th>Paso</th>
+                            <th>Qué haces</th>
+                            <th>Ejemplo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>1</strong></td>
+                            <td>Definir una clase (molde)</td>
+                            <td><code>public class Libro { }</code></td>
+                        </tr>
+                        <tr>
+                            <td><strong>2</strong></td>
+                            <td>Crear objetos (instancias)</td>
+                            <td><code>Libro l1 = new Libro();</code></td>
+                        </tr>
+                        <tr>
+                            <td><strong>3</strong></td>
+                            <td>Guardar referencias</td>
+                            <td><code>Libro l2 = l1;</code></td>
+                        </tr>
+                        <tr>
+                            <td><strong>4</strong></td>
+                            <td>Verificar que entiendes identidad</td>
+                            <td>Objetos distintos vs referencias al mismo objeto</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>3.3. Recomendaciones para esta semana (sin adelantarnos a encapsulación)</h3>
+            <p>
+                Todavía no vamos a profundizar en atributos y métodos, pero sí puedes practicar con clases “vacías” y
+                con clases que tengan lo mínimo para poder crear instancias correctamente. En la semana 3 aprenderás
+                a diseñar el interior de la clase con atributos privados, métodos públicos y validaciones.
+            </p>
+
+            <div class="strategy-grid">
+                <div class="strategy-box qa-box">
+                    <h5>Enfoque correcto de Semana 2</h5>
+                    <ul>
+                        <li>Entender diferencia clase vs objeto.</li>
+                        <li>Crear múltiples instancias con <code>new</code>.</li>
+                        <li>Entender referencias: copiar referencia no crea objeto.</li>
+                        <li>Identificar qué significa <code>null</code> y el riesgo del NullPointerException.</li>
+                    </ul>
+                </div>
+                <div class="strategy-box qc-box">
+                    <h5>Lo que NO vamos a profundizar aún</h5>
+                    <ul>
+                        <li>Diseño completo de atributos (estado) con reglas.</li>
+                        <li>Métodos con lógica de negocio y validaciones completas.</li>
+                        <li>Encapsulación (<code>private</code>, getters/setters) en profundidad.</li>
+                        <li>Herencia, polimorfismo, interfaces (vienen después).</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <hr class="divider-thick">
+
+        <section id="foro" class="case-study-section">
+            <div class="case-header">
+                <h2>Actividad práctica de la semana (no obligatoria)</h2>
+            </div>
+
+            <div class="scenario-box">
+                <h4>1. Contexto</h4>
+                <p>
+                    Vas a crear un mini-proyecto en Java para practicar la diferencia entre <strong>clase</strong> y <strong>objeto</strong>
+                    y dominar el uso de <code>new</code>, referencias y <code>null</code>. En esta actividad NO se evaluará aún
+                    encapsulación ni diseño avanzado de métodos (eso se trabaja en la semana 3).
+                </p>
+                <ol>
+                    <li>Crea un proyecto con paquete <code>com.corhuila.poo.semana2</code>.</li>
+                    <li>Crea la clase <strong>Producto</strong> (puede estar vacía o con una estructura mínima).</li>
+                    <li>En <strong>App</strong>, crea varios objetos y prueba referencias.</li>
+                </ol>
+            </div>
+
+            <h3>2. Requerimientos del mini-ejercicio “Catálogo simple”</h3>
+            <p>
+                Implementa dos clases: <strong>Producto</strong> y <strong>App</strong>.
+                El foco es la creación de objetos y el manejo de referencias.
+            </p>
+
+            <div class="table-responsive">
+                <table class="styled-table">
+                    <thead>
+                        <tr>
+                            <th>Requisito</th>
+                            <th>Qué debes hacer</th>
+                            <th>Qué se busca evidenciar</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>R1. Clase Producto</strong></td>
+                            <td>Crear la clase <code>Producto</code> (sin lógica compleja).</td>
+                            <td>Definir una clase como “molde”.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>R2. Crear instancias</strong></td>
+                            <td>Crear 3 objetos <code>Producto</code> con <code>new</code>.</td>
+                            <td>Diferenciar clase vs objeto.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>R3. Probar referencias</strong></td>
+                            <td>Asignar <code>Producto p2 = p1;</code> y mostrar que no es un objeto nuevo.</td>
+                            <td>Entender referencias y misma identidad.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>R4. Probar null</strong></td>
+                            <td>Crear una referencia <code>Producto pNull = null;</code> e imprimirla.</td>
+                            <td>Entender referencia sin objeto (sin provocar errores).</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>3. Entregables</h3>
+            <div class="table-responsive">
+                <table class="styled-table">
+                    <thead>
+                        <tr>
+                            <th>Entregable</th>
+                            <th>Qué incluye</th>
+                            <th>Formato sugerido</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Código fuente</strong></td>
+                            <td>Proyecto con <code>Producto.java</code> y <code>App.java</code>.</td>
+                            <td>.zip o repositorio</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Salida en consola</strong></td>
+                            <td>Impresión de referencias para evidenciar objetos distintos o iguales.</td>
+                            <td>Texto o captura</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Breve explicación</strong></td>
+                            <td>
+                                5–8 líneas explicando: ¿qué pasó con <code>p2 = p1</code>? ¿qué significa <code>null</code>?
+                            </td>
+                            <td>Texto / Markdown</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="reflection-box">
+                <h4>Criterios de evaluación (referencia)</h4>
+                <p>
+                    Se observará: (1) que el proyecto compile y ejecute, (2) uso correcto de <code>new</code>,
+                    (3) comprensión de referencia vs objeto, (4) claridad en la explicación final.
+                    No se calificará aún encapsulación ni diseño completo de atributos/métodos.
+                </p>
+            </div>
+
+           
+        </section>
+
+    </main>
+
+    <footer class="main-footer">
+        <div class="container">
+            <p>Material docente para: Programación Orientada a Objetos</p>
+            <p>Semana 2 · Clases y objetos en Java · Ingeniería Mecatrónica</p>
+            <p>© 2026 CORHUILA</p>
+        </div>
+    </footer>
+
+    <button id="scrollTopBtn" title="Volver arriba">↑</button>
+
+    <script src="js/script.js"></script>
+</body>
+</html>

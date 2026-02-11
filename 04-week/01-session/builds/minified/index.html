@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Semana 4: Constructores y representación de objetos | Programación Orientada a Objetos</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <header class="main-header">
+        <div class="top-bar">
+            <div class="container brand-container">
+                <span class="brand-name">Programación Orientada a Objetos</span><br>
+                <span class="brand-name">Semana 4: Constructores y representación de objetos</span>
+            </div>
+        </div>
+
+        <!-- IMPORTANTE: 5 links = 5 secciones (para que el JS marque bien el activo) -->
+        <nav class="main-nav">
+            <div class="container">
+                <ul>
+                    <li><a href="#introduccion" class="active">Inicio</a></li>
+                    <li><a href="#fundamentos">Constructores</a></li>
+                    <li><a href="#ecosistema">Sobrecarga</a></li>
+                    <li><a href="#planificacion">Representación</a></li>
+                    <li><a href="#foro">Actividad Práctica</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container main-content">
+
+        <section id="introduccion" class="hero-section">
+            <h1>Semana 4: Constructores y representación de objetos</h1>
+            <p class="lead">
+                En esta semana aprenderás a crear objetos de forma correcta y consistente usando <strong>constructores</strong>.
+                Entenderás cómo inicializar el estado de un objeto (que “nazca válido”), cómo manejar diferentes formas de creación
+                con <strong>sobrecarga de constructores</strong> y cómo mejorar la lectura y depuración de tus programas mediante
+                una buena <strong>representación de objetos</strong> (por ejemplo, con <code>toString()</code>).
+            </p>
+        </section>
+
+        <hr class="divider">
+
+        <section id="fundamentos">
+            <h2>1. Constructores: crear objetos con estado válido</h2>
+            <p>
+                Un constructor es un bloque especial que se ejecuta automáticamente cuando creas un objeto con <code>new</code>.
+                Su propósito es <strong>inicializar</strong> los atributos del objeto y asegurar que el objeto quede en un estado válido
+                desde el inicio.
+            </p>
+
+            <blockquote class="definition-box">
+                <strong>Constructor:</strong> método especial que se llama igual que la clase y no tiene tipo de retorno.<br>
+                Se ejecuta al instanciar un objeto: <code>new NombreClase(...)</code>.
+            </blockquote>
+
+            <h3>1.1. ¿Por qué los constructores son tan importantes?</h3>
+            <p>
+                Sin constructores (o con constructores mal usados), es fácil crear objetos “incompletos” o inválidos:
+                objetos con datos faltantes, con valores imposibles (edad negativa, saldo negativo) o con reglas de negocio rotas.
+                Un buen constructor ayuda a evitar eso.
+            </p>
+
+            <div class="comparison-cards">
+                <div class="card qc-card">
+                    <h3>Problema típico (sin buen constructor)</h3>
+                    <ul>
+                        <li>Objeto creado sin información mínima.</li>
+                        <li>Valores por defecto no deseados (0, null).</li>
+                        <li>El objeto queda “inservible” hasta que alguien lo configure bien.</li>
+                    </ul>
+                </div>
+                <div class="card qa-card">
+                    <h3>Solución (constructor bien diseñado)</h3>
+                    <ul>
+                        <li>El objeto nace con datos esenciales.</li>
+                        <li>Se validan reglas desde el inicio.</li>
+                        <li>Menos errores en ejecución y menos estados inválidos.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3>1.2. Constructor con validaciones (ejemplo completo)</h3>
+            <p>
+                Vamos a construir una clase <strong>Producto</strong> para un sistema de inventario básico.
+                Un producto debe tener al menos: <strong>código</strong>, <strong>nombre</strong> y <strong>precio</strong> válido.
+            </p>
+
+            <pre><code class="language-java">package com.corhuila.poo.semana4;
+
+public class Producto {
+    private String codigo;
+    private String nombre;
+    private double precio;
+
+    public Producto(String codigo, String nombre, double precio) {
+        setCodigo(codigo);
+        setNombre(nombre);
+        setPrecio(precio);
+    }
+
+    public String getCodigo() {
+        return codigo;
+    }
+
+    public void setCodigo(String codigo) {
+        if (codigo == null || codigo.trim().isEmpty()) {
+            throw new IllegalArgumentException("El código no puede estar vacío.");
+        }
+        this.codigo = codigo.trim();
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        if (nombre == null || nombre.trim().isEmpty()) {
+            throw new IllegalArgumentException("El nombre no puede estar vacío.");
+        }
+        this.nombre = nombre.trim();
+    }
+
+    public double getPrecio() {
+        return precio;
+    }
+
+    public void setPrecio(double precio) {
+        if (precio &lt;= 0) {
+            throw new IllegalArgumentException("El precio debe ser mayor a 0.");
+        }
+        this.precio = precio;
+    }
+}</code></pre>
+
+            <p>
+                Observa dos ideas clave:
+            </p>
+            <ul>
+                <li>El constructor recibe lo mínimo necesario para crear un producto válido.</li>
+                <li>El constructor reutiliza los setters para no duplicar validaciones.</li>
+            </ul>
+
+            <h3>1.3. Constructor por defecto (implícito) y cuándo aparece</h3>
+            <p>
+                Si una clase no define ningún constructor, Java crea automáticamente un <strong>constructor por defecto</strong>
+                sin parámetros. Ese constructor solo inicializa atributos con valores por defecto (0, null, false).
+            </p>
+
+            <pre><code class="language-java">public class Cliente {
+    // Sin atributos ni constructores definidos
+}</code></pre>
+
+            <p>
+                En este caso, Java permite:
+            </p>
+            <pre><code class="language-java">Cliente c = new Cliente();</code></pre>
+
+            <p>
+                Pero si tú defines al menos un constructor con parámetros, entonces Java ya NO crea el constructor por defecto.
+                Si aún quieres permitir creación sin parámetros, debes declararlo tú (esto se relaciona con sobrecarga).
+            </p>
+        </section>
+
+        <section id="ecosistema">
+            <h2>2. Sobrecarga de constructores: diferentes formas de crear un objeto</h2>
+            <p>
+                La <strong>sobrecarga</strong> consiste en definir varios constructores con el mismo nombre (el de la clase),
+                pero con diferentes parámetros. Esto permite crear objetos de varias maneras, dependiendo de la información disponible.
+            </p>
+
+            <blockquote class="definition-box">
+                <strong>Sobrecarga:</strong> múltiples constructores (o métodos) con el mismo nombre, pero distinta lista de parámetros.<br>
+                Java decide cuál usar según los argumentos al llamar <code>new</code>.
+            </blockquote>
+
+            <h3>2.1. ¿Cuándo tiene sentido sobrecargar constructores?</h3>
+            <p>
+                Es útil cuando:
+            </p>
+            <ul>
+                <li>Hay datos opcionales (por ejemplo: descripción, marca, categoría).</li>
+                <li>Existen valores razonables por defecto (por ejemplo: activo = true).</li>
+                <li>Necesitas crear objetos desde diferentes fuentes (entrada del usuario, archivo, API).</li>
+            </ul>
+
+            <h3>2.2. Ejemplo: Producto con constructor completo y constructor simplificado</h3>
+            <p>
+                Imagina que a veces solo tienes código y nombre, y quieres un precio temporal por defecto que luego ajustarás.
+                Aquí entra la sobrecarga, pero cuidando que el objeto siga siendo válido.
+            </p>
+
+            <pre><code class="language-java">package com.corhuila.poo.semana4;
+
+public class Producto {
+    private String codigo;
+    private String nombre;
+    private double precio;
+
+    // Constructor principal (recomendado)
+    public Producto(String codigo, String nombre, double precio) {
+        setCodigo(codigo);
+        setNombre(nombre);
+        setPrecio(precio);
+    }
+
+    // Constructor alterno: asigna un precio por defecto (ejemplo)
+    public Producto(String codigo, String nombre) {
+        this(codigo, nombre, 1.0); // delega al constructor principal
+    }
+
+    public String getCodigo() { return codigo; }
+
+    public void setCodigo(String codigo) {
+        if (codigo == null || codigo.trim().isEmpty()) {
+            throw new IllegalArgumentException("El código no puede estar vacío.");
+        }
+        this.codigo = codigo.trim();
+    }
+
+    public String getNombre() { return nombre; }
+
+    public void setNombre(String nombre) {
+        if (nombre == null || nombre.trim().isEmpty()) {
+            throw new IllegalArgumentException("El nombre no puede estar vacío.");
+        }
+        this.nombre = nombre.trim();
+    }
+
+    public double getPrecio() { return precio; }
+
+    public void setPrecio(double precio) {
+        if (precio &lt;= 0) {
+            throw new IllegalArgumentException("El precio debe ser mayor a 0.");
+        }
+        this.precio = precio;
+    }
+}</code></pre>
+
+            <p>
+                Nota lo más importante: el constructor alterno usa <code>this(...)</code> para delegar en el constructor principal.
+                Esto evita duplicar validaciones y garantiza consistencia.
+            </p>
+
+            <h3>2.3. Reglas de <code>this(...)</code> dentro de constructores (lo que debes recordar)</h3>
+            <div class="table-responsive">
+                <table class="styled-table">
+                    <thead>
+                        <tr>
+                            <th>Regla</th>
+                            <th>Qué significa</th>
+                            <th>Ejemplo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Debe ser la primera línea</strong></td>
+                            <td>Si llamas a otro constructor con <code>this(...)</code>, debe ir primero.</td>
+                            <td><code>this(cod, nom, 1.0);</code></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Evita duplicación</strong></td>
+                            <td>Centraliza validaciones y asignaciones en un constructor principal.</td>
+                            <td>Constructor secundario delega al principal.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>No se llama recursivamente</strong></td>
+                            <td>No hagas que un constructor llame a otro y este vuelva al primero.</td>
+                            <td>Evitar ciclos de <code>this(...)</code>.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section id="planificacion">
+            <h2>3. Representación de objetos: leer y depurar mejor (toString)</h2>
+            <p>
+                Cuando imprimes un objeto en Java, por defecto verás algo como:
+                <code>com.corhuila.poo.semana4.Producto@1a2b3c</code>.
+                Eso no es útil para entender el estado del objeto. Por eso, es una práctica estándar implementar
+                una representación legible mediante el método <code>toString()</code>.
+            </p>
+
+            <blockquote class="definition-box">
+                <strong>toString():</strong> método que devuelve una representación en texto del objeto.<br>
+                Se usa automáticamente cuando imprimes el objeto: <code>System.out.println(objeto)</code>.
+            </blockquote>
+
+            <h3>3.1. ¿Por qué importa una buena representación?</h3>
+            <p>
+                Porque te ayuda a:
+            </p>
+            <ul>
+                <li>Depurar (debug): ver rápidamente qué valores tiene el objeto.</li>
+                <li>Registrar información (logs): imprimir objetos en consola o archivos.</li>
+                <li>Entender el flujo del programa durante pruebas.</li>
+            </ul>
+
+            <h3>3.2. Implementar <code>toString()</code> correctamente</h3>
+            <p>
+                Vamos a añadir <code>toString()</code> a <strong>Producto</strong>. Nota que se usa <code>@Override</code> para indicar
+                que estamos sobrescribiendo un método heredado de <code>Object</code>.
+            </p>
+
+            <pre><code class="language-java">package com.corhuila.poo.semana4;
+
+public class Producto {
+    private String codigo;
+    private String nombre;
+    private double precio;
+
+    public Producto(String codigo, String nombre, double precio) {
+        setCodigo(codigo);
+        setNombre(nombre);
+        setPrecio(precio);
+    }
+
+    public Producto(String codigo, String nombre) {
+        this(codigo, nombre, 1.0);
+    }
+
+    public String getCodigo() { return codigo; }
+
+    public void setCodigo(String codigo) {
+        if (codigo == null || codigo.trim().isEmpty()) {
+            throw new IllegalArgumentException("El código no puede estar vacío.");
+        }
+        this.codigo = codigo.trim();
+    }
+
+    public String getNombre() { return nombre; }
+
+    public void setNombre(String nombre) {
+        if (nombre == null || nombre.trim().isEmpty()) {
+            throw new IllegalArgumentException("El nombre no puede estar vacío.");
+        }
+        this.nombre = nombre.trim();
+    }
+
+    public double getPrecio() { return precio; }
+
+    public void setPrecio(double precio) {
+        if (precio &lt;= 0) {
+            throw new IllegalArgumentException("El precio debe ser mayor a 0.");
+        }
+        this.precio = precio;
+    }
+
+    @Override
+    public String toString() {
+        return "Producto{codigo='" + codigo + "', nombre='" + nombre + "', precio=" + precio + "}";
+    }
+}</code></pre>
+
+            <h3>3.3. Probar la representación en un programa principal</h3>
+            <pre><code class="language-java">package com.corhuila.poo.semana4;
+
+public class App {
+    public static void main(String[] args) {
+        Producto p1 = new Producto("P-001", "Teclado Mecánico", 180000);
+        Producto p2 = new Producto("P-002", "Mouse Gamer"); // usa constructor alterno
+
+        System.out.println(p1);
+        System.out.println(p2);
+
+        p2.setPrecio(95000);
+        System.out.println("Actualizado: " + p2);
+    }
+}</code></pre>
+
+            <h3>3.4. Buenas prácticas al representar objetos</h3>
+            <div class="strategy-grid">
+                <div class="strategy-box qa-box">
+                    <h5>Recomendaciones</h5>
+                    <ul>
+                        <li>Incluye solo datos relevantes (no todo).</li>
+                        <li>Evita exponer información sensible (contraseñas, tokens).</li>
+                        <li>Mantén el formato claro y consistente.</li>
+                        <li>Útil para depuración y logs.</li>
+                    </ul>
+                </div>
+                <div class="strategy-box qc-box">
+                    <h5>Errores comunes</h5>
+                    <ul>
+                        <li>Dejar el <code>toString()</code> por defecto y no entender la salida.</li>
+                        <li>Imprimir información sensible sin querer.</li>
+                        <li>Crear <code>toString()</code> demasiado largo e ilegible.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <hr class="divider-thick">
+
+        <section id="foro" class="case-study-section">
+            <div class="case-header">
+                <h2>Actividad práctica de la semana (no obligatoria)</h2>
+            </div>
+
+            <div class="scenario-box">
+                <h4>1. Contexto</h4>
+                <p>
+                    Vas a construir una clase <strong>ReservaHotel</strong> para practicar constructores, sobrecarga y representación
+                    de objetos con <code>toString()</code>. El objetivo es que puedas crear reservas de distintas formas
+                    (con y sin datos opcionales) y que la impresión en consola sea clara y útil.
+                </p>
+                <ol>
+                    <li>Crea la clase <strong>ReservaHotel</strong> con atributos privados.</li>
+                    <li>Implementa al menos <strong>2 constructores</strong> (sobrecarga).</li>
+                    <li>Implementa <code>toString()</code> para imprimir la reserva de forma legible.</li>
+                    <li>En <strong>App</strong>, crea varias reservas y muéstralas.</li>
+                </ol>
+            </div>
+
+            <h3>2. Requerimientos del ejercicio</h3>
+            <div class="table-responsive">
+                <table class="styled-table">
+                    <thead>
+                        <tr>
+                            <th>Elemento</th>
+                            <th>Requisito</th>
+                            <th>Reglas (obligatorias)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Atributos</strong></td>
+                            <td>
+                                <code>codigo</code>, <code>nombreHuesped</code>, <code>noches</code>, <code>valorNoche</code>, <code>incluyeDesayuno</code>
+                            </td>
+                            <td>Todos deben ser <code>private</code>.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Constructor principal</strong></td>
+                            <td>Recibe todos los datos</td>
+                            <td>
+                                <code>noches</code> &gt; 0, <code>valorNoche</code> &gt; 0, textos no vacíos.
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>Constructor alterno</strong></td>
+                            <td>Recibe: código, huésped, noches, valorNoche</td>
+                            <td>
+                                <code>incluyeDesayuno</code> debe quedar en <strong>false</strong> por defecto.
+                                Debe delegar con <code>this(...)</code>.
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>Representación</strong></td>
+                            <td>Implementar <code>toString()</code></td>
+                            <td>Debe mostrar al menos: código, huésped, noches, total y desayuno.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>3. Entregables</h3>
+            <div class="table-responsive">
+                <table class="styled-table">
+                    <thead>
+                        <tr>
+                            <th>Entregable</th>
+                            <th>Qué incluye</th>
+                            <th>Formato sugerido</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Código fuente</strong></td>
+                            <td>Clases <code>ReservaHotel</code> y <code>App</code> compilando y ejecutando.</td>
+                            <td>.zip o repositorio</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Salida en consola</strong></td>
+                            <td>Impresión de al menos 3 reservas usando <code>System.out.println(reserva)</code>.</td>
+                            <td>Texto o captura</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Explicación breve</strong></td>
+                            <td>
+                                8–12 líneas: ¿por qué usaste sobrecarga? ¿qué ventaja te da <code>toString()</code>?
+                            </td>
+                            <td>Texto / Markdown</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="reflection-box">
+                <h4>Criterios de evaluación (referencia)</h4>
+                <p>
+                    Se revisará: (1) uso correcto de constructores, (2) delegación con <code>this(...)</code>, (3) validaciones mínimas,
+                    (4) <code>toString()</code> claro, (5) pruebas desde <code>App</code>.
+                </p>
+            </div>
+
+          
+        </section>
+
+    </main>
+
+    <footer class="main-footer">
+        <div class="container">
+            <p>Material docente para: Programación Orientada a Objetos</p>
+            <p>Semana 4 · Constructores y representación de objetos · Ingeniería Mecatrónica</p>
+            <p>© 2026 CORHUILA</p>
+        </div>
+    </footer>
+
+    <button id="scrollTopBtn" title="Volver arriba">↑</button>
+
+    <script src="js/script.js"></script>
+</body>
+</html>

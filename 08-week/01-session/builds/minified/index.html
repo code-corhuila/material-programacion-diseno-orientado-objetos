@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Semana 8: Clases abstractas e interfaces | Programación Orientada a Objetos</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <header class="main-header">
+        <div class="top-bar">
+            <div class="container brand-container">
+                <span class="brand-name">Programación Orientada a Objetos</span><br>
+                <span class="brand-name">Semana 8: Clases abstractas e interfaces</span>
+            </div>
+        </div>
+
+        <!-- IMPORTANTE: 5 links = 5 secciones (para que el JS marque bien el activo) -->
+        <nav class="main-nav">
+            <div class="container">
+                <ul>
+                    <li><a href="#introduccion" class="active">Inicio</a></li>
+                    <li><a href="#fundamentos">Clases abstractas</a></li>
+                    <li><a href="#ecosistema">Interfaces</a></li>
+                    <li><a href="#planificacion">Cuándo usar cada una</a></li>
+                    <li><a href="#foro">Actividad Práctica</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container main-content">
+
+        <section id="introduccion" class="hero-section">
+            <h1>Semana 8: Clases abstractas e interfaces</h1>
+            <p class="lead">
+                En esta semana aprenderás a diseñar jerarquías más sólidas y extensibles usando <strong>clases abstractas</strong> e
+                <strong>interfaces</strong>. Entenderás por qué a veces una clase base no debe instanciarse, cómo declarar métodos
+                abstractos obligatorios, y cómo las interfaces permiten agregar “capacidades” a una clase (incluso cuando ya hereda de otra),
+                evitando limitaciones de la herencia simple en Java.
+            </p>
+        </section>
+
+        <hr class="divider">
+
+        <section id="fundamentos">
+            <h2>1. Clases abstractas: una base común que no debe instanciarse</h2>
+            <p>
+                Una <strong>clase abstracta</strong> es una clase que representa un concepto general, pero que no tiene sentido crear
+                como objeto directamente. Sirve como “molde parcial”: define lo común y obliga a que las subclases completen lo específico.
+            </p>
+
+            <blockquote class="definition-box">
+                <strong>Clase abstracta:</strong> clase que <strong>no se puede instanciar</strong> y que puede contener
+                métodos <strong>abstractos</strong> (sin implementación) y métodos <strong>concretos</strong> (con implementación).
+            </blockquote>
+
+            <h3>1.1. ¿Por qué existen las clases abstractas?</h3>
+            <p>
+                Porque a veces el concepto base es demasiado general. Por ejemplo: “Figura” es una idea general, pero no existe una
+                “Figura” genérica real para calcular área. Lo que existe son figuras concretas: círculo, rectángulo, triángulo.
+            </p>
+
+            <div class="comparison-cards">
+                <div class="card qc-card">
+                    <h3>Clase base instanciable (problema)</h3>
+                    <ul>
+                        <li>Permite crear objetos que no tienen sentido: <code>new Figura()</code>.</li>
+                        <li>Obliga a inventar implementaciones “vacías” (por ejemplo <code>area() = 0</code>).</li>
+                        <li>Puede ocultar errores: el sistema “funciona” pero con resultados incorrectos.</li>
+                    </ul>
+                </div>
+                <div class="card qa-card">
+                    <h3>Clase abstracta (solución)</h3>
+                    <ul>
+                        <li>Evita instancias sin sentido: no permite <code>new Figura()</code>.</li>
+                        <li>Obliga a subclases a implementar métodos críticos.</li>
+                        <li>Garantiza que el diseño sea coherente con el dominio.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3>1.2. Sintaxis básica de clase abstracta y método abstracto</h3>
+            <pre><code class="language-java">public abstract class Figura {
+    public abstract double area();   // sin cuerpo: obliga a implementar
+    public abstract String nombre(); // sin cuerpo
+
+    public String resumen() {        // método concreto (con implementación)
+        return nombre() + " - área: " + area();
+    }
+}</code></pre>
+
+            <p>
+                Puntos clave:
+            </p>
+            <ul>
+                <li><code>abstract</code> en la clase: indica que NO se puede instanciar.</li>
+                <li><code>abstract</code> en un método: no tiene cuerpo y debe ser implementado por las subclases.</li>
+                <li>Una clase abstracta puede tener métodos normales con lógica reutilizable.</li>
+            </ul>
+
+            <h3>1.3. Ejemplo completo: Figura (abstracta) → Círculo y Rectángulo</h3>
+
+            <h4>Clase abstracta: Figura</h4>
+            <pre><code class="language-java">package com.corhuila.poo.semana8;
+
+public abstract class Figura {
+
+    public abstract double area();
+    public abstract String nombre();
+
+    public String resumen() {
+        return nombre() + " - área: " + area();
+    }
+}</code></pre>
+
+            <h4>Subclase concreta: Circulo</h4>
+            <pre><code class="language-java">package com.corhuila.poo.semana8;
+
+public class Circulo extends Figura {
+    private double radio;
+
+    public Circulo(double radio) {
+        if (radio &lt;= 0) {
+            throw new IllegalArgumentException("El radio debe ser mayor a 0.");
+        }
+        this.radio = radio;
+    }
+
+    @Override
+    public double area() {
+        return Math.PI * radio * radio;
+    }
+
+    @Override
+    public String nombre() {
+        return "Círculo";
+    }
+}</code></pre>
+
+            <h4>Subclase concreta: Rectangulo</h4>
+            <pre><code class="language-java">package com.corhuila.poo.semana8;
+
+public class Rectangulo extends Figura {
+    private double base;
+    private double altura;
+
+    public Rectangulo(double base, double altura) {
+        if (base &lt;= 0 || altura &lt;= 0) {
+            throw new IllegalArgumentException("Base y altura deben ser mayores a 0.");
+        }
+        this.base = base;
+        this.altura = altura;
+    }
+
+    @Override
+    public double area() {
+        return base * altura;
+    }
+
+    @Override
+    public String nombre() {
+        return "Rectángulo";
+    }
+}</code></pre>
+
+            <h4>App: polimorfismo con clase abstracta</h4>
+            <pre><code class="language-java">package com.corhuila.poo.semana8;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class App {
+    public static void main(String[] args) {
+        List&lt;Figura&gt; figuras = new ArrayList&lt;&gt;();
+
+        figuras.add(new Circulo(2.5));
+        figuras.add(new Rectangulo(4, 3));
+
+        for (Figura f : figuras) {
+            System.out.println(f.resumen());
+        }
+
+        // Figura x = new Figura(); // ERROR: no se puede instanciar una clase abstracta
+    }
+}</code></pre>
+
+            <p>
+                Observa cómo el método <code>resumen()</code> está en la clase abstracta y se reutiliza para todas las figuras,
+                pero <code>area()</code> y <code>nombre()</code> son obligatorios para cada figura concreta.
+            </p>
+        </section>
+
+        <section id="ecosistema">
+            <h2>2. Interfaces: contratos de comportamiento (capacidades)</h2>
+            <p>
+                Una <strong>interfaz</strong> define un contrato: un conjunto de métodos que una clase se compromete a implementar.
+                A diferencia de la herencia, que modela una relación “es-un”, las interfaces suelen modelar “<strong>puede-hacer</strong>”
+                (capacidad). Por ejemplo: un objeto puede ser “imprimible”, “pagable”, “comparable”, “notificable”.
+            </p>
+
+            <blockquote class="definition-box">
+                <strong>Interfaz:</strong> un contrato de métodos que una clase debe implementar.<br>
+                Se implementa con <code>implements</code>. Una clase puede implementar varias interfaces.
+            </blockquote>
+
+            <h3>2.1. ¿Por qué son clave en Java?</h3>
+            <p>
+                Porque Java tiene herencia simple (solo puedes extender una clase). Si quieres que una clase tenga múltiples “capacidades”,
+                las interfaces resuelven ese problema sin crear jerarquías forzadas.
+            </p>
+
+            <div class="comparison-cards">
+                <div class="card qa-card">
+                    <h3>Herencia (es-un)</h3>
+                    <ul>
+                        <li>Una clase hereda de otra: <code>extends</code>.</li>
+                        <li>Comparte estado y comportamiento base.</li>
+                        <li>Solo puedes heredar de una clase.</li>
+                    </ul>
+                </div>
+                <div class="card qc-card">
+                    <h3>Interface (puede-hacer)</h3>
+                    <ul>
+                        <li>Una clase implementa capacidades: <code>implements</code>.</li>
+                        <li>No define estado (en general) como una clase base.</li>
+                        <li>Puedes implementar múltiples interfaces.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3>2.2. Sintaxis básica de una interfaz</h3>
+            <pre><code class="language-java">public interface Imprimible {
+    String imprimir(); // método que debe implementar la clase
+}</code></pre>
+
+            <h3>2.3. Ejemplo: interfaz Imprimible + clases que la implementan</h3>
+            <p>
+                Imagina que en un sistema quieres imprimir distintos tipos de documentos: factura, recibo, certificado.
+                No necesariamente están en una misma jerarquía de herencia, pero todos pueden “imprimirse”.
+                Ahí encaja perfecto una interfaz.
+            </p>
+
+            <h4>Interfaz: Imprimible</h4>
+            <pre><code class="language-java">package com.corhuila.poo.semana8;
+
+public interface Imprimible {
+    String imprimir();
+}</code></pre>
+
+            <h4>Clase: Factura (implementa Imprimible)</h4>
+            <pre><code class="language-java">package com.corhuila.poo.semana8;
+
+public class Factura implements Imprimible {
+    private String numero;
+    private double total;
+
+    public Factura(String numero, double total) {
+        if (numero == null || numero.trim().isEmpty()) {
+            throw new IllegalArgumentException("Número inválido.");
+        }
+        if (total &lt; 0) {
+            throw new IllegalArgumentException("Total inválido.");
+        }
+        this.numero = numero.trim();
+        this.total = total;
+    }
+
+    @Override
+    public String imprimir() {
+        return "Factura #" + numero + " - Total: " + total;
+    }
+}</code></pre>
+
+            <h4>Clase: Certificado (implementa Imprimible)</h4>
+            <pre><code class="language-java">package com.corhuila.poo.semana8;
+
+public class Certificado implements Imprimible {
+    private String estudiante;
+    private String programa;
+
+    public Certificado(String estudiante, String programa) {
+        if (estudiante == null || estudiante.trim().isEmpty()) {
+            throw new IllegalArgumentException("Estudiante inválido.");
+        }
+        if (programa == null || programa.trim().isEmpty()) {
+            throw new IllegalArgumentException("Programa inválido.");
+        }
+        this.estudiante = estudiante.trim();
+        this.programa = programa.trim();
+    }
+
+    @Override
+    public String imprimir() {
+        return "Certificado: " + estudiante + " - Programa: " + programa;
+    }
+}</code></pre>
+
+            <h4>App: lista de Imprimible (polimorfismo con interfaces)</h4>
+            <pre><code class="language-java">package com.corhuila.poo.semana8;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class AppInterfaces {
+    public static void main(String[] args) {
+        List&lt;Imprimible&gt; docs = new ArrayList&lt;&gt;();
+
+        docs.add(new Factura("F-100", 325000));
+        docs.add(new Certificado("Laura Pérez", "Ingeniería de Sistemas"));
+
+        for (Imprimible d : docs) {
+            System.out.println(d.imprimir());
+        }
+    }
+}</code></pre>
+
+            <p>
+                Esto es polimorfismo también: una lista de <code>Imprimible</code> contiene objetos diferentes, pero todos cumplen el contrato.
+            </p>
+
+            <h3>2.4. “¿Entonces una interfaz no puede tener implementación?”</h3>
+            <p>
+                En Java moderno, las interfaces pueden tener métodos <code>default</code> (con implementación) y métodos <code>static</code>.
+                Pero para este curso (nivel base), la idea más importante es: interfaz = contrato.
+                Usaremos métodos <code>default</code> solo cuando sea necesario y con cuidado, porque puede confundir al inicio.
+            </p>
+
+            <pre><code class="language-java">public interface Imprimible {
+    String imprimir();
+
+    default String etiqueta() {
+        return "[DOC]";
+    }
+}</code></pre>
+
+            <p>
+                En este punto, lo más relevante es que una clase puede implementar varias interfaces, por ejemplo:
+                <code>class Factura implements Imprimible, Exportable</code>.
+            </p>
+        </section>
+
+        <section id="planificacion">
+            <h2>3. ¿Cuándo usar clase abstracta y cuándo usar interfaz?</h2>
+            <p>
+                Esta es una pregunta clave de diseño. Ambas herramientas sirven para crear sistemas extensibles, pero su propósito es diferente.
+                La decisión correcta depende de qué estás modelando: una “familia” de objetos (abstracta) o una “capacidad” (interfaz).
+            </p>
+
+            <h3>3.1. Tabla comparativa (decisión rápida)</h3>
+            <div class="table-responsive">
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Pregunta</th>
+                            <th>Si la respuesta es SÍ</th>
+                            <th>Recomendación</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>¿Existe relación “es-un” clara y comparten estado común?</td>
+                            <td>Quieres herencia con base común</td>
+                            <td><strong>Clase abstracta</strong></td>
+                        </tr>
+                        <tr>
+                            <td>¿Quieres definir un contrato sin forzar herencia?</td>
+                            <td>Distintas clases pueden cumplir la misma capacidad</td>
+                            <td><strong>Interfaz</strong></td>
+                        </tr>
+                        <tr>
+                            <td>¿Necesitas que una clase tenga varias capacidades?</td>
+                            <td>Una clase ya hereda de otra y necesita “más”</td>
+                            <td><strong>Interfaz</strong></td>
+                        </tr>
+                        <tr>
+                            <td>¿Quieres reutilizar lógica base para todas las subclases?</td>
+                            <td>Hay implementación común importante</td>
+                            <td><strong>Clase abstracta</strong></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>3.2. Ejemplo de diseño combinado: abstracta + interfaces</h3>
+            <p>
+                En sistemas reales es común combinarlas. Por ejemplo: una clase abstracta <code>Empleado</code> (familia “es-un”),
+                y una interfaz <code>Bonificable</code> (capacidad “puede-hacer”).
+            </p>
+
+            <pre><code class="language-java">package com.corhuila.poo.semana8;
+
+public interface Bonificable {
+    double calcularBono();
+}</code></pre>
+
+            <pre><code class="language-java">package com.corhuila.poo.semana8;
+
+public abstract class Empleado {
+    private String nombre;
+    private double salarioBase;
+
+    public Empleado(String nombre, double salarioBase) {
+        if (nombre == null || nombre.trim().isEmpty()) {
+            throw new IllegalArgumentException("Nombre inválido.");
+        }
+        if (salarioBase &lt;= 0) {
+            throw new IllegalArgumentException("Salario inválido.");
+        }
+        this.nombre = nombre.trim();
+        this.salarioBase = salarioBase;
+    }
+
+    public String getNombre() { return nombre; }
+    public double getSalarioBase() { return salarioBase; }
+
+    public abstract double calcularSalarioTotal(); // cada tipo de empleado lo define
+}</code></pre>
+
+            <pre><code class="language-java">package com.corhuila.poo.semana8;
+
+public class EmpleadoVentas extends Empleado implements Bonificable {
+    private double ventasMes;
+
+    public EmpleadoVentas(String nombre, double salarioBase, double ventasMes) {
+        super(nombre, salarioBase);
+        if (ventasMes &lt; 0) {
+            throw new IllegalArgumentException("Ventas inválidas.");
+        }
+        this.ventasMes = ventasMes;
+    }
+
+    @Override
+    public double calcularSalarioTotal() {
+        return getSalarioBase() + calcularBono();
+    }
+
+    @Override
+    public double calcularBono() {
+        return ventasMes * 0.05; // 5% de bono sobre ventas
+    }
+}</code></pre>
+
+            <p>
+                Aquí se ve el patrón:
+            </p>
+            <ul>
+                <li><strong>Empleado</strong> (abstracta) define lo común y obliga a implementar salario total.</li>
+                <li><strong>Bonificable</strong> (interfaz) define una capacidad adicional: calcular bono.</li>
+            </ul>
+
+            <h3>3.3. Buenas prácticas</h3>
+            <div class="strategy-grid">
+                <div class="strategy-box qa-box">
+                    <h5>Haz esto</h5>
+                    <ul>
+                        <li>Usa clase abstracta cuando quieras una base común NO instanciable con lógica compartida.</li>
+                        <li>Usa interfaces para “capacidades” y contratos que múltiples clases pueden cumplir.</li>
+                        <li>Apóyate en polimorfismo: listas de tipo abstracto o de interfaz.</li>
+                        <li>Diseña nombres claros: <code>Imprimible</code>, <code>Pagable</code>, <code>Bonificable</code>.</li>
+                    </ul>
+                </div>
+                <div class="strategy-box qc-box">
+                    <h5>Evita esto</h5>
+                    <ul>
+                        <li>Crear clases abstractas sin necesidad (si se pueden instanciar, quizá no sea abstracta).</li>
+                        <li>Usar herencia para representar “tiene-un” (eso es composición, no herencia).</li>
+                        <li>Crear interfaces con demasiados métodos (contratos difíciles de implementar).</li>
+                        <li>Diseñar jerarquías profundas sin razón.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <hr class="divider-thick">
+
+        <section id="foro" class="case-study-section">
+            <div class="case-header">
+                <h2>Actividad práctica de la semana (no obligatoria)</h2>
+            </div>
+
+            <div class="scenario-box">
+                <h4>1. Contexto</h4>
+                <p>
+                    Vas a construir un mini-sistema de <strong>gestión de biblioteca</strong> usando una combinación de clase abstracta e interfaces.
+                    En la biblioteca existen diferentes tipos de recursos (libro y revista) que comparten información base, pero cada uno
+                    define su forma de “descripción”. Además, algunos recursos pueden ser “prestables”.
+                </p>
+                <ol>
+                    <li>Crear una clase abstracta <strong>RecursoBiblioteca</strong> con datos comunes.</li>
+                    <li>Crear subclases <strong>Libro</strong> y <strong>Revista</strong>.</li>
+                    <li>Crear una interfaz <strong>Prestable</strong> con métodos <code>prestar()</code> y <code>devolver()</code>.</li>
+                    <li>Hacer que solo <strong>Libro</strong> implemente <strong>Prestable</strong> (por ejemplo, revista no se presta).</li>
+                    <li>Probar en App con listas y llamados polimórficos.</li>
+                </ol>
+            </div>
+
+            <h3>2. Requerimientos del ejercicio</h3>
+            <div class="table-responsive">
+                <table class="styled-table">
+                    <thead>
+                        <tr>
+                            <th>Elemento</th>
+                            <th>Requisito</th>
+                            <th>Reglas sugeridas</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>RecursoBiblioteca (abstracta)</strong></td>
+                            <td>
+                                Atributos privados: <code>codigo</code>, <code>titulo</code>.<br>
+                                Constructor con validaciones.<br>
+                                Métodos: <code>getCodigo()</code>, <code>getTitulo()</code>.<br>
+                                Método abstracto: <code>descripcion()</code>.
+                            </td>
+                            <td>Código y título no vacíos.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Libro</strong></td>
+                            <td>
+                                Atributo adicional: <code>autor</code>.<br>
+                                Implementar <code>descripcion()</code>.<br>
+                                Implementar interfaz <code>Prestable</code>.
+                            </td>
+                            <td>Autor no vacío. Manejar estado “prestado”.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Revista</strong></td>
+                            <td>
+                                Atributo adicional: <code>numeroEdicion</code>.<br>
+                                Implementar <code>descripcion()</code>.
+                            </td>
+                            <td>Edición &gt; 0.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Prestable (interfaz)</strong></td>
+                            <td>
+                                Métodos: <code>prestar()</code> y <code>devolver()</code>.
+                            </td>
+                            <td>Si ya está prestado, no permitir prestar de nuevo.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>App</strong></td>
+                            <td>
+                                Crear una lista de <code>RecursoBiblioteca</code> con Libro y Revista.<br>
+                                Imprimir <code>descripcion()</code> de cada uno.<br>
+                                Probar prestar y devolver un Libro.
+                            </td>
+                            <td>Demostrar polimorfismo: misma llamada, distintas descripciones.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>3. Entregables</h3>
+            <div class="table-responsive">
+                <table class="styled-table">
+                    <thead>
+                        <tr>
+                            <th>Entregable</th>
+                            <th>Qué incluye</th>
+                            <th>Formato sugerido</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Código fuente</strong></td>
+                            <td>Proyecto completo con clases, interfaz y App ejecutable.</td>
+                            <td>.zip o repositorio</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Salida en consola</strong></td>
+                            <td>Impresión de descripciones + evidencia de prestar y devolver.</td>
+                            <td>Texto o captura</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Explicación breve</strong></td>
+                            <td>
+                                12–18 líneas: ¿por qué <code>RecursoBiblioteca</code> es abstracta?
+                                ¿por qué <code>Prestable</code> es interfaz?
+                                ¿qué ganaste con la combinación?
+                            </td>
+                            <td>Texto / Markdown</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="reflection-box">
+                <h4>Criterios de evaluación (referencia)</h4>
+                <p>
+                    Se revisará: (1) uso correcto de <code>abstract</code> y métodos abstractos, (2) implementación de interfaz con <code>implements</code>,
+                    (3) polimorfismo con lista de tipo base, (4) validaciones mínimas, (5) claridad del diseño.
+                </p>
+            </div>
+
+           
+        </section>
+
+    </main>
+
+    <footer class="main-footer">
+        <div class="container">
+            <p>Material docente para: Programación Orientada a Objetos</p>
+            <p>Semana 8 · Clases abstractas e interfaces · Ingeniería Mecatrónica</p>
+            <p>© 2026 CORHUILA</p>
+        </div>
+    </footer>
+
+    <button id="scrollTopBtn" title="Volver arriba">↑</button>
+
+    <script src="js/script.js"></script>
+</body>
+</html>

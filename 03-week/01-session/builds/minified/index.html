@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Semana 3: Atributos, métodos y encapsulamiento | Programación Orientada a Objetos</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <header class="main-header">
+        <div class="top-bar">
+            <div class="container brand-container">
+                <span class="brand-name">Programación Orientada a Objetos</span><br>
+                <span class="brand-name">Semana 3: Atributos, métodos y encapsulamiento</span>
+            </div>
+        </div>
+
+        <!-- IMPORTANTE: 5 links = 5 secciones (para que el JS marque bien el activo) -->
+        <nav class="main-nav">
+            <div class="container">
+                <ul>
+                    <li><a href="#introduccion" class="active">Inicio</a></li>
+                    <li><a href="#fundamentos">Atributos</a></li>
+                    <li><a href="#ecosistema">Métodos</a></li>
+                    <li><a href="#planificacion">Encapsulamiento</a></li>
+                    <li><a href="#foro">Actividad Práctica</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container main-content">
+
+        <section id="introduccion" class="hero-section">
+            <h1>Semana 3: Atributos, métodos y encapsulamiento</h1>
+            <p class="lead">
+                En esta semana pasarás de “crear objetos” a “diseñar objetos bien hechos”. Aprenderás a definir
+                <strong>atributos</strong> (estado), <strong>métodos</strong> (comportamiento) y, sobre todo, a proteger el estado interno
+                mediante <strong>encapsulamiento</strong>. Esta es una de las habilidades más importantes en POO porque evita errores,
+                mejora la mantenibilidad y permite aplicar reglas de negocio de forma correcta.
+            </p>
+        </section>
+
+        <hr class="divider">
+
+        <section id="fundamentos">
+            <h2>1. Atributos (estado del objeto)</h2>
+            <p>
+                Los <strong>atributos</strong> son variables que pertenecen a una clase y describen el estado de cada objeto.
+                Cuando creas dos objetos de la misma clase, cada uno tiene sus propios atributos con valores independientes.
+            </p>
+
+            <blockquote class="definition-box">
+                <strong>Atributo:</strong> dato que caracteriza a un objeto (estado). En Java suele declararse como una variable dentro de la clase.<br>
+                Ejemplos: <em>nombre</em>, <em>edad</em>, <em>saldo</em>, <em>precio</em>, <em>disponible</em>.
+            </blockquote>
+
+            <h3>1.1. Diferencia entre atributos y variables locales</h3>
+            <p>
+                Es común confundir atributos con variables locales. La diferencia principal es el <strong>alcance</strong> y el <strong>tiempo de vida</strong>:
+            </p>
+
+            <div class="table-responsive">
+                <table class="styled-table">
+                    <thead>
+                        <tr>
+                            <th>Tipo</th>
+                            <th>Dónde se declara</th>
+                            <th>Tiempo de vida</th>
+                            <th>Ejemplo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Atributo</strong></td>
+                            <td>Dentro de la clase (fuera de métodos)</td>
+                            <td>Vive mientras el objeto exista</td>
+                            <td><code>private double saldo;</code></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Variable local</strong></td>
+                            <td>Dentro de un método o bloque</td>
+                            <td>Vive solo durante la ejecución del método</td>
+                            <td><code>double total = 0;</code></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>1.2. Valores por defecto de atributos en Java</h3>
+            <p>
+                En Java, los atributos tienen valores por defecto cuando no se inicializan explícitamente. Esto NO significa que sea buena práctica
+                depender siempre de esos valores, pero es importante conocerlo para entender el comportamiento.
+            </p>
+
+            <div class="table-responsive">
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Tipo</th>
+                            <th>Valor por defecto</th>
+                            <th>Ejemplo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>int</strong></td>
+                            <td>0</td>
+                            <td><code>private int edad;</code> → 0</td>
+                        </tr>
+                        <tr>
+                            <td><strong>double</strong></td>
+                            <td>0.0</td>
+                            <td><code>private double saldo;</code> → 0.0</td>
+                        </tr>
+                        <tr>
+                            <td><strong>boolean</strong></td>
+                            <td>false</td>
+                            <td><code>private boolean activo;</code> → false</td>
+                        </tr>
+                        <tr>
+                            <td><strong>String / objetos</strong></td>
+                            <td>null</td>
+                            <td><code>private String nombre;</code> → null</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>1.3. Ejemplo: clase con atributos</h3>
+            <p>
+                Vamos a modelar una entidad simple: <strong>Usuario</strong>. Por ahora, solo definimos atributos. Luego agregaremos métodos y encapsulamiento.
+            </p>
+
+            <pre><code class="language-java">package com.corhuila.poo.semana3;
+
+public class Usuario {
+    String nombre;
+    int edad;
+    boolean activo;
+}</code></pre>
+
+            <p>
+                Este ejemplo “funciona”, pero es una mala práctica porque los atributos están con acceso por defecto (package-private).
+                En encapsulamiento aprenderás por qué deben ser <code>private</code> y cómo controlar cambios.
+            </p>
+        </section>
+
+        <section id="ecosistema">
+            <h2>2. Métodos (comportamiento del objeto)</h2>
+            <p>
+                Los <strong>métodos</strong> son funciones definidas dentro de una clase. Representan lo que el objeto “puede hacer”.
+                Un método puede:
+                (1) modificar el estado del objeto, (2) devolver información, o (3) realizar una acción (por ejemplo imprimir).
+            </p>
+
+            <blockquote class="definition-box">
+                <strong>Método:</strong> bloque de código que pertenece a una clase y define una acción o comportamiento.<br>
+                Partes clave: <strong>modificadores</strong>, <strong>tipo de retorno</strong>, <strong>nombre</strong>, <strong>parámetros</strong>, <strong>cuerpo</strong>.
+            </blockquote>
+
+            <h3>2.1. Estructura de un método en Java</h3>
+            <pre><code class="language-java">modificador tipoRetorno nombreMetodo(tipo parametro1, tipo parametro2) {
+    // instrucciones
+    return valor; // si el tipoRetorno no es void
+}</code></pre>
+
+            <h3>2.2. Tipos comunes de métodos (según su propósito)</h3>
+            <div class="table-responsive">
+                <table class="styled-table">
+                    <thead>
+                        <tr>
+                            <th>Tipo de método</th>
+                            <th>Qué hace</th>
+                            <th>Ejemplo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Modificador de estado</strong></td>
+                            <td>Cambia atributos del objeto</td>
+                            <td><code>depositar(monto)</code></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Consultor</strong></td>
+                            <td>Devuelve información sin cambiar estado</td>
+                            <td><code>getSaldo()</code></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Acción</strong></td>
+                            <td>Realiza una acción (puede o no cambiar estado)</td>
+                            <td><code>imprimirResumen()</code></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>2.3. Ejemplo: agregar métodos a la clase Usuario</h3>
+            <p>
+                Ahora agregaremos métodos simples para activar/desactivar y mostrar información. Ojo: todavía no hemos aplicado encapsulamiento,
+                pero ya verás cómo los métodos ayudan a controlar acciones.
+            </p>
+
+            <pre><code class="language-java">package com.corhuila.poo.semana3;
+
+public class Usuario {
+    String nombre;
+    int edad;
+    boolean activo;
+
+    void activar() {
+        activo = true;
+    }
+
+    void desactivar() {
+        activo = false;
+    }
+
+    String resumen() {
+        return "Usuario{nombre='" + nombre + "', edad=" + edad + ", activo=" + activo + "}";
+    }
+}</code></pre>
+
+            <p>
+                Ya hay un avance: en vez de que “desde afuera” cualquier parte del programa cambie <code>activo</code> sin control,
+                ahora existe una acción clara: <code>activar()</code> o <code>desactivar()</code>. Sin embargo, todavía se pueden
+                cambiar atributos desde afuera directamente, y eso es un problema.
+            </p>
+
+            <h3>2.4. El constructor (método especial) y por qué importa</h3>
+            <p>
+                Un <strong>constructor</strong> es un método especial que se ejecuta cuando creas un objeto con <code>new</code>.
+                Su propósito principal es asegurar que el objeto nazca en un estado válido.
+            </p>
+
+            <blockquote class="definition-box">
+                <strong>Constructor:</strong> se llama igual que la clase y no tiene tipo de retorno.<br>
+                Se ejecuta automáticamente al instanciar el objeto.
+            </blockquote>
+
+            <pre><code class="language-java">package com.corhuila.poo.semana3;
+
+public class Usuario {
+    String nombre;
+    int edad;
+    boolean activo;
+
+    public Usuario(String nombre, int edad) {
+        this.nombre = nombre;
+        this.edad = edad;
+        this.activo = true; // por defecto, el usuario inicia activo
+    }
+
+    String resumen() {
+        return "Usuario{nombre='" + nombre + "', edad=" + edad + ", activo=" + activo + "}";
+    }
+}</code></pre>
+
+            <p>
+                Fíjate en <code>this.nombre</code>: <code>this</code> hace referencia al objeto actual. Se usa para diferenciar
+                atributos de parámetros cuando tienen el mismo nombre.
+            </p>
+        </section>
+
+        <section id="planificacion">
+            <h2>3. Encapsulamiento: proteger el estado y controlar cambios</h2>
+            <p>
+                El <strong>encapsulamiento</strong> es la práctica de ocultar los detalles internos del objeto y permitir acceso controlado.
+                Esto se hace principalmente con:
+                <strong>atributos privados</strong> (<code>private</code>) y <strong>métodos públicos</strong> que exponen operaciones seguras.
+            </p>
+
+            <blockquote class="definition-box">
+                <strong>Encapsulamiento:</strong> restringir el acceso directo a los atributos y permitir interacción mediante métodos controlados.<br>
+                <strong>Objetivo:</strong> evitar estados inválidos y aplicar reglas de negocio dentro de la clase.
+            </blockquote>
+
+            <h3>3.1. ¿Qué problema resuelve el encapsulamiento?</h3>
+            <p>
+                Sin encapsulación, cualquier parte del programa podría hacer algo como:
+                <code>saldo = -9999</code> o <code>edad = -5</code>.
+                Eso rompe reglas del dominio y genera errores difíciles de detectar.
+            </p>
+
+            <div class="comparison-cards">
+                <div class="card qc-card">
+                    <h3>Sin encapsulación (mala práctica)</h3>
+                    <ul>
+                        <li>Atributos accesibles desde cualquier parte.</li>
+                        <li>Se pueden poner valores inválidos.</li>
+                        <li>No hay un punto único donde aplicar reglas.</li>
+                    </ul>
+                </div>
+                <div class="card qa-card">
+                    <h3>Con encapsulación (buena práctica)</h3>
+                    <ul>
+                        <li>Atributos privados.</li>
+                        <li>Reglas y validaciones dentro de la clase.</li>
+                        <li>Menos errores y mejor mantenimiento.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3>3.2. Modificadores de acceso en Java (lo necesario para esta semana)</h3>
+            <p>
+                Los modificadores definen desde dónde se puede acceder a una clase, atributo o método.
+                Aquí está lo esencial (sin entrar en temas avanzados):
+            </p>
+
+            <div class="table-responsive">
+                <table class="styled-table">
+                    <thead>
+                        <tr>
+                            <th>Modificador</th>
+                            <th>Acceso</th>
+                            <th>Uso típico</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>private</strong></td>
+                            <td>Solo dentro de la misma clase</td>
+                            <td>Atributos (para encapsular)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>public</strong></td>
+                            <td>Desde cualquier parte</td>
+                            <td>Métodos que expone el objeto</td>
+                        </tr>
+                        <tr>
+                            <td><strong>(sin modifier)</strong></td>
+                            <td>Solo dentro del mismo paquete</td>
+                            <td>Evitarlo en atributos; usarlo con intención</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>3.3. Getters y setters: acceso controlado (no es “solo generar por generar”)</h3>
+            <p>
+                Un error común es pensar que encapsular es únicamente “poner private y generar getters/setters”.
+                La idea real es: <strong>controlar</strong> y <strong>validar</strong>.
+                Los getters devuelven valores; los setters permiten cambios, pero deberían aplicar reglas.
+            </p>
+
+            <pre><code class="language-java">package com.corhuila.poo.semana3;
+
+public class Usuario {
+    private String nombre;
+    private int edad;
+    private boolean activo;
+
+    public Usuario(String nombre, int edad) {
+        setNombre(nombre);
+        setEdad(edad);
+        this.activo = true;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        if (nombre == null || nombre.trim().isEmpty()) {
+            throw new IllegalArgumentException("El nombre no puede estar vacío.");
+        }
+        this.nombre = nombre.trim();
+    }
+
+    public int getEdad() {
+        return edad;
+    }
+
+    public void setEdad(int edad) {
+        if (edad &lt; 0) {
+            throw new IllegalArgumentException("La edad no puede ser negativa.");
+        }
+        this.edad = edad;
+    }
+
+    public boolean isActivo() {
+        return activo;
+    }
+
+    public void desactivar() {
+        this.activo = false;
+    }
+
+    public void activar() {
+        this.activo = true;
+    }
+
+    public String resumen() {
+        return "Usuario{nombre='" + nombre + "', edad=" + edad + ", activo=" + activo + "}";
+    }
+}</code></pre>
+
+            <p>
+                Observa lo importante:
+            </p>
+            <ul>
+                <li>Los atributos son <code>private</code> (nadie puede cambiarlos directamente).</li>
+                <li>Los setters validan reglas (nombre no vacío, edad no negativa).</li>
+                <li>El constructor usa setters para asegurar que el objeto nace válido.</li>
+            </ul>
+
+            <h3>3.4. Ejemplo completo de uso (App)</h3>
+            <pre><code class="language-java">package com.corhuila.poo.semana3;
+
+public class App {
+    public static void main(String[] args) {
+        Usuario u1 = new Usuario("Camila", 20);
+
+        System.out.println(u1.resumen());
+
+        u1.setEdad(21);
+        u1.desactivar();
+
+        System.out.println(u1.resumen());
+
+        // Ejemplo de validación (descomenta para probar)
+        // u1.setNombre("");
+        // u1.setEdad(-3);
+    }
+}</code></pre>
+
+            <h3>3.5. Recomendaciones prácticas de encapsulación (las que sí importan)</h3>
+            <div class="strategy-grid">
+                <div class="strategy-box qc-box">
+                    <h5>Encapsulación bien aplicada</h5>
+                    <ul>
+                        <li>No expongas atributos públicos.</li>
+                        <li>No crees setters si NO necesitas permitir cambios.</li>
+                        <li>Prefiere métodos con intención (ej.: <code>activar()</code>) en vez de <code>setActivo(true)</code>.</li>
+                        <li>Valida datos dentro de la clase, no afuera.</li>
+                    </ul>
+                </div>
+                <div class="strategy-box qa-box">
+                    <h5>Errores comunes</h5>
+                    <ul>
+                        <li>Generar setters para todo sin reglas (encapsulación “falsa”).</li>
+                        <li>Permitir estados inválidos (edad negativa, strings vacíos).</li>
+                        <li>Hacer validaciones solo en App (se rompe cuando el sistema crece).</li>
+                        <li>Confundir “private” con “seguridad total” (es control de acceso, no cifrado).</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <hr class="divider-thick">
+
+        <section id="foro" class="case-study-section">
+            <div class="case-header">
+                <h2>Actividad práctica de la semana (no obligatoria)</h2>
+            </div>
+
+            <div class="scenario-box">
+                <h4>1. Contexto</h4>
+                <p>
+                    Vas a construir un mini-sistema de consola para gestionar una <strong>Tarjeta de Transporte</strong> (tipo tarjeta de bus/metro).
+                    El objetivo es practicar atributos, métodos y encapsulamiento: la tarjeta debe proteger su saldo y solo permitir cambios
+                    mediante operaciones válidas.
+                </p>
+                <ol>
+                    <li>Crear la clase <strong>TarjetaTransporte</strong> con atributos privados.</li>
+                    <li>Definir constructor y métodos para operar sobre el saldo.</li>
+                    <li>Probar en <strong>App</strong> diferentes escenarios (válidos e inválidos).</li>
+                </ol>
+            </div>
+
+            <h3>2. Requerimientos del mini-ejercicio</h3>
+            <div class="table-responsive">
+                <table class="styled-table">
+                    <thead>
+                        <tr>
+                            <th>Elemento</th>
+                            <th>Requisito</th>
+                            <th>Reglas (obligatorias)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Atributos</strong></td>
+                            <td><code>private String codigo;</code>, <code>private double saldo;</code>, <code>private boolean activa;</code></td>
+                            <td>No se permite acceso directo a los atributos.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Constructor</strong></td>
+                            <td>Recibe <code>codigo</code> y <code>saldoInicial</code></td>
+                            <td>Saldo inicial no puede ser negativo.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Método recargar</strong></td>
+                            <td><code>public void recargar(double monto)</code></td>
+                            <td>Monto debe ser &gt; 0.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Método pagarPasaje</strong></td>
+                            <td><code>public void pagarPasaje(double valorPasaje)</code></td>
+                            <td>
+                                Valor pasaje &gt; 0, tarjeta activa, y saldo suficiente.<br>
+                                Si no cumple, no descuenta.
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>Métodos de control</strong></td>
+                            <td><code>activar()</code>, <code>desactivar()</code>, <code>getSaldo()</code>, <code>resumen()</code></td>
+                            <td>Usar métodos con intención para estado “activa”.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>3. Entregables</h3>
+            <div class="table-responsive">
+                <table class="styled-table">
+                    <thead>
+                        <tr>
+                            <th>Entregable</th>
+                            <th>Qué incluye</th>
+                            <th>Formato sugerido</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Código fuente</strong></td>
+                            <td>Clases <code>TarjetaTransporte</code> y <code>App</code> compilando y ejecutando.</td>
+                            <td>.zip o repositorio</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Casos de prueba en consola</strong></td>
+                            <td>
+                                Evidencia de: recarga válida, pago válido, pago sin saldo, pago con tarjeta desactivada.
+                            </td>
+                            <td>Texto o captura</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Explicación breve</strong></td>
+                            <td>
+                                8–12 líneas: ¿qué protege el encapsulamiento? ¿qué reglas aplicaste y dónde?
+                            </td>
+                            <td>Texto / Markdown</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="reflection-box">
+                <h4>Criterios de evaluación (referencia)</h4>
+                <p>
+                    Se revisará principalmente: (1) atributos privados, (2) constructor válido, (3) métodos con validaciones,
+                    (4) que el saldo solo cambie mediante métodos, (5) claridad y orden del código.
+                </p>
+            </div>
+
+           
+        </section>
+
+    </main>
+
+    <footer class="main-footer">
+        <div class="container">
+            <p>Material docente para: Programación Orientada a Objetos</p>
+            <p>Semana 3 · Atributos, métodos y encapsulamiento · Ingeniería Mecatrónica</p>
+            <p>© 2026 CORHUILA</p>
+        </div>
+    </footer>
+
+    <button id="scrollTopBtn" title="Volver arriba">↑</button>
+
+    <script src="js/script.js"></script>
+</body>
+</html>

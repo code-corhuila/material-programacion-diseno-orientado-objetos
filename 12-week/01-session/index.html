@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Semana 12: Colecciones y estructuras de datos | Programación Orientada a Objetos</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <header class="main-header">
+        <div class="top-bar">
+            <div class="container brand-container">
+                <span class="brand-name">Programación Orientada a Objetos</span><br>
+                <span class="brand-name">Semana 12: Colecciones y estructuras de datos</span>
+            </div>
+        </div>
+
+        <!-- IMPORTANTE: 5 links = 5 secciones (para que el JS marque bien el activo) -->
+        <nav class="main-nav">
+            <div class="container">
+                <ul>
+                    <li><a href="#introduccion" class="active">Inicio</a></li>
+                    <li><a href="#fundamentos">Colecciones (Collection)</a></li>
+                    <li><a href="#ecosistema">List / Set / Map</a></li>
+                    <li><a href="#planificacion">Iteración y buenas prácticas</a></li>
+                    <li><a href="#foro">Actividad Práctica</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container main-content">
+
+        <section id="introduccion" class="hero-section">
+            <h1>Semana 12: Colecciones y estructuras de datos</h1>
+            <p class="lead">
+                En esta semana aprenderás a manejar grupos de datos de forma profesional usando el <strong>Framework de Colecciones</strong> de Java.
+                Verás cuándo usar <strong>List</strong>, <strong>Set</strong> y <strong>Map</strong>, cómo iterar de forma segura,
+                cómo buscar y filtrar elementos, y qué decisiones de estructura impactan rendimiento y claridad del código.
+                También practicarás con un caso realista donde almacenar, consultar y organizar información es clave.
+            </p>
+        </section>
+
+        <hr class="divider">
+
+        <section id="fundamentos">
+            <h2>1. ¿Qué es una colección y por qué no basta con arrays?</h2>
+            <p>
+                Un <strong>array</strong> es una estructura básica: tamaño fijo, acceso por índice, y muy útil para ciertos casos.
+                Pero en aplicaciones reales, los datos cambian: se agregan, se eliminan, se buscan, se ordenan, y el tamaño crece o disminuye.
+                Ahí entran las <strong>colecciones</strong>, que son estructuras dinámicas diseñadas para manipular conjuntos de elementos
+                de forma flexible.
+            </p>
+
+            <blockquote class="definition-box">
+                <strong>Colección:</strong> estructura de datos que almacena múltiples elementos y ofrece operaciones
+                como agregar, eliminar, buscar e iterar de manera eficiente, con soporte para tamaño dinámico.
+            </blockquote>
+
+            <h3>1.1. Limitaciones típicas de arrays</h3>
+            <div class="table-responsive">
+                <table class="styled-table">
+                    <thead>
+                        <tr>
+                            <th>Necesidad</th>
+                            <th>Array</th>
+                            <th>Colecciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Tamaño variable</td>
+                            <td>No (fijo)</td>
+                            <td>Sí (dinámico)</td>
+                        </tr>
+                        <tr>
+                            <td>Eliminar elementos</td>
+                            <td>Complejo (mover posiciones)</td>
+                            <td>Más simple</td>
+                        </tr>
+                        <tr>
+                            <td>Búsquedas / claves</td>
+                            <td>Manual (recorrer)</td>
+                            <td>Soporte (Set/Map)</td>
+                        </tr>
+                        <tr>
+                            <td>Evitar duplicados</td>
+                            <td>Manual</td>
+                            <td>Natural con Set</td>
+                        </tr>
+                        <tr>
+                            <td>Asociar clave → valor</td>
+                            <td>No (directo)</td>
+                            <td>Map (ideal)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>1.2. Java Collections Framework (visión general)</h3>
+            <p>
+                Java provee un conjunto estándar de interfaces y clases para trabajar con colecciones.
+                La idea no es memorizar “todas”, sino dominar las principales:
+            </p>
+
+            <div class="table-responsive">
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Familia</th>
+                            <th>Qué almacena</th>
+                            <th>Ejemplos de implementación</th>
+                            <th>Uso típico</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>List</strong></td>
+                            <td>Elementos ordenados, permite duplicados</td>
+                            <td><code>ArrayList</code>, <code>LinkedList</code></td>
+                            <td>Listados, historial, carrito de compras</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Set</strong></td>
+                            <td>Elementos sin duplicados</td>
+                            <td><code>HashSet</code>, <code>TreeSet</code></td>
+                            <td>Control de únicos: códigos, correos, etiquetas</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Map</strong></td>
+                            <td>Pares clave → valor</td>
+                            <td><code>HashMap</code>, <code>TreeMap</code></td>
+                            <td>Búsqueda por clave: id → objeto</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>1.3. Genéricos: colecciones con tipo</h3>
+            <p>
+                En Java, las colecciones se trabajan con <strong>genéricos</strong> para evitar mezclar tipos y para que el compilador te ayude.
+                Por eso verás cosas como <code>List&lt;Producto&gt;</code>.
+            </p>
+
+            <pre><code class="language-java">import java.util.ArrayList;
+import java.util.List;
+
+public class Demo {
+    public static void main(String[] args) {
+        List&lt;String&gt; nombres = new ArrayList&lt;&gt;();
+        nombres.add("Ana");
+        nombres.add("Luis");
+
+        // nombres.add(10); // ERROR de compilación: no es String
+        System.out.println(nombres);
+    }
+}</code></pre>
+
+            <p>
+                Esto mejora seguridad y claridad: el IDE te sugiere métodos y evita errores comunes.
+            </p>
+        </section>
+
+        <section id="ecosistema">
+            <h2>2. List, Set y Map: cuándo usar cada uno (con ejemplos)</h2>
+            <p>
+                Para dominar colecciones, necesitas tomar buenas decisiones. No existe “la mejor” colección universal:
+                depende del objetivo: ¿necesitas orden? ¿duplicados? ¿búsqueda por clave? ¿evitar repetidos?
+            </p>
+
+            <h3>2.1. List (ArrayList): cuando importa el orden y se permiten duplicados</h3>
+            <p>
+                <strong>List</strong> representa una secuencia de elementos. Mantiene orden de inserción y permite elementos repetidos.
+                La implementación más común es <code>ArrayList</code>.
+            </p>
+
+            <pre><code class="language-java">import java.util.ArrayList;
+import java.util.List;
+
+public class DemoList {
+    public static void main(String[] args) {
+        List&lt;String&gt; tareas = new ArrayList&lt;&gt;();
+        tareas.add("Estudiar");
+        tareas.add("Hacer ejercicio");
+        tareas.add("Estudiar"); // permitido (duplicado)
+
+        System.out.println("Tareas: " + tareas);
+        System.out.println("Primera tarea: " + tareas.get(0));
+    }
+}</code></pre>
+
+            <h4>Operaciones comunes en List</h4>
+            <div class="table-responsive">
+                <table class="styled-table">
+                    <thead>
+                        <tr>
+                            <th>Operación</th>
+                            <th>Método</th>
+                            <th>Ejemplo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Agregar</td>
+                            <td><code>add()</code></td>
+                            <td><code>lista.add(x)</code></td>
+                        </tr>
+                        <tr>
+                            <td>Obtener por índice</td>
+                            <td><code>get(i)</code></td>
+                            <td><code>lista.get(0)</code></td>
+                        </tr>
+                        <tr>
+                            <td>Eliminar</td>
+                            <td><code>remove()</code></td>
+                            <td><code>lista.remove(2)</code></td>
+                        </tr>
+                        <tr>
+                            <td>Tamaño</td>
+                            <td><code>size()</code></td>
+                            <td><code>lista.size()</code></td>
+                        </tr>
+                        <tr>
+                            <td>Recorrer</td>
+                            <td>for / foreach</td>
+                            <td><code>for(String x: lista)</code></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>2.2. Set (HashSet): cuando NO quieres duplicados</h3>
+            <p>
+                <strong>Set</strong> evita duplicados. Es ideal cuando necesitas almacenar valores únicos.
+                <code>HashSet</code> es la opción más común (rápida para agregar y buscar).
+            </p>
+
+            <pre><code class="language-java">import java.util.HashSet;
+import java.util.Set;
+
+public class DemoSet {
+    public static void main(String[] args) {
+        Set&lt;String&gt; codigos = new HashSet&lt;&gt;();
+        codigos.add("A-01");
+        codigos.add("A-02");
+        codigos.add("A-01"); // duplicado: NO se agrega de nuevo
+
+        System.out.println("Códigos únicos: " + codigos);
+        System.out.println("Existe A-02?: " + codigos.contains("A-02"));
+        System.out.println("Tamaño: " + codigos.size());
+    }
+}</code></pre>
+
+            <p>
+                Importante: <strong>HashSet</strong> no garantiza orden. Si quieres orden alfabético o natural, existe <code>TreeSet</code>.
+            </p>
+
+            <h3>2.3. Map (HashMap): cuando necesitas buscar por “clave”</h3>
+            <p>
+                <strong>Map</strong> almacena pares <strong>clave → valor</strong>. Es ideal para búsquedas rápidas por una clave.
+                Ejemplo: código de producto → objeto Producto.
+            </p>
+
+            <pre><code class="language-java">import java.util.HashMap;
+import java.util.Map;
+
+public class DemoMap {
+    public static void main(String[] args) {
+        Map&lt;String, Integer&gt; stock = new HashMap&lt;&gt;();
+
+        stock.put("P-01", 10);
+        stock.put("P-02", 5);
+        stock.put("P-01", 12); // reemplaza el valor anterior
+
+        System.out.println("Stock P-01: " + stock.get("P-01"));
+        System.out.println("Existe P-03?: " + stock.containsKey("P-03"));
+        System.out.println("Claves: " + stock.keySet());
+    }
+}</code></pre>
+
+            <h4>Operaciones comunes en Map</h4>
+            <div class="table-responsive">
+                <table class="styled-table">
+                    <thead>
+                        <tr>
+                            <th>Operación</th>
+                            <th>Método</th>
+                            <th>Ejemplo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Guardar / actualizar</td>
+                            <td><code>put(k, v)</code></td>
+                            <td><code>map.put("P-01", 10)</code></td>
+                        </tr>
+                        <tr>
+                            <td>Obtener por clave</td>
+                            <td><code>get(k)</code></td>
+                            <td><code>map.get("P-01")</code></td>
+                        </tr>
+                        <tr>
+                            <td>Verificar clave</td>
+                            <td><code>containsKey(k)</code></td>
+                            <td><code>map.containsKey("P-02")</code></td>
+                        </tr>
+                        <tr>
+                            <td>Recorrer</td>
+                            <td><code>entrySet()</code></td>
+                            <td><code>for(var e: map.entrySet())</code></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>2.4. ¿Qué estructura usar? (guía rápida)</h3>
+            <div class="strategy-grid">
+                <div class="strategy-box qa-box">
+                    <h5>Usa List si...</h5>
+                    <ul>
+                        <li>Importa el orden</li>
+                        <li>Se permiten duplicados</li>
+                        <li>Trabajas por posición (índice)</li>
+                    </ul>
+                </div>
+                <div class="strategy-box qc-box">
+                    <h5>Usa Set si...</h5>
+                    <ul>
+                        <li>No quieres elementos repetidos</li>
+                        <li>Quieres validar “únicos”</li>
+                        <li>La existencia/contención es clave</li>
+                    </ul>
+                </div>
+                <div class="strategy-box qa-box">
+                    <h5>Usa Map si...</h5>
+                    <ul>
+                        <li>Necesitas buscar por clave rápidamente</li>
+                        <li>Clave→Valor (id→objeto)</li>
+                        <li>Quieres reemplazo/actualización por clave</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="planificacion">
+            <h2>3. Iteración, búsqueda y buenas prácticas en colecciones</h2>
+            <p>
+                Saber crear colecciones no es suficiente: debes saber recorrerlas, buscar, filtrar y evitar errores comunes.
+                Aquí verás formas seguras de iterar y patrones básicos para manipular datos.
+            </p>
+
+            <h3>3.1. Formas de recorrer colecciones</h3>
+
+            <h4>a) for-each (recomendado para lectura)</h4>
+            <pre><code class="language-java">for (String x : lista) {
+    System.out.println(x);
+}</code></pre>
+
+            <h4>b) for clásico (cuando necesitas índice)</h4>
+            <pre><code class="language-java">for (int i = 0; i &lt; lista.size(); i++) {
+    System.out.println(i + ": " + lista.get(i));
+}</code></pre>
+
+            <h4>c) Iterar Map con entrySet (mejor opción)</h4>
+            <pre><code class="language-java">for (Map.Entry&lt;String, Integer&gt; e : stock.entrySet()) {
+    System.out.println(e.getKey() + " =&gt; " + e.getValue());
+}</code></pre>
+
+            <h3>3.2. Búsqueda manual en List (patrón básico)</h3>
+            <p>
+                En una List, si necesitas buscar un objeto por alguna propiedad (por ejemplo, por código), normalmente recorres:
+            </p>
+
+            <pre><code class="language-java">public Producto buscarPorCodigo(List&lt;Producto&gt; productos, String codigo) {
+    for (Producto p : productos) {
+        if (p.getCodigo().equalsIgnoreCase(codigo)) {
+            return p;
+        }
+    }
+    return null; // no encontrado
+}</code></pre>
+
+            <p>
+                Nota importante: devolver <code>null</code> es válido para este nivel, pero debes manejarlo con cuidado
+                para evitar <code>NullPointerException</code>. En niveles más avanzados se usa <code>Optional</code>.
+            </p>
+
+            <h3>3.3. Eliminar mientras recorres (error común)</h3>
+            <p>
+                Un error típico es intentar eliminar elementos de una lista mientras la recorres con for-each,
+                lo que puede producir <code>ConcurrentModificationException</code>.
+            </p>
+
+            <div class="comparison-cards">
+                <div class="card qc-card">
+                    <h3>Mal (puede fallar)</h3>
+                    <ul>
+                        <li>Eliminar en un for-each</li>
+                        <li>Produce errores en tiempo de ejecución</li>
+                    </ul>
+                </div>
+                <div class="card qa-card">
+                    <h3>Bien (seguro)</h3>
+                    <ul>
+                        <li>Usar <code>Iterator</code> o remover por índice con cuidado</li>
+                        <li>Evita errores de modificación concurrente</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h4>Eliminar con Iterator (forma segura)</h4>
+            <pre><code class="language-java">import java.util.Iterator;
+import java.util.List;
+
+public void eliminarVacios(List&lt;String&gt; lista) {
+    Iterator&lt;String&gt; it = lista.iterator();
+    while (it.hasNext()) {
+        String v = it.next();
+        if (v == null || v.trim().isEmpty()) {
+            it.remove();
+        }
+    }
+}</code></pre>
+
+            <h3>3.4. Elegir estructura por rendimiento (idea básica)</h3>
+            <p>
+                Sin entrar en complejidad matemática avanzada, recuerda:
+            </p>
+            <ul>
+                <li><strong>ArrayList:</strong> acceso por índice rápido, agregar al final suele ser eficiente.</li>
+                <li><strong>LinkedList:</strong> útil si insertas/eliminan mucho en medio, pero menos común en práctica básica.</li>
+                <li><strong>HashSet/HashMap:</strong> buscar por contención/clave suele ser muy rápido.</li>
+                <li><strong>TreeSet/TreeMap:</strong> mantiene orden, pero puede ser más lento que Hash en operaciones básicas.</li>
+            </ul>
+
+            <h3>3.5. Buenas prácticas recomendadas</h3>
+            <div class="strategy-grid">
+                <div class="strategy-box qa-box">
+                    <h5>Recomendaciones</h5>
+                    <ul>
+                        <li>Programar contra interfaces: <code>List</code>, <code>Set</code>, <code>Map</code> (no contra la implementación).</li>
+                        <li>Validar antes de usar <code>get()</code> en Map: <code>containsKey</code>.</li>
+                        <li>Evitar <code>null</code> en colecciones cuando sea posible (o manejarlo claramente).</li>
+                        <li>Usar clases pequeñas para representar datos (POO), no solo Strings sueltos.</li>
+                    </ul>
+                </div>
+                <div class="strategy-box qc-box">
+                    <h5>Errores comunes</h5>
+                    <ul>
+                        <li>Usar List cuando realmente necesitas evitar duplicados (debió ser Set).</li>
+                        <li>Usar List para buscar por clave (debió ser Map).</li>
+                        <li>Eliminar en for-each y romper el programa.</li>
+                        <li>Guardar datos “sin modelo” (ej.: “código-nombre-precio” en un String).</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <hr class="divider-thick">
+
+        <section id="foro" class="case-study-section">
+            <div class="case-header">
+                <h2>Actividad práctica de la semana (no obligatoria)</h2>
+            </div>
+
+            <div class="scenario-box">
+                <h4>1. Contexto</h4>
+                <p>
+                    Vas a construir un mini-sistema de <strong>gestión de inventario</strong> usando colecciones.
+                    El inventario almacenará productos, permitirá registrar entradas y salidas de stock,
+                    consultar por código y mostrar reportes básicos. La idea es que elijas correctamente
+                    <strong>List</strong> y <strong>Map</strong> según el tipo de operación.
+                </p>
+                <ol>
+                    <li>Crear clase <strong>Producto</strong> (código, nombre, precio).</li>
+                    <li>Crear clase <strong>Inventario</strong> que use un <code>Map&lt;String, Producto&gt;</code> para búsqueda rápida por código.</li>
+                    <li>Crear clase <strong>Stock</strong> o usar un <code>Map&lt;String, Integer&gt;</code> para cantidades.</li>
+                    <li>Implementar: agregar producto, actualizar stock, consultar por código, listar todos.</li>
+                    <li>Probar desde App con al menos 4 productos.</li>
+                </ol>
+            </div>
+
+            <h3>2. Requerimientos del ejercicio</h3>
+            <div class="table-responsive">
+                <table class="styled-table">
+                    <thead>
+                        <tr>
+                            <th>Elemento</th>
+                            <th>Requisito</th>
+                            <th>Reglas sugeridas</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Producto</strong></td>
+                            <td>Constructor + getters + <code>toString()</code></td>
+                            <td>Precio &gt; 0, textos no vacíos</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Inventario</strong></td>
+                            <td>
+                                Atributos: <code>Map&lt;String, Producto&gt; productos</code>,
+                                <code>Map&lt;String, Integer&gt; cantidades</code>
+                            </td>
+                            <td>El código debe ser único</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Métodos mínimos</strong></td>
+                            <td>
+                                <code>agregarProducto(Producto p)</code><br>
+                                <code>entrada(String codigo, int cantidad)</code><br>
+                                <code>salida(String codigo, int cantidad)</code><br>
+                                <code>buscar(String codigo)</code><br>
+                                <code>listar()</code>
+                            </td>
+                            <td>No permitir salida si no hay stock suficiente</td>
+                        </tr>
+                        <tr>
+                            <td><strong>App</strong></td>
+                            <td>Simular movimientos y mostrar reporte final</td>
+                            <td>Mostrar errores controlados si el código no existe</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>3. Entregables</h3>
+            <div class="table-responsive">
+                <table class="styled-table">
+                    <thead>
+                        <tr>
+                            <th>Entregable</th>
+                            <th>Qué incluye</th>
+                            <th>Formato sugerido</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Código fuente</strong></td>
+                            <td>Clases + App ejecutable con uso de colecciones.</td>
+                            <td>.zip o repositorio</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Salida en consola</strong></td>
+                            <td>Listado final + consultas por código + movimientos.</td>
+                            <td>Texto o captura</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Explicación breve</strong></td>
+                            <td>
+                                12–18 líneas: ¿por qué usaste Map? ¿qué problemas resolvería Set en otro contexto?
+                                ¿qué errores comunes evitaste al iterar?
+                            </td>
+                            <td>Texto / Markdown</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="reflection-box">
+                <h4>Criterios de evaluación (referencia)</h4>
+                <p>
+                    Se revisará: (1) uso correcto de <code>List/Set/Map</code> según necesidad,
+                    (2) genéricos, (3) operaciones básicas (agregar/buscar/listar),
+                    (4) manejo de casos: código inexistente o stock insuficiente, (5) claridad y orden del código.
+                </p>
+            </div>
+
+            
+        </section>
+
+    </main>
+
+    <footer class="main-footer">
+        <div class="container">
+            <p>Material docente para: Programación Orientada a Objetos</p>
+            <p>Semana 12 · Colecciones y estructuras de datos · Ingeniería Mecatrónica</p>
+            <p>© 2026 CORHUILA</p>
+        </div>
+    </footer>
+
+    <button id="scrollTopBtn" title="Volver arriba">↑</button>  
+
+    <script src="js/script.js"></script>
+</body>
+</html>

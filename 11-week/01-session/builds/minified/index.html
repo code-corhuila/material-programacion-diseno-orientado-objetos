@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Semana 11: Manejo de errores y excepciones | Programación Orientada a Objetos</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <header class="main-header">
+        <div class="top-bar">
+            <div class="container brand-container">
+                <span class="brand-name">Programación Orientada a Objetos</span><br>
+                <span class="brand-name">Semana 11: Manejo de errores y excepciones</span>
+            </div>
+        </div>
+
+        <!-- IMPORTANTE: 5 links = 5 secciones (para que el JS marque bien el activo) -->
+        <nav class="main-nav">
+            <div class="container">
+                <ul>
+                    <li><a href="#introduccion" class="active">Inicio</a></li>
+                    <li><a href="#fundamentos">Errores y excepciones</a></li>
+                    <li><a href="#ecosistema">try/catch/finally</a></li>
+                    <li><a href="#planificacion">Buenas prácticas</a></li>
+                    <li><a href="#foro">Actividad Práctica</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container main-content">
+
+        <section id="introduccion" class="hero-section">
+            <h1>Semana 11: Manejo de errores y excepciones</h1>
+            <p class="lead">
+                En esta semana aprenderás a manejar situaciones inesperadas sin que tu programa “reviente”.
+                Verás la diferencia entre <strong>errores</strong> y <strong>excepciones</strong>, cómo usar
+                <code>try</code>/<code>catch</code>/<code>finally</code>, cuándo conviene lanzar una excepción,
+                cómo crear excepciones propias y cómo diseñar validaciones que mantengan tu sistema estable y claro.
+            </p>
+        </section>
+
+        <hr class="divider">
+
+        <section id="fundamentos">
+            <h2>1. Errores y excepciones: ¿qué son y por qué importan?</h2>
+            <p>
+                En programación, un “error” puede significar muchas cosas: desde un fallo de sintaxis que no deja compilar,
+                hasta un problema en tiempo de ejecución como dividir por cero o intentar leer un archivo que no existe.
+                Java clasifica estos problemas en categorías para que puedas manejarlos correctamente.
+            </p>
+
+            <blockquote class="definition-box">
+                <strong>Error/Excepción:</strong> evento anómalo que ocurre durante la ejecución y altera el flujo normal del programa.<br>
+                Java usa <strong>excepciones</strong> para representar muchos de estos problemas de forma controlada.
+            </blockquote>
+
+            <h3>1.1. Tipos de problemas: compilación vs ejecución</h3>
+            <p>
+                Primero, separa claramente estos dos mundos:
+            </p>
+
+            <div class="table-responsive">
+                <table class="styled-table">
+                    <thead>
+                        <tr>
+                            <th>Tipo</th>
+                            <th>Cuándo ocurre</th>
+                            <th>Ejemplo</th>
+                            <th>Cómo se resuelve</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Error de compilación</strong></td>
+                            <td>Antes de ejecutar (al compilar)</td>
+                            <td>Olvidar un <code>;</code>, variable no declarada</td>
+                            <td>Corrigiendo el código (no compila si está mal)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Problema en ejecución</strong></td>
+                            <td>Mientras el programa corre</td>
+                            <td>División por cero, archivo no encontrado</td>
+                            <td>Con validación o manejo de excepciones</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>1.2. Throwable, Error y Exception (la jerarquía)</h3>
+            <p>
+                En Java, casi todo lo que se puede “lanzar” (throw) se deriva de <code>Throwable</code>.
+                A partir de ahí, se divide en:
+            </p>
+
+            <div class="table-responsive">
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Categoría</th>
+                            <th>Qué representa</th>
+                            <th>¿Se maneja normalmente?</th>
+                            <th>Ejemplos</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Error</strong></td>
+                            <td>Problemas graves del sistema/VM</td>
+                            <td>No (en general)</td>
+                            <td><code>OutOfMemoryError</code>, <code>StackOverflowError</code></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Exception</strong></td>
+                            <td>Problemas que el programa puede manejar</td>
+                            <td>Sí</td>
+                            <td><code>NullPointerException</code>, <code>IOException</code></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <p>
+                En este curso, nos enfocaremos en <strong>Exception</strong>, que es lo que tú controlas desde el código.
+            </p>
+
+            <h3>1.3. Checked vs Unchecked: diferencia clave</h3>
+            <p>
+                Java separa las excepciones en dos grandes grupos:
+            </p>
+
+            <div class="table-responsive">
+                <table class="styled-table">
+                    <thead>
+                        <tr>
+                            <th>Tipo</th>
+                            <th>Qué significa</th>
+                            <th>Regla del compilador</th>
+                            <th>Ejemplo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Checked</strong></td>
+                            <td>Excepciones “verificadas”</td>
+                            <td>Debes manejarla con <code>try/catch</code> o declararla con <code>throws</code></td>
+                            <td><code>IOException</code>, <code>FileNotFoundException</code></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Unchecked</strong></td>
+                            <td>Excepciones de tiempo de ejecución</td>
+                            <td>No obliga a capturar (pero puedes)</td>
+                            <td><code>IllegalArgumentException</code>, <code>NullPointerException</code></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <p>
+                Regla rápida para entenderlo:
+            </p>
+            <ul>
+                <li><strong>Checked:</strong> problemas externos al programa (archivo, red, BD) → no siempre depende de ti.</li>
+                <li><strong>Unchecked:</strong> normalmente errores de lógica/validación de tu código.</li>
+            </ul>
+
+            <h3>1.4. Ejemplos rápidos de excepciones comunes</h3>
+            <div class="table-responsive">
+                <table class="styled-table">
+                    <thead>
+                        <tr>
+                            <th>Excepción</th>
+                            <th>Cuándo ocurre</th>
+                            <th>Ejemplo típico</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>NullPointerException</code></td>
+                            <td>Usar un objeto <code>null</code> como si existiera</td>
+                            <td><code>obj.toString()</code> cuando <code>obj = null</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>ArithmeticException</code></td>
+                            <td>Operación matemática inválida</td>
+                            <td><code>10 / 0</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>ArrayIndexOutOfBoundsException</code></td>
+                            <td>Índice inválido en un arreglo</td>
+                            <td><code>arr[10]</code> si el tamaño es 5</td>
+                        </tr>
+                        <tr>
+                            <td><code>IllegalArgumentException</code></td>
+                            <td>Parámetro inválido</td>
+                            <td>Enviar edad negativa a un método</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section id="ecosistema">
+            <h2>2. try/catch/finally: controlar fallos sin romper el programa</h2>
+            <p>
+                El bloque <code>try</code> permite ejecutar código que puede fallar.
+                Si ocurre un problema, el control pasa al <code>catch</code> correspondiente.
+                El bloque <code>finally</code> se ejecuta siempre (haya error o no) y se usa para liberar recursos.
+            </p>
+
+            <blockquote class="definition-box">
+                <strong>try:</strong> contiene el código que puede lanzar una excepción.<br>
+                <strong>catch:</strong> captura y maneja una excepción específica.<br>
+                <strong>finally:</strong> se ejecuta siempre (ideal para “limpieza”).
+            </blockquote>
+
+            <h3>2.1. Ejemplo básico: división segura</h3>
+            <pre><code class="language-java">package com.corhuila.poo.semana11;
+
+public class App {
+    public static void main(String[] args) {
+        int a = 10;
+        int b = 0;
+
+        try {
+            int r = a / b; // aquí puede fallar
+            System.out.println("Resultado: " + r);
+        } catch (ArithmeticException ex) {
+            System.out.println("Error: no se puede dividir entre cero.");
+        }
+
+        System.out.println("El programa continúa...");
+    }
+}</code></pre>
+
+            <p>
+                Sin el <code>try/catch</code>, el programa se detendría abruptamente. Con manejo, el programa continúa y tú decides qué mostrar.
+            </p>
+
+            <h3>2.2. Capturar múltiples excepciones</h3>
+            <p>
+                A veces un bloque puede fallar por diferentes razones. Puedes tener múltiples <code>catch</code> o usar un catch múltiple.
+            </p>
+
+            <pre><code class="language-java">try {
+    String texto = null;
+    System.out.println(texto.length()); // NullPointerException
+} catch (NullPointerException ex) {
+    System.out.println("El texto está vacío (null).");
+} catch (Exception ex) {
+    System.out.println("Ocurrió un error inesperado: " + ex.getMessage());
+}</code></pre>
+
+            <p>
+                Buen punto: captura primero las excepciones específicas, y al final una más general si es necesario.
+            </p>
+
+            <h3>2.3. finally: limpieza de recursos</h3>
+            <p>
+                <code>finally</code> se usa cuando necesitas ejecutar algo sí o sí: cerrar archivos, liberar conexiones, etc.
+                En proyectos reales, este bloque evita “fugas” de recursos.
+            </p>
+
+            <pre><code class="language-java">try {
+    System.out.println("Procesando...");
+    // Simular proceso que podría fallar
+} catch (Exception ex) {
+    System.out.println("Ocurrió un problema.");
+} finally {
+    System.out.println("FINALLY: aquí liberarías recursos (cerrar archivo, cerrar conexión, etc.).");
+}</code></pre>
+
+            <h3>2.4. Lanzar excepciones: throw (cuando la entrada es inválida)</h3>
+            <p>
+                Manejar excepciones no es solo capturarlas. También es importante saber cuándo lanzar una excepción
+                para evitar que el programa continúe con datos inválidos.
+            </p>
+
+            <pre><code class="language-java">public class CuentaBancaria {
+    private double saldo;
+
+    public CuentaBancaria(double saldoInicial) {
+        if (saldoInicial &lt; 0) {
+            throw new IllegalArgumentException("El saldo inicial no puede ser negativo.");
+        }
+        this.saldo = saldoInicial;
+    }
+
+    public void retirar(double monto) {
+        if (monto &lt;= 0) {
+            throw new IllegalArgumentException("El monto debe ser mayor a 0.");
+        }
+        if (monto &gt; saldo) {
+            throw new IllegalStateException("Fondos insuficientes.");
+        }
+        saldo -= monto;
+    }
+
+    public double getSaldo() {
+        return saldo;
+    }
+}</code></pre>
+
+            <p>
+                Aquí se usan dos ideas:
+            </p>
+            <ul>
+                <li><strong>IllegalArgumentException:</strong> para parámetros inválidos (monto negativo, saldo inicial negativo).</li>
+                <li><strong>IllegalStateException:</strong> para estado inválido del objeto (fondos insuficientes).</li>
+            </ul>
+
+            <h3>2.5. throws: declarar excepciones checked</h3>
+            <p>
+                Cuando trabajas con cosas externas (archivos, red), Java puede exigir que declares la excepción con <code>throws</code>.
+                Esto significa: “este método puede lanzar esta excepción; quien lo llame debe manejarla”.
+            </p>
+
+            <pre><code class="language-java">import java.io.FileReader;
+import java.io.IOException;
+
+public class LectorArchivo {
+
+    public void leer(String ruta) throws IOException {
+        FileReader fr = new FileReader(ruta); // puede lanzar IOException
+        // ...
+        fr.close();
+    }
+}</code></pre>
+
+            <p>
+                En este curso, la clave es entender el concepto: algunas excepciones Java te obliga a manejarlas.
+                Más adelante, aprenderás una forma muy usada para archivos: <strong>try-with-resources</strong>.
+            </p>
+
+            <h3>2.6. try-with-resources (forma moderna de cerrar recursos)</h3>
+            <p>
+                Si un recurso implementa <code>AutoCloseable</code> (como lectores de archivos), puedes usar:
+                <code>try(...)</code> y Java lo cierra automáticamente al final.
+            </p>
+
+            <pre><code class="language-java">import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+
+public class LectorSeguro {
+
+    public void leer(String ruta) {
+        try (BufferedReader br = new BufferedReader(new FileReader(ruta))) {
+            String linea;
+            while ((linea = br.readLine()) != null) {
+                System.out.println(linea);
+            }
+        } catch (IOException ex) {
+            System.out.println("No se pudo leer el archivo: " + ex.getMessage());
+        }
+    }
+}</code></pre>
+
+            <p>
+                Ventaja: no necesitas <code>finally</code> para cerrar el archivo. Se vuelve más limpio y seguro.
+            </p>
+        </section>
+
+        <section id="planificacion">
+            <h2>3. Buenas prácticas: cómo manejar errores sin “ensuciar” tu código</h2>
+            <p>
+                El manejo de excepciones no es “poner try/catch a todo”. Debe ser un diseño coherente:
+                validar donde corresponde, lanzar excepciones claras, capturar solo donde puedas resolver,
+                y evitar esconder errores.
+            </p>
+
+            <h3>3.1. Dónde validar y dónde capturar</h3>
+            <p>
+                Regla práctica:
+            </p>
+            <ul>
+                <li><strong>Valida lo antes posible</strong> (en constructores, setters, métodos públicos) y lanza excepciones si hay datos inválidos.</li>
+                <li><strong>Captura</strong> en el lugar donde puedas tomar una decisión: reintentar, mostrar mensaje al usuario, usar un valor alterno, etc.</li>
+                <li>Si no puedes hacer nada útil, es mejor dejar que la excepción suba (o envolverla con más contexto).</li>
+            </ul>
+
+            <h3>3.2. No capturar Exception “porque sí” (ocultar errores)</h3>
+            <p>
+                Este es un error común: capturar <code>Exception</code> y solo imprimir “falló” sin más, porque eso oculta el problema real.
+                Si vas a capturar, debes dar una salida clara y conservar información útil.
+            </p>
+
+            <div class="comparison-cards">
+                <div class="card qc-card">
+                    <h3>Mala práctica</h3>
+                    <ul>
+                        <li><code>catch(Exception e) { }</code> vacío</li>
+                        <li>Oculta errores y dificulta depuración</li>
+                        <li>El programa puede seguir en estado incorrecto</li>
+                    </ul>
+                </div>
+                <div class="card qa-card">
+                    <h3>Buena práctica</h3>
+                    <ul>
+                        <li>Capturar excepciones específicas</li>
+                        <li>Mostrar mensaje claro y registrar detalles</li>
+                        <li>Decidir: reintentar, cancelar, o informar</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3>3.3. Mensajes de excepción útiles</h3>
+            <p>
+                Si tú lanzas una excepción, el mensaje debe decir exactamente qué falló y por qué.
+                Debe ayudar a la persona que depura (que puede ser tú mismo en el futuro).
+            </p>
+
+            <blockquote class="definition-box">
+                Un buen mensaje de excepción incluye: <strong>qué dato</strong> fue inválido + <strong>qué regla</strong> se violó.<br>
+                Ejemplo: “El precio debe ser mayor a 0. Se recibió: -2000”.
+            </blockquote>
+
+            <h3>3.4. Crear excepciones personalizadas (cuando el dominio lo exige)</h3>
+            <p>
+                En proyectos reales, a veces necesitas excepciones propias para representar reglas de negocio, por ejemplo:
+                “No hay cupo”, “Usuario bloqueado”, “Pago rechazado”. Esto hace el código más expresivo y fácil de manejar.
+            </p>
+
+            <h4>Excepción personalizada</h4>
+            <pre><code class="language-java">package com.corhuila.poo.semana11;
+
+public class SinCupoException extends RuntimeException {
+    public SinCupoException(String mensaje) {
+        super(mensaje);
+    }
+}</code></pre>
+
+            <h4>Uso en una clase de dominio</h4>
+            <pre><code class="language-java">package com.corhuila.poo.semana11;
+
+public class Evento {
+    private String nombre;
+    private int cuposDisponibles;
+
+    public Evento(String nombre, int cuposDisponibles) {
+        if (nombre == null || nombre.trim().isEmpty()) {
+            throw new IllegalArgumentException("Nombre inválido.");
+        }
+        if (cuposDisponibles &lt; 0) {
+            throw new IllegalArgumentException("Cupos inválidos.");
+        }
+        this.nombre = nombre.trim();
+        this.cuposDisponibles = cuposDisponibles;
+    }
+
+    public void inscribir() {
+        if (cuposDisponibles == 0) {
+            throw new SinCupoException("No hay cupos disponibles para: " + nombre);
+        }
+        cuposDisponibles--;
+    }
+
+    public int getCuposDisponibles() {
+        return cuposDisponibles;
+    }
+}</code></pre>
+
+            <h4>Manejo en App</h4>
+            <pre><code class="language-java">package com.corhuila.poo.semana11;
+
+public class AppEvento {
+    public static void main(String[] args) {
+        Evento e = new Evento("Taller de Java", 1);
+
+        try {
+            e.inscribir();
+            System.out.println("Inscripción OK. Cupos: " + e.getCuposDisponibles());
+
+            e.inscribir(); // aquí falla
+            System.out.println("Esto no se imprime.");
+        } catch (SinCupoException ex) {
+            System.out.println("No se pudo inscribir: " + ex.getMessage());
+        }
+    }
+}</code></pre>
+
+            <p>
+                Esto te permite capturar específicamente la regla de negocio: “sin cupo”, sin mezclarlo con errores técnicos.
+            </p>
+
+            <h3>3.5. Checklist rápido (para hacerlo bien)</h3>
+            <ul>
+                <li>¿Validaste datos de entrada y lanzaste excepción si eran inválidos?</li>
+                <li>¿Capturaste solo donde podías hacer algo útil?</li>
+                <li>¿Tus mensajes son claros y específicos?</li>
+                <li>¿Evitaste <code>catch(Exception)</code> sin sentido?</li>
+                <li>¿Usaste try-with-resources cuando aplicaba?</li>
+            </ul>
+        </section>
+
+        <hr class="divider-thick">
+
+        <section id="foro" class="case-study-section">
+            <div class="case-header">
+                <h2>Actividad práctica de la semana (no obligatoria)</h2>
+            </div>
+
+            <div class="scenario-box">
+                <h4>1. Contexto</h4>
+                <p>
+                    Vas a construir un mini-sistema de <strong>registro de productos</strong> que valida entradas del usuario y maneja errores
+                    sin detener el programa. El sistema permitirá agregar productos por consola, validará los datos y, si hay problemas,
+                    mostrará mensajes claros. Además, crearás una excepción personalizada para una regla de negocio.
+                </p>
+                <ol>
+                    <li>Crear la clase <strong>Producto</strong> con validaciones (código, nombre, precio).</li>
+                    <li>Crear una excepción personalizada <strong>ProductoDuplicadoException</strong> (runtime).</li>
+                    <li>Crear la clase <strong>Inventario</strong> que guarda productos en una lista y lanza excepción si el código ya existe.</li>
+                    <li>En <strong>App</strong>, simular agregar varios productos y manejar errores con <code>try/catch</code>.</li>
+                </ol>
+            </div>
+
+            <h3>2. Requerimientos del ejercicio</h3>
+            <div class="table-responsive">
+                <table class="styled-table">
+                    <thead>
+                        <tr>
+                            <th>Elemento</th>
+                            <th>Requisito</th>
+                            <th>Reglas sugeridas</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Producto</strong></td>
+                            <td>Atributos privados + constructor con validaciones</td>
+                            <td>Precio &gt; 0, textos no vacíos</td>
+                        </tr>
+                        <tr>
+                            <td><strong>ProductoDuplicadoException</strong></td>
+                            <td>Excepción personalizada</td>
+                            <td>Mensaje: “Ya existe producto con código X”</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Inventario</strong></td>
+                            <td>Método <code>agregarProducto(Producto p)</code> y <code>listar()</code></td>
+                            <td>No permitir códigos repetidos</td>
+                        </tr>
+                        <tr>
+                            <td><strong>App</strong></td>
+                            <td>Agregar 3 productos, uno repetido, y manejar excepciones</td>
+                            <td>El programa no debe detenerse</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Extra (opcional)</strong></td>
+                            <td>Usar try-with-resources para leer entradas con Scanner/BufferedReader</td>
+                            <td>Valida entradas numéricas</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>3. Entregables</h3>
+            <div class="table-responsive">
+                <table class="styled-table">
+                    <thead>
+                        <tr>
+                            <th>Entregable</th>
+                            <th>Qué incluye</th>
+                            <th>Formato sugerido</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Código fuente</strong></td>
+                            <td>Clases + App ejecutable con manejo de excepciones.</td>
+                            <td>.zip o repositorio</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Salida en consola</strong></td>
+                            <td>Evidencia de error controlado y que el programa continúa.</td>
+                            <td>Texto o captura</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Explicación breve</strong></td>
+                            <td>
+                                12–18 líneas: ¿qué validaste con <code>IllegalArgumentException</code>?
+                                ¿qué regla manejaste con excepción personalizada?
+                                ¿dónde capturaste y por qué?
+                            </td>
+                            <td>Texto / Markdown</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="reflection-box">
+                <h4>Criterios de evaluación (referencia)</h4>
+                <p>
+                    Se revisará: (1) validaciones correctas, (2) uso de <code>try/catch</code> con excepciones específicas,
+                    (3) excepción personalizada con sentido de negocio, (4) mensajes claros, (5) ejecución sin detenerse.
+                </p>
+            </div>
+
+           
+        </section>
+
+    </main>
+
+    <footer class="main-footer">
+        <div class="container">
+            <p>Material docente para: Programación Orientada a Objetos</p>
+            <p>Semana 11 · Manejo de errores y excepciones · Ingeniería Mecatrónica</p>
+            <p>© 2026 CORHUILA</p>
+        </div>
+    </footer>
+
+    <button id="scrollTopBtn" title="Volver arriba">↑</button>
+
+    <script src="js/script.js"></script>
+</body>
+</html>

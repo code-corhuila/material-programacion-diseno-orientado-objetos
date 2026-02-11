@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Semana 6: Herencia en Java | Programación Orientada a Objetos</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <header class="main-header">
+        <div class="top-bar">
+            <div class="container brand-container">
+                <span class="brand-name">Programación Orientada a Objetos</span><br>
+                <span class="brand-name">Semana 6: Herencia en Java</span>
+            </div>
+        </div>
+
+        <!-- IMPORTANTE: 5 links = 5 secciones (para que el JS marque bien el activo) -->
+        <nav class="main-nav">
+            <div class="container">
+                <ul>
+                    <li><a href="#introduccion" class="active">Inicio</a></li>
+                    <li><a href="#fundamentos">Concepto y propósito</a></li>
+                    <li><a href="#ecosistema">extends y super</a></li>
+                    <li><a href="#planificacion">Diseño correcto</a></li>
+                    <li><a href="#foro">Actividad Práctica</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container main-content">
+
+        <section id="introduccion" class="hero-section">
+            <h1>Semana 6: Herencia en Java</h1>
+            <p class="lead">
+                En esta semana aprenderás uno de los mecanismos más importantes de la POO: la <strong>herencia</strong>.
+                Entenderás cómo crear clases nuevas basadas en clases existentes, reutilizar atributos y métodos,
+                especializar comportamientos y construir jerarquías de clases de forma correcta en Java usando
+                <code>extends</code> y <code>super</code>.
+            </p>
+        </section>
+
+        <hr class="divider">
+
+        <section id="fundamentos">
+            <h2>1. Concepto y propósito de la herencia</h2>
+            <p>
+                La <strong>herencia</strong> permite crear una clase (hija o subclase) a partir de otra clase (padre o superclase).
+                La subclase hereda características de la superclase y puede agregar nuevas o modificar algunas existentes
+                (más adelante verás esto con polimorfismo y sobrescritura).
+            </p>
+
+            <blockquote class="definition-box" >
+                <strong>Herencia:</strong> relación “<strong>es-un</strong>” (IS-A).<br>
+                Si <em>Carro</em> hereda de <em>Vehiculo</em>, entonces un Carro <strong>es un</strong> Vehiculo.
+            </blockquote>
+
+            <h3>1.1. ¿Para qué sirve realmente la herencia?</h3>
+            <p>
+                Su objetivo principal es <strong>reutilizar código</strong> y <strong>organizar familias de clases</strong> que comparten
+                características. Pero ojo: no se trata de usar herencia “por usarla”, sino cuando existe una relación clara “es-un”.
+            </p>
+
+            <div class="table-responsive">
+                <table class="styled-table">
+                    <thead>
+                        <tr>
+                            <th>Beneficio</th>
+                            <th>Qué significa</th>
+                            <th>Ejemplo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Reutilización</strong></td>
+                            <td>Evita duplicar atributos y métodos comunes.</td>
+                            <td><em>Empleado</em> comparte nombre y documento con <em>Vendedor</em>.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Especialización</strong></td>
+                            <td>Una clase hija agrega características específicas.</td>
+                            <td><em>Vendedor</em> agrega comisión, meta, ventas.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Organización</strong></td>
+                            <td>Jerarquías que modelan el dominio de forma clara.</td>
+                            <td><em>Figura</em> → <em>Circulo</em>, <em>Rectangulo</em>.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Base para polimorfismo</strong></td>
+                            <td>Permite tratar objetos diferentes como si fueran del mismo tipo base.</td>
+                            <td>Lista de <em>Vehiculo</em> con carros y motos.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>1.2. Herencia vs copiar y pegar</h3>
+            <p>
+                Un error típico es duplicar código entre clases: mismos atributos, mismos métodos, con pequeñas variaciones.
+                Eso vuelve el sistema difícil de mantener: si cambias una regla, debes cambiarla en muchos lugares.
+                La herencia reduce esa duplicación cuando el diseño lo permite.
+            </p>
+
+            <div class="comparison-cards">
+                <div class="card qc-card">
+                    <h3>Duplicación (mala práctica)</h3>
+                    <ul>
+                        <li>Clase Carro y Moto repiten: placa, marca, modelo.</li>
+                        <li>Si cambias una validación, debes hacerlo en 2 o más clases.</li>
+                        <li>Incrementa errores por inconsistencias.</li>
+                    </ul>
+                </div>
+                <div class="card qa-card">
+                    <h3>Herencia (buena práctica)</h3>
+                    <ul>
+                        <li>Vehiculo contiene lo común: placa, marca, modelo.</li>
+                        <li>Carro y Moto agregan lo específico.</li>
+                        <li>Una mejora en Vehiculo beneficia a todas las subclases.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3>1.3. Reglas para usar herencia correctamente</h3>
+            <p>
+                Antes de heredar, valida estas ideas. Si no se cumplen, probablemente necesitas otro enfoque (como composición, que verás más adelante).
+            </p>
+            <ul style="margin-left: 20px;">
+                <li><strong>Relación “es-un” real:</strong> si no puedes decir “X es un Y”, no uses herencia.</li>
+                <li><strong>Compartir lo común:</strong> la clase base debe representar lo que todas las hijas tienen en común.</li>
+                <li><strong>Evitar jerarquías innecesarias:</strong> no hagas herencia por conveniencia de “reutilizar cualquier cosa”.</li>
+                <li><strong>Diseño estable:</strong> la clase padre debe ser relativamente estable, porque impacta a todas las hijas.</li>
+            </ul>
+        </section>
+
+        <section id="ecosistema">
+            <h2>2. Herencia en Java: <code>extends</code> y <code>super</code></h2>
+            <p>
+                En Java, una clase hereda de otra usando la palabra reservada <code>extends</code>.
+                Además, se utiliza <code>super</code> para llamar al constructor o a miembros de la clase padre.
+            </p>
+
+            <h3>2.1. Sintaxis básica con <code>extends</code></h3>
+            <pre><code class="language-java">public class ClaseHija extends ClasePadre {
+    // contenido adicional
+}</code></pre>
+
+            <h3>2.2. Ejemplo completo: Vehículo → Carro y Moto</h3>
+            <p>
+                En este ejemplo, <strong>Vehiculo</strong> contiene lo común (placa, marca, modelo) y las subclases agregan lo específico.
+                Aquí no haremos polimorfismo todavía (eso se verá en semanas posteriores), pero sí un diseño de herencia claro.
+            </p>
+
+            <h4>Clase padre: Vehiculo</h4>
+            <pre><code class="language-java">package com.corhuila.poo.semana6;
+
+public class Vehiculo {
+    private String placa;
+    private String marca;
+    private int modelo;
+
+    public Vehiculo(String placa, String marca, int modelo) {
+        setPlaca(placa);
+        setMarca(marca);
+        setModelo(modelo);
+    }
+
+    public String getPlaca() {
+        return placa;
+    }
+
+    public void setPlaca(String placa) {
+        if (placa == null || placa.trim().isEmpty()) {
+            throw new IllegalArgumentException("La placa no puede estar vacía.");
+        }
+        this.placa = placa.trim().toUpperCase();
+    }
+
+    public String getMarca() {
+        return marca;
+    }
+
+    public void setMarca(String marca) {
+        if (marca == null || marca.trim().isEmpty()) {
+            throw new IllegalArgumentException("La marca no puede estar vacía.");
+        }
+        this.marca = marca.trim();
+    }
+
+    public int getModelo() {
+        return modelo;
+    }
+
+    public void setModelo(int modelo) {
+        if (modelo &lt; 1900) {
+            throw new IllegalArgumentException("Modelo inválido.");
+        }
+        this.modelo = modelo;
+    }
+
+    public String ficha() {
+        return "Vehiculo{placa='" + placa + "', marca='" + marca + "', modelo=" + modelo + "}";
+    }
+}</code></pre>
+
+            <h4>Clase hija: Carro</h4>
+            <p>
+                Un <strong>Carro</strong> es un <strong>Vehiculo</strong>, pero además puede tener un número de puertas.
+                Observa el uso de <code>super(...)</code> para inicializar la parte heredada.
+            </p>
+
+            <pre><code class="language-java">package com.corhuila.poo.semana6;
+
+public class Carro extends Vehiculo {
+    private int puertas;
+
+    public Carro(String placa, String marca, int modelo, int puertas) {
+        super(placa, marca, modelo);
+        setPuertas(puertas);
+    }
+
+    public int getPuertas() {
+        return puertas;
+    }
+
+    public void setPuertas(int puertas) {
+        if (puertas &lt; 2 || puertas &gt; 5) {
+            throw new IllegalArgumentException("Puertas inválidas (2 a 5).");
+        }
+        this.puertas = puertas;
+    }
+
+    public String fichaCarro() {
+        return ficha() + ", Carro{puertas=" + puertas + "}";
+    }
+}</code></pre>
+
+            <h4>Clase hija: Moto</h4>
+            <p>
+                Una <strong>Moto</strong> es un <strong>Vehiculo</strong>, pero además puede tener cilindrada.
+            </p>
+
+            <pre><code class="language-java">package com.corhuila.poo.semana6;
+
+public class Moto extends Vehiculo {
+    private int cilindraje;
+
+    public Moto(String placa, String marca, int modelo, int cilindraje) {
+        super(placa, marca, modelo);
+        setCilindraje(cilindraje);
+    }
+
+    public int getCilindraje() {
+        return cilindraje;
+    }
+
+    public void setCilindraje(int cilindraje) {
+        if (cilindraje &lt; 50) {
+            throw new IllegalArgumentException("Cilindraje inválido (mínimo 50cc).");
+        }
+        this.cilindraje = cilindraje;
+    }
+
+    public String fichaMoto() {
+        return ficha() + ", Moto{cilindraje=" + cilindraje + "}";
+    }
+}</code></pre>
+
+            <h3>2.3. Probar la herencia desde App</h3>
+            <pre><code class="language-java">package com.corhuila.poo.semana6;
+
+public class App {
+    public static void main(String[] args) {
+        Vehiculo v = new Vehiculo("abc123", "Toyota", 2020);
+        Carro c = new Carro("def456", "Mazda", 2022, 4);
+        Moto m = new Moto("ghi789", "Yamaha", 2021, 155);
+
+        System.out.println(v.ficha());
+        System.out.println(c.fichaCarro());
+        System.out.println(m.fichaMoto());
+    }
+}</code></pre>
+
+            <h3>2.4. ¿Qué hace <code>super</code> exactamente?</h3>
+            <p>
+                <code>super</code> se usa para referirse a la clase padre. Principalmente lo usarás para:
+            </p>
+            <ul>
+                <li><strong>super(...)</strong>: llamar al constructor del padre (inicializar lo heredado).</li>
+                <li><strong>super.metodo()</strong>: llamar un método del padre si necesitas reutilizarlo.</li>
+            </ul>
+
+            <blockquote class="definition-box">
+                Si la clase padre no tiene constructor vacío, entonces la subclase debe llamar a un constructor del padre
+                usando <code>super(...)</code> como primera línea del constructor.
+            </blockquote>
+        </section>
+
+        <section id="planificacion">
+            <h2>3. Diseño correcto con herencia: qué poner en la clase padre y qué en la hija</h2>
+            <p>
+                Diseñar herencia no es solo escribir <code>extends</code>. La clave es decidir correctamente:
+                qué es común (va al padre) y qué es específico (va a la hija).
+            </p>
+
+            <h3>3.1. La regla práctica: “Padre = lo común, Hija = lo específico”</h3>
+            <div class="table-responsive">
+                <table class="styled-table">
+                    <thead>
+                        <tr>
+                            <th>Pregunta</th>
+                            <th>Si la respuesta es “sí”</th>
+                            <th>Ejemplo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>¿Este atributo aplica a todas las subclases?</td>
+                            <td>Va en la clase padre</td>
+                            <td>placa, marca, modelo</td>
+                        </tr>
+                        <tr>
+                            <td>¿Este atributo solo aplica a una subclase?</td>
+                            <td>Va en la clase hija</td>
+                            <td>puertas (solo Carro)</td>
+                        </tr>
+                        <tr>
+                            <td>¿Esta validación es común para todos?</td>
+                            <td>Va en el padre</td>
+                            <td>placa no vacía</td>
+                        </tr>
+                        <tr>
+                            <td>¿Esta validación es específica?</td>
+                            <td>Va en la hija</td>
+                            <td>cilindraje mínimo</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>3.2. Evitar errores típicos de diseño</h3>
+            <div class="strategy-grid">
+                <div class="strategy-box qc-box">
+                    <h5>Errores comunes</h5>
+                    <ul>
+                        <li>Hacer una clase padre “gigante” con cosas que no son comunes.</li>
+                        <li>Forzar la relación “es-un” solo para reutilizar código.</li>
+                        <li>Hacer jerarquías profundas (muchos niveles) sin necesidad.</li>
+                        <li>Duplicar código en hijas porque el padre no fue bien diseñado.</li>
+                    </ul>
+                </div>
+                <div class="strategy-box qa-box">
+                    <h5>Buenas prácticas</h5>
+                    <ul>
+                        <li>El padre debe representar una abstracción real del dominio.</li>
+                        <li>Usa herencia cuando la relación “es-un” sea clara.</li>
+                        <li>Mantén jerarquías simples (2–3 niveles máximo en proyectos básicos).</li>
+                        <li>Reutiliza validaciones comunes en el padre.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3>3.3. Punto importante: herencia en Java es simple</h3>
+            <p>
+                Java solo permite <strong>herencia simple</strong>: una clase solo puede extender de una clase padre.
+                Esto reduce ambigüedades y simplifica el diseño, pero también te obliga a pensar bien la jerarquía.
+            </p>
+
+            <blockquote class="definition-box">
+                <strong>Herencia simple:</strong> <code>class A extends B</code> (solo un padre).<br>
+                Más adelante, cuando necesites múltiples “capacidades”, se usan <strong>interfaces</strong>.
+            </blockquote>
+        </section>
+
+        <hr class="divider-thick">
+
+        <section id="foro" class="case-study-section">
+            <div class="case-header">
+                <h2>Actividad práctica de la semana (no obligatoria)</h2>
+            </div>
+
+            <div class="scenario-box">
+                <h4>1. Contexto</h4>
+                <p>
+                    Vas a modelar un sistema básico de <strong>personal universitario</strong> aplicando herencia.
+                    Existirá una clase base <strong>Persona</strong> con lo común, y subclases que representen roles específicos.
+                    El objetivo es identificar correctamente qué va en la clase padre y qué va en cada hija.
+                </p>
+                <ol>
+                    <li>Crear clase base <strong>Persona</strong>.</li>
+                    <li>Crear al menos dos subclases: <strong>Docente</strong> y <strong>Administrativo</strong>.</li>
+                    <li>Usar <code>super(...)</code> para inicializar atributos heredados.</li>
+                    <li>Imprimir fichas de cada objeto en consola.</li>
+                </ol>
+            </div>
+
+            <h3>2. Requerimientos del ejercicio</h3>
+            <div class="table-responsive">
+                <table class="styled-table">
+                    <thead>
+                        <tr>
+                            <th>Clase</th>
+                            <th>Debe incluir</th>
+                            <th>Reglas</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Persona</strong></td>
+                            <td>
+                                Atributos privados: <code>documento</code>, <code>nombre</code>, <code>correo</code>.<br>
+                                Constructor + getters/setters con validaciones mínimas.<br>
+                                Método <code>ficha()</code>.
+                            </td>
+                            <td>
+                                Documento y nombre no vacíos. Correo contiene <code>@</code>.
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>Docente</strong></td>
+                            <td>
+                                Atributo: <code>area</code> o <code>departamento</code>.<br>
+                                Constructor que llame <code>super(...)</code>.<br>
+                                Método <code>fichaDocente()</code> o similar.
+                            </td>
+                            <td>Área no vacía.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Administrativo</strong></td>
+                            <td>
+                                Atributo: <code>cargo</code>.<br>
+                                Constructor con <code>super(...)</code>.<br>
+                                Método <code>fichaAdministrativo()</code>.
+                            </td>
+                            <td>Cargo no vacío.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>App</strong></td>
+                            <td>Crear 1 Persona, 1 Docente y 1 Administrativo e imprimir fichas.</td>
+                            <td>Debe ejecutarse sin errores.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>3. Entregables</h3>
+            <div class="table-responsive">
+                <table class="styled-table">
+                    <thead>
+                        <tr>
+                            <th>Entregable</th>
+                            <th>Qué incluye</th>
+                            <th>Formato sugerido</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Código fuente</strong></td>
+                            <td>Proyecto con las clases y paquete (por ejemplo: <code>com.corhuila.poo.semana6</code>).</td>
+                            <td>.zip o repositorio</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Salida en consola</strong></td>
+                            <td>Impresión de fichas de cada objeto.</td>
+                            <td>Texto o captura</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Explicación breve</strong></td>
+                            <td>
+                                10–15 líneas respondiendo: ¿qué colocaste en Persona y por qué?
+                                ¿qué quedó en las subclases y por qué?
+                            </td>
+                            <td>Texto / Markdown</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="reflection-box">
+                <h4>Criterios de evaluación (referencia)</h4>
+                <p>
+                    Se revisará: (1) relación “es-un” clara, (2) uso de <code>extends</code> y <code>super</code>,
+                    (3) atributos comunes en la clase base, (4) atributos específicos en las hijas,
+                    (5) validaciones mínimas en el constructor/setters, (6) ejecución correcta.
+                </p>
+            </div>
+
+        </section>
+
+    </main>
+
+    <footer class="main-footer">
+        <div class="container">
+            <p>Material docente para: Programación Orientada a Objetos</p>
+            <p>Semana 6 · Herencia en Java · Ingeniería Mecatrónica</p>
+            <p>© 2026 CORHUILA</p>
+        </div>
+    </footer>
+
+    <button id="scrollTopBtn" title="Volver arriba">↑</button>
+
+    <script src="js/script.js"></script>
+</body>
+</html>
