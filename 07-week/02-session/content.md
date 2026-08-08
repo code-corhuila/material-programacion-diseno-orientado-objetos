@@ -8,41 +8,59 @@ corte: 2
 unit: Unidad 2 · Herencia y polimorfismo
 topic: Polimorfismo y enlace dinámico
 eyebrow: Unidad 2 · Herencia y polimorfismo · Corte 2
-lead: El polimorfismo —cuarto pilar de la POO— permite tratar objetos distintos de forma uniforme y que cada uno responda a su manera. Es lo que hace flexible y extensible al código orientado a objetos.
+lead: El polimorfismo es el cuarto pilar de la POO y el que más potencia el diseño: permite tratar objetos de distintas subclases de forma uniforme y que cada uno responda a su manera, decidido en tiempo de ejecución. Es la clave del código extensible, abierto a nuevos tipos sin modificar el existente.
 objectives:
-  - Explicar el polimorfismo con referencias de superclase.
-  - Comprender el enlace dinámico (qué método se ejecuta).
-  - Recorrer colecciones de objetos polimórficamente.
+  - Explicar el polimorfismo de subtipo con referencias de superclase.
+  - Describir el enlace dinámico (dynamic dispatch).
+  - Aplicar upcasting/downcasting e instanceof con seguridad.
+  - Justificar el beneficio de "abierto a extensión".
 ---
 
 ## 1. Una referencia, muchas formas
 
-**Polimorfismo** = "muchas formas". Una variable del tipo **superclase** puede apuntar a objetos de cualquier **subclase**:
+> info: **Polimorfismo de subtipo.** Una referencia de tipo **superclase** puede apuntar a objetos de cualquier **subclase**, y al invocar un método sobrescrito se ejecuta el de su **tipo real**.
 
 ```java
 // tab: Referencia polimórfica
-Animal a1 = new Perro();   // referencia Animal -> objeto Perro
-Animal a2 = new Gato();    // referencia Animal -> objeto Gato
+Animal a1 = new Perro();   // referencia Animal -> objeto Perro (upcasting implícito)
+Animal a2 = new Gato();
 System.out.println(a1.sonido());   // "Guau"
 System.out.println(a2.sonido());   // "Miau"
 ```
 
-Aunque ambas son `Animal`, cada una responde según su **tipo real**.
+Aunque ambas variables son de tipo `Animal`, cada objeto responde según su **clase real**.
 
-## 2. Enlace dinámico
+## 2. Enlace dinámico (dynamic dispatch)
 
-Java decide **en tiempo de ejecución** qué versión del método ejecutar, según el objeto real (no el tipo de la variable). Eso se llama **enlace dinámico** (dynamic binding).
+> info: **Enlace dinámico.** Java decide **en tiempo de ejecución** qué versión de un método sobrescrito ejecutar, según el **objeto real**, no según el tipo de la variable.
 
 ```ascii
 Animal a = new Perro();
-a.sonido()  --->  Java mira el objeto REAL (Perro)  --->  "Guau"
+a.sonido()  →  la JVM mira el OBJETO real (Perro)  →  ejecuta Perro.sonido()  →  "Guau"
 ```
 
-> info: Por eso el polimorfismo necesita **herencia + sobrescritura**: la subclase redefine el método y el enlace dinámico elige esa versión.
+Por eso el polimorfismo requiere **herencia + sobrescritura** (S7-S1): la subclase redefine el método y el enlace dinámico elige esa versión.
 
-## 3. El poder: código uniforme y extensible
+## 3. Upcasting y downcasting
 
-Puedes tratar muchos objetos distintos con el **mismo código**:
+- **Upcasting** (subclase → superclase): **implícito** y seguro. `Animal a = new Perro();`
+- **Downcasting** (superclase → subclase): **explícito** y riesgoso; verifica con `instanceof`.
+
+```java
+// tab: instanceof + downcasting
+for (Animal a : animales) {
+    if (a instanceof Perro) {          // ¿es realmente un Perro?
+        Perro p = (Perro) a;           // downcasting seguro
+        p.ladrar();                    // método propio de Perro
+    }
+}
+```
+
+> warn: Un downcasting a un tipo que el objeto **no es** (`(Gato) unPerro`) lanza `ClassCastException`. Verifica siempre con `instanceof` antes de convertir.
+
+## 4. El poder: código uniforme y extensible
+
+Puedes procesar muchos tipos con **el mismo código**:
 
 ```java
 // tab: Colección polimórfica
@@ -52,50 +70,81 @@ for (Animal a : animales) {
 }
 ```
 
-Si mañana agregas `Vaca extends Animal`, **este bucle no cambia**: funciona con la nueva clase automáticamente.
+> info: **Principio abierto/cerrado.** Si mañana agregas `Vaca extends Animal` con su `sonido()`, **este bucle no cambia**: funciona con el tipo nuevo automáticamente. El código queda *abierto a extensión* (nuevos tipos) y *cerrado a modificación* (no tocas lo existente).
 
-> tip: El polimorfismo es lo que hace el código **abierto a extensión**: agregar tipos nuevos sin tocar el código que los usa.
-
-## 4. instanceof y casting
-
-A veces necesitas saber el tipo real o acceder a métodos propios de la subclase:
+## 5. Ejemplo trabajado: áreas de figuras
 
 ```java
-// tab: instanceof
-for (Animal a : animales) {
-    if (a instanceof Perro) {
-        Perro p = (Perro) a;   // casting
-        p.ladrar();
-    }
+// tab: Figura (base)
+public abstract class Figura {           // (abstracta: ver S8)
+    public abstract double area();
 }
 ```
+```java
+// tab: Subclases + uso polimórfico
+public class Circulo extends Figura {
+    private double r; public Circulo(double r){this.r=r;}
+    @Override public double area(){ return Math.PI*r*r; }
+}
+public class Rectangulo extends Figura {
+    private double b,h; public Rectangulo(double b,double h){this.b=b;this.h=h;}
+    @Override public double area(){ return b*h; }
+}
+// ...
+Figura[] figs = { new Circulo(2), new Rectangulo(3,4) };
+double total = 0;
+for (Figura f : figs) total += f.area();   // polimorfismo: cada figura su fórmula
+```
 
-> warn: Un casting incorrecto (`(Gato) unPerro`) lanza `ClassCastException`. Verifica con `instanceof` antes de convertir.
+## 6. Errores comunes
+
+- Creer que el método ejecutado depende del **tipo de la variable** (depende del **objeto real**).
+- Hacer downcasting sin `instanceof` → `ClassCastException`.
+- Llamar, desde una referencia de superclase, un método **propio** de la subclase sin castear (no compila).
+- Abusar de `instanceof` + casting donde bastaría un método polimórfico (rediseñar).
 
 ## Autoevaluación
 
 ```quiz
-Q: ¿Qué permite el polimorfismo?
-* Que una referencia de superclase trate objetos de distintas subclases, cada uno a su manera
-- Que las clases no tengan métodos
+Q: ¿Qué permite el polimorfismo de subtipo?
+* Que una referencia de superclase trate objetos de subclases, cada uno respondiendo a su manera
+- Que todas las subclases hagan lo mismo
 - Eliminar la herencia
-E: Polimorfismo = una referencia superclase, muchos comportamientos según el objeto real.
+E: Una referencia superclase, muchos comportamientos según el objeto real.
 
 Q: El enlace dinámico decide qué método ejecutar según...
 * El tipo real del objeto, en tiempo de ejecución
 - El tipo de la variable, en compilación
-- El orden alfabético
-E: Java elige la versión del método por el objeto real (dynamic binding).
+- El orden de declaración
+E: Dynamic dispatch elige la versión del objeto real (no del tipo de la variable).
 
-Q: Antes de hacer casting a una subclase conviene...
-* Verificar con instanceof
+Q: ¿Cuál conversión es implícita y segura?
+* Upcasting (subclase → superclase)
+- Downcasting (superclase → subclase)
+- Ninguna es segura
+E: El upcasting es implícito y seguro; el downcasting requiere verificación.
+
+Q: Antes de un downcasting conviene...
+* Verificar con instanceof para evitar ClassCastException
 - Nada, siempre es seguro
-- Borrar el objeto
-E: instanceof evita un ClassCastException al convertir.
+- Convertir a String primero
+E: instanceof confirma el tipo real antes de convertir.
+
+Q: Agregar Vaca extends Animal sin tocar el bucle que recorre Animal[] ilustra...
+* El principio abierto/cerrado (abierto a extensión, cerrado a modificación)
+- Sobrecarga de métodos
+- Encapsulamiento
+E: El polimorfismo permite extender con nuevos tipos sin modificar el código existente.
+
+Q: ¿Qué necesita el polimorfismo para funcionar?
+* Herencia + sobrescritura del método
+- Solo sobrecarga
+- Atributos públicos
+E: La subclase sobrescribe el método y el enlace dinámico elige esa versión.
 ```
 
 ## Actividad de la semana (formativa)
 
 Opcional y no evaluable. Versión ampliada con rúbrica en **optional-activity** (entrega por GitHub).
 
-- Recorre un arreglo de `Animal` con varias subclases y muestra el polimorfismo en acción.
+- Crea `Figura` con `area()` y 3 subclases; recorre un `Figura[]` sumando áreas (polimorfismo) y usa `instanceof` para invocar un método propio de una de ellas.
