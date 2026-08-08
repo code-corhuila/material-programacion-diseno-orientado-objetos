@@ -1,6 +1,6 @@
 # GUÍA DE ACTIVIDAD PRÁCTICA
 
-**Programación y Diseño Orientado a Objetos · Semana 6 · Jerarquía de clases con herencia**
+**Programación y Diseño Orientado a Objetos · Semana 6 · Jerarquía de clases con herencia y super**
 
 | Programa | Ingeniería de Sistemas | Asignatura | Programación y Diseño Orientado a Objetos |
 |---|---|---|---|
@@ -10,45 +10,58 @@
 
 ## Objetivos
 
-- Diseñar una superclase y subclases con extends.
-- Reutilizar el constructor del padre con super.
-- Ampliar métodos con super.metodo().
+- Justificar una jerarquía con el criterio de sustitución (es-un).
+- Implementar la cadena de constructores con super(...).
+- Ampliar comportamiento heredado con super.metodo().
+- Verificar el orden de construcción con una traza.
 
-## 1. Enunciado
+## 1. Contexto
 
-1. Crea la superclase `Empleado` con `nombre`, `salario` y método `datos()`.
-2. Crea dos subclases: `Gerente` (agrega `bono`) y `Desarrollador` (agrega `lenguaje`).
-3. Usa `super(...)` en los constructores y `super.datos()` para ampliar la información.
-4. En `main`, crea un objeto de cada subclase e imprime sus datos.
+Una empresa gestiona empleados de distintos tipos. Todos comparten datos y comportamiento comunes, pero cada tipo añade lo suyo. Es un caso natural de **generalización–especialización**.
 
-## 2. Requisitos
+## 2. Enunciado
 
-- Uso de `extends` y `super(...)`.
+1. **Diseño (antes de codificar).** Define la superclase `Empleado` (atributos comunes: `nombre`, `salarioBase`; método `ficha()`) y **al menos dos** subclases: `Gerente` (agrega `bono`) y `Desarrollador` (agrega `lenguaje`). En el README, **justifica con el criterio es-un** por qué cada subclase hereda de `Empleado`.
+2. **Constructores encadenados.** Cada subclase debe usar `super(...)` para inicializar la parte `Empleado`. Agrega un `System.out.println` en cada constructor para **trazar el orden** de construcción.
+3. **Ampliar comportamiento.** Sobrescribe `ficha()` en cada subclase usando `super.ficha()` para reutilizar la información base y añadir la específica.
+4. **Cálculo propio.** Agrega `salarioTotal()`: en `Gerente` suma el bono; en `Desarrollador` es el salario base.
+5. **Prueba.** En `main`, crea un objeto de cada subclase, imprime su `ficha()` y su `salarioTotal()`, y muestra la traza del orden de construcción.
+
+## 3. Requisitos técnicos
+
+- Uso correcto de `extends` y `super(...)` (primera instrucción).
 - Al menos un método que use `super.metodo()`.
-- Objetos de ambas subclases.
+- Atributos con el acceso adecuado (`protected`/`private` justificado).
+- README con: diagrama de la jerarquía, justificación es-un y la traza de construcción obtenida.
 
-## 3. Cómo entregar
+## 4. Reto opcional (+)
+
+- Agrega un tercer nivel (`GerenteRegional extends Gerente`) y observa/traza la cadena de tres constructores.
+- Marca algún método como `final` y explica por qué no debería sobrescribirse.
+
+## 5. Cómo entregar
 
 Entrega **por GitHub**. Repositorio: `poo-s06-herencia`.
 
 ```
 poo-s06-herencia/
-  README.md   -> jerarquia + salida de ejemplo
+  README.md   -> diagrama + justificacion es-un + traza de construccion
   src/         -> Empleado.java, Gerente.java, Desarrollador.java, Main.java
 ```
 
-1. Crea el repo público con ese nombre.
-2. Sube el código y el README.
-3. Comparte el enlace por el canal indicado.
+1. Crea el repositorio público con ese nombre.
+2. Sube el código y el README con el diseño y la traza.
+3. Comparte el enlace por el canal indicado por el docente.
 
-## 4. Rúbrica de evaluación
+## 6. Rúbrica de evaluación
 
-| Criterio | Excelente | Aceptable | Por mejorar | Pts |
+| Criterio | Excelente (100%) | Aceptable (60%) | Por mejorar (0%) | Pts |
 |---|---|---|---|---|
-| Herencia con extends | Correcta | Con detalles | Falla | 30 |
-| Uso de super(...) | Correcto | Parcial | Ausente | 30 |
-| super.metodo() (ampliar) | Correcto | Parcial | Ausente | 25 |
-| README y repositorio | Ordenado | Aceptable | Deficiente | 15 |
+| Diseño y justificación es-un | Jerarquía correcta y bien justificada por sustitución | Justificación básica | Sin justificar o relación incorrecta | 25 |
+| Cadena de constructores (super) | Correcta en todas las subclases + traza | Con detalles | Falla o ausente | 25 |
+| Ampliar con super.metodo() | ficha() reutiliza y amplía correctamente | Parcial | Ausente | 20 |
+| salarioTotal() y pruebas | Correctos y probados | Parciales | Fallan | 15 |
+| Calidad de código y README | Ordenado, diagrama y traza claros | Aceptable | Deficiente | 15 |
 
-> Nota: actividad formativa y opcional (sin nota en Moodle). La guía unificada de entrega estará en el Manual de Entrega de Actividades Opcionales (próximamente).
+> Nota: actividad formativa y opcional (sin nota en Moodle). La guía unificada para entregar todas las actividades opcionales, válida para todas las materias, estará en el Manual de Entrega de Actividades Opcionales (próximamente).
 
