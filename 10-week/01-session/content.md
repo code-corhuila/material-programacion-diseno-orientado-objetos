@@ -6,53 +6,80 @@ week: 10
 session: 1
 corte: 2
 unit: Unidad 2 · Herencia y polimorfismo
-topic: Repaso del Corte 2
+topic: Síntesis integradora del Corte 2
 eyebrow: Unidad 2 · Cierre de Corte 2
-lead: Cerramos el segundo corte consolidando herencia, polimorfismo, abstracción (clases abstractas e interfaces) y composición. Repaso guiado para el parcial.
+lead: Cerramos el segundo corte integrando sus mecanismos de diseño: herencia y sobrescritura, polimorfismo, abstracción (clases abstractas e interfaces) y composición. La clave no es solo conocerlos, sino saber cuál aplicar en cada relación del problema.
 objectives:
-  - Repasar los conceptos clave del Corte 2.
-  - Distinguir herencia, polimorfismo, abstracción y composición.
-  - Detectar cuándo usar cada mecanismo.
+  - Integrar los conceptos del Corte 2 en un diseño coherente.
+  - Elegir el mecanismo correcto según la relación (es-un / tiene-un / puede-hacer).
+  - Diagnosticar errores de diseño típicos del corte.
 ---
 
-## 1. Mapa del Corte 2
+## 1. Mapa conceptual del Corte 2
 
 ```ascii
-Semana 6   Herencia (extends, super)
-Semana 7   Polimorfismo y sobreescritura (@Override)
-Semana 8   Clases abstractas e interfaces
-Semana 9   Composicion y modularizacion
-Semana 10  Repaso + Parcial
+Herencia (es-un, extends, super)
+      │  habilita
+Sobrescritura (@Override) ──► Polimorfismo (enlace dinámico)
+Abstracción:  Clase abstracta (familia + código común)  |  Interfaz (capacidad, puede-hacer)
+Composición (tiene-un, delegación)  ── favorecida sobre la herencia
 ```
 
-## 2. Repaso exprés
+## 2. La decisión de diseño (lo esencial del corte)
 
-- **Herencia (es-un):** `extends`, `super(...)`, reutilizar y especializar.
-- **Sobrescritura:** `@Override` redefine un método heredado (misma firma).
-- **Polimorfismo:** referencia de superclase/interfaz → cada objeto responde a su manera (enlace dinámico).
-- **Abstracción:** clase `abstract` (base con método abstracto) e `interface` (contrato, `implements`).
-- **Composición (tiene-un):** un objeto contiene a otros y delega.
-
-| Mecanismo | Relación | Palabra clave |
+| Relación en el problema | Mecanismo | Palabra clave |
 |---|---|---|
-| Herencia | es-un | extends |
-| Interfaz | puede-hacer | implements |
-| Composición | tiene-un | atributo de otro tipo |
+| "A **es un** B" (y respeta sustitución) | Herencia | `extends` |
+| "A **tiene un** B" | Composición | atributo de tipo B |
+| "A **puede hacer** X" (capacidad) | Interfaz | `implements` |
+| Familia con estado y código común + método obligatorio | Clase abstracta | `abstract` + `extends` |
 
-## 3. Decisiones de diseño
+> tip: "Favorece la composición sobre la herencia." Usa herencia solo ante un "es-un" genuino; para capacidades transversales, interfaces; para reutilizar partes, composición.
 
-- ¿"A es un B"? → herencia. ¿"A tiene un B"? → composición.
-- ¿Contrato entre clases dispares? → interfaz.
-- ¿Base común con código compartido + método obligatorio? → clase abstracta.
+## 3. Diseño integrador (todo junto)
 
-> tip: "Favorece la composición sobre la herencia": cuando dudes, la composición suele dar un diseño más flexible.
+```java
+// tab: Jerarquía + interfaz
+public abstract class Empleado {                 // es-un (familia)
+    protected String nombre;
+    public Empleado(String n){ this.nombre = n; }
+    public abstract double salario();            // cada tipo lo calcula
+}
+public interface Bonificable { double bono(); }  // puede-hacer (capacidad)
 
-## 4. Errores comunes
+public class Gerente extends Empleado implements Bonificable {
+    public Gerente(String n){ super(n); }
+    @Override public double salario(){ return 5_000_000; }
+    @Override public double bono(){ return 1_000_000; }
+}
+```
+```java
+// tab: Composición + polimorfismo
+public class Nomina {                            // tiene-un (composición)
+    private final List<Empleado> empleados = new ArrayList<>();
+    public void agregar(Empleado e){ empleados.add(e); }
+    public double totalPagar(){
+        double t = 0;
+        for (Empleado e : empleados) {           // polimorfismo
+            t += e.salario();
+            if (e instanceof Bonificable b) t += b.bono();   // capacidad
+        }
+        return t;
+    }
+}
+```
 
-- Forzar herencia sin relación "es-un".
-- Creer que sobrescribes pero cambiar la firma (en realidad sobrecargas) — usa `@Override`.
-- Instanciar una clase abstracta con `new`.
-- Olvidar implementar métodos de la interfaz.
+Aquí conviven **los cuatro** mecanismos: herencia (`Empleado`), abstracción (abstracta + interfaz), polimorfismo (`e.salario()`), composición (`Nomina` tiene empleados).
+
+## 4. Errores típicos del corte
+
+| Síntoma | Causa | Corrección |
+|---|---|---|
+| Herencia sin sentido | Se usó `extends` sin "es-un" | Composición o interfaz |
+| "Sobrescribí" pero no cambia | Se cambió la firma (fue overload) | Firma idéntica + `@Override` |
+| `ClassCastException` | Downcasting sin verificar | `instanceof` antes de castear |
+| `new Abstracta()` | Instanciar clase abstracta | Instanciar una subclase concreta |
+| Método de interfaz faltante | No se implementó | Implementar todo el contrato |
 
 ## Autoevaluación
 
@@ -63,21 +90,33 @@ Q: "Un Cliente tiene una Dirección" se modela con...
 - Una interfaz
 E: "tiene-un" es composición; no hay relación "es-un".
 
-Q: Para un contrato que implementen clases sin relación entre sí, usas...
+Q: Para una capacidad que implementan clases sin relación entre sí, usas...
 * Una interfaz
 - Una clase abstracta como padre común
 - Un método estático
-E: La interfaz define un contrato que clases dispares pueden implementar.
+E: La interfaz modela "puede-hacer" y la implementan clases dispares.
 
 Q: El enlace dinámico del polimorfismo elige el método según...
 * El tipo real del objeto en ejecución
 - El tipo de la variable en compilación
-- El nombre del archivo
-E: Se ejecuta la versión del objeto real (dynamic binding).
+- El orden de las clases
+E: Se ejecuta la versión del objeto real (dynamic dispatch).
+
+Q: En el ejemplo, if (e instanceof Bonificable b) sirve para...
+* Ejecutar bono() solo en los empleados que tienen esa capacidad
+- Crear un nuevo empleado
+- Heredar de Bonificable
+E: Se comprueba la capacidad (interfaz) antes de usar bono().
+
+Q: ¿Cuál es la guía central de diseño del corte?
+* Elegir el mecanismo según la relación: es-un/tiene-un/puede-hacer; favorecer composición
+- Usar siempre herencia
+- Evitar el polimorfismo
+E: Cada relación tiene su mecanismo; la composición se favorece sobre la herencia.
 ```
 
 ## Actividad de la semana (formativa)
 
 Opcional y no evaluable. Versión ampliada con rúbrica en **optional-activity** (entrega por GitHub).
 
-- Repasa diseñando un mini-sistema que use herencia, una interfaz y composición.
+- Diseña un mini-sistema que use, justificadamente, herencia, una interfaz y composición; marca en el README qué relación motivó cada decisión.

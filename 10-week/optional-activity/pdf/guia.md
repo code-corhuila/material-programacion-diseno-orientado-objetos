@@ -1,6 +1,6 @@
 # GUÍA DE ACTIVIDAD PRÁCTICA
 
-**Programación y Diseño Orientado a Objetos · Semana 10 · Guía de repaso del Corte 2**
+**Programación y Diseño Orientado a Objetos · Semana 10 · Mini-sistema integrador del Corte 2**
 
 | Programa | Ingeniería de Sistemas | Asignatura | Programación y Diseño Orientado a Objetos |
 |---|---|---|---|
@@ -10,48 +10,49 @@
 
 ## Objetivos
 
-- Integrar herencia, interfaz y composición en un diseño.
-- Aplicar polimorfismo en un caso concreto.
-- Autoevaluar la preparación para el parcial.
+- Integrar todos los mecanismos del Corte 2 en un diseño coherente.
+- Elegir cada mecanismo según la relación del problema.
+- Verificar el comportamiento polimórfico.
 
 ## 1. Enunciado
 
-Diseña e implementa un mini-sistema de **medios reproducibles**:
+Diseña e implementa un mini-sistema de **medios reproducibles** (o un dominio equivalente):
 
-1. Clase abstracta `Medio` con `duracion()` abstracto.
-2. Subclases `Cancion` y `Video` que implementen `duracion()`.
-3. Interfaz `Reproducible` (`reproducir()`, `detener()`) implementada por ambas.
-4. Una clase `Playlist` que **tenga** una lista de `Medio` (composición) y calcule la duración total.
-5. `main` que use polimorfismo para reproducir todos los medios.
+1. Clase **abstracta** `Medio` con `duracion()` abstracto y algún método concreto común.
+2. Subclases `Cancion` y `Video` que implementen `duracion()` (**herencia + sobrescritura**).
+3. Interfaz `Reproducible` (`reproducir()`) implementada por ambas (**capacidad**).
+4. Clase `Playlist` que **tenga** una lista de `Medio` (**composición**) y calcule `duracionTotal()` y `reproducirTodo()` (**polimorfismo**).
+5. `Main` que arme una playlist con varios medios, la reproduzca e informe la duración total.
 
 ## 2. Requisitos
 
-- Herencia + interfaz + composición, todas presentes.
-- Uso polimórfico (lista de `Medio`).
-- Cálculo correcto de la duración total.
+- Herencia + abstracción + interfaz + polimorfismo + composición, todos presentes y **justificados** en el README (qué relación motivó cada uno).
+- Uso polimórfico real (recorrer `List<Medio>`).
+- `@Override` donde corresponde.
 
 ## 3. Cómo entregar
 
-Entrega **por GitHub**. Repositorio: `poo-s10-repaso`.
+Entrega **por GitHub**. Repositorio: `poo-s10-integrador-c2`.
 
 ```
-poo-s10-repaso/
-  README.md   -> diseno (relaciones) + salida
+poo-s10-integrador-c2/
+  README.md   -> diagrama de relaciones + justificacion de cada mecanismo
   src/         -> Medio.java, Reproducible.java, Cancion.java, Video.java, Playlist.java, Main.java
 ```
 
-1. Crea el repo público con ese nombre.
+1. Crea el repositorio público con ese nombre.
 2. Sube el código y el README.
-3. Comparte el enlace por el canal indicado.
+3. Comparte el enlace por el canal indicado por el docente.
 
 ## 4. Rúbrica de evaluación
 
-| Criterio | Excelente | Aceptable | Por mejorar | Pts |
+| Criterio | Excelente (100%) | Aceptable (60%) | Por mejorar (0%) | Pts |
 |---|---|---|---|---|
-| Herencia + abstracción | Correctas | Con detalles | Fallan | 30 |
-| Interfaz implementada | Correcta | Parcial | Ausente | 20 |
+| Herencia + abstracción | Correctas y justificadas | Con detalles | Fallan | 25 |
+| Interfaz (capacidad) | Correcta | Parcial | Ausente | 15 |
 | Composición (Playlist) | Correcta | Parcial | Falla | 25 |
-| Polimorfismo + README | Correcto y claro | Aceptable | Deficiente | 25 |
+| Polimorfismo (recorrido) | Correcto | Con detalles | Ausente | 20 |
+| README (relaciones justificadas) | Claro y completo | Básico | Ausente | 15 |
 
-> Nota: actividad formativa y opcional (sin nota en Moodle). La guía unificada de entrega estará en el Manual de Entrega de Actividades Opcionales (próximamente).
+> Nota: actividad formativa y opcional (sin nota en Moodle). La guía unificada para entregar todas las actividades opcionales, válida para todas las materias, estará en el Manual de Entrega de Actividades Opcionales (próximamente).
 

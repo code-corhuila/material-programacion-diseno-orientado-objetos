@@ -8,92 +8,123 @@ corte: 2
 unit: Unidad 2 · Herencia y polimorfismo
 topic: Práctica guiada tipo parcial (Corte 2)
 eyebrow: Unidad 2 · Cierre de Corte 2
-lead: Resolvemos juntos un ejercicio integrador de diseño que combina herencia, polimorfismo e interfaces, con el formato del parcial.
+lead: Resolvemos, con el formato del parcial, un ejercicio de diseño que integra herencia, abstracción, interfaces, polimorfismo y composición. El objetivo es fijar un método: identificar relaciones, elegir el mecanismo y verificar.
 objectives:
-  - Diseñar una jerarquía con polimorfismo.
-  - Aplicar una interfaz a la solución.
+  - Aplicar un método para diseñar con los mecanismos del Corte 2.
+  - Combinar jerarquía, interfaz, polimorfismo y composición en un caso.
   - Autoevaluar la preparación para el parcial.
 ---
 
-## 1. Ejercicio guiado
+## 1. Método (identificar relaciones → elegir mecanismo)
 
-**Enunciado:** modela figuras geométricas que calculan su área (polimorfismo) y que además son "dibujables" (interfaz).
+1. Lista las entidades y sus **relaciones**: ¿es-un? ¿tiene-un? ¿puede-hacer?
+2. Traduce cada relación al mecanismo (herencia / composición / interfaz / abstracta).
+3. Sobrescribe lo que varíe (`@Override`), procesa por la superclase/interfaz (polimorfismo).
+4. Verifica con casos y con la sustitución.
 
-**Paso 1 — clase abstracta:**
+## 2. Enunciado guiado
+
+> **Enunciado.** Modela una biblioteca de **medios** reproducibles. Hay `Cancion` y `Video`; ambos son medios (tienen duración) y son *reproducibles*. Una `Playlist` contiene medios y calcula la duración total.
+
+**Paso 1 — abstracción (familia):**
 
 ```java
 // tab: Paso 1
-public abstract class Figura {
-    public abstract double area();
+public abstract class Medio {          // es-un: familia con código común
+    protected String titulo;
+    public Medio(String t){ titulo = t; }
+    public abstract int duracion();    // cada tipo la define (segundos)
+    public String getTitulo(){ return titulo; }
 }
 ```
 
-**Paso 2 — interfaz:**
+**Paso 2 — capacidad (interfaz):**
 
 ```java
 // tab: Paso 2
-public interface Dibujable { void dibujar(); }
+public interface Reproducible { void reproducir(); }   // puede-hacer
 ```
 
-**Paso 3 — subclases:**
+**Paso 3 — subclases (herencia + interfaz + sobrescritura):**
 
 ```java
 // tab: Paso 3
-public class Circulo extends Figura implements Dibujable {
-    private double r;
-    public Circulo(double r) { this.r = r; }
-    @Override public double area() { return Math.PI * r * r; }
-    @Override public void dibujar() { System.out.println("Dibujando círculo"); }
+public class Cancion extends Medio implements Reproducible {
+    private int seg;
+    public Cancion(String t, int seg){ super(t); this.seg = seg; }
+    @Override public int duracion(){ return seg; }
+    @Override public void reproducir(){ System.out.println("♪ " + titulo); }
 }
 ```
 
-**Paso 4 — uso polimórfico:**
+**Paso 4 — composición + polimorfismo:**
 
 ```java
 // tab: Paso 4
-Figura[] figuras = { new Circulo(2), new Rectangulo(3, 4) };
-for (Figura f : figuras) System.out.println(f.area());
+public class Playlist {                 // tiene-un: contiene medios
+    private final List<Medio> medios = new ArrayList<>();
+    public void agregar(Medio m){ medios.add(m); }
+    public int duracionTotal(){
+        int t = 0;
+        for (Medio m : medios) t += m.duracion();   // polimorfismo
+        return t;
+    }
+}
 ```
 
-## 2. Lista de verificación
+## 3. Errores más penalizados
 
-- [ ] Clase abstracta con método abstracto.
-- [ ] Al menos una interfaz implementada.
+- Usar herencia donde era composición (una Playlist **no es** un Medio; **tiene** medios).
+- Cambiar la firma creyendo sobrescribir (usar `@Override`).
+- Instanciar `new Medio()` (es abstracta).
+- No implementar todo el contrato de la interfaz.
+
+> tip: En el parcial, dibuja primero las relaciones (es-un/tiene-un/puede-hacer). El diseño correcto vale más que la cantidad de código.
+
+## 4. Lista de verificación
+
+- [ ] Clase abstracta con método abstracto implementado en subclases.
+- [ ] Al menos una interfaz implementada (capacidad).
 - [ ] Sobrescritura con `@Override`.
-- [ ] Uso polimórfico (arreglo de superclase).
-
-## 3. Recomendaciones para el parcial
-
-- Identifica primero las **relaciones**: ¿es-un (herencia)? ¿tiene-un (composición)? ¿puede-hacer (interfaz)?
-- Marca todo lo sobrescrito con `@Override`.
-- Prueba el polimorfismo con un arreglo de la superclase o interfaz.
-
-> tip: Un buen diseño (relaciones correctas + polimorfismo) vale más que muchas líneas: demuestra que entiendes la POO.
+- [ ] Composición donde corresponde (Playlist tiene Medios).
+- [ ] Uso polimórfico (recorrer `List<Medio>`).
 
 ## Autoevaluación
 
 ```quiz
-Q: Si una clase debe calcular área (jerarquía) y además dibujarse (contrato), usas...
-* extends (clase/abstracta) + implements (interfaz)
-- Solo herencia
-- Solo una interfaz
-E: Puede heredar de una clase/abstracta y a la vez implementar interfaces.
+Q: ¿Playlist debe heredar de Medio?
+* No: una Playlist TIENE medios (composición), no ES un medio
+- Sí, con extends
+- Solo si implementa Reproducible
+E: La relación es "tiene-un" → composición, no herencia.
 
-Q: ¿Qué evidencia el polimorfismo en el ejercicio?
-* Recorrer un arreglo de Figura y que cada una calcule su propia área
-- Que todas las figuras tengan la misma área
-- Que no haya subclases
-E: Un arreglo de la superclase con objetos distintos que responden cada uno a su forma.
+Q: ¿Por qué Medio es abstracta?
+* Representa una familia general que no se instancia; cada tipo define su duración
+- Para que sea más rápida
+- Para no usar interfaces
+E: Un "medio" genérico no existe; se instancian Cancion/Video (subclases concretas).
 
-Q: Antes de codificar en el parcial conviene identificar...
-* Las relaciones: es-un, tiene-un, puede-hacer
-- El color de la consola
-- La versión del sistema operativo
-E: Definir las relaciones guía qué mecanismo de POO aplicar.
+Q: duracionTotal() suma m.duracion() recorriendo List<Medio>. Esto es...
+* Polimorfismo: cada medio aporta su propia duración
+- Sobrecarga
+- Encapsulamiento
+E: El enlace dinámico llama la duracion() del tipo real de cada medio.
+
+Q: Reproducible en el diseño representa...
+* Una capacidad ("puede-hacer") implementada por las clases de medio
+- La superclase de Medio
+- Un atributo
+E: La interfaz modela la capacidad de reproducirse.
+
+Q: ¿Qué conviene hacer primero al resolver el ejercicio?
+* Identificar las relaciones (es-un/tiene-un/puede-hacer) y elegir el mecanismo
+- Escribir el main sin diseñar
+- Copiar un ejercicio anterior
+E: Modelar las relaciones guía qué mecanismo de POO aplicar.
 ```
 
 ## Actividad de la semana (formativa)
 
 Opcional y no evaluable. Versión ampliada con rúbrica en **optional-activity** (entrega por GitHub).
 
-- Completa el ejercicio de figuras (abstracta + interfaz + polimorfismo) con 3 figuras.
+- Completa el sistema de `Medio`/`Playlist` (con `Video`), reproduce polimórficamente e informa la duración total.
