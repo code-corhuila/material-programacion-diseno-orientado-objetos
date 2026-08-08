@@ -15,7 +15,7 @@
     <div class="brand-text"><span class="brand-course">Programación y Diseño Orientado a Objetos</span><span class="brand-topic">Semana 3 · Sesión 2 · Getters, setters y validación</span></div>
     <div class="brand-meta">CORHUILA<br>Ingeniería de Sistemas · 2026-B</div>
   </div></div>
-  <nav class="main-nav"><div class="container"><ul><li><a href="#introduccion" class="active">Inicio</a></li><li><a href="#1-getters-y-setters">Getters y setters</a></li><li><a href="#2-el-valor-de-validar">El valor de validar</a></li><li><a href="#3-clase-totalmente-encapsulada">Clase totalmente encapsulada</a></li><li><a href="#autoevaluacion">Autoevaluación</a></li><li><a href="#actividad-de-la-semana-formativa">Actividad de la semana (formativa)</a></li></ul></div></nav>
+  <nav class="main-nav"><div class="container"><ul><li><a href="#introduccion" class="active">Inicio</a></li><li><a href="#s-1-getters-y-setters">Getters y setters</a></li><li><a href="#s-2-el-valor-de-validar">El valor de validar</a></li><li><a href="#s-3-clase-totalmente-encapsulada">Clase totalmente encapsulada</a></li><li><a href="#autoevaluacion">Autoevaluación</a></li><li><a href="#actividad-de-la-semana-formativa">Actividad de la semana (formativa)</a></li></ul></div></nav>
 </header>
 <main class="container main-content">
   <section id="introduccion" class="hero-section">
@@ -24,7 +24,7 @@
     <p class="lead">Si los atributos son privados, ¿cómo se leen y modifican desde fuera? Con getters y setters: métodos públicos que dan acceso controlado y permiten validar antes de cambiar el estado.</p>
     <div class="objectives-grid"><div class="objective-card"><span class="num">1</span><p>Implementar getters y setters para atributos privados.</p></div><div class="objective-card"><span class="num">2</span><p>Validar datos dentro de los setters.</p></div><div class="objective-card"><span class="num">3</span><p>Diseñar una clase completamente encapsulada.</p></div></div>
   </section>
-  <section id="1-getters-y-setters"><h2>1. Getters y setters</h2><ul><li><strong>Getter:</strong> método que <strong>devuelve</strong> el valor de un atributo. Convención: <code>getNombre()</code>.</li><li><strong>Setter:</strong> método que <strong>asigna</strong> un valor, normalmente con validación. Convención: <code>setNombre(...)</code>.</li></ul><pre class="code"><span class="kw">public</span> <span class="kw">class</span> Persona {
+  <section id="s-1-getters-y-setters"><h2>1. Getters y setters</h2><ul><li><strong>Getter:</strong> método que <strong>devuelve</strong> el valor de un atributo. Convención: <code>getNombre()</code>.</li><li><strong>Setter:</strong> método que <strong>asigna</strong> un valor, normalmente con validación. Convención: <code>setNombre(...)</code>.</li></ul><pre class="code"><span class="kw">public</span> <span class="kw">class</span> Persona {
     <span class="kw">private</span> String nombre;
     <span class="kw">private</span> <span class="kw">int</span> edad;
 
@@ -35,10 +35,10 @@
     <span class="kw">public</span> <span class="kw">void</span> setEdad(<span class="kw">int</span> edad) {
         <span class="kw">if</span> (edad &gt;= 0 &amp;&amp; edad &lt;= 120) this.edad = edad;   <span class="cm">// validación</span>
     }
-}</pre></section><section id="2-el-valor-de-validar"><h2>2. El valor de validar</h2><p>El setter es el <strong>guardián</strong> del atributo: rechaza valores inválidos y mantiene el objeto siempre en un estado correcto.</p><pre class="code">Persona p = <span class="kw">new</span> Persona();
+}</pre></section><section id="s-2-el-valor-de-validar"><h2>2. El valor de validar</h2><p>El setter es el <strong>guardián</strong> del atributo: rechaza valores inválidos y mantiene el objeto siempre en un estado correcto.</p><pre class="code">Persona p = <span class="kw">new</span> Persona();
 p.setEdad(30);    <span class="cm">// OK</span>
 p.setEdad(-4);    <span class="cm">// rechazado por la validación -&gt; edad sigue válida</span>
-<span class="kw">System</span>.out.<span class="kw">println</span>(p.getEdad());  <span class="cm">// 30</span></pre><div class="callout tip"><h4>Tip</h4><p>No todo atributo necesita setter. Si un dato no debe cambiar tras crearse (p. ej. un número de identificación), deja solo el getter: lo haces de <strong>solo lectura</strong>.</p></div></section><section id="3-clase-totalmente-encapsulada"><h2>3. Clase totalmente encapsulada</h2><pre class="code"><span class="kw">public</span> <span class="kw">class</span> Cuenta {
+<span class="kw">System</span>.out.<span class="kw">println</span>(p.getEdad());  <span class="cm">// 30</span></pre><div class="callout tip"><h4>Tip</h4><p>No todo atributo necesita setter. Si un dato no debe cambiar tras crearse (p. ej. un número de identificación), deja solo el getter: lo haces de <strong>solo lectura</strong>.</p></div></section><section id="s-3-clase-totalmente-encapsulada"><h2>3. Clase totalmente encapsulada</h2><pre class="code"><span class="kw">public</span> <span class="kw">class</span> Cuenta {
     <span class="kw">private</span> <span class="kw">double</span> saldo = 0;
 
     <span class="kw">public</span> <span class="kw">double</span> getSaldo() { <span class="kw">return</span> saldo; }

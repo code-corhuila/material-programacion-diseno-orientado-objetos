@@ -13,7 +13,8 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     const navLinks = Array.from(document.querySelectorAll('.main-nav a'));
-    const sections = navLinks.map(a => document.querySelector(a.getAttribute('href'))).filter(Boolean);
+    // getElementById NO lanza por sintaxis (querySelector('#1-...') sí); robusto ante cualquier id.
+    const sections = navLinks.map(a => document.getElementById(a.getAttribute('href').slice(1))).filter(Boolean);
     if (sections.length) {
         const spy = () => {
             const y = window.scrollY + 140;

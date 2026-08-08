@@ -15,7 +15,7 @@
     <div class="brand-text"><span class="brand-course">Programación y Diseño Orientado a Objetos</span><span class="brand-topic">Semana 4 · Sesión 1 · Constructores en Java</span></div>
     <div class="brand-meta">CORHUILA<br>Ingeniería de Sistemas · 2026-B</div>
   </div></div>
-  <nav class="main-nav"><div class="container"><ul><li><a href="#introduccion" class="active">Inicio</a></li><li><a href="#1-que-es-un-constructor">¿Qué es un constructor?</a></li><li><a href="#2-constructor-por-defecto">Constructor por defecto</a></li><li><a href="#3-sobrecarga-de-constructores">Sobrecarga de constructores</a></li><li><a href="#autoevaluacion">Autoevaluación</a></li><li><a href="#actividad-de-la-semana-formativa">Actividad de la semana (formativa)</a></li></ul></div></nav>
+  <nav class="main-nav"><div class="container"><ul><li><a href="#introduccion" class="active">Inicio</a></li><li><a href="#s-1-que-es-un-constructor">¿Qué es un constructor?</a></li><li><a href="#s-2-constructor-por-defecto">Constructor por defecto</a></li><li><a href="#s-3-sobrecarga-de-constructores">Sobrecarga de constructores</a></li><li><a href="#autoevaluacion">Autoevaluación</a></li><li><a href="#actividad-de-la-semana-formativa">Actividad de la semana (formativa)</a></li></ul></div></nav>
 </header>
 <main class="container main-content">
   <section id="introduccion" class="hero-section">
@@ -24,7 +24,7 @@
     <p class="lead">Crear un objeto y luego asignar sus datos uno por uno es tedioso y propenso a errores. Los constructores permiten crear objetos ya inicializados y válidos desde el primer momento.</p>
     <div class="objectives-grid"><div class="objective-card"><span class="num">1</span><p>Explicar qué es un constructor y cuándo se ejecuta.</p></div><div class="objective-card"><span class="num">2</span><p>Definir constructores parametrizados.</p></div><div class="objective-card"><span class="num">3</span><p>Sobrecargar constructores y usar this().</p></div></div>
   </section>
-  <section id="1-que-es-un-constructor"><h2>1. ¿Qué es un constructor?</h2><p>Un <strong>constructor</strong> es un método especial que se ejecuta <strong>al crear el objeto</strong> (con <code>new</code>). Sirve para inicializar su estado.</p><ul><li>Tiene <strong>el mismo nombre que la clase</strong>.</li><li><strong>No</strong> declara tipo de retorno (ni <code>void</code>).</li></ul><pre class="code"><span class="kw">public</span> <span class="kw">class</span> Persona {
+  <section id="s-1-que-es-un-constructor"><h2>1. ¿Qué es un constructor?</h2><p>Un <strong>constructor</strong> es un método especial que se ejecuta <strong>al crear el objeto</strong> (con <code>new</code>). Sirve para inicializar su estado.</p><ul><li>Tiene <strong>el mismo nombre que la clase</strong>.</li><li><strong>No</strong> declara tipo de retorno (ni <code>void</code>).</li></ul><pre class="code"><span class="kw">public</span> <span class="kw">class</span> Persona {
     <span class="kw">private</span> String nombre;
     <span class="kw">private</span> <span class="kw">int</span> edad;
 
@@ -34,10 +34,10 @@
     }
 }
 <span class="cm">// uso:</span>
-Persona p = <span class="kw">new</span> Persona("Ana", 20);   <span class="cm">// objeto ya inicializado</span></pre></section><section id="2-constructor-por-defecto"><h2>2. Constructor por defecto</h2><p>Si no defines ninguno, Java crea uno <strong>vacío</strong> implícito. Pero si defines uno parametrizado, el vacío <strong>desaparece</strong> (a menos que lo declares tú).</p><pre class="code"><span class="kw">public</span> Persona() {          <span class="cm">// constructor sin parámetros</span>
+Persona p = <span class="kw">new</span> Persona("Ana", 20);   <span class="cm">// objeto ya inicializado</span></pre></section><section id="s-2-constructor-por-defecto"><h2>2. Constructor por defecto</h2><p>Si no defines ninguno, Java crea uno <strong>vacío</strong> implícito. Pero si defines uno parametrizado, el vacío <strong>desaparece</strong> (a menos que lo declares tú).</p><pre class="code"><span class="kw">public</span> Persona() {          <span class="cm">// constructor sin parámetros</span>
     this.nombre = "Sin nombre";
     this.edad = 0;
-}</pre><div class="callout warn"><h4>Cuidado</h4><p>Error típico: defines <code>Persona(String, int)</code> y luego intentas <code>new Persona()</code> — no compila, porque el constructor vacío ya no existe. Decláralo si lo necesitas.</p></div></section><section id="3-sobrecarga-de-constructores"><h2>3. Sobrecarga de constructores</h2><p>Puedes tener <strong>varios constructores</strong> con distintos parámetros (sobrecarga). <code>this(...)</code> llama a otro constructor de la misma clase para no repetir código.</p><pre class="code"><span class="kw">public</span> Persona() {
+}</pre><div class="callout warn"><h4>Cuidado</h4><p>Error típico: defines <code>Persona(String, int)</code> y luego intentas <code>new Persona()</code> — no compila, porque el constructor vacío ya no existe. Decláralo si lo necesitas.</p></div></section><section id="s-3-sobrecarga-de-constructores"><h2>3. Sobrecarga de constructores</h2><p>Puedes tener <strong>varios constructores</strong> con distintos parámetros (sobrecarga). <code>this(...)</code> llama a otro constructor de la misma clase para no repetir código.</p><pre class="code"><span class="kw">public</span> Persona() {
     this("Sin nombre", 0);          <span class="cm">// reutiliza el otro constructor</span>
 }
 <span class="kw">public</span> Persona(String nombre, <span class="kw">int</span> edad) {

@@ -15,7 +15,7 @@
     <div class="brand-text"><span class="brand-course">Programación y Diseño Orientado a Objetos</span><span class="brand-topic">Semana 13 · Sesión 1 · Lectura de archivos en Java</span></div>
     <div class="brand-meta">CORHUILA<br>Ingeniería de Sistemas · 2026-B</div>
   </div></div>
-  <nav class="main-nav"><div class="container"><ul><li><a href="#introduccion" class="active">Inicio</a></li><li><a href="#1-por-que-archivos">¿Por qué archivos?</a></li><li><a href="#2-leer-con-bufferedreader">Leer con BufferedReader</a></li><li><a href="#3-try-with-resources-recomendado">try-with-resources (recomendado)</a></li><li><a href="#4-alternativa-moderna-files">Alternativa moderna: Files</a></li><li><a href="#autoevaluacion">Autoevaluación</a></li><li><a href="#actividad-de-la-semana-formativa">Actividad de la semana (formativa)</a></li></ul></div></nav>
+  <nav class="main-nav"><div class="container"><ul><li><a href="#introduccion" class="active">Inicio</a></li><li><a href="#s-1-por-que-archivos">¿Por qué archivos?</a></li><li><a href="#s-2-leer-con-bufferedreader">Leer con BufferedReader</a></li><li><a href="#s-3-try-with-resources-recomendado">try-with-resources (recomendado)</a></li><li><a href="#s-4-alternativa-moderna-files">Alternativa moderna: Files</a></li><li><a href="#autoevaluacion">Autoevaluación</a></li><li><a href="#actividad-de-la-semana-formativa">Actividad de la semana (formativa)</a></li></ul></div></nav>
 </header>
 <main class="container main-content">
   <section id="introduccion" class="hero-section">
@@ -24,21 +24,21 @@
     <p class="lead">Hasta ahora los datos desaparecían al cerrar el programa. Leer y escribir archivos permite que la información persista. Empezamos por leer archivos de texto de forma segura.</p>
     <div class="objectives-grid"><div class="objective-card"><span class="num">1</span><p>Leer un archivo de texto línea por línea.</p></div><div class="objective-card"><span class="num">2</span><p>Manejar la IOException que puede ocurrir.</p></div><div class="objective-card"><span class="num">3</span><p>Usar try-with-resources para cerrar el archivo automáticamente.</p></div></div>
   </section>
-  <section id="1-por-que-archivos"><h2>1. ¿Por qué archivos?</h2><p>La memoria del programa es <strong>volátil</strong>: al cerrar, se pierde todo. Un <strong>archivo</strong> guarda los datos en disco para recuperarlos después. Es la forma más simple de <strong>persistencia</strong>.</p></section><section id="2-leer-con-bufferedreader"><h2>2. Leer con BufferedReader</h2><p>Una forma clásica y eficiente de leer texto línea por línea:</p><pre class="code"><span class="kw">import</span> java.io.*;
+  <section id="s-1-por-que-archivos"><h2>1. ¿Por qué archivos?</h2><p>La memoria del programa es <strong>volátil</strong>: al cerrar, se pierde todo. Un <strong>archivo</strong> guarda los datos en disco para recuperarlos después. Es la forma más simple de <strong>persistencia</strong>.</p></section><section id="s-2-leer-con-bufferedreader"><h2>2. Leer con BufferedReader</h2><p>Una forma clásica y eficiente de leer texto línea por línea:</p><pre class="code"><span class="kw">import</span> java.io.*;
 
 BufferedReader br = <span class="kw">new</span> BufferedReader(<span class="kw">new</span> FileReader("datos.txt"));
 String linea;
 <span class="kw">while</span> ((linea = br.readLine()) != <span class="kw">null</span>) {
     <span class="kw">System</span>.out.<span class="kw">println</span>(linea);
 }
-br.close();   <span class="cm">// ¡hay que cerrarlo!</span></pre><div class="callout warn"><h4>Cuidado</h4><p>Estas operaciones lanzan <code>IOException</code> (verificada): debes manejarla con try/catch o declararla con <code>throws</code>.</p></div></section><section id="3-try-with-resources-recomendado"><h2>3. try-with-resources (recomendado)</h2><p>Java cierra el archivo <strong>automáticamente</strong> si lo declaras en el <code>try(...)</code>. Más seguro y limpio:</p><pre class="code">try (BufferedReader br = <span class="kw">new</span> BufferedReader(<span class="kw">new</span> FileReader("datos.txt"))) {
+br.close();   <span class="cm">// ¡hay que cerrarlo!</span></pre><div class="callout warn"><h4>Cuidado</h4><p>Estas operaciones lanzan <code>IOException</code> (verificada): debes manejarla con try/catch o declararla con <code>throws</code>.</p></div></section><section id="s-3-try-with-resources-recomendado"><h2>3. try-with-resources (recomendado)</h2><p>Java cierra el archivo <strong>automáticamente</strong> si lo declaras en el <code>try(...)</code>. Más seguro y limpio:</p><pre class="code">try (BufferedReader br = <span class="kw">new</span> BufferedReader(<span class="kw">new</span> FileReader("datos.txt"))) {
     String linea;
     <span class="kw">while</span> ((linea = br.readLine()) != <span class="kw">null</span>) {
         <span class="kw">System</span>.out.<span class="kw">println</span>(linea);
     }
 } catch (IOException e) {
     <span class="kw">System</span>.out.<span class="kw">println</span>("No se pudo leer el archivo: " + e.getMessage());
-}</pre></section><section id="4-alternativa-moderna-files"><h2>4. Alternativa moderna: Files</h2><p>Para archivos pequeños, la API <code>java.nio.file</code> es muy cómoda:</p><pre class="code"><span class="kw">import</span> java.nio.file.*;
+}</pre></section><section id="s-4-alternativa-moderna-files"><h2>4. Alternativa moderna: Files</h2><p>Para archivos pequeños, la API <code>java.nio.file</code> es muy cómoda:</p><pre class="code"><span class="kw">import</span> java.nio.file.*;
 <span class="kw">import</span> java.util.List;
 
 List&lt;String&gt; lineas = Files.readAllLines(Path.of("datos.txt"));
