@@ -6,7 +6,7 @@
   <organizations default="ORG-OVA">
     <organization identifier="ORG-OVA">
       <title>Programación y Diseño Orientado a Objetos · Semana 4 · Sesión 1 · CORHUILA</title>
-      <item identifier="ITEM-OVA" identifierref="RES-OVA"><title>Clase con constructores y toString</title></item>
+      <item identifier="ITEM-OVA" identifierref="RES-OVA"><title>Clase con constructores, toString e igualdad</title></item>
     </organization>
   </organizations>
   <resources>

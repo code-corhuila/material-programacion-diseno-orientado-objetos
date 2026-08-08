@@ -6,7 +6,7 @@
   <organizations default="ORG-OVA">
     <organization identifier="ORG-OVA">
       <title>Programación y Diseño Orientado a Objetos · Semana 4 · Sesión 2 · CORHUILA</title>
-      <item identifier="ITEM-OVA" identifierref="RES-OVA"><title>Representación de objetos (toString y equals)</title></item>
+      <item identifier="ITEM-OVA" identifierref="RES-OVA"><title>Representación e igualdad de objetos (toString, equals, hashCode)</title></item>
     </organization>
   </organizations>
   <resources>

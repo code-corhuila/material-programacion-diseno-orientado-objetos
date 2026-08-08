@@ -6,7 +6,7 @@
   <organizations default="ORG-OVA">
     <organization identifier="ORG-OVA">
       <title>Programación y Diseño Orientado a Objetos · Semana 4 · Sesión 1 · CORHUILA</title>
-      <item identifier="ITEM-OVA" identifierref="RES-OVA"><title>Constructores en Java</title></item>
+      <item identifier="ITEM-OVA" identifierref="RES-OVA"><title>Constructores e inicialización de objetos</title></item>
     </organization>
   </organizations>
   <resources>
