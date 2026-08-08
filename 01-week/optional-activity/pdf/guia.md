@@ -1,6 +1,6 @@
 # GUÍA DE ACTIVIDAD PRÁCTICA
 
-**Programación y Diseño Orientado a Objetos · Semana 1 · Configura tu entorno Java y tu primer programa**
+**Programación y Diseño Orientado a Objetos · Semana 1 · Entorno Java, primer programa y modelado de objetos**
 
 | Programa | Ingeniería de Sistemas | Asignatura | Programación y Diseño Orientado a Objetos |
 |---|---|---|---|
@@ -10,22 +10,32 @@
 
 ## Objetivos
 
-- Instalar el JDK y un IDE funcionando.
-- Compilar y ejecutar un programa Java.
-- Escribir una primera clase propia.
+- Verificar la instalación del JDK y compilar/ejecutar desde la terminal.
+- Escribir una primera clase con estado y comportamiento.
+- Modelar un dominio identificando clases, atributos y métodos.
 
 ## 1. Enunciado
 
-1. Instala el **JDK** y un **IDE** (IntelliJ, Eclipse o VS Code con Java).
-2. Crea y ejecuta un `HolaMundo` que imprima un saludo.
-3. Crea una clase `Estudiante` con un método `presentarse()` que imprima tu nombre y programa.
-4. Desde `main`, crea un objeto `Estudiante` y llama a `presentarse()`.
+**Parte A — Entorno y ejecución (obligatoria).**
+
+1. Instala el **JDK** y verifica en terminal: `java -version` y `javac -version`.
+2. Crea `HolaMundo.java`, **compílalo con `javac`** y **ejecútalo con `java`** desde la terminal (adjunta captura).
+
+**Parte B — Primer objeto.**
+
+3. Crea una clase `Estudiante` con atributos (`nombre`, `programa`, `semestre`) y un método `presentarse()` que imprima una frase con esos datos.
+4. En una clase `Main`, crea **dos** objetos `Estudiante` distintos y llama a `presentarse()` en cada uno (observa que comparten clase pero tienen estado propio).
+
+**Parte C — Modelado (análisis).**
+
+5. Elige un dominio real (tienda, clínica, transporte). En el README, identifica **3 clases** con sus atributos y métodos, y explica qué **abstrajiste** (qué dejaste fuera por irrelevante) en cada una.
 
 ## 2. Requisitos
 
-- Captura de pantalla del programa ejecutándose.
-- Código compilable (`javac` sin errores).
-- Nombre de archivo igual al de la clase pública.
+- Ejecución desde **terminal** demostrada con captura (no solo IDE).
+- Nombre de archivo = nombre de la clase pública.
+- Dos objetos `Estudiante` con estados distintos.
+- Análisis de modelado con justificación de la abstracción.
 
 ## 3. Cómo entregar
 
@@ -33,22 +43,23 @@ Entrega **por GitHub**. Repositorio: `poo-s01-entorno`.
 
 ```
 poo-s01-entorno/
-  README.md   -> pasos + captura de la ejecucion
+  README.md   -> capturas (java -version, ejecucion) + analisis de modelado
   src/         -> HolaMundo.java, Estudiante.java, Main.java
 ```
 
-1. Crea el repo público con ese nombre.
-2. Sube el código y el README con la captura.
-3. Comparte el enlace por el canal indicado.
+1. Crea el repositorio público con ese nombre.
+2. Sube el código y el README con capturas y el análisis.
+3. Comparte el enlace por el canal indicado por el docente.
 
 ## 4. Rúbrica de evaluación
 
-| Criterio | Excelente | Aceptable | Por mejorar | Pts |
+| Criterio | Excelente (100%) | Aceptable (60%) | Por mejorar (0%) | Pts |
 |---|---|---|---|---|
-| Entorno funcionando (captura) | Claro y correcto | Parcial | Ausente | 30 |
-| HolaMundo ejecutado | Correcto | Con detalles | Falla | 25 |
-| Clase Estudiante + presentarse() | Correcta | Con detalles | Falla | 30 |
-| README y repositorio | Ordenado | Aceptable | Deficiente | 15 |
+| Entorno + ejecución en terminal | Verificado con capturas (javac/java) | Solo IDE | No demostrado | 25 |
+| Clase Estudiante (estado + comportamiento) | Correcta y clara | Con detalles | Falla | 25 |
+| Dos objetos con estado propio | Correcto y evidenciado | Parcial | Ausente | 20 |
+| Modelado + justificación de abstracción | 3 clases bien modeladas y justificadas | Básico | Ausente | 20 |
+| README y repositorio | Ordenado y claro | Aceptable | Deficiente | 10 |
 
-> Nota: actividad formativa y opcional (sin nota en Moodle). La guía unificada de entrega estará en el Manual de Entrega de Actividades Opcionales (próximamente).
+> Nota: actividad formativa y opcional (sin nota en Moodle). La guía unificada para entregar todas las actividades opcionales, válida para todas las materias, estará en el Manual de Entrega de Actividades Opcionales (próximamente).
 

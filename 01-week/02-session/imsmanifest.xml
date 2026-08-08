@@ -6,7 +6,7 @@
   <organizations default="ORG-OVA">
     <organization identifier="ORG-OVA">
       <title>Programación y Diseño Orientado a Objetos · Semana 1 · Sesión 2 · CORHUILA</title>
-      <item identifier="ITEM-OVA" identifierref="RES-OVA"><title>Entorno de desarrollo en Java</title></item>
+      <item identifier="ITEM-OVA" identifierref="RES-OVA"><title>Entorno de desarrollo y modelo de ejecución de Java</title></item>
     </organization>
   </organizations>
   <resources>
