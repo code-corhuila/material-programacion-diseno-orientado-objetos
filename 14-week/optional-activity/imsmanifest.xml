@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<manifest identifier="OVA-PROGRAMACION-S14-SESION01" version="1.2"
+  xmlns="http://www.imsproject.org/xsd/imscp_rootv1p1p2"
+  xmlns:adlcp="http://www.adlnet.org/xsd/adlcp_rootv1p2"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <organizations default="ORG-OVA">
+    <organization identifier="ORG-OVA">
+      <title>Programación y Diseño Orientado a Objetos · Semana 14 · Sesión 1 · CORHUILA</title>
+      <item identifier="ITEM-OVA" identifierref="RES-OVA"><title>Refactoriza un código</title></item>
+    </organization>
+  </organizations>
+  <resources>
+    <resource identifier="RES-OVA" type="webcontent" adlcp:scormtype="sco" href="index.html">
+      <file href="index.html"/><file href="css/style.css"/><file href="js/script.js"/>
+    </resource>
+  </resources>
+</manifest>

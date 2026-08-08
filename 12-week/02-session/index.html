@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Programación y Diseño Orientado a Objetos · Semana 12 · Mapas (HashMap) y genéricos | CORHUILA</title>
+<link rel="stylesheet" href="css/style.css">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+</head>
+<body>
+<div id="readingBar"></div>
+<header class="main-header">
+  <div class="top-bar"><div class="container">
+    <div class="brand-badge">UH</div>
+    <div class="brand-text"><span class="brand-course">Programación y Diseño Orientado a Objetos</span><span class="brand-topic">Semana 12 · Sesión 2 · Mapas (HashMap) y genéricos</span></div>
+    <div class="brand-meta">CORHUILA<br>Ingeniería de Sistemas · 2026-B</div>
+  </div></div>
+  <nav class="main-nav"><div class="container"><ul><li><a href="#introduccion" class="active">Inicio</a></li><li><a href="#1-clave-valor">Clave → valor</a></li><li><a href="#2-operaciones-basicas">Operaciones básicas</a></li><li><a href="#3-recorrer-un-mapa">Recorrer un mapa</a></li><li><a href="#4-mapas-de-objetos">Mapas de objetos</a></li><li><a href="#autoevaluacion">Autoevaluación</a></li><li><a href="#actividad-de-la-semana-formativa">Actividad de la semana (formativa)</a></li></ul></div></nav>
+</header>
+<main class="container main-content">
+  <section id="introduccion" class="hero-section">
+    <span class="eyebrow">Unidad 3 · Bibliotecas · Corte 3</span>
+    <h1>Mapas (HashMap) y genéricos</h1>
+    <p class="lead">Cuando necesitas buscar datos por una clave —un producto por su código, un usuario por su cédula— la estructura ideal es el mapa. HashMap ofrece búsqueda casi instantánea por clave.</p>
+    <div class="objectives-grid"><div class="objective-card"><span class="num">1</span><p>Usar Map y HashMap con pares clave-valor.</p></div><div class="objective-card"><span class="num">2</span><p>Aplicar put, get, containsKey y remove.</p></div><div class="objective-card"><span class="num">3</span><p>Recorrer un mapa y aprovechar los genéricos.</p></div></div>
+  </section>
+  <section id="1-clave-valor"><h2>1. Clave → valor</h2><p>Un <strong>Map</strong> guarda pares <strong>clave → valor</strong>. Cada clave es única y lleva a un valor. Ideal para buscar por identificador.</p><pre class="code"><span class="kw">import</span> java.util.HashMap;
+<span class="kw">import</span> java.util.Map;
+
+Map&lt;String, Integer&gt; edades = <span class="kw">new</span> HashMap&lt;&gt;();
+edades.put("Ana", 20);      <span class="cm">// clave "Ana" -&gt; valor 20</span>
+edades.put("Luis", 31);
+<span class="kw">System</span>.out.<span class="kw">println</span>(edades.get("Ana"));   <span class="cm">// 20</span></pre><div class="callout info"><h4>Nota</h4><p>La búsqueda por clave en un HashMap es en promedio <strong>O(1)</strong> (casi inmediata), mucho más rápida que recorrer una lista buscando.</p></div></section><section id="2-operaciones-basicas"><h2>2. Operaciones básicas</h2><div class="table-responsive"><table class="styled-table"><thead><tr><th>Operación</th><th>Qué hace</th></tr></thead><tbody><tr><td><code>put(k, v)</code></td><td>Inserta o actualiza la clave k con valor v</td></tr><tr><td><code>get(k)</code></td><td>Devuelve el valor de k (o null)</td></tr><tr><td><code>containsKey(k)</code></td><td>¿existe la clave?</td></tr><tr><td><code>remove(k)</code></td><td>Elimina el par de la clave k</td></tr><tr><td><code>size()</code></td><td>Cantidad de pares</td></tr></tbody></table></div></section><section id="3-recorrer-un-mapa"><h2>3. Recorrer un mapa</h2><pre class="code"><span class="kw">for</span> (Map.Entry&lt;String, Integer&gt; e : edades.entrySet()) {
+    <span class="kw">System</span>.out.<span class="kw">println</span>(e.getKey() + " -&gt; " + e.getValue());
+}</pre></section><section id="4-mapas-de-objetos"><h2>4. Mapas de objetos</h2><pre class="code">Map&lt;String, Producto&gt; inventario = <span class="kw">new</span> HashMap&lt;&gt;();
+inventario.put("P001", <span class="kw">new</span> Producto("Café", 12000));
+Producto p = inventario.get("P001");   <span class="cm">// búsqueda directa por código</span></pre><div class="callout warn"><h4>Cuidado</h4><p><code>get(clave)</code> devuelve <code>null</code> si la clave no existe. Verifica con <code>containsKey</code> o comprueba <code>null</code> antes de usar el valor.</p></div></section><section id="autoevaluacion"><h2>Autoevaluación</h2><div class="quiz" id="quiz"><div class="quiz-progress"><span id="quizAnswered">0</span> de 3 respondidas</div><div class="q" data-correct="0" data-exp="El Map asocia cada clave única a un valor."><div class="stem"><span class="n">Pregunta 1.</span> ¿Qué almacena un Map?</div><button class="opt">Pares clave-valor, con claves únicas</button><button class="opt">Solo valores en orden</button><button class="opt">Solo claves</button><div class="feedback"></div></div><div class="q" data-correct="0" data-exp="El HashMap busca por clave en tiempo casi constante, O(1) en promedio."><div class="stem"><span class="n">Pregunta 2.</span> ¿Cuál es la ventaja de un HashMap para buscar por clave?</div><button class="opt">Búsqueda en promedio O(1)</button><button class="opt">Mantiene todo ordenado</button><button class="opt">Usa menos memoria que todo</button><div class="feedback"></div></div><div class="q" data-correct="0" data-exp="get devuelve null cuando la clave no está; conviene verificar."><div class="stem"><span class="n">Pregunta 3.</span> Si haces get(clave) y la clave no existe, obtienes...</div><button class="opt">null</button><button class="opt">0</button><button class="opt">una excepción</button><div class="feedback"></div></div><div class="quiz-result" id="quizResult"><div>Tu puntaje</div><div class="score" id="quizScore">0/3</div><div id="quizMsg"></div></div></div></section><section id="actividad-de-la-semana-formativa" class="activity-section"><h2>Actividad de la semana (formativa)</h2><p>Opcional y no evaluable. Versión ampliada con rúbrica en <strong>optional-activity</strong> (entrega por GitHub).</p><ul><li>Crea un <code>Map&lt;String, Producto&gt;</code> (código→producto), agrega varios y busca uno por su código.</li></ul></section>
+</main>
+<footer class="main-footer"><div class="container">
+  <p><strong>Programación y Diseño Orientado a Objetos</strong> <span class="sep">·</span> Semana 12 · Sesión 2 · Mapas (HashMap) y genéricos</p>
+  <p>Ingeniería de Sistemas <span class="sep">·</span> Facultad de Ingeniería <span class="sep">·</span> © 2026 CORHUILA</p>
+</div></footer>
+<button id="scrollTopBtn" title="Volver arriba" aria-label="Volver arriba">↑</button>
+<script src="js/script.js"></script>
+</body>
+</html>

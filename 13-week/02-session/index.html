@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Programación y Diseño Orientado a Objetos · Semana 13 · Escritura de archivos en Java | CORHUILA</title>
+<link rel="stylesheet" href="css/style.css">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+</head>
+<body>
+<div id="readingBar"></div>
+<header class="main-header">
+  <div class="top-bar"><div class="container">
+    <div class="brand-badge">UH</div>
+    <div class="brand-text"><span class="brand-course">Programación y Diseño Orientado a Objetos</span><span class="brand-topic">Semana 13 · Sesión 2 · Escritura de archivos en Java</span></div>
+    <div class="brand-meta">CORHUILA<br>Ingeniería de Sistemas · 2026-B</div>
+  </div></div>
+  <nav class="main-nav"><div class="container"><ul><li><a href="#introduccion" class="active">Inicio</a></li><li><a href="#1-escribir-con-bufferedwriter">Escribir con BufferedWriter</a></li><li><a href="#2-sobrescribir-vs-agregar-append">Sobrescribir vs agregar (append)</a></li><li><a href="#3-persistir-objetos">Persistir objetos</a></li><li><a href="#4-alternativa-moderna-files-write">Alternativa moderna: Files.write</a></li><li><a href="#autoevaluacion">Autoevaluación</a></li><li><a href="#actividad-de-la-semana-formativa">Actividad de la semana (formativa)</a></li></ul></div></nav>
+</header>
+<main class="container main-content">
+  <section id="introduccion" class="hero-section">
+    <span class="eyebrow">Unidad 3 · Persistencia · Corte 3</span>
+    <h1>Escritura de archivos en Java</h1>
+    <p class="lead">Leer es la mitad; ahora aprendemos a guardar datos en disco. Con la escritura de archivos podrás persistir los objetos de tu programa y recuperarlos después.</p>
+    <div class="objectives-grid"><div class="objective-card"><span class="num">1</span><p>Escribir texto en un archivo.</p></div><div class="objective-card"><span class="num">2</span><p>Diferenciar sobrescribir de agregar (append).</p></div><div class="objective-card"><span class="num">3</span><p>Persistir datos de objetos en un archivo.</p></div></div>
+  </section>
+  <section id="1-escribir-con-bufferedwriter"><h2>1. Escribir con BufferedWriter</h2><pre class="code"><span class="kw">import</span> java.io.*;
+
+try (BufferedWriter bw = <span class="kw">new</span> BufferedWriter(<span class="kw">new</span> FileWriter("salida.txt"))) {
+    bw.write("Primera línea");
+    bw.newLine();
+    bw.write("Segunda línea");
+} catch (IOException e) {
+    <span class="kw">System</span>.out.<span class="kw">println</span>("Error al escribir: " + e.getMessage());
+}</pre><div class="callout info"><h4>Nota</h4><p><code>new FileWriter("salida.txt")</code> <strong>sobrescribe</strong> el archivo. Para <strong>agregar</strong> al final sin borrar, usa <code>new FileWriter("salida.txt", true)</code>.</p></div></section><section id="2-sobrescribir-vs-agregar-append"><h2>2. Sobrescribir vs agregar (append)</h2><div class="table-responsive"><table class="styled-table"><thead><tr><th>Modo</th><th>Constructor</th><th>Efecto</th></tr></thead><tbody><tr><td>Sobrescribir</td><td><code>new FileWriter(ruta)</code></td><td>Borra el contenido previo</td></tr><tr><td>Agregar</td><td><code>new FileWriter(ruta, true)</code></td><td>Añade al final</td></tr></tbody></table></div></section><section id="3-persistir-objetos"><h2>3. Persistir objetos</h2><p>Puedes guardar el estado de tus objetos convirtiéndolos a texto (por ejemplo, separado por comas):</p><pre class="code">try (BufferedWriter bw = <span class="kw">new</span> BufferedWriter(<span class="kw">new</span> FileWriter("productos.csv"))) {
+    <span class="kw">for</span> (Producto p : lista) {
+        bw.write(p.getNombre() + "," + p.getPrecio());
+        bw.newLine();
+    }
+}</pre></section><section id="4-alternativa-moderna-files-write"><h2>4. Alternativa moderna: Files.write</h2><pre class="code"><span class="kw">import</span> java.nio.file.*;
+<span class="kw">import</span> java.util.List;
+
+List&lt;String&gt; lineas = List.of("Ana,20", "Luis,31");
+Files.write(Path.of("personas.csv"), lineas);</pre><div class="callout warn"><h4>Cuidado</h4><p>Escribir con <code>FileWriter(ruta)</code> sin <code>true</code> <strong>borra</strong> lo que había. Si querías conservar los datos, usa el modo append.</p></div></section><section id="autoevaluacion"><h2>Autoevaluación</h2><div class="quiz" id="quiz"><div class="quiz-progress"><span id="quizAnswered">0</span> de 3 respondidas</div><div class="q" data-correct="0" data-exp="Por defecto sobrescribe; para agregar se pasa true como segundo parámetro."><div class="stem"><span class="n">Pregunta 1.</span> ¿Qué hace new FileWriter("a.txt") (sin segundo parámetro)?</div><button class="opt">Sobrescribe el archivo (borra lo previo)</button><button class="opt">Agrega al final</button><button class="opt">Da error si el archivo existe</button><div class="feedback"></div></div><div class="q" data-correct="0" data-exp="El segundo parámetro true activa el modo append (agregar)."><div class="stem"><span class="n">Pregunta 2.</span> ¿Cómo se agrega texto al final sin borrar?</div><button class="opt">new FileWriter(ruta, true)</button><button class="opt">new FileWriter(ruta)</button><button class="opt">new FileReader(ruta)</button><div class="feedback"></div></div><div class="q" data-correct="0" data-exp="El CSV (texto separado por comas) es un formato simple y legible para datos."><div class="stem"><span class="n">Pregunta 3.</span> ¿Qué formato simple es común para persistir objetos en texto?</div><button class="opt">CSV (valores separados por comas)</button><button class="opt">Imágenes PNG</button><button class="opt">Bytecode</button><div class="feedback"></div></div><div class="quiz-result" id="quizResult"><div>Tu puntaje</div><div class="score" id="quizScore">0/3</div><div id="quizMsg"></div></div></div></section><section id="actividad-de-la-semana-formativa" class="activity-section"><h2>Actividad de la semana (formativa)</h2><p>Opcional y no evaluable. Versión ampliada con rúbrica en <strong>optional-activity</strong> (entrega por GitHub).</p><ul><li>Guarda una lista de productos en <code>productos.csv</code> y luego léela para mostrarla.</li></ul></section>
+</main>
+<footer class="main-footer"><div class="container">
+  <p><strong>Programación y Diseño Orientado a Objetos</strong> <span class="sep">·</span> Semana 13 · Sesión 2 · Escritura de archivos en Java</p>
+  <p>Ingeniería de Sistemas <span class="sep">·</span> Facultad de Ingeniería <span class="sep">·</span> © 2026 CORHUILA</p>
+</div></footer>
+<button id="scrollTopBtn" title="Volver arriba" aria-label="Volver arriba">↑</button>
+<script src="js/script.js"></script>
+</body>
+</html>

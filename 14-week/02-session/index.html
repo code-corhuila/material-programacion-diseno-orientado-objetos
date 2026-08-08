@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Programación y Diseño Orientado a Objetos · Semana 14 · Refactorización | CORHUILA</title>
+<link rel="stylesheet" href="css/style.css">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+</head>
+<body>
+<div id="readingBar"></div>
+<header class="main-header">
+  <div class="top-bar"><div class="container">
+    <div class="brand-badge">UH</div>
+    <div class="brand-text"><span class="brand-course">Programación y Diseño Orientado a Objetos</span><span class="brand-topic">Semana 14 · Sesión 2 · Refactorización</span></div>
+    <div class="brand-meta">CORHUILA<br>Ingeniería de Sistemas · 2026-B</div>
+  </div></div>
+  <nav class="main-nav"><div class="container"><ul><li><a href="#introduccion" class="active">Inicio</a></li><li><a href="#1-que-es-refactorizar">¿Qué es refactorizar?</a></li><li><a href="#2-malos-olores-code-smells">Malos olores (code smells)</a></li><li><a href="#3-refactor-extraer-metodo">Refactor: extraer método</a></li><li><a href="#4-refactor-renombrar-y-constantes">Refactor: renombrar y constantes</a></li><li><a href="#autoevaluacion">Autoevaluación</a></li><li><a href="#actividad-de-la-semana-formativa">Actividad de la semana (formativa)</a></li></ul></div></nav>
+</header>
+<main class="container main-content">
+  <section id="introduccion" class="hero-section">
+    <span class="eyebrow">Unidad 3 · Calidad · Corte 3</span>
+    <h1>Refactorización</h1>
+    <p class="lead">Refactorizar es mejorar la estructura interna del código sin cambiar lo que hace. Aprenderás a detectar "malos olores" y a aplicar refactorizaciones seguras que dejan el código más limpio.</p>
+    <div class="objectives-grid"><div class="objective-card"><span class="num">1</span><p>Definir qué es refactorizar (y qué no).</p></div><div class="objective-card"><span class="num">2</span><p>Reconocer "code smells" comunes.</p></div><div class="objective-card"><span class="num">3</span><p>Aplicar refactorizaciones básicas.</p></div></div>
+  </section>
+  <section id="1-que-es-refactorizar"><h2>1. ¿Qué es refactorizar?</h2><p><strong>Refactorizar</strong> = mejorar la estructura del código <strong>sin cambiar su comportamiento externo</strong>. Mismo resultado, mejor diseño: más legible, más fácil de mantener.</p><div class="callout warn"><h4>Cuidado</h4><p>Refactorizar NO es agregar funciones ni corregir bugs. Es reordenar. Idealmente, con pruebas que confirmen que el comportamiento no cambió.</p></div></section><section id="2-malos-olores-code-smells"><h2>2. Malos olores (code smells)</h2><p>Señales de que el código necesita refactor:</p><div class="table-responsive"><table class="styled-table"><thead><tr><th>Olor</th><th>Síntoma</th><th>Refactor</th></tr></thead><tbody><tr><td>Código duplicado</td><td>La misma lógica repetida</td><td>Extraer método</td></tr><tr><td>Método largo</td><td>Decenas de líneas</td><td>Dividir en métodos</td></tr><tr><td>Nombres pobres</td><td><code>x</code>, <code>data2</code>, <code>temp</code></td><td>Renombrar</td></tr><tr><td>Clase que hace de todo</td><td>Baja cohesión</td><td>Separar responsabilidades</td></tr><tr><td>Números mágicos</td><td>Literales sin nombre</td><td>Introducir constante</td></tr></tbody></table></div></section><section id="3-refactor-extraer-metodo"><h2>3. Refactor: extraer método</h2><div class="tabs"><div class="tab-btns"><button class="tab-btn active" data-tab="tab-45536-0">Antes</button><button class="tab-btn" data-tab="tab-45536-1">Después</button></div><div class="tab-panel active" id="tab-45536-0"><pre class="code"><span class="kw">void</span> procesar() {
+    <span class="cm">// ... 20 líneas de validación</span>
+    <span class="cm">// ... 20 líneas de cálculo</span>
+    <span class="cm">// ... 20 líneas de impresión</span>
+}</pre></div><div class="tab-panel" id="tab-45536-1"><pre class="code"><span class="kw">void</span> procesar() {
+    validar();
+    <span class="kw">double</span> total = calcular();
+    imprimir(total);
+}</pre></div></div><p>Cada parte es ahora un método corto con nombre claro.</p></section><section id="4-refactor-renombrar-y-constantes"><h2>4. Refactor: renombrar y constantes</h2><pre class="code"><span class="kw">double</span> p = b * 0.19;              <span class="cm">// ¿qué es b? ¿0.19?</span>
+<span class="cm">// --&gt;</span>
+<span class="kw">double</span> impuesto = base * TASA_IVA;</pre><div class="callout tip"><h4>Tip</h4><p>Los IDE modernos refactorizan seguro: "Rename" (renombrar en todo el proyecto) y "Extract Method" con un par de teclas. Úsalos.</p></div></section><section id="autoevaluacion"><h2>Autoevaluación</h2><div class="quiz" id="quiz"><div class="quiz-progress"><span id="quizAnswered">0</span> de 3 respondidas</div><div class="q" data-correct="0" data-exp="Refactorizar reordena el código manteniendo el mismo comportamiento externo."><div class="stem"><span class="n">Pregunta 1.</span> ¿Qué es refactorizar?</div><button class="opt">Mejorar la estructura del código sin cambiar su comportamiento</button><button class="opt">Agregar nuevas funciones</button><button class="opt">Corregir errores de lógica</button><div class="feedback"></div></div><div class="q" data-correct="0" data-exp="El código duplicado se extrae a un método reutilizable."><div class="stem"><span class="n">Pregunta 2.</span> Ver la misma lógica repetida es un "olor" que se corrige con...</div><button class="opt">Extraer método</button><button class="opt">Dejarlo igual</button><button class="opt">Agregar comentarios</button><div class="feedback"></div></div><div class="q" data-correct="0" data-exp="Las pruebas dan seguridad de que el refactor no rompió el comportamiento."><div class="stem"><span class="n">Pregunta 3.</span> ¿Qué conviene tener antes de refactorizar a fondo?</div><button class="opt">Pruebas que confirmen que el comportamiento no cambió</button><button class="opt">Nada, se hace de memoria</button><button class="opt">Más números mágicos</button><div class="feedback"></div></div><div class="quiz-result" id="quizResult"><div>Tu puntaje</div><div class="score" id="quizScore">0/3</div><div id="quizMsg"></div></div></div></section><section id="actividad-de-la-semana-formativa" class="activity-section"><h2>Actividad de la semana (formativa)</h2><p>Opcional y no evaluable. Versión ampliada con rúbrica en <strong>optional-activity</strong> (entrega por GitHub).</p><ul><li>Refactoriza un método largo dividiéndolo en métodos cortos con nombres claros.</li></ul></section>
+</main>
+<footer class="main-footer"><div class="container">
+  <p><strong>Programación y Diseño Orientado a Objetos</strong> <span class="sep">·</span> Semana 14 · Sesión 2 · Refactorización</p>
+  <p>Ingeniería de Sistemas <span class="sep">·</span> Facultad de Ingeniería <span class="sep">·</span> © 2026 CORHUILA</p>
+</div></footer>
+<button id="scrollTopBtn" title="Volver arriba" aria-label="Volver arriba">↑</button>
+<script src="js/script.js"></script>
+</body>
+</html>

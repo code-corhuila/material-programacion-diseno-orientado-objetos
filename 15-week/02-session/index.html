@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Programación y Diseño Orientado a Objetos · Semana 15 · Sustentación y entrega incremental | CORHUILA</title>
+<link rel="stylesheet" href="css/style.css">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+</head>
+<body>
+<div id="readingBar"></div>
+<header class="main-header">
+  <div class="top-bar"><div class="container">
+    <div class="brand-badge">UH</div>
+    <div class="brand-text"><span class="brand-course">Programación y Diseño Orientado a Objetos</span><span class="brand-topic">Semana 15 · Sesión 2 · Sustentación y entrega incremental</span></div>
+    <div class="brand-meta">CORHUILA<br>Ingeniería de Sistemas · 2026-B</div>
+  </div></div>
+  <nav class="main-nav"><div class="container"><ul><li><a href="#introduccion" class="active">Inicio</a></li><li><a href="#1-la-entrega-incremental">La entrega incremental</a></li><li><a href="#2-como-sustentar">Cómo sustentar</a></li><li><a href="#3-checklist-previo-a-la-entrega">Checklist previo a la entrega</a></li><li><a href="#4-autoevaluacion-con-la-rubrica">Autoevaluación con la rúbrica</a></li><li><a href="#autoevaluacion">Autoevaluación</a></li><li><a href="#actividad-de-la-semana">Actividad de la semana</a></li></ul></div></nav>
+</header>
+<main class="container main-content">
+  <section id="introduccion" class="hero-section">
+    <span class="eyebrow">Unidad 3 · Cierre de Corte 3</span>
+    <h1>Sustentación y entrega incremental</h1>
+    <p class="lead">Un buen proyecto también se sabe presentar. En esta sesión preparamos la sustentación y organizamos la entrega incremental por GitHub, mostrando el avance con commits claros.</p>
+    <div class="objectives-grid"><div class="objective-card"><span class="num">1</span><p>Preparar una sustentación breve y clara del proyecto.</p></div><div class="objective-card"><span class="num">2</span><p>Organizar la entrega incremental con Git.</p></div><div class="objective-card"><span class="num">3</span><p>Autoevaluar el proyecto con la rúbrica.</p></div></div>
+  </section>
+  <section id="1-la-entrega-incremental" class="activity-section"><h2>1. La entrega incremental</h2><p>No entregues todo al final: avanza en <strong>incrementos</strong> con commits frecuentes y descriptivos. El historial cuenta la historia de tu proyecto.</p><pre class="ascii">commit 1: modelo base (clases + encapsulamiento)
+commit 2: herencia/interfaces + polimorfismo
+commit 3: colecciones + CRUD
+commit 4: excepciones + persistencia
+commit 5: limpieza + README final</pre><div class="callout tip"><h4>Tip</h4><p>Commits pequeños y con mensaje claro ("Agrega persistencia de productos") valen más que un único commit gigante "proyecto".</p></div></section><section id="2-como-sustentar"><h2>2. Cómo sustentar</h2><p>En pocos minutos, enfócate en <strong>decisiones de diseño</strong>, no en leer código:</p><ul><li>Qué problema resuelve y qué <strong>clases</strong> lo modelan.</li><li>Qué <strong>relaciones</strong> usaste (es-un, tiene-un, puede-hacer) y por qué.</li><li>Una <strong>demo</strong> corta del CRUD y del manejo de errores.</li><li>Qué <strong>aprendiste</strong> y qué mejorarías.</li></ul></section><section id="3-checklist-previo-a-la-entrega" class="activity-section"><h2>3. Checklist previo a la entrega</h2><ul class="checklist"><li><input type="checkbox"> Pilares de POO aplicados (encapsulamiento, herencia/interfaces, polimorfismo).</li><li><input type="checkbox"> Composición donde corresponde.</li><li><input type="checkbox"> Colecciones (List/Map) y excepciones.</li><li><input type="checkbox"> Persistencia en archivo.</li><li><input type="checkbox"> CRUD completo y probado.</li><li><input type="checkbox"> README con instrucciones, diseño y capturas.</li><li><input type="checkbox"> Commits claros e incrementales.</li></ul></section><section id="4-autoevaluacion-con-la-rubrica"><h2>4. Autoevaluación con la rúbrica</h2><p>Antes de entregar, califícate tú mismo con la rúbrica de la sesión anterior. Si un criterio está flojo, aún tienes tiempo de mejorarlo.</p></section><section id="autoevaluacion"><h2>Autoevaluación</h2><div class="quiz" id="quiz"><div class="quiz-progress"><span id="quizAnswered">0</span> de 3 respondidas</div><div class="q" data-correct="0" data-exp="La entrega incremental con buenos commits refleja el avance real."><div class="stem"><span class="n">Pregunta 1.</span> ¿Cómo conviene entregar el proyecto?</div><button class="opt">De forma incremental, con commits claros y frecuentes</button><button class="opt">Todo en un único commit al final</button><button class="opt">Sin control de versiones</button><div class="feedback"></div></div><div class="q" data-correct="0" data-exp="Se valora explicar decisiones de diseño y mostrar el sistema funcionando."><div class="stem"><span class="n">Pregunta 2.</span> Al sustentar, ¿en qué debes enfocarte?</div><button class="opt">En las decisiones de diseño y una demo breve</button><button class="opt">En leer todo el código en voz alta</button><button class="opt">En el tamaño de la fuente</button><div class="feedback"></div></div><div class="q" data-correct="0" data-exp="Autoevaluarse con la rúbrica permite mejorar antes de la entrega final."><div class="stem"><span class="n">Pregunta 3.</span> ¿Qué conviene hacer antes de entregar?</div><button class="opt">Autoevaluarse con la rúbrica y corregir lo flojo</button><button class="opt">Nada, entregar y ya</button><button class="opt">Borrar el historial de commits</button><div class="feedback"></div></div><div class="quiz-result" id="quizResult"><div>Tu puntaje</div><div class="score" id="quizScore">0/3</div><div id="quizMsg"></div></div></div></section><section id="actividad-de-la-semana" class="activity-section"><h2>Actividad de la semana</h2><p>Consolida el proyecto y prepárate para sustentar. Entrega por <strong>GitHub</strong> (ver optional-activity).</p></section>
+</main>
+<footer class="main-footer"><div class="container">
+  <p><strong>Programación y Diseño Orientado a Objetos</strong> <span class="sep">·</span> Semana 15 · Sesión 2 · Sustentación y entrega incremental</p>
+  <p>Ingeniería de Sistemas <span class="sep">·</span> Facultad de Ingeniería <span class="sep">·</span> © 2026 CORHUILA</p>
+</div></footer>
+<button id="scrollTopBtn" title="Volver arriba" aria-label="Volver arriba">↑</button>
+<script src="js/script.js"></script>
+</body>
+</html>

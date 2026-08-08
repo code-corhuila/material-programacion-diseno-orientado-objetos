@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Programación y Diseño Orientado a Objetos · Semana 11 · throw, finally y excepciones propias | CORHUILA</title>
+<link rel="stylesheet" href="css/style.css">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+</head>
+<body>
+<div id="readingBar"></div>
+<header class="main-header">
+  <div class="top-bar"><div class="container">
+    <div class="brand-badge">UH</div>
+    <div class="brand-text"><span class="brand-course">Programación y Diseño Orientado a Objetos</span><span class="brand-topic">Semana 11 · Sesión 2 · throw, finally y excepciones propias</span></div>
+    <div class="brand-meta">CORHUILA<br>Ingeniería de Sistemas · 2026-B</div>
+  </div></div>
+  <nav class="main-nav"><div class="container"><ul><li><a href="#introduccion" class="active">Inicio</a></li><li><a href="#1-lanzar-con-throw">Lanzar con throw</a></li><li><a href="#2-propagar-con-throws">Propagar con throws</a></li><li><a href="#3-finally">finally</a></li><li><a href="#4-excepciones-personalizadas">Excepciones personalizadas</a></li><li><a href="#autoevaluacion">Autoevaluación</a></li><li><a href="#actividad-de-la-semana-formativa">Actividad de la semana (formativa)</a></li></ul></div></nav>
+</header>
+<main class="container main-content">
+  <section id="introduccion" class="hero-section">
+    <span class="eyebrow">Unidad 3 · Robustez · Corte 3</span>
+    <h1>throw, finally y excepciones propias</h1>
+    <p class="lead">Además de capturar errores, un buen diseño los lanza cuando algo viola sus reglas y libera recursos pase lo que pase. En esta sesión aprendes a lanzar, propagar y crear tus propias excepciones.</p>
+    <div class="objectives-grid"><div class="objective-card"><span class="num">1</span><p>Lanzar excepciones con throw y propagarlas con throws.</p></div><div class="objective-card"><span class="num">2</span><p>Usar finally para liberar recursos.</p></div><div class="objective-card"><span class="num">3</span><p>Crear excepciones personalizadas.</p></div></div>
+  </section>
+  <section id="1-lanzar-con-throw"><h2>1. Lanzar con throw</h2><p>Tú también puedes <strong>lanzar</strong> una excepción cuando se viola una regla del negocio:</p><pre class="code"><span class="kw">public</span> <span class="kw">void</span> retirar(<span class="kw">double</span> monto) {
+    <span class="kw">if</span> (monto &gt; saldo) {
+        throw <span class="kw">new</span> IllegalArgumentException("Fondos insuficientes");
+    }
+    saldo -= monto;
+}</pre></section><section id="2-propagar-con-throws"><h2>2. Propagar con throws</h2><p>Si un método no maneja una excepción verificada, la <strong>declara</strong> con <code>throws</code> para que la maneje quien lo llame:</p><pre class="code"><span class="kw">public</span> <span class="kw">void</span> leerArchivo(String ruta) throws IOException {
+    <span class="cm">// ... operación que puede lanzar IOException</span>
+}</pre></section><section id="3-finally"><h2>3. finally</h2><p>El bloque <strong>finally</strong> se ejecuta <strong>siempre</strong> (haya o no excepción). Ideal para liberar recursos (cerrar archivos, conexiones).</p><pre class="code">try {
+    <span class="cm">// usar un recurso</span>
+} catch (Exception e) {
+    <span class="kw">System</span>.out.<span class="kw">println</span>("Error: " + e.getMessage());
+} finally {
+    <span class="kw">System</span>.out.<span class="kw">println</span>("Esto se ejecuta siempre.");   <span class="cm">// limpieza</span>
+}</pre></section><section id="4-excepciones-personalizadas"><h2>4. Excepciones personalizadas</h2><p>Puedes crear tus propias excepciones extendiendo <code>Exception</code> (verificada) o <code>RuntimeException</code> (no verificada):</p><pre class="code"><span class="kw">public</span> <span class="kw">class</span> SaldoInsuficienteException extends RuntimeException {
+    <span class="kw">public</span> SaldoInsuficienteException(String msg) { super(msg); }
+}
+<span class="cm">// uso:</span>
+<span class="kw">if</span> (monto &gt; saldo) throw <span class="kw">new</span> SaldoInsuficienteException("Saldo: " + saldo);</pre><div class="callout tip"><h4>Tip</h4><p>Una excepción propia con buen nombre (<code>SaldoInsuficienteException</code>) comunica el error mejor que un genérico y permite manejarlo específicamente.</p></div></section><section id="autoevaluacion"><h2>Autoevaluación</h2><div class="quiz" id="quiz"><div class="quiz-progress"><span id="quizAnswered">0</span> de 3 respondidas</div><div class="q" data-correct="0" data-exp="throw lanza una excepción; throws la declara para propagarla."><div class="stem"><span class="n">Pregunta 1.</span> ¿Qué hace la palabra clave throw?</div><button class="opt">Lanza una excepción explícitamente</button><button class="opt">Captura una excepción</button><button class="opt">Declara un método</button><div class="feedback"></div></div><div class="q" data-correct="0" data-exp="finally se ejecuta siempre; sirve para liberar recursos."><div class="stem"><span class="n">Pregunta 2.</span> ¿Cuándo se ejecuta el bloque finally?</div><button class="opt">Siempre, haya o no excepción</button><button class="opt">Solo si hay excepción</button><button class="opt">Solo si no hay excepción</button><div class="feedback"></div></div><div class="q" data-correct="0" data-exp="Las excepciones personalizadas heredan de Exception o RuntimeException."><div class="stem"><span class="n">Pregunta 3.</span> Para crear una excepción propia, se extiende...</div><button class="opt">Exception o RuntimeException</button><button class="opt">Object directamente</button><button class="opt">Una interfaz</button><div class="feedback"></div></div><div class="quiz-result" id="quizResult"><div>Tu puntaje</div><div class="score" id="quizScore">0/3</div><div id="quizMsg"></div></div></div></section><section id="actividad-de-la-semana-formativa" class="activity-section"><h2>Actividad de la semana (formativa)</h2><p>Opcional y no evaluable. Versión ampliada con rúbrica en <strong>optional-activity</strong> (entrega por GitHub).</p><ul><li>Crea <code>SaldoInsuficienteException</code> y lánzala en el método <code>retirar</code> de una cuenta.</li></ul></section>
+</main>
+<footer class="main-footer"><div class="container">
+  <p><strong>Programación y Diseño Orientado a Objetos</strong> <span class="sep">·</span> Semana 11 · Sesión 2 · throw, finally y excepciones propias</p>
+  <p>Ingeniería de Sistemas <span class="sep">·</span> Facultad de Ingeniería <span class="sep">·</span> © 2026 CORHUILA</p>
+</div></footer>
+<button id="scrollTopBtn" title="Volver arriba" aria-label="Volver arriba">↑</button>
+<script src="js/script.js"></script>
+</body>
+</html>
