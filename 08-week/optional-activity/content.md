@@ -7,25 +7,29 @@ corte: 2
 unit: Unidad 2 · Herencia y polimorfismo
 topic: Abstracción con clases abstractas e interfaces
 eyebrow: Actividad opcional · Formativa · Entrega por GitHub
-lead: Aplica abstracción combinando una clase abstracta y una interfaz. Actividad opcional de refuerzo.
+lead: Combina los dos mecanismos de abstracción de Java —clase abstracta (familia con código común) e interfaz (capacidad)— en un mismo diseño, y úsalos polimórficamente. Actividad opcional de refuerzo.
 objectives:
-  - Definir una clase abstracta con un método abstracto.
-  - Definir e implementar una interfaz.
-  - Usar polimorfismo por superclase y por interfaz.
+  - Definir una clase abstracta con método abstracto y método concreto.
+  - Definir e implementar una interfaz (capacidad).
+  - Usar polimorfismo por superclase y por interfaz en el mismo programa.
 ---
 
 ## 1. Enunciado
 
-1. Crea la clase abstracta `Figura` con `area()` abstracto y `describir()` concreto.
-2. Crea `Circulo` y `Rectangulo` que implementen `area()`.
-3. Define la interfaz `Dibujable` con `dibujar()` e impleméntala en ambas figuras.
-4. En `main`, recorre un `Figura[]` mostrando área; y un `Dibujable[]` invocando `dibujar()`.
+1. Clase abstracta `Figura` con `area()` **abstracto** y `describir()` **concreto** que use `area()`.
+2. Subclases `Circulo`, `Rectangulo`, `Triangulo` que implementen `area()`.
+3. Interfaz `Dibujable` con `dibujar()`, implementada por las tres figuras.
+4. En `Main`:
+   - Recorre un `Figura[]` mostrando `describir()` (polimorfismo por **superclase**).
+   - Recorre un `Dibujable[]` invocando `dibujar()` (polimorfismo por **interfaz**).
+5. Verifica que `new Figura()` **no compila** (coméntalo y explica por qué).
 
 ## 2. Requisitos
 
-- Clase abstracta + método abstracto implementado en subclases.
+- Clase abstracta con método abstracto implementado en subclases.
 - Interfaz implementada por las figuras.
-- Uso polimórfico por superclase y por interfaz.
+- Uso polimórfico por superclase **y** por interfaz.
+- Explicación de por qué no se puede instanciar la abstracta.
 
 ## 3. Cómo entregar
 
@@ -33,24 +37,24 @@ Entrega **por GitHub**. Repositorio: `poo-s08-abstraccion`.
 
 ```
 poo-s08-abstraccion/
-  README.md   -> salida de ejemplo
+  README.md   -> salida + por que Figura no se instancia + interfaz vs abstracta
   src/         -> Figura.java, Dibujable.java, subclases, Main.java
 ```
 
-1. Crea el repo público con ese nombre.
+1. Crea el repositorio público con ese nombre.
 2. Sube el código y el README.
-3. Comparte el enlace por el canal indicado.
+3. Comparte el enlace por el canal indicado por el docente.
 
 ## 4. Rúbrica de evaluación
 
-| Criterio | Excelente | Aceptable | Por mejorar | Pts |
+| Criterio | Excelente (100%) | Aceptable (60%) | Por mejorar (0%) | Pts |
 |---|---|---|---|---|
-| Clase abstracta + abstracto | Correcta | Con detalles | Falla | 30 |
-| Interfaz + implements | Correcta | Con detalles | Falla | 30 |
-| Polimorfismo (superclase e interfaz) | Correcto | Parcial | Ausente | 25 |
-| README y repositorio | Ordenado | Aceptable | Deficiente | 15 |
+| Clase abstracta + método abstracto | Correcta | Con detalles | Falla | 25 |
+| Interfaz + implements | Correcta | Con detalles | Falla | 25 |
+| Polimorfismo (superclase e interfaz) | Ambos correctos | Uno | Ausente | 30 |
+| README (abstracta vs interfaz + no-instanciable) | Claro | Básico | Ausente | 20 |
 
-> Nota: actividad formativa y opcional (sin nota en Moodle). La guía unificada de entrega estará en el Manual de Entrega de Actividades Opcionales (próximamente).
+> Nota: actividad formativa y opcional (sin nota en Moodle). La guía unificada para entregar todas las actividades opcionales, válida para todas las materias, estará en el Manual de Entrega de Actividades Opcionales (próximamente).
 
 ## Descargar
 
