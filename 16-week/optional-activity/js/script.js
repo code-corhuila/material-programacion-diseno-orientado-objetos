@@ -31,6 +31,20 @@ document.addEventListener('DOMContentLoaded', () => {
         topBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
     }
 
+    // Menú plegable (hamburguesa) en móvil
+    const navToggle = document.querySelector('.nav-toggle');
+    const mainNav = document.querySelector('.main-nav');
+    if (navToggle && mainNav) {
+        navToggle.addEventListener('click', () => {
+            const open = mainNav.classList.toggle('open');
+            navToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+        });
+        mainNav.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+            mainNav.classList.remove('open');
+            navToggle.setAttribute('aria-expanded', 'false');
+        }));
+    }
+
     document.querySelectorAll('.tab-btn').forEach(btn => {
         btn.addEventListener('click', () => {
             const id = btn.dataset.tab, t = btn.closest('.tabs');

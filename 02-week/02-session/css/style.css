@@ -91,6 +91,7 @@ li { margin-bottom: .5rem; }
     font-weight: 500; font-size: .92rem; transition: background-color .25s;
 }
 .main-nav ul li a:hover, .main-nav ul li a.active { background-color: var(--primary-dark); }
+.nav-toggle { display: none; }   /* solo visible en móvil */
 
 /* --- Contenido --- */
 .main-content {
@@ -271,11 +272,16 @@ pre.ascii { background: var(--primary-light); border: 1px dashed var(--primary-t
     .brand-course { font-size: .95rem; }
     .brand-topic { font-size: .8rem; }
     .brand-meta { margin-left: 0; width: 100%; text-align: center; font-size: .72rem; }
-    /* Nav: una sola fila deslizable en horizontal (no una pila que tapa el contenido) */
-    .main-nav ul { flex-wrap: nowrap; overflow-x: auto; justify-content: flex-start;
-        -webkit-overflow-scrolling: touch; scrollbar-width: thin; }
-    .main-nav ul li { flex: 0 0 auto; }
-    .main-nav ul li a { white-space: nowrap; padding: 11px 13px; font-size: .85rem; }
+    /* Nav plegable (hamburguesa con etiqueta) en móvil */
+    .main-nav .container { display: block; }
+    .nav-toggle { display: block; width: 100%; text-align: left; background: var(--primary-dark);
+        color: #fff; border: none; padding: 12px 16px; font: inherit; font-weight: 700;
+        letter-spacing: .3px; cursor: pointer; }
+    .main-nav ul { display: none; flex-direction: column; }
+    .main-nav.open ul { display: flex; }
+    .main-nav ul li { width: 100%; }
+    .main-nav ul li a { display: block; white-space: normal; padding: 12px 16px;
+        border-top: 1px solid rgba(255,255,255,.12); font-size: .92rem; }
     .hero-section { padding: 22px; }
     .objectives-grid { grid-template-columns: 1fr; }
     html { scroll-behavior: smooth; scroll-padding-top: 104px; }
