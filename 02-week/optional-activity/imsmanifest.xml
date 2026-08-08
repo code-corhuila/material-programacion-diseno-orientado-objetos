@@ -6,7 +6,7 @@
   <organizations default="ORG-OVA">
     <organization identifier="ORG-OVA">
       <title>Programación y Diseño Orientado a Objetos · Semana 2 · Sesión 1 · CORHUILA</title>
-      <item identifier="ITEM-OVA" identifierref="RES-OVA"><title>Modela y usa tus primeras clases</title></item>
+      <item identifier="ITEM-OVA" identifierref="RES-OVA"><title>Clases, objetos y el modelo de referencias</title></item>
     </organization>
   </organizations>
   <resources>
