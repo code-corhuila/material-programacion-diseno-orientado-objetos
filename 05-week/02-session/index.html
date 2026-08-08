@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Programación y Diseño Orientado a Objetos · Semana 5 · Práctica guiada tipo parcial | CORHUILA</title>
+<link rel="stylesheet" href="css/style.css">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+</head>
+<body>
+<div id="readingBar"></div>
+<header class="main-header">
+  <div class="top-bar"><div class="container">
+    <div class="brand-badge">UH</div>
+    <div class="brand-text"><span class="brand-course">Programación y Diseño Orientado a Objetos</span><span class="brand-topic">Semana 5 · Sesión 2 · Práctica guiada tipo parcial</span></div>
+    <div class="brand-meta">CORHUILA<br>Ingeniería de Sistemas · 2026-B</div>
+  </div></div>
+  <nav class="main-nav"><div class="container"><ul><li><a href="#introduccion" class="active">Inicio</a></li><li><a href="#1-ejercicio-guiado">Ejercicio guiado</a></li><li><a href="#2-lista-de-verificacion-del-ejercicio">Lista de verificación del ejercicio</a></li><li><a href="#3-recomendaciones-para-el-parcial">Recomendaciones para el parcial</a></li><li><a href="#autoevaluacion">Autoevaluación</a></li><li><a href="#actividad-de-la-semana-formativa">Actividad de la semana (formativa)</a></li></ul></div></nav>
+</header>
+<main class="container main-content">
+  <section id="introduccion" class="hero-section">
+    <span class="eyebrow">Unidad 1 · Cierre de Corte 1</span>
+    <h1>Práctica guiada tipo parcial</h1>
+    <p class="lead">Segunda sesión del cierre: resolvemos juntos un ejercicio con el formato del parcial, para que llegues con la técnica clara y confianza.</p>
+    <div class="objectives-grid"><div class="objective-card"><span class="num">1</span><p>Resolver un ejercicio integrador con el formato del parcial.</p></div><div class="objective-card"><span class="num">2</span><p>Aplicar encapsulamiento, constructores y validación en un caso.</p></div><div class="objective-card"><span class="num">3</span><p>Autoevaluar la preparación.</p></div></div>
+  </section>
+  <section id="1-ejercicio-guiado"><h2>1. Ejercicio guiado</h2><p><strong>Enunciado:</strong> modela una clase <code>CuentaBancaria</code> encapsulada, con constructor, consignar/retirar validados y <code>toString()</code>.</p><p><strong>Paso 1 — atributos y constructor:</strong></p><pre class="code"><span class="kw">public</span> <span class="kw">class</span> CuentaBancaria {
+    <span class="kw">private</span> String titular;
+    <span class="kw">private</span> <span class="kw">double</span> saldo;
+    <span class="kw">public</span> CuentaBancaria(String titular) {
+        this.titular = titular;
+        this.saldo = 0;
+    }
+}</pre><p><strong>Paso 2 — operaciones con validación:</strong></p><pre class="code"><span class="kw">public</span> <span class="kw">void</span> consignar(<span class="kw">double</span> m) { <span class="kw">if</span> (m &gt; 0) saldo += m; }
+<span class="kw">public</span> <span class="kw">boolean</span> retirar(<span class="kw">double</span> m) {
+    <span class="kw">if</span> (m &gt; 0 &amp;&amp; m &lt;= saldo) { saldo -= m; <span class="kw">return</span> <span class="kw">true</span>; }
+    <span class="kw">return</span> <span class="kw">false</span>;
+}
+<span class="kw">public</span> <span class="kw">double</span> getSaldo() { <span class="kw">return</span> saldo; }</pre><p><strong>Paso 3 — representación:</strong></p><pre class="code">@Override <span class="kw">public</span> String toString() {
+    <span class="kw">return</span> titular + " -&gt; saldo: " + saldo;
+}</pre></section><section id="2-lista-de-verificacion-del-ejercicio"><h2>2. Lista de verificación del ejercicio</h2><ul class="checklist"><li><input type="checkbox"> Atributos privados.</li><li><input type="checkbox"> Constructor que inicializa el estado.</li><li><input type="checkbox"> Validación en consignar y retirar.</li><li><input type="checkbox"> <code>toString()</code> legible.</li><li><input type="checkbox"> Casos de prueba (válidos e inválidos).</li></ul></section><section id="3-recomendaciones-para-el-parcial"><h2>3. Recomendaciones para el parcial</h2><ul><li>Lee el enunciado y <strong>identifica la clase, sus atributos y su comportamiento</strong> antes de codificar.</li><li>Encapsula desde el inicio; valida en los métodos que cambian el estado.</li><li>Prueba con casos límite (monto negativo, retiro mayor al saldo).</li></ul><div class="callout tip"><h4>Tip</h4><p>Un diseño limpio (privado + validado + toString) suele valer más puntos que muchas líneas sin estructura.</p></div></section><section id="autoevaluacion"><h2>Autoevaluación</h2><div class="quiz" id="quiz"><div class="quiz-progress"><span id="quizAnswered">0</span> de 3 respondidas</div><div class="q" data-correct="0" data-exp="Solo se retira si el monto es positivo y no supera el saldo disponible."><div class="stem"><span class="n">Pregunta 1.</span> En retirar(m), ¿qué condición evita dejar el saldo negativo?</div><button class="opt">m &gt; 0 &amp;&amp; m &lt;= saldo</button><button class="opt">m &gt; saldo</button><button class="opt">m != 0</button><div class="feedback"></div></div><div class="q" data-correct="0" data-exp="Diseñar primero (clase, estado, comportamiento) guía una solución limpia."><div class="stem"><span class="n">Pregunta 2.</span> ¿Qué conviene hacer antes de codificar en el parcial?</div><button class="opt">Identificar la clase, sus atributos y su comportamiento</button><button class="opt">Escribir el main primero sin pensar</button><button class="opt">Copiar código al azar</button><div class="feedback"></div></div><div class="q" data-correct="0" data-exp="Los casos límite (retiro &gt; saldo, monto negativo) validan la robustez."><div class="stem"><span class="n">Pregunta 3.</span> ¿Qué caso límite deberías probar en una cuenta?</div><button class="opt">Retirar más que el saldo</button><button class="opt">Solo consignaciones válidas</button><button class="opt">Nada, si compila basta</button><div class="feedback"></div></div><div class="quiz-result" id="quizResult"><div>Tu puntaje</div><div class="score" id="quizScore">0/3</div><div id="quizMsg"></div></div></div></section><section id="actividad-de-la-semana-formativa" class="activity-section"><h2>Actividad de la semana (formativa)</h2><p>Opcional y no evaluable. Versión ampliada con rúbrica en <strong>optional-activity</strong> (entrega por GitHub).</p><ul><li>Resuelve el ejercicio de <code>CuentaBancaria</code> completo y agrega casos de prueba.</li></ul></section>
+</main>
+<footer class="main-footer"><div class="container">
+  <p><strong>Programación y Diseño Orientado a Objetos</strong> <span class="sep">·</span> Semana 5 · Sesión 2 · Práctica guiada tipo parcial</p>
+  <p>Ingeniería de Sistemas <span class="sep">·</span> Facultad de Ingeniería <span class="sep">·</span> © 2026 CORHUILA</p>
+</div></footer>
+<button id="scrollTopBtn" title="Volver arriba" aria-label="Volver arriba">↑</button>
+<script src="js/script.js"></script>
+</body>
+</html>

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Programación y Diseño Orientado a Objetos · Semana 2 · Objetos — instanciación y uso | CORHUILA</title>
+<link rel="stylesheet" href="css/style.css">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+</head>
+<body>
+<div id="readingBar"></div>
+<header class="main-header">
+  <div class="top-bar"><div class="container">
+    <div class="brand-badge">UH</div>
+    <div class="brand-text"><span class="brand-course">Programación y Diseño Orientado a Objetos</span><span class="brand-topic">Semana 2 · Sesión 2 · Objetos — instanciación y uso</span></div>
+    <div class="brand-meta">CORHUILA<br>Ingeniería de Sistemas · 2026-B</div>
+  </div></div>
+  <nav class="main-nav"><div class="container"><ul><li><a href="#introduccion" class="active">Inicio</a></li><li><a href="#1-crear-un-objeto-con-new">Crear un objeto con new</a></li><li><a href="#2-muchos-objetos-una-clase">Muchos objetos, una clase</a></li><li><a href="#3-referencias-y-null">Referencias y null</a></li><li><a href="#4-objetos-como-parametros">Objetos como parámetros</a></li><li><a href="#autoevaluacion">Autoevaluación</a></li><li><a href="#actividad-de-la-semana-formativa">Actividad de la semana (formativa)</a></li></ul></div></nav>
+</header>
+<main class="container main-content">
+  <section id="introduccion" class="hero-section">
+    <span class="eyebrow">Unidad 1 · Fundamentos · Corte 1</span>
+    <h1>Objetos — instanciación y uso</h1>
+    <p class="lead">Con la clase lista, toca darle vida: crear objetos. En esta sesión instancias objetos con new, accedes a sus atributos y métodos, y entiendes qué es una referencia.</p>
+    <div class="objectives-grid"><div class="objective-card"><span class="num">1</span><p>Crear objetos con el operador new.</p></div><div class="objective-card"><span class="num">2</span><p>Acceder a atributos y métodos con el operador punto.</p></div><div class="objective-card"><span class="num">3</span><p>Comprender el concepto de referencia y el valor null.</p></div></div>
+  </section>
+  <section id="1-crear-un-objeto-con-new"><h2>1. Crear un objeto con new</h2><p>Un objeto se crea (instancia) a partir de una clase con <strong>new</strong>:</p><pre class="code">Persona p1 = <span class="kw">new</span> Persona();   <span class="cm">// se crea el objeto</span>
+p1.nombre = "Ana";            <span class="cm">// se asigna su estado</span>
+p1.edad = 20;
+p1.saludar();                 <span class="cm">// se invoca su comportamiento</span></pre><ul><li><code>new Persona()</code> reserva memoria y crea el objeto.</li><li><code>p1</code> es una <strong>referencia</strong>: apunta al objeto en memoria.</li></ul></section><section id="2-muchos-objetos-una-clase"><h2>2. Muchos objetos, una clase</h2><p>Cada objeto tiene su <strong>propio estado</strong>, aunque compartan la clase:</p><pre class="code">Persona a = <span class="kw">new</span> Persona(); a.nombre = "Ana";  a.edad = 20;
+Persona b = <span class="kw">new</span> Persona(); b.nombre = "Beto"; b.edad = 31;
+a.saludar();   <span class="cm">// Hola, soy Ana...</span>
+b.saludar();   <span class="cm">// Hola, soy Beto...</span></pre><pre class="ascii"> a --&gt; [ nombre=Ana,  edad=20 ]
+ b --&gt; [ nombre=Beto, edad=31 ]</pre></section><section id="3-referencias-y-null"><h2>3. Referencias y null</h2><p>Una variable de tipo objeto guarda una <strong>referencia</strong> (la dirección), no el objeto en sí.</p><pre class="code">Persona x = <span class="kw">new</span> Persona();
+Persona y = x;        <span class="cm">// y apunta AL MISMO objeto que x</span>
+y.nombre = "Zoe";
+<span class="kw">System</span>.out.<span class="kw">println</span>(x.nombre);  <span class="cm">// "Zoe" (¡es el mismo objeto!)</span></pre><div class="callout warn"><h4>Cuidado</h4><p>Si una referencia no apunta a ningún objeto vale <code>null</code>. Usarla (<code>p.saludar()</code> con <code>p == null</code>) lanza <code>NullPointerException</code>, el error más común en Java.</p></div></section><section id="4-objetos-como-parametros"><h2>4. Objetos como parámetros</h2><p>Puedes pasar objetos a métodos; se pasa la <strong>referencia</strong>, así que el método puede modificar el objeto.</p><pre class="code"><span class="kw">static</span> <span class="kw">void</span> cumplir(Persona p) { p.edad++; }
+<span class="cm">// ...</span>
+cumplir(a);   <span class="cm">// a.edad aumenta en 1</span></pre></section><section id="autoevaluacion"><h2>Autoevaluación</h2><div class="quiz" id="quiz"><div class="quiz-progress"><span id="quizAnswered">0</span> de 3 respondidas</div><div class="q" data-correct="0" data-exp="new reserva memoria y crea un objeto; la variable guarda su referencia."><div class="stem"><span class="n">Pregunta 1.</span> ¿Qué hace el operador new?</div><button class="opt">Crea (instancia) un objeto de la clase</button><button class="opt">Borra un objeto</button><button class="opt">Declara una clase</button><div class="feedback"></div></div><div class="q" data-correct="0" data-exp="Las variables de objeto guardan referencias; y y x apuntan al mismo objeto."><div class="stem"><span class="n">Pregunta 2.</span> Si <code>y = x</code> (ambos Persona) y cambias y.nombre, ¿qué pasa con x.nombre?</div><button class="opt">También cambia, porque apuntan al mismo objeto</button><button class="opt">No cambia, son copias independientes</button><button class="opt">Da error de compilación</button><div class="feedback"></div></div><div class="q" data-correct="0" data-exp="Invocar métodos/atributos sobre null lanza NullPointerException."><div class="stem"><span class="n">Pregunta 3.</span> ¿Qué error se produce al usar una referencia null?</div><button class="opt">NullPointerException</button><button class="opt">ArrayIndexOutOfBoundsException</button><button class="opt">StackOverflowError</button><div class="feedback"></div></div><div class="quiz-result" id="quizResult"><div>Tu puntaje</div><div class="score" id="quizScore">0/3</div><div id="quizMsg"></div></div></div></section><section id="actividad-de-la-semana-formativa" class="activity-section"><h2>Actividad de la semana (formativa)</h2><p>Opcional y no evaluable. Versión ampliada con rúbrica en <strong>optional-activity</strong> (entrega por GitHub).</p><ul><li>Crea 3 objetos <code>Libro</code> distintos y llama a <code>describir()</code> en cada uno.</li></ul></section>
+</main>
+<footer class="main-footer"><div class="container">
+  <p><strong>Programación y Diseño Orientado a Objetos</strong> <span class="sep">·</span> Semana 2 · Sesión 2 · Objetos — instanciación y uso</p>
+  <p>Ingeniería de Sistemas <span class="sep">·</span> Facultad de Ingeniería <span class="sep">·</span> © 2026 CORHUILA</p>
+</div></footer>
+<button id="scrollTopBtn" title="Volver arriba" aria-label="Volver arriba">↑</button>
+<script src="js/script.js"></script>
+</body>
+</html>
