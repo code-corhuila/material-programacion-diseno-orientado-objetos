@@ -6,30 +6,31 @@ week: 15
 corte: 3
 unit: Unidad 3 · Robustez y bibliotecas
 topic: Entrega del proyecto final
-eyebrow: Actividad opcional · Proyecto · Entrega por GitHub
-lead: Consolida y entrega tu proyecto final aplicando todo el curso. Actividad alineada con el proyecto del corte.
+eyebrow: Actividad opcional · Formativa · Entrega por GitHub
+lead: Consolida y entrega tu proyecto final integrando todo el semestre. Esta guía define la estructura del repositorio, el README esperado y la rúbrica con la que se valorará. Actividad opcional de refuerzo.
 objectives:
-  - Integrar los pilares de POO en un sistema funcional.
-  - Incluir colecciones, excepciones y persistencia.
-  - Entregar de forma incremental por GitHub.
+  - Integrar los pilares de POO en un sistema completo.
+  - Entregar el proyecto con estructura y documentación profesionales.
+  - Autoevaluar el trabajo con la rúbrica antes de compartirlo.
 ---
 
 ## 1. Enunciado
 
-Desarrolla y entrega tu proyecto final cumpliendo los requisitos mínimos:
+Construye una **aplicación de consola en Java** para un problema de gestión (biblioteca, inventario, agenda, estudiantes, playlist…) que integre **todo el curso**:
 
-1. Modelo con **encapsulamiento** y validación.
-2. **Herencia o interfaces + polimorfismo**.
-3. **Composición** donde aplique.
-4. **Colecciones** (List/Map) para gestionar datos.
-5. **Excepciones** y **persistencia** en archivo.
-6. **CRUD** completo sobre la entidad principal.
+1. **Modelo** encapsulado con invariantes; usa **herencia/interfaces + polimorfismo** y **composición**.
+2. **Colecciones** (`List`/`Map`) para gestionar los datos.
+3. **CRUD** completo sobre la entidad principal.
+4. **Excepciones** (validación y errores controlados; al menos una **propia**).
+5. **Persistencia** en archivo, aislada en un **repositorio**.
+6. **Buenas prácticas**: nombres claros, DRY, métodos cortos, sin números mágicos.
 
 ## 2. Requisitos
 
-- Todos los puntos del enunciado, integrados.
-- README con diseño (clases y relaciones), instrucciones y capturas.
-- Historial de commits incremental.
+- Todos los pilares de POO aplicados y justificados.
+- Colecciones + excepciones + persistencia + CRUD funcionando.
+- Diseño por capas (modelo / servicio / persistencia / app).
+- README completo y commits incrementales.
 
 ## 3. Cómo entregar
 
@@ -37,25 +38,34 @@ Entrega **por GitHub**. Repositorio: `poo-proyecto-final`.
 
 ```
 poo-proyecto-final/
-  README.md   -> problema, diseno, instrucciones, capturas
-  src/         -> paquetes modelo/servicio/app
-  data/        -> archivo de persistencia (ej. .csv)
+  README.md    -> problema, diseño (clases/relaciones), instrucciones, capturas
+  src/
+    modelo/       -> entidades del dominio
+    servicio/     -> logica de negocio (CRUD, reglas)
+    persistencia/ -> repositorio (guardar/cargar)
+    app/          -> Main (consola)
+  datos/         -> archivos de datos (ej. datos.csv)
 ```
 
-1. Crea (o usa) el repo del proyecto.
-2. Sube el proyecto con commits incrementales.
-3. Comparte el enlace por el canal indicado.
+1. Crea el repositorio público con ese nombre.
+2. Sube el código organizado por capas y el README.
+3. Realiza commits incrementales y claros durante el desarrollo.
+4. Comparte el enlace por el canal indicado por el docente.
 
 ## 4. Rúbrica de evaluación
 
-| Criterio | Excelente | Aceptable | Por mejorar | Pts |
+| Criterio | Excelente (100%) | Aceptable (60%) | Por mejorar (0%) | Pts |
 |---|---|---|---|---|
-| Pilares de POO | Todos correctos | La mayoría | Pocos | 30 |
-| Colecciones + excepciones + persistencia | Correctos | Con detalles | Fallan | 30 |
-| CRUD funcional | Completo | Parcial | Incompleto | 20 |
-| Código limpio, README y commits | Ordenado | Aceptable | Deficiente | 20 |
+| Pilares de POO | Todos, correctos y justificados | La mayoría | Pocos | 25 |
+| Colecciones + excepciones | Correctos y pertinentes | Con detalles | Fallan | 20 |
+| CRUD funcional | Completo y probado | Parcial | Incompleto | 20 |
+| Persistencia (repositorio) | Funciona y está separada | Parcial | Ausente | 15 |
+| Diseño (capas, cohesión/acoplamiento) | Claro y justificado | Aceptable | Débil | 10 |
+| README + commits | Ordenado e incremental | Aceptable | Deficiente | 10 |
 
-> Nota: actividad formativa y opcional (sin nota en Moodle). La guía unificada de entrega estará en el Manual de Entrega de Actividades Opcionales (próximamente).
+> tip: Antes de entregar, **autoevalúate con esta rúbrica**. Cualquier criterio flojo aún puedes reforzarlo. Un buen README y commits claros comunican profesionalismo.
+
+> Nota: actividad formativa y opcional (sin nota en Moodle). La guía unificada para entregar todas las actividades opcionales, válida para todas las materias, estará en el Manual de Entrega de Actividades Opcionales (próximamente).
 
 ## Descargar
 

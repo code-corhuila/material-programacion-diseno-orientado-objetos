@@ -6,7 +6,7 @@
   <organizations default="ORG-OVA">
     <organization identifier="ORG-OVA">
       <title>Programación y Diseño Orientado a Objetos · Semana 16 · Sesión 1 · CORHUILA</title>
-      <item identifier="ITEM-OVA" identifierref="RES-OVA"><title>Portafolio y reflexión final</title></item>
+      <item identifier="ITEM-OVA" identifierref="RES-OVA"><title>Mapa conceptual integrador de la POO</title></item>
     </organization>
   </organizations>
   <resources>

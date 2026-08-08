@@ -6,7 +6,7 @@
   <organizations default="ORG-OVA">
     <organization identifier="ORG-OVA">
       <title>Programación y Diseño Orientado a Objetos · Semana 16 · Sesión 2 · CORHUILA</title>
-      <item identifier="ITEM-OVA" identifierref="RES-OVA"><title>Presentaciones y reflexión final</title></item>
+      <item identifier="ITEM-OVA" identifierref="RES-OVA"><title>Repaso final y hacia dónde seguir</title></item>
     </organization>
   </organizations>
   <resources>

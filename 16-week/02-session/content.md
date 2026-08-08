@@ -6,70 +6,97 @@ week: 16
 session: 2
 corte: 3
 unit: Unidad 3 · Robustez y bibliotecas
-topic: Presentaciones y reflexión final
+topic: Repaso final y hacia dónde seguir
 eyebrow: Unidad 3 · Cierre del curso
-lead: Cerramos con la presentación de los proyectos y una reflexión sobre el camino recorrido. La retroalimentación entre compañeros es parte del aprendizaje.
+lead: Última sesión del curso. Consolidamos lo aprendido con un repaso final y trazamos el camino hacia adelante: qué temas continúan de forma natural la POO y cómo seguir creciendo como desarrollador orientado a objetos.
 objectives:
-  - Presentar el proyecto final con claridad.
-  - Dar y recibir retroalimentación constructiva.
-  - Reflexionar sobre lo aprendido en el semestre.
+  - Consolidar los conceptos clave del curso.
+  - Identificar los próximos temas que amplían la POO.
+  - Adoptar hábitos para seguir aprendiendo con autonomía.
 ---
 
-## 1. Presentación de proyectos
+## 1. Lo esencial en una página
 
-Cada estudiante/equipo presenta su proyecto enfocándose en:
+- Una **clase** es un molde; un **objeto** es una instancia con **identidad** y **estado**.
+- **Encapsular** = atributos privados + métodos que preservan **invariantes**.
+- **Herencia** para *es-un*; **composición** para *tiene-un* (prefiere composición).
+- **Polimorfismo** = el mismo mensaje se resuelve según el tipo real en ejecución.
+- **Interfaces** = contratos; programa **contra la interfaz**, no la implementación.
+- **Excepciones** para errores; **colecciones** para agrupar; **archivos** para persistir.
+- **Código limpio + SOLID** = sistemas que se mantienen y crecen sin romperse.
 
-- El **problema** y el **diseño** (clases y relaciones).
-- Cómo aplicó los **pilares de la POO**.
-- Una **demo** del CRUD, las excepciones y la persistencia.
-- **Aprendizajes** y posibles mejoras.
+## 2. Hacia dónde seguir
 
-## 2. Retroalimentación constructiva
+La POO es la base. Los siguientes pasos naturales:
 
-Al comentar el trabajo de otros, sé **específico y respetuoso**:
+| Tema | Qué aporta | Conecta con |
+|---|---|---|
+| **Estructuras de datos** | Eficiencia (listas, pilas, árboles, grafos) | Colecciones (S12) |
+| **Patrones de diseño** | Soluciones probadas a problemas recurrentes | Polimorfismo, interfaces |
+| **Pruebas automatizadas (JUnit)** | Verificar comportamiento y refactorizar seguro | Refactor (S14) |
+| **Genéricos avanzados** | Reutilización con seguridad de tipos | Colecciones, interfaces |
+| **Bases de datos + JDBC** | Persistencia real (más allá de archivos) | Repositorio (S13) |
+| **Frameworks (Spring)** | Aplicaciones profesionales | Inversión de dependencias (S14) |
 
-- Destaca algo que esté **bien hecho**.
-- Sugiere **una mejora concreta** ("podrías encapsular X", "ese método largo se podría dividir").
-- Pregunta por **decisiones de diseño** ("¿por qué herencia y no composición aquí?").
+> info: Muchos de estos temas **son POO aplicada**. Los patrones de diseño, por ejemplo, se apoyan por completo en polimorfismo, interfaces y composición: lo que aprendiste es la llave.
 
-> tip: La mejor retroalimentación es accionable: no "está mal", sino "esto mejoraría si...".
+## 3. Hábitos para seguir creciendo
 
-## 3. Reflexión final
+- **Lee código** de otros (proyectos open source) y pregúntate por qué está diseñado así.
+- **Escribe pruebas**: te obligan a diseñar clases con buenas interfaces.
+- **Refactoriza** con frecuencia; no dejes que los olores se acumulen.
+- **Practica** con proyectos pequeños y completos, de punta a punta.
+- Cuando dudes entre herencia y composición, **empieza por composición**.
 
-Tómate un momento para responder:
+> tip: El mejor ejercicio ahora es tomar tu **proyecto final** y ampliarlo: agrégale pruebas con JUnit, cámbiale la persistencia a una base de datos, o refactorízalo aplicando un patrón. Cada mejora afianza lo aprendido.
 
-- ¿Qué concepto de POO te costó más y cómo lo superaste?
-- ¿Qué parte de tu proyecto te enorgullece?
-- ¿Qué harías distinto si empezaras de nuevo?
+## 4. Repaso rápido
 
-## 4. Tu portafolio
+- ¿Qué relación (es-un / tiene-un) usarías para "un pedido tiene varias líneas"?
+- ¿Por qué `equals` y `hashCode` van juntos?
+- ¿Cuándo `Map` en vez de `List`?
+- ¿Qué olor corrige reemplazar un `switch` por polimorfismo?
 
-Deja tu proyecto final **pulido y destacado** en GitHub. Es una evidencia real de competencias para prácticas, empleo y futuros cursos.
-
-> info: Un repositorio bien documentado (README claro, commits ordenados) comunica profesionalismo tanto como el código mismo.
-
-## Autoevaluación
+## Autoevaluación final
 
 ```quiz
-Q: ¿Cómo debe ser una buena retroalimentación?
-* Específica, respetuosa y accionable
-- Vaga y general
-- Solo negativa
-E: La retroalimentación útil es concreta, respetuosa y sugiere mejoras accionables.
+Q: "Un pedido tiene varias líneas de pedido" se modela con...
+* Composición (tiene-un)
+- Herencia (es-un)
+- Una interfaz vacía
+E: Contener otras instancias es composición (tiene-un).
 
-Q: Al presentar, ¿qué es lo más valioso a mostrar?
-* El diseño (clases y relaciones) y una demo
-- Leer todo el código
-- El número de líneas
-E: Se valora explicar el diseño y demostrar el sistema funcionando.
+Q: Programar "contra la interfaz" significa...
+* Depender de la abstracción, no de una implementación concreta
+- No usar interfaces
+- Copiar el código de la clase
+E: Se depende del contrato (interfaz) para poder intercambiar implementaciones.
 
-Q: ¿Por qué dejar el proyecto pulido en GitHub?
-* Es evidencia de competencias para prácticas y empleo
-- No tiene utilidad
-- Solo para la nota
-E: Un buen repositorio es parte de tu portafolio profesional.
+Q: ¿Qué tema es la continuación natural de las colecciones?
+* Estructuras de datos (listas, pilas, árboles, grafos)
+- El color de la consola
+- Nada, la POO termina aquí
+E: Las estructuras de datos profundizan y optimizan lo visto en colecciones.
+
+Q: ¿Qué te permite refactorizar con seguridad?
+* Tener pruebas automatizadas que verifican el comportamiento
+- No verificar nada
+- Borrar el historial
+E: Las pruebas confirman que el comportamiento no cambió tras el refactor.
+
+Q: Ante la duda entre herencia y composición, conviene...
+* Empezar por composición
+- Usar siempre herencia
+- Evitar ambas
+E: La composición es más flexible y suele ser la mejor primera opción.
+
+Q: Los patrones de diseño se apoyan sobre todo en...
+* Polimorfismo, interfaces y composición (POO aplicada)
+- Números mágicos
+- Variables globales
+E: Los patrones son POO aplicada; usan los pilares que ya dominas.
 ```
 
 ## Actividad de la semana
 
-Entrega tu portafolio final con reflexión (ver optional-activity). ¡Felicitaciones por cerrar el curso!
+Cierra tu proyecto y define **un próximo paso concreto** para seguir mejorándolo (pruebas, base de datos o un patrón). Comparte tu plan.

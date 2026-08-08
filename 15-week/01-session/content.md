@@ -8,69 +8,98 @@ corte: 3
 unit: Unidad 3 · Robustez y bibliotecas
 topic: Proyecto final — diseño e implementación
 eyebrow: Unidad 3 · Cierre de Corte 3
-lead: El proyecto final integra todo el curso: modelas un sistema real aplicando los cuatro pilares de la POO, con manejo de errores, colecciones y persistencia. Esta sesión define qué construir y cómo.
+lead: El proyecto final integra todo el semestre: modelas un sistema real aplicando los cuatro pilares de la POO, con colecciones, manejo de excepciones, persistencia y buenas prácticas. Esta sesión define el alcance, el método de diseño y los criterios de calidad con los que se evaluará.
 objectives:
-  - Definir el alcance del proyecto final.
-  - Aplicar los pilares de la POO en un sistema completo.
-  - Organizar el proyecto con buenas prácticas.
+  - Definir el alcance y los requisitos del proyecto final.
+  - Diseñar el sistema (clases y relaciones) antes de implementar.
+  - Integrar todos los conceptos del curso en una arquitectura por capas.
 ---
 
-## 1. Objetivo del proyecto
+## 1. Objetivo
 
-Construir una aplicación de consola en Java que resuelva un problema real de gestión, aplicando **de forma integrada** lo aprendido en el semestre.
+Construir una **aplicación de consola en Java** que resuelva un problema real de gestión, aplicando **de forma integrada** lo aprendido. No se evalúa solo que funcione, sino la **calidad del diseño orientado a objetos**.
 
-> info: No se evalúa solo que funcione, sino el **diseño orientado a objetos**: clases bien encapsuladas, uso correcto de herencia/interfaces/composición y código limpio.
+## 2. Requisitos mínimos (checklist)
 
-## 2. Requisitos mínimos
+- [ ] **Encapsulamiento** con invariantes (atributos privados + validación).
+- [ ] **Herencia o interfaces + polimorfismo** (una jerarquía o contrato usado polimórficamente).
+- [ ] **Composición** (una clase que contiene a otras).
+- [ ] **Colecciones** (`List`/`Map`) para gestionar los datos.
+- [ ] **Manejo de excepciones** (entradas y errores controlados; alguna excepción propia).
+- [ ] **Persistencia** en archivo (guardar/cargar; separada en un repositorio).
+- [ ] **CRUD** completo sobre la entidad principal.
+- [ ] **Buenas prácticas** (nombres, DRY, métodos cortos, sin números mágicos).
 
-- **Encapsulamiento:** atributos privados + validación.
-- **Herencia o interfaces + polimorfismo:** una jerarquía o contrato usado polimórficamente.
-- **Composición:** una clase que contenga a otras.
-- **Colecciones:** `List` o `Map` para gestionar los datos.
-- **Manejo de excepciones:** entradas y errores controlados.
-- **Persistencia:** guardar/leer datos en un archivo.
-- **CRUD** completo sobre la entidad principal.
+## 3. Diseño primero (método)
 
-## 3. Temas sugeridos
+Antes de programar, **diseña**:
 
-- Sistema de biblioteca (libros, préstamos, usuarios).
+1. Identifica las **entidades** (clases) y sus **relaciones** (es-un / tiene-un / puede-hacer).
+2. Define atributos (con invariantes) y comportamiento de cada clase.
+3. Elige las **colecciones** según la operación dominante.
+4. Organiza en **capas/paquetes**.
+
+```ascii
+Arquitectura sugerida (por capas)
+ modelo/     -> entidades del dominio (encapsuladas)
+ servicio/   -> lógica de negocio (CRUD, reglas)
+ persistencia/ -> repositorio (guardar/cargar archivo)
+ app/        -> Main (interacción por consola)
+```
+
+## 4. Temas sugeridos
+
+- Sistema de biblioteca (libros, usuarios, préstamos).
 - Gestión de inventario de una tienda.
 - Agenda médica / turnos.
 - Gestor de estudiantes y calificaciones.
 - Reproductor con playlists.
 
-## 4. Rúbrica del proyecto
+## 5. Rúbrica del proyecto
 
 | Criterio | Excelente | Aceptable | Por mejorar | Pts |
 |---|---|---|---|---|
-| Pilares de POO aplicados | Todos, correctos | La mayoría | Pocos | 30 |
-| Colecciones + excepciones | Correctos | Con detalles | Fallan | 20 |
-| Persistencia (archivos) | Funciona | Parcial | Ausente | 15 |
-| CRUD funcional | Completo | Parcial | Incompleto | 20 |
-| Código limpio + README | Ordenado y claro | Aceptable | Deficiente | 15 |
+| Pilares de POO aplicados | Todos, correctos y justificados | La mayoría | Pocos | 25 |
+| Colecciones + excepciones | Correctos y pertinentes | Con detalles | Fallan | 20 |
+| Persistencia (archivos, repositorio) | Funciona y está separada | Parcial | Ausente | 15 |
+| CRUD funcional | Completo y probado | Parcial | Incompleto | 20 |
+| Diseño (capas, cohesión/acoplamiento) | Claro y justificado | Aceptable | Débil | 10 |
+| Código limpio + README | Ordenado y documentado | Aceptable | Deficiente | 10 |
 
-> tip: Empieza por el **diseño**: dibuja las clases y sus relaciones (es-un, tiene-un, puede-hacer) antes de programar. Ahorra tiempo y mejora la nota de diseño.
+> tip: Empieza por el **diagrama de clases y relaciones**. Un buen diseño hace la implementación más simple y suma en la mayoría de los criterios de la rúbrica.
 
 ## Autoevaluación
 
 ```quiz
 Q: ¿Qué se evalúa especialmente en el proyecto?
-* El diseño orientado a objetos (no solo que funcione)
+* La calidad del diseño orientado a objetos, no solo que funcione
 - La cantidad de líneas
 - El color de la consola
-E: El foco es aplicar bien los conceptos de POO, no solo que compile.
+E: El foco es aplicar bien los conceptos de POO con buen diseño.
 
 Q: ¿Cuál NO es un requisito mínimo del proyecto?
 * Interfaz gráfica 3D
-- Encapsulamiento
 - Manejo de excepciones
-E: Es una app de consola; los requisitos son de diseño POO, no gráficos 3D.
+- Persistencia en archivo
+E: Es una app de consola; los requisitos son de diseño POO, no gráficos.
 
 Q: ¿Por dónde conviene empezar?
-* Por el diseño de clases y sus relaciones
-- Escribiendo el main sin pensar
+* Por el diseño: clases, relaciones y capas, antes de codificar
+- Escribiendo el main sin diseñar
 - Por el README al final
-E: Diseñar primero (clases y relaciones) guía una implementación limpia.
+E: Diseñar primero guía una implementación limpia y ordenada.
+
+Q: ¿Qué separa la capa de persistencia?
+* La lógica de guardar/cargar archivos, aislada del modelo (repositorio)
+- La interfaz gráfica
+- Los comentarios
+E: La persistencia va en un repositorio, no mezclada con las entidades.
+
+Q: Elegir List o Map en el proyecto debe basarse en...
+* La operación dominante (buscar por clave → Map; índice/orden → List)
+- El azar
+- Usar siempre List
+E: La colección se elige según la operación más frecuente del sistema.
 ```
 
 ## Actividad de la semana
