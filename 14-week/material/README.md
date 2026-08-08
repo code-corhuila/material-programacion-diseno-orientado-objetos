@@ -1,169 +1,160 @@
-# Week 14 — Reading & Resource Material (Download Area)
+# Week 14 — Material and Resources (Download Area)
 
-> **Subject:** Object-Oriented Programming and Design · **Unit 3** · **Week 14** · **Corte 3**
-> **RAA:** `90_82759`
-> **Topic:** Good programming practices in Java and refactoring with static analysis tools
+**Course:** Object-Oriented Programming and Design (2026-B)
+**Unit 3 — Practical application of OOP in Java · Corte 3**
+**Topic:** Good programming practices in Java and refactoring with static analysis tools
+**RAA:** `90_82759`
 
----
-
-## How to use this area
-
-This folder is a **download area** for the week's consolidated **PDF** and a
-**curated index of readings**. It is **not** a Moodle submission box — nothing is
-turned in here. Download the PDF, read the sources below, and bring your notes to
-Sessions 1 and 2. The graded evidence for the week is the **Corte 3 quiz**; the
-[optional activity](../optional-activity/README.md) is submitted via **GitHub**.
-
-> **PDF placement:** put the compiled week PDF in this folder as
-> `week14-good-practices-refactoring.pdf`. Once present, link it here:
-> `./week14-good-practices-refactoring.pdf`.
+> This is a **download area** for the week's PDF summary and curated resources.
+> It is **not** a Moodle submission box — nothing is turned in here. Use it to
+> study before and after the two sessions.
 
 ---
 
-## 1. Core readings (required)
+## 1. Downloadable PDF
 
-| # | Source | What to read | Why it matters |
-|---|--------|--------------|----------------|
-| 1 | **Google Java Style Guide** (online) | §2 Source file basics, §4 Formatting, §5 Naming | The concrete, automatable style rules Checkstyle enforces. |
-| 2 | **Oracle — Code Conventions for the Java Programming Language** | Naming conventions, file organization, statements | The classic reference behind most Java house styles. |
-| 3 | **Martin Fowler — *Refactoring* (2nd ed.)** | Ch. 1 (worked example), Ch. 2 ("Principles in Refactoring"), Ch. 3 ("Bad Smells in Code") | The canonical definition, catalog, and philosophy of refactoring. |
-| 4 | **Robert C. Martin — *Clean Code*** | Ch. 2 "Meaningful Names", Ch. 3 "Functions" | Practical rules for names and small, single-purpose methods. |
-| 5 | **Checkstyle documentation** (`checkstyle.org`) | "Getting Started", "Standard Checks", `google_checks.xml` | How to configure and run convention checks. |
-| 6 | **SonarLint / SonarSource rules** (`rules.sonarsource.com`) | Filter by **Java → Code Smell**; read `java:S3776` (Cognitive Complexity), `java:S1172` (unused params), `java:S109` (magic numbers) | How in-IDE analysis explains and prioritizes issues. |
+- **`week14-good-practices-and-refactoring.pdf`** — a printable summary of the
+  week: naming/style cheat-sheet, code-smell catalog, static-analysis workflow,
+  and the refactoring catalog with examples.
 
-## 2. Supplementary readings (recommended)
-
-| # | Source | Focus |
-|---|--------|-------|
-| 7 | **Kent Beck & Martin Fowler — "Bad Smells in Code"** (chapter/essay) | The original smell taxonomy in depth. |
-| 8 | **refactoring.guru — Refactoring & Code Smells catalog** | Visual, example-driven catalog; great quick reference. |
-| 9 | **Joshua Bloch — *Effective Java* (3rd ed.)** | Items on naming, minimizing scope, and API design quality. |
-| 10 | **Ward Cunningham — "The WyCash Portfolio Management System" / Technical Debt metaphor** | Origin and correct meaning of technical debt. |
+*(Place the generated PDF in this folder. Until then, the equivalent content
+lives in the session `README.md` files and the summaries below.)*
 
 ---
 
-## 3. Short summary notes
+## 2. In-class sample files
 
-### 3.1 Naming at a glance
-- Types (class/interface/enum): `UpperCamelCase`, nouns — `PaymentService`.
-- Methods: `lowerCamelCase`, verbs — `calculateTotal()`.
-- Variables/fields/params: `lowerCamelCase`, nouns — `retryCount`.
-- Constants (`static final`): `UPPER_SNAKE_CASE` — `MAX_RETRIES`.
-- Packages: lowercase dotted reverse-domain — `co.corhuila.billing`.
-- Booleans read as questions — `isValid()`, `hasNext()`.
+To be used in the Session 1 and Session 2 practices:
 
-### 3.2 Code smells cheat-sheet
-- **Bloaters:** Long Method, Large Class, Long Parameter List, Primitive Obsession.
-- **Dispensables:** Duplicated Code, Dead Code, needless Comments.
-- **OO abusers:** type-checking Switch Statements, refused bequest.
-- **Couplers:** Feature Envy, Inappropriate Intimacy, Message Chains.
-- **Everyday flags:** Magic Numbers, poor names, deep nesting, boolean `== true`.
+- **`LegacySample.java`** — a small, compiling class deliberately full of style
+  issues and code smells (Long Method, Magic Numbers, cryptic names, raw types,
+  dead code, poor formatting). Used to practice **detection** (S1) and
+  **refactoring** (S2).
+- **`LegacySampleTest.java`** — a JUnit 5 characterization test that pins down
+  the current behavior so refactoring can be proven safe.
+- **`session1-findings.md`** — template for the findings table students fill in.
 
-### 3.3 Refactoring safety loop
-```
-confirm GREEN test → one small refactoring → run test
-     └────────── still GREEN? keep going / else undo ──────────┘
-```
-Behavior must be identical before and after. If behavior changes, it is a
-feature or a bug fix — not a refactoring.
-
-### 3.4 Tooling in one line each
-- **Checkstyle** — enforces *style/convention* uniformity via `checkstyle.xml`.
-- **SonarLint** — flags *bugs, vulnerabilities, and code smells* inside the IDE,
-  with severities (`Blocker`→`Info`) and rule explanations.
-- Static analysis reads structure, **not intent** — it complements, never
-  replaces, tests and human review.
-
-### 3.5 The three-way distinction (memorize for the quiz)
-| Action | Behavior changes? |
-|--------|-------------------|
-| Refactoring | **No** |
-| Bug fix | Yes (wrong → right) |
-| New feature | Yes (adds capability) |
+> If these files are not yet placed here, recreate them from the worked example
+> in [`../01-session/README.md`](../01-session/README.md) and
+> [`../02-session/README.md`](../02-session/README.md).
 
 ---
 
-## 4. Practice code (used in Sessions 1 & 2)
+## 3. Curated readings and references (with notes)
 
-Copy these into a Java project to follow along and to complete the guided
-practice. They are the exact samples referenced in the session guides.
+### Official style guides
 
-**`Order.java` (smelly — the starting point):**
-```java
-public class order {
-    int S=0;
-    public double process(String c,double p1,int q1,double p2,int q2,boolean vip){
-        double total=0;
-        total=total+p1*q1;
-        total=total+p2*q2;
-        if(vip==true){ total=total-total*0.1; }
-        if(total>1000000){ total=total-total*0.05; }
-        total=total+total*0.19;   // apply tax
-        S=S+1;
-        System.out.println("order for "+c+" = "+total);
-        return total;
-    }
-    public void x(){ /* TODO */ }
-}
+- **Oracle — *Code Conventions for the Java Programming Language*.**
+  The classic reference for Java layout and naming. Older but foundational;
+  explains *why* conventions exist.
+  *Note:* read the naming and formatting sections; some parts are dated.
+
+- **Google — *Google Java Style Guide*.**
+  A modern, precise, widely-adopted style specification. Directly maps to the
+  `google_checks.xml` Checkstyle configuration.
+  *Note:* this is the style guide we align with in class (2-space indent,
+  100-column limit, no wildcard imports, braces always).
+
+### Refactoring and clean code
+
+- **Martin Fowler — *Refactoring: Improving the Design of Existing Code* (2nd
+  ed., examples in JavaScript but concepts are language-agnostic).**
+  The definitive catalog of refactorings and code smells.
+  *Note:* study the "Bad Smells in Code" chapter and the entries for Extract
+  Function/Method, Rename, and Replace Magic Literal.
+
+- **Robert C. Martin — *Clean Code: A Handbook of Agile Software
+  Craftsmanship*.**
+  Practical rules for names, functions, comments, and formatting.
+  *Note:* chapters 2 (Meaningful Names) and 3 (Functions) match this week
+  exactly.
+
+### Tool documentation
+
+- **Checkstyle — official documentation.**
+  How to run Checkstyle from the CLI, Maven, Gradle, and IDE plugins; how to
+  pick a configuration (`google_checks.xml` / `sun_checks.xml`) and read the
+  report.
+  *Note:* focus on "Getting Started", "Standard Checks", and "Running
+  Checkstyle".
+
+- **SonarLint — official documentation and rule catalog.**
+  Installing the IDE plugin (IntelliJ IDEA, Eclipse, VS Code), understanding
+  rule types (Bug, Code Smell, Vulnerability), and connected mode.
+  *Note:* browse a few Java rule pages (e.g., magic numbers, cognitive
+  complexity) to see the "why + how to fix" structure.
+
+---
+
+## 4. Quick-reference summaries
+
+### 4.1 Naming cheat-sheet
+
+| Element | Convention | Example |
+|---------|-----------|---------|
+| Class / interface / enum | `PascalCase` | `InvoiceService` |
+| Method | `camelCase` (verb) | `calculateTotal()` |
+| Variable / field / param | `camelCase` (noun) | `totalAmount` |
+| Constant | `UPPER_SNAKE_CASE` | `VAT_RATE` |
+| Package | lowercase, dotted | `co.edu.corhuila.billing` |
+| Boolean accessor | `is/has/can` | `isActive()` |
+
+### 4.2 Code-smell → refactoring map
+
+| Smell | Typical refactoring |
+|-------|---------------------|
+| Long Method | Extract Method |
+| Magic Number | Replace Magic Number with Constant |
+| Long Parameter List / Data Clump | Introduce Parameter Object |
+| `switch` on a type code | Replace Conditional with Polymorphism |
+| Deeply nested conditionals | Guard Clauses / Decompose Conditional |
+| Cryptic name | Rename |
+| Duplicate Code | Extract Method + reuse |
+| Dead Code | Delete it |
+
+### 4.3 Static analysis in one line
+
+> **Static analysis** reads your code **without running it** to flag style
+> issues, smells, bugs, and security problems. **Checkstyle** = style;
+> **SonarLint** = smells + bugs + security. Tests (dynamic analysis) still
+> prove behavior.
+
+### 4.4 The refactoring loop
+
 ```
-
-**`OrderTest.java` (the safety net to write first):**
-```java
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import org.junit.jupiter.api.Test;
-
-class OrderTest {
-    private static final double EPS = 0.0001;
-
-    @Test
-    void vipBulkOrderTotalIsPreserved() {
-        Order order = new Order();
-        double total = order.calculateTotal("Ana", 600000, 2, 500000, 1, true);
-        assertEquals(1_729_665.0, total, EPS); // golden value from original code
-    }
-}
-```
-
-> The clean, refactored `Order` is shown in
-> [Session 2 §4.3](../02-session/README.md). Try to reach it yourself before
-> looking.
-
-**Minimal `checkstyle` run (CLI):**
-```bash
-java -jar checkstyle-all.jar -c /google_checks.xml Order.java
+green tests -> one small refactoring -> re-run tests
+   ^                                        |
+   |__________ green? continue _____________|
+              red? revert last step
 ```
 
 ---
 
-## 5. Glossary (quick reference)
+## 5. Tooling quick-start (for self-study)
 
-| Term | One-line meaning |
-|------|------------------|
-| Static analysis | Finding problems by reading code, not running it. |
-| Checkstyle | Style/convention rule checker for Java. |
-| SonarLint | In-IDE bug & code-smell detector. |
-| Code smell | A symptom hinting at a deeper design problem. |
-| Refactoring | Behavior-preserving structural improvement. |
-| Technical debt | Future cost of a quick-and-dirty solution. |
-| Magic number | Unexplained numeric literal that should be a constant. |
-| Cyclomatic/Cognitive complexity | How tangled/branchy a method is. |
-| Guard clause | Early return/throw to reduce nesting. |
-| Characterization test | A test that pins down current behavior before refactoring. |
+**SonarLint (IDE plugin — recommended first):**
+1. Open your IDE's plugin marketplace (IntelliJ IDEA / Eclipse / VS Code).
+2. Search "SonarLint", install, restart the IDE.
+3. Open the sample project — findings appear inline as you view/edit files.
+4. Click a finding to read the rule's rationale and suggested fix.
 
----
+**Checkstyle (command line with a config):**
+1. Download the Checkstyle "all" JAR and the `google_checks.xml` configuration.
+2. Run: `java -jar checkstyle-all.jar -c google_checks.xml LegacySample.java`
+3. Read each line: `[severity] rule  file:line  message`.
+4. (Optional) Wire it into Maven/Gradle so it runs on every build.
 
-## 6. Downloads index
-
-| File | Description | Status |
-|------|-------------|--------|
-| `week14-good-practices-refactoring.pdf` | Consolidated week reading (theory + examples). | Place in this folder. |
-| `Order.java` | Smelly starter class for the guided practice. | Code shown above (§4). |
-| `OrderTest.java` | Characterization test. | Code shown above (§4). |
-| `google_checks.xml` | Reference Checkstyle rule set. | Ships with Checkstyle. |
+> No installation? You can still act as a **human linter** using the cheat-sheets
+> above — this is exactly the Session 1 fallback.
 
 ---
 
-### Attribution note
-Sources above are named for study. Respect each work's license and copyright;
-consult originals for full text. These notes are summaries for classroom use,
-not substitutes for the primary sources.
+## 6. How this material maps to the objectives
+
+| Objective | Where to study |
+|-----------|----------------|
+| Naming & style conventions | §4.1 here; Session 1 §3.2–3.3 |
+| Detect smells with tools | §5 here; Session 1 §3.4–3.5 |
+| Refactor without changing behavior | §4.4 here; Session 2 §3–4 |
+| Choose the right refactoring | §4.2 here; Session 2 §3.3 |
+| Quiz preparation | all summaries + both session exit tickets |

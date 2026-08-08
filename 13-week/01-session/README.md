@@ -1,302 +1,386 @@
-# Week 13 · Session 1 — Foundations of File I/O and Reading/Writing Plain Text
+# Week 13 · Session 1 — Foundations of Java I/O and reading/writing `.txt`
 
-**Object-Oriented Programming and Design** · CORHUILA · Mechatronics Engineering
-**Unit 3 — Practical application of OOP in Java** · Corte 3 · Week 13, Session 1 of 2
-
-> There is an interactive learning object (OVA/SCORM) accompanying this session in [`index.html`](index.html). This README is the instructor-and-student reference: read it before class and keep it open during the practice.
+**Course:** Object-Oriented Programming and Design · **Term:** 2026-B · **Corte 3**
+**Unit 3:** Practical application of OOP in Java
+**RAA:** 90_82759
 
 ---
 
 ## 1. Session objective
 
-By the end of this 3-hour session, the student will be able to **read a plain-text (`.txt`) file line by line and write text to it safely**, choosing correctly between overwrite and append, specifying UTF-8 encoding, handling `IOException`, and releasing file resources deterministically with **`try-with-resources`** — using both the classic I/O API and the modern NIO.2 (`Files`/`Path`) API.
-
-This directly serves weekly objectives **1, 2, and 3** (read, write, and handle exceptions / close resources).
+By the end of this session the student will **read** a plain-text file line by line
+and **write/append** text to a file in Java, using `BufferedReader`,
+`BufferedWriter`/`PrintWriter`, and the NIO.2 `Files` helpers — always inside a
+**try-with-resources** block so that file handles are released even when an error
+occurs.
 
 ---
 
-## 2. Timed agenda (180 minutes)
+## 2. Timed agenda (110 minutes)
 
-| Time | Block | Activity |
-|---|---|---|
-| 0:00 – 0:15 | Warm-up & hook | "Where did my data go?" — run a program that creates objects, close it, reopen: state is gone. Motivate persistence. |
-| 0:15 – 0:45 | Theory I | Files, bytes, encoding, lines; absolute vs. relative paths; the working directory. |
-| 0:45 – 1:15 | Theory II | The stream model; character vs. byte streams; buffering; classic I/O vs. NIO.2. |
-| 1:15 – 1:30 | Theory III | Checked exceptions in I/O and **`try-with-resources`**. |
-| 1:30 – 1:40 | — | Short break. |
-| 1:40 – 2:10 | Worked example | Live-code the `NoteBook`: write notes to `notes.txt` (append) and read them back. |
-| 2:10 – 2:55 | Guided practice | Students extend the `NoteBook` (numbered listing, line count, defensive reading). |
-| 2:55 – 3:00 | Wrap-up | Exit ticket + preview of Session 2 (CSV & repository). |
+| Time | Activity |
+|------|----------|
+| 0:00 – 0:10 | Warm-up: "Where does my data go when the program ends?" discussion. |
+| 0:10 – 0:30 | Theory: the memory/disk boundary; streams vs. readers/writers; buffering. |
+| 0:30 – 0:45 | Theory: exceptions in I/O and try-with-resources. |
+| 0:45 – 1:05 | Live worked example: the `Note` app (`notes.txt`). |
+| 1:05 – 1:35 | Guided in-class practice (students code along). |
+| 1:35 – 1:45 | Common pitfalls & debugging clinic. |
+| 1:45 – 1:50 | Wrap-up and exit ticket. |
 
 ---
 
 ## 3. Theory notes
 
-### 3.1 What is a file, really?
+### 3.1 The memory/disk boundary
 
-A **file** is a named, ordered **sequence of bytes** managed by the operating system. Nothing in the file itself says "this is text" or "this is an image" — that meaning is a convention we impose. A `.txt` file is one we *agree* to interpret as text, where certain bytes represent characters and certain bytes represent **line separators**.
-
-Two facts have practical consequences from day one:
-
-1. **Encoding.** The mapping from characters to bytes is the *encoding*. The safe, portable default is **UTF-8**. If you never specify an encoding, Java uses the platform default, which may differ between your machine and the grading machine — a classic source of "it worked on my computer" bugs with accented characters (á, ñ, ü). **Always specify `StandardCharsets.UTF_8`.**
-
-2. **Line separators.** A "line" ends with a separator that differs by platform: Windows uses `\r\n` (CRLF), Linux/macOS use `\n` (LF). Reading APIs hide this from you (they strip the separator); when writing, prefer helpers like `BufferedWriter.newLine()` or `Files.write(...)` that use the platform separator, or commit to `\n` explicitly for cross-platform data files.
+When your program runs, its objects live in **RAM** — fast, but *volatile*: when the
+JVM exits, RAM is reclaimed and everything is gone. To keep data we must copy it to
+**non-volatile storage** (a disk file). That copy is called **persistence**.
 
 ```
-A text file is bytes on disk:
-  +----+----+----+----+----+----+----+----+
-  | 48 | 65 | 6C | 6C | 6F | 0A | 48 | 69 |   (hex)
-  +----+----+----+----+----+----+----+----+
-  |  H |  e |  l |  l |  o | \n |  H |  i |   (UTF-8 → chars)
-  +----+----+----+----+----+----+----+----+
-                          ^ line separator (LF)
-  Interpreted as text  →  Line 1: "Hello"
-                          Line 2: "Hi"
+   RUNNING PROGRAM (RAM, volatile)          DISK (non-volatile)
+  +-----------------------------+          +--------------------+
+  |  Note note = new Note(...)  |  write   |  notes.txt         |
+  |  ArrayList<Note> notes      | -------> |  2026-08-08|Buy...  |
+  |                             | <------- |  2026-08-08|Call... |
+  |  (gone when JVM stops)      |  read    |  (survives restart)|
+  +-----------------------------+          +--------------------+
 ```
 
-### 3.2 Paths: absolute vs. relative
+The core skill of this unit is translating **between these two worlds**: an object
+in memory ⇄ a line of text on disk.
 
-A **path** tells the OS where a file lives.
+### 3.2 Streams vs. readers/writers
 
-- An **absolute path** starts at a filesystem root and is unambiguous: `C:\Users\student\notes.txt` (Windows) or `/home/student/notes.txt` (Linux).
-- A **relative path** is resolved against the program's **current working directory** (CWD) — usually the directory from which the JVM was launched (in an IDE, typically the project root). `notes.txt` and `data/notes.txt` are relative.
+Java models I/O as **streams** — ordered sequences of data. There are two families:
 
-> **Predict before you run.** A frequent beginner surprise is "my file was created, but where?". A relative path lands in the CWD, *not* next to your `.java` source. When in doubt, print `System.getProperty("user.dir")` to see the CWD.
+```
+        java.io families
 
-The modern way to represent a path is the NIO.2 `Path` type, which is platform-independent:
+  BYTE streams (raw bytes, 8-bit)         CHARACTER streams (text, Unicode)
+  --------------------------------        --------------------------------
+  InputStream   OutputStream              Reader        Writer
+      |              |                       |             |
+  FileInputStream FileOutputStream       FileReader    FileWriter
+                                         BufferedReader BufferedWriter
+```
+
+- **Byte streams** (`InputStream`/`OutputStream`) move *raw bytes*. Use them for
+  images, audio, `.class` files, ZIPs — any binary content.
+- **Character streams** (`Reader`/`Writer`) move *text*, correctly translating bytes
+  to characters using a **character encoding**. Use them for `.txt` and `.csv`.
+
+> **Rule of thumb:** text file → use a `Reader`/`Writer`. Binary file → use a
+> byte stream. This week is 100% text, so we live in the `Reader`/`Writer` world.
+
+### 3.3 Why buffering matters
+
+Talking to the disk is *slow*. Reading one character at a time means one physical
+I/O request per character — catastrophic for performance. A **buffer** is an
+in-memory array that lets us read/write in big chunks:
+
+```
+  Without buffer:  app  --char--> disk  (thousands of tiny slow trips)
+  With buffer:     app  --char--> [ buffer in RAM ] --big chunk--> disk
+```
+
+`BufferedReader` adds the handy `readLine()` method; `BufferedWriter` batches writes.
+**Always wrap** a raw `FileReader`/`FileWriter` in its buffered counterpart, or use
+the `Files` helpers (which buffer for you).
+
+### 3.4 Character encoding — do not skip this
+
+An encoding maps characters ↔ bytes. If you write with one encoding and read with
+another, accents and special characters (`á`, `ñ`, `ü`, `€`) turn into garbage
+("mojibake"). **Always specify UTF-8 explicitly**:
 
 ```java
-import java.nio.file.Path;
-
-Path p1 = Path.of("data", "notes.txt");   // builds data/notes.txt on any OS
-Path p2 = Path.of("C:", "temp", "log.txt");
-System.out.println(p1.toAbsolutePath());  // resolve against CWD to see the real location
+import java.nio.charset.StandardCharsets;
+// ...
+Files.readAllLines(path, StandardCharsets.UTF_8);
+new BufferedReader(new InputStreamReader(new FileInputStream(f), StandardCharsets.UTF_8));
 ```
 
-### 3.3 The stream model, and why we buffer
+### 3.5 Exceptions in I/O
 
-Java models I/O as **streams** — a flow of data you read from or write to, one piece at a time.
+I/O can always fail — the disk is full, the file is missing, permissions are wrong.
+Java forces us to acknowledge this with **checked exceptions**, chiefly
+`IOException` (and its subclass `FileNotFoundException`). The compiler makes you
+either:
 
-```
-        READING                                WRITING
-  file ──> [ FileReader ] ──> chars     chars ──> [ FileWriter ] ──> file
-                │                                       │
-        wrap for speed                          wrap for speed
-                ▼                                       ▼
-        [ BufferedReader ]                      [ BufferedWriter ]
-         .readLine()                             .write(...) / .newLine()
-```
+1. **catch** it with `try/catch`, or
+2. **declare** it with `throws IOException` and let the caller handle it.
 
-There are two families:
+### 3.6 try-with-resources (the modern, safe way)
 
-- **Byte streams** (`InputStream`/`OutputStream`) move raw bytes — used for images, audio, binary formats.
-- **Character streams** (`Reader`/`Writer`) move text and understand encoding — used for `.txt`, `.csv`, `.json`.
-
-For text files we use **character streams**. But reading one character at a time from disk is slow: each call may touch the operating system. A **buffer** solves this by reading a big chunk into memory once and then serving your small reads from RAM. `BufferedReader` adds the invaluable **`readLine()`** method; `BufferedWriter` adds **`newLine()`** and batches writes. **Rule of thumb: always wrap file readers/writers in a buffered wrapper.**
-
-### 3.4 Two APIs for the same goal
-
-Java offers two overlapping toolkits. You should recognize both.
-
-| | Classic I/O (`java.io`, since Java 1.x) | Modern NIO.2 (`java.nio.file`, since Java 7) |
-|---|---|---|
-| Read all lines | `BufferedReader` loop | `Files.readAllLines(path, UTF_8)` → `List<String>` |
-| Read lazily (large files) | `BufferedReader.readLine()` loop | `Files.lines(path, UTF_8)` → `Stream<String>` |
-| Write text | `BufferedWriter.write(...)` | `Files.write(path, lines, UTF_8, options...)` |
-| Open a buffered reader | `new BufferedReader(new FileReader(...))` | `Files.newBufferedReader(path, UTF_8)` |
-| Exists / delete / size | `File` methods | `Files.exists`, `Files.delete`, `Files.size` |
-
-**Guidance for this course:** prefer **NIO.2** for its concise, safe, UTF-8-aware helpers, but be fluent in the classic `BufferedReader`/`BufferedWriter` loop because it is what you will meet in most examples, exams, and legacy code.
-
-### 3.5 Checked exceptions and closing resources
-
-Anything can go wrong with a file: it may not exist, you may lack permission, the disk may fill up, the path may be a directory. Java forces you to confront this: **`IOException` is a *checked* exception**, so the compiler requires you to either `catch` it or declare it with `throws`.
+An open file is an **operating-system resource**. If you forget to close it you
+"leak" a handle; enough leaks and the program (or OS) runs out. The old
+`try/finally` pattern was verbose and error-prone. Java 7+ gives us
+**try-with-resources**: any object implementing `AutoCloseable` declared in the
+`try (...)` header is **closed automatically** — in reverse order, even if an
+exception is thrown.
 
 ```java
+// GOOD: file is guaranteed closed, no matter what happens inside.
+try (BufferedReader reader = Files.newBufferedReader(path, StandardCharsets.UTF_8)) {
+    // ... use reader ...
+} catch (IOException e) {
+    System.err.println("Could not read file: " + e.getMessage());
+}
+// No finally block needed — the resource closed itself.
+```
+
+Compare with the old style you should now avoid:
+
+```java
+// LEGACY (verbose, easy to get wrong):
+BufferedReader reader = null;
 try {
-    List<String> lines = Files.readAllLines(Path.of("notes.txt"), StandardCharsets.UTF_8);
-    // ... use lines
-} catch (NoSuchFileException e) {          // more specific first
-    System.out.println("The file does not exist yet.");
-} catch (IOException e) {                   // general I/O failure
-    System.out.println("Could not read the file: " + e.getMessage());
+    reader = Files.newBufferedReader(path);
+    // ...
+} catch (IOException e) {
+    // ...
+} finally {
+    if (reader != null) {
+        try { reader.close(); } catch (IOException ignored) {}
+    }
 }
 ```
 
-Equally important: **every open file resource must be closed**, or you leak OS handles and may lose buffered data that was never flushed to disk. The wrong old way was a verbose `finally` block. The right modern way is **`try-with-resources`**:
+### 3.7 Two ways to read, two ways to write (cheat sheet)
 
+**Reading:**
 ```java
-// The resource declared in try(...) is closed automatically at the end
-// of the block — even if an exception is thrown. No finally needed.
-try (BufferedReader reader = Files.newBufferedReader(path, StandardCharsets.UTF_8)) {
+// (a) Line by line — great for large files, streaming.
+try (BufferedReader br = Files.newBufferedReader(path, StandardCharsets.UTF_8)) {
     String line;
-    while ((line = reader.readLine()) != null) {
+    while ((line = br.readLine()) != null) {  // readLine() returns null at EOF
         System.out.println(line);
     }
-} catch (IOException e) {
-    System.out.println("Read failed: " + e.getMessage());
 }
-// reader.close() has already run here, guaranteed.
+
+// (b) All at once — convenient for small files.
+List<String> lines = Files.readAllLines(path, StandardCharsets.UTF_8);
 ```
 
-Any class that implements **`AutoCloseable`** (all readers, writers, and streams do) can be declared in the `try(...)` header. When the block finishes — normally or by exception — `close()` is called in reverse order of declaration. This is the single most important habit of correct file code.
+**Writing:**
+```java
+// (a) PrintWriter/BufferedWriter — fine-grained control, append flag.
+try (PrintWriter pw = new PrintWriter(
+        Files.newBufferedWriter(path, StandardCharsets.UTF_8,
+            StandardOpenOption.CREATE, StandardOpenOption.APPEND))) {
+    pw.println("a new line");
+}
 
+// (b) All at once — simplest for a whole list.
+Files.write(path, lines, StandardCharsets.UTF_8);
 ```
-   try (open A; open B) {          Order of close() on exit:
-       ... work ...          →         close(B)   ← last opened, first closed
-   }                                    close(A)
-```
+
+> **Overwrite vs. append:** by default writing *truncates* (overwrites) the file.
+> Add `StandardOpenOption.APPEND` to add to the end instead. Getting this wrong is
+> the #1 beginner bug — accidentally erasing previous data.
 
 ---
 
-## 4. Fully worked example — the `NoteBook`
+## 4. Fully worked example — a `Note`-keeping app
 
-**Goal:** a tiny app that *appends* a note to `notes.txt` and can *list* all notes back, demonstrating every concept above: UTF-8, relative path, buffering, append vs. overwrite, `IOException` handling, and `try-with-resources`.
+We build a tiny app that stores short notes in `notes.txt`, one note per line, using
+`|` as a separator between the date and the text. This shows read **and** write end
+to end, with proper resource handling.
+
+### 4.1 The domain object
 
 ```java
-import java.io.BufferedReader;
+// Note.java
+import java.time.LocalDate;
+
+public class Note {
+    private final LocalDate date;
+    private final String text;
+
+    public Note(LocalDate date, String text) {
+        this.date = date;
+        this.text = text;
+    }
+
+    public LocalDate getDate() { return date; }
+    public String getText()    { return text; }
+
+    /** Turn this object into ONE line of text (object -> record). */
+    public String toLine() {
+        return date + "|" + text;   // e.g. 2026-08-08|Buy coffee
+    }
+
+    /** Rebuild a Note from ONE line of text (record -> object). */
+    public static Note fromLine(String line) {
+        String[] parts = line.split("\\|", 2);   // split on the FIRST '|' only
+        LocalDate date = LocalDate.parse(parts[0].trim());
+        String text = parts.length > 1 ? parts[1].trim() : "";
+        return new Note(date, text);
+    }
+
+    @Override
+    public String toString() {
+        return "[" + date + "] " + text;
+    }
+}
+```
+
+Notice the symmetric pair `toLine()` / `fromLine()`. Keeping the object↔text
+translation *inside the class* is a clean, reusable design.
+
+### 4.2 Writing (append a new note)
+
+```java
+// NoteWriterDemo.java
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.NoSuchFileException;
-import java.nio.file.Path;
-import java.nio.file.StandardOpenOption;
-import java.util.List;
+import java.nio.file.*;
+import java.time.LocalDate;
 
-/**
- * A minimal notebook that persists notes to a plain-text file, one note per line.
- * Demonstrates: UTF-8 encoding, relative paths, buffering, append vs. overwrite,
- * IOException handling, and try-with-resources.
- */
-public class NoteBook {
+public class NoteWriterDemo {
+    public static void main(String[] args) {
+        Path file = Paths.get("notes.txt");
+        Note note = new Note(LocalDate.now(), "Review file I/O before class");
 
-    /** File is created in the current working directory if it does not exist. */
-    private static final Path FILE = Path.of("notes.txt");
-
-    /** Appends one note as a new line. Creates the file on first use. */
-    public static void addNote(String note) {
-        // APPEND + CREATE: keep existing content, create the file if missing.
-        try (BufferedWriter writer = Files.newBufferedWriter(
-                FILE, StandardCharsets.UTF_8,
-                StandardOpenOption.CREATE, StandardOpenOption.APPEND)) {
-            writer.write(note);
-            writer.newLine();               // platform-correct line separator
+        try (BufferedWriter bw = Files.newBufferedWriter(
+                file, StandardCharsets.UTF_8,
+                StandardOpenOption.CREATE,   // create the file if missing
+                StandardOpenOption.APPEND)) { // add to the end, don't erase
+            bw.write(note.toLine());
+            bw.newLine();                    // portable line separator
             System.out.println("Saved: " + note);
         } catch (IOException e) {
-            System.out.println("Could not save the note: " + e.getMessage());
+            System.err.println("Failed to save note: " + e.getMessage());
         }
-    }
-
-    /** Reads and prints every note, numbered. */
-    public static void listNotes() {
-        try (BufferedReader reader = Files.newBufferedReader(FILE, StandardCharsets.UTF_8)) {
-            String line;
-            int n = 1;
-            while ((line = reader.readLine()) != null) {   // null == end of file
-                System.out.println(n++ + ". " + line);
-            }
-        } catch (NoSuchFileException e) {
-            System.out.println("No notes yet — the notebook is empty.");
-        } catch (IOException e) {
-            System.out.println("Could not read the notes: " + e.getMessage());
-        }
-    }
-
-    public static void main(String[] args) {
-        addNote("Study try-with-resources");
-        addNote("Prepare the CSV example for session 2");
-        addNote("Remember: always specify UTF-8");
-        System.out.println("--- Current notes ---");
-        listNotes();
     }
 }
 ```
 
-**Expected output (first run):**
-
-```
-Saved: Study try-with-resources
-Saved: Prepare the CSV example for session 2
-Saved: Remember: always specify UTF-8
---- Current notes ---
-1. Study try-with-resources
-2. Prepare the CSV example for session 2
-3. Remember: always specify UTF-8
-```
-
-**Points to highlight while running it**
-
-- Run `main` **twice**. Because we open with `APPEND`, the second run adds three *more* lines (six total). Change `APPEND` to `TRUNCATE_EXISTING` and re-run to see **overwrite** behavior — a deliberate, observable contrast.
-- Delete `notes.txt` and call `listNotes()` first: it hits `NoSuchFileException` and prints a friendly message instead of crashing. This is robustness in action.
-- Add `System.out.println(FILE.toAbsolutePath());` to reveal *exactly* where the file was created (the CWD).
-
-**Classic-I/O equivalent (recognize this form too):**
+### 4.3 Reading (load all notes back into objects)
 
 ```java
-// The same append, using the java.io classes instead of NIO.2:
-try (BufferedWriter writer = new BufferedWriter(
-        new FileWriter("notes.txt", StandardCharsets.UTF_8, /*append=*/ true))) {
-    writer.write("A note");
-    writer.newLine();
-} catch (IOException e) {
-    System.out.println("Write failed: " + e.getMessage());
+// NoteReaderDemo.java
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.*;
+import java.util.ArrayList;
+import java.util.List;
+
+public class NoteReaderDemo {
+    public static void main(String[] args) {
+        Path file = Paths.get("notes.txt");
+        List<Note> notes = new ArrayList<>();
+
+        // Graceful handling of "file not created yet".
+        if (Files.notExists(file)) {
+            System.out.println("No notes file yet — nothing to load.");
+            return;
+        }
+
+        try (BufferedReader br = Files.newBufferedReader(file, StandardCharsets.UTF_8)) {
+            String line;
+            int lineNo = 0;
+            while ((line = br.readLine()) != null) {
+                lineNo++;
+                if (line.isBlank()) continue;          // skip empty lines
+                try {
+                    notes.add(Note.fromLine(line));
+                } catch (RuntimeException parseError) {
+                    // One bad line should not kill the whole load.
+                    System.err.println("Skipping malformed line " + lineNo
+                            + ": \"" + line + "\" (" + parseError.getMessage() + ")");
+                }
+            }
+        } catch (IOException e) {
+            System.err.println("Failed to read notes: " + e.getMessage());
+            return;
+        }
+
+        System.out.println("Loaded " + notes.size() + " note(s):");
+        notes.forEach(System.out::println);
+    }
 }
 ```
 
----
+### 4.4 Expected result
 
-## 5. Guided in-class practice
+Run `NoteWriterDemo` twice, then `NoteReaderDemo`:
 
-Work in pairs (co-evaluation). Start from the `NoteBook` above and complete the tasks in order. Each builds on the previous one.
+```
+notes.txt now contains:
+2026-08-08|Review file I/O before class
+2026-08-08|Review file I/O before class
 
-**Task A — Count the notes.**
-Add a method `int countNotes()` that returns how many notes are stored. Use `Files.readAllLines(FILE, StandardCharsets.UTF_8).size()`, and return `0` if the file does not exist. Call it from `main`.
+Console (reader):
+Loaded 2 note(s):
+[2026-08-08] Review file I/O before class
+[2026-08-08] Review file I/O before class
+```
 
-**Task B — Overwrite mode.**
-Add a method `replaceAll(List<String> newNotes)` that *replaces* the entire file content with a fresh list of notes. Use `Files.write(FILE, newNotes, StandardCharsets.UTF_8)` (which truncates by default) and observe that the old notes are gone.
-
-**Task C — Defensive reading.**
-Modify `listNotes()` so that **blank lines are skipped** (ignore lines where `line.isBlank()`), and each printed note is trimmed with `line.strip()`. Test by manually adding an empty line in the file with a text editor.
-
-**Task D — Search.**
-Add `List<String> find(String keyword)` returning every note that contains `keyword` (case-insensitive). Reuse `Files.readAllLines`. Handle the missing-file case by returning an empty list.
-
-**Stretch goal (optional).**
-Rewrite `listNotes()` using `Files.lines(FILE, StandardCharsets.UTF_8)` inside a `try-with-resources` and a stream pipeline: `.filter(l -> !l.isBlank()).forEach(System.out::println)`. Discuss why the `Stream<String>` from `Files.lines` **must** be closed (it holds the file open) — hence the `try-with-resources`.
-
-**Acceptance checks (self-verify before you leave):**
-
-- [ ] Running `main` twice with append produces a growing file; switching to truncate resets it.
-- [ ] `countNotes()` returns `0` (not a crash) when `notes.txt` is absent.
-- [ ] `listNotes()` never prints blank lines.
-- [ ] Every file operation is inside a `try-with-resources` or uses a `Files` one-shot helper, and every `catch` prints a clear message.
+**What to notice:**
+- The writer used `CREATE + APPEND`, so the second run *added* a line instead of erasing.
+- The reader returned early and gracefully when the file didn't exist.
+- A malformed line is *reported and skipped*, not fatal — robust reading.
+- Both file resources closed themselves via try-with-resources.
 
 ---
 
-## 6. Common pitfalls (troubleshooting)
+## 5. Guided in-class practice (30 min)
+
+Work in pairs. Build a **`TaskLog`** application, mirroring the `Note` example.
+
+**Step 1.** Create a `Task` class with fields `int id`, `String title`,
+`boolean done`. Add `toLine()` (format: `id|title|done`) and a static `fromLine()`.
+
+**Step 2.** Write `saveTask(Task t)` that *appends* one task to `tasks.txt`
+(`CREATE + APPEND`), all inside try-with-resources.
+
+**Step 3.** Write `loadTasks()` that returns a `List<Task>`, reading line by line,
+skipping blanks, and reporting (not crashing on) malformed lines.
+
+**Step 4.** In `main`, add three tasks, then load and print them. Run the program
+**twice** and confirm the list keeps growing (proof of persistence).
+
+**Stretch goal.** Add a `printSummary()` that reports how many tasks are `done`
+vs. pending, computed from the loaded list.
+
+**Checkpoints (instructor circulates):**
+- ✅ Does the program still work when `tasks.txt` does not exist yet?
+- ✅ Is UTF-8 specified everywhere?
+- ✅ Is APPEND used (not accidental overwrite)?
+- ✅ Are all resources in try-with-resources (no manual `close()`)?
+
+---
+
+## 6. Common pitfalls & debugging clinic
 
 | Symptom | Likely cause | Fix |
-|---|---|---|
-| Accented characters look garbled (`Ã±`) | Encoding mismatch | Specify `StandardCharsets.UTF_8` on **both** read and write. |
-| "File not found" but you *did* create it | Relative path resolved against a different CWD | Print `FILE.toAbsolutePath()`; use a known folder. |
-| File is empty after writing | Writer never flushed/closed | Use `try-with-resources` so `close()` (which flushes) always runs. |
-| Each run wipes previous data | Opened in truncate/overwrite mode | Use `StandardOpenOption.APPEND` (or classic `FileWriter(..., true)`). |
-| `NullPointerException` at end of loop | Treated `readLine()`'s `null` as data | Loop condition must be `(line = reader.readLine()) != null`. |
-| Compiler error: "unreported IOException" | Forgot to handle the checked exception | Wrap in `try/catch` or declare `throws IOException`. |
+|---------|-------------|-----|
+| File is empty / previous data gone | Forgot `APPEND`; default is truncate | Add `StandardOpenOption.APPEND` |
+| `NoSuchFileException` on read | File not created yet | Check `Files.notExists()` first |
+| Accents show as `Ã±`, `Ã©` | Encoding mismatch | Specify `StandardCharsets.UTF_8` on both ends |
+| Nothing written to file | Writer not flushed/closed | Use try-with-resources (auto-close flushes) |
+| `readLine()` loops forever | Compared with `""` instead of `null` | Loop condition must be `!= null` |
+| Extra blank lines when reading | `println` adds a newline you also add | Use one newline source (`newLine()` or `println`, not both) |
 
 ---
 
-## 7. Wrap-up and exit ticket
+## 7. Wrap-up
 
-**One-sentence summary:** *Text files are UTF-8 byte sequences read/written through buffered character streams, and correct code always specifies the encoding and closes resources with `try-with-resources`.*
+Today we learned that persistence is just disciplined translation between objects in
+memory and lines on disk. We met the `Reader`/`Writer` character-stream family,
+learned why buffering matters, insisted on UTF-8, and adopted try-with-resources as
+our non-negotiable habit for never leaking a file handle. Next session we upgrade
+plain text to **CSV**, tackle the quoting problem, and package all of this into a
+clean **repository** class for the workshop app.
 
-**Exit ticket (submit before leaving — 5 minutes):**
-
-1. In one sentence, explain what `try-with-resources` guarantees and *when* `close()` runs.
-2. What is the difference in the file's content after running an **append** write versus a **truncate/overwrite** write?
-3. Why must you specify `StandardCharsets.UTF_8` explicitly instead of relying on the default?
-
-**Preview of Session 2:** We move from one note per line to *structured records*. We will encode each object as a **CSV** line, design a **repository** class to save/load a whole `List` of objects, and verify a full **round-trip** (save → load → equal).
-
-**Autonomous work before next session (approx. 2 h):** finish practice Tasks A–D; read the CSV entries in [`../material/README.md`](../material/README.md); skim the `BufferedReader` and `Files` pages of the official Java API.
+### Exit ticket (hand in before leaving)
+Answer briefly (3–5 lines total):
+1. In one sentence, what does try-with-resources guarantee, and why do we want it?
+2. Which single `StandardOpenOption` decides whether writing *adds to* or *erases*
+   the previous contents of a file?
+3. Why do we compare the result of `readLine()` against `null` in the read loop?

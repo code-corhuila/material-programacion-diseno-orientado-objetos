@@ -1,169 +1,153 @@
 # Week 12 - Collections and data structures: List, Map, Set and their implementations
 
-**Program:** Object-Oriented Programming and Design
-**Academic period:** 2026-B
-**Unit:** Unit 3 - Practical application of OOP in Java
-**Week:** 12 (Assessment period: **Corte 3**)
-**Learning outcome (RAA):** 90_82759
+> **Subject:** Object-Oriented Programming and Design
+> **Program period:** 2026-B
+> **Unit:** Unit 3 - Practical application of OOP in Java
+> **Assessment period:** Corte 3 (third grading cut)
+> **Learning outcome (RAA):** `90_82759`
 
 ---
 
 ## 1. Overview
 
-By Week 12 you already know how to model a domain with classes, encapsulate state,
-reuse code through inheritance, and depend on abstractions through interfaces and
-polymorphism. The natural next question is: **once you have hundreds of objects, where do
-you keep them, and how do you find the one you need?**
+Up to this point in the course you have modeled the real world with **classes, objects,
+attributes, and behavior**, and you have organized responsibilities with **encapsulation,
+inheritance, and polymorphism**. But real programs rarely deal with a single object at a
+time. A store has *many* products, a classroom has *many* students, a game has *many*
+enemies on screen. This week we learn how Java lets us **store, organize, search, and
+manipulate groups of objects** using the **Java Collections Framework (JCF)**.
 
-This week introduces the **Java Collections Framework (JCF)** — the standard library of
-container types every professional Java developer uses daily. Instead of managing raw
-arrays with manual resizing and index bookkeeping, you will learn to select and use the
-three fundamental abstractions:
+By the end of the week you will be able to look at a requirement — "I need a list of
+orders", "I need to guarantee there are no duplicate emails", "I need to look up a product
+by its code instantly" — and confidently pick the *right* data structure (`List`, `Set`,
+or `Map`) and its most common implementation (`ArrayList`, `HashSet`, `HashMap`).
 
-- **`List`** — an ordered sequence that allows duplicates (positional access).
-- **`Set`** — a collection of unique elements (membership and de-duplication).
-- **`Map`** — a dictionary of key → value associations (fast lookup by key).
-
-You will also learn *why* the framework separates **interfaces** (the contract: `List`,
-`Set`, `Map`) from **implementations** (the concrete class: `ArrayList`, `HashSet`,
-`HashMap`), and how choosing the right one is a real design decision with measurable
-performance consequences.
-
-The week closes with a small but complete engineering deliverable: a **product inventory
-backed by a `HashMap`**, which ties collections back to everything you learned about
-classes, `equals`/`hashCode`, and clean design.
+This is a corte-3 week: the content here is directly assessable and feeds into the
+practical inventory project that closes Unit 3.
 
 ---
 
 ## 2. RAA and competencies addressed
 
-**RAA 90_82759** — *Apply object-oriented programming principles in Java to build
-structured, maintainable solutions to practical problems.*
+| Code | Description |
+|------|-------------|
+| **RAA `90_82759`** | The student applies object-oriented programming principles in Java to solve practical problems, selecting and using appropriate data structures to manage collections of objects. |
 
-This week contributes to the RAA through the following competencies:
+**Competencies developed this week**
 
-| Competency | How it is developed this week |
-|---|---|
-| **Cognitive** — Understands the abstractions of the Collections Framework and their contracts | Theory on `List`/`Set`/`Map` semantics, ordering, uniqueness, and complexity |
-| **Procedural** — Uses `ArrayList`, `HashSet`, and `HashMap` correctly to store and retrieve objects | Worked examples, guided practice, and the inventory exercise |
-| **Analytical** — Selects the appropriate data structure for a stated requirement | Decision framework + "choose the collection" drills |
-| **Attitudinal** — Writes clean, self-documenting, and testable data-management code | Rubric emphasis on naming, encapsulation, and `equals`/`hashCode` correctness |
+- **Cognitive:** Distinguish the semantic contract of `List`, `Set`, and `Map` and reason about when each is appropriate.
+- **Procedural:** Implement and manipulate `ArrayList`, `HashSet`, and `HashMap` in Java, including iteration, insertion, removal, and lookup.
+- **Design:** Combine collections with custom classes to model non-trivial domains (e.g., an inventory), and understand the role of `equals()`/`hashCode()` in correct collection behavior.
+- **Attitudinal:** Value code clarity and the reuse of standard library abstractions over reinventing data structures.
 
 ---
 
 ## 3. Learning objectives (measurable)
 
-By the end of Week 12, the student will be able to:
+By the end of Week 12 the student will be able to:
 
-1. **Select** the appropriate collection (`List`, `Set`, or `Map`) for a given functional
-   requirement, justifying the choice against at least three criteria (ordering,
-   uniqueness, access pattern).
-2. **Use** `ArrayList`, `HashSet`, and `HashMap` (with generics) to store, retrieve, update,
-   and remove objects without compilation warnings.
-3. **Iterate and manipulate** collections of objects effectively using the enhanced
-   `for`, `Iterator`, and `Map` views (`keySet`, `values`, `entrySet`).
-4. **Implement** a basic inventory using a `HashMap` of domain objects encapsulated inside
-   a class model, exposing safe operations (add, find, update quantity, remove, total).
-5. **Explain** the role of `equals()` and `hashCode()` in the correct behavior of
-   hash-based collections, and override them consistently for a value object.
+1. **Select** the appropriate collection type (`List`, `Set`, or `Map`) for a given requirement, justifying the choice in terms of ordering, duplicates, and access pattern.
+2. **Use** `ArrayList`, `HashSet`, and `HashMap` to store and retrieve objects, applying generics correctly (e.g., `List<Product>`, `Map<String, Product>`).
+3. **Iterate and manipulate** collections of objects effectively using enhanced for-loops, iterators, and (introductory) Stream operations, without causing `ConcurrentModificationException`.
+4. **Implement** a basic inventory as a class that internally uses a `HashMap` of objects, exposing safe operations (add, remove, find, update quantity, list all).
+5. **Explain** the role of `equals()` and `hashCode()` in the correct functioning of hash-based collections and override them appropriately in a domain class.
 
 ---
 
 ## 4. Contents outline
 
-1. **Why collections?** — Limits of arrays; the framework's interface/implementation split.
-2. **The `Collection` hierarchy** — `Iterable → Collection → {List, Set, Queue}` and the
-   separate `Map` branch.
-3. **`List` and `ArrayList`** — ordered, indexed, duplicates allowed; core operations and cost.
-4. **`Set` and `HashSet`** — uniqueness, membership tests, de-duplication; `LinkedHashSet`
-   and `TreeSet` as ordered variants.
-5. **`Map` and `HashMap`** — key → value associations, lookup by key; `keySet`/`values`/
-   `entrySet` views; `getOrDefault`, `putIfAbsent`, `computeIfAbsent`, `merge`.
-6. **Generics with collections** — type safety, `<>` diamond, and why raw types are avoided.
-7. **`equals` and `hashCode`** — the contract that makes `HashSet` and `HashMap` work.
-8. **Choosing the right collection** — a practical decision framework.
-9. **Case study** — an inventory system built on a `HashMap<String, Product>`.
+1. **The Collections Framework at a glance**
+   - Why collections exist; arrays vs. collections
+   - The core interfaces: `Collection`, `List`, `Set`, `Map` (note: `Map` is *not* a `Collection`)
+   - Generics recap: `<E>`, `<K,V>`, type safety, autoboxing
+2. **`List` and `ArrayList`**
+   - Ordered, indexed, allows duplicates
+   - Core operations: `add`, `get`, `set`, `remove`, `size`, `contains`, `indexOf`
+   - `ArrayList` vs `LinkedList` (brief)
+3. **`Set` and `HashSet`**
+   - Uniqueness, no positional access, unordered
+   - The role of `equals()` and `hashCode()`
+   - `HashSet` vs `LinkedHashSet` vs `TreeSet` (brief)
+4. **`Map` and `HashMap`**
+   - Key → value association, keys unique
+   - Core operations: `put`, `get`, `getOrDefault`, `containsKey`, `remove`, `keySet`, `values`, `entrySet`
+   - `HashMap` vs `TreeMap` vs `LinkedHashMap` (brief)
+5. **Iteration and manipulation**
+   - Enhanced for-loop, `Iterator`, `Iterator.remove()`
+   - `forEach` + lambda; a first look at Streams (`filter`, `map`, `collect`)
+   - Avoiding `ConcurrentModificationException`
+6. **Applied design: the inventory model**
+   - A `Product` class + an `Inventory` class backed by `HashMap<String, Product>`
+   - Safe API design and defensive copying
 
 ---
 
 ## 5. Session-by-session agenda
 
-### Session 1 — Lists, Sets, and choosing the right collection
-- Motivation: arrays vs. collections; the interface/implementation idea.
-- `List`/`ArrayList`: create, add, get, set, remove, iterate.
-- `Set`/`HashSet`: uniqueness, `contains`, de-duplication; ordered variants.
-- The role of `equals`/`hashCode` (introduction).
-- Decision framework: List vs. Set.
-- **Deliverable:** in-class exercises + exit ticket.
+| Session | Focus | Deliverable at the end |
+|---------|-------|------------------------|
+| **[Session 1](./01-session/README.md)** | Foundations: `List`/`ArrayList` and `Set`/`HashSet`, iteration, and `equals()`/`hashCode()` | Working code that stores and de-duplicates objects |
+| **[Session 2](./02-session/README.md)** | `Map`/`HashMap`, choosing the right collection, and building an `Inventory` class | A functioning in-memory inventory backed by a `HashMap` |
 
-### Session 2 — Maps and a HashMap-based inventory
-- `Map`/`HashMap`: put, get, `getOrDefault`, `containsKey`, remove.
-- Iterating maps with `keySet`, `values`, `entrySet`.
-- `computeIfAbsent`, `merge` for counting and grouping.
-- Case study: designing and building a `Product` + `Inventory` model.
-- **Deliverable:** working inventory + exit ticket; setup for the optional GitHub activity.
+Supporting spaces:
+
+- **[/material](./material/README.md)** — curated readings and a downloadable PDF (download area, *not* a Moodle submission box).
+- **[/optional-activity](./optional-activity/README.md)** — an optional graded-practice challenge submitted via **GitHub** (not Moodle).
 
 ---
 
 ## 6. Key-concepts glossary
 
 | Term | Definition |
-|---|---|
-| **Collections Framework (JCF)** | The standard Java library of container interfaces and implementations found in `java.util`. |
-| **Interface (of a collection)** | The abstract contract describing *what* a collection does (`List`, `Set`, `Map`) without committing to *how*. |
-| **Implementation** | A concrete class that realizes a collection interface (`ArrayList`, `HashSet`, `HashMap`). |
-| **`List`** | An ordered collection (a sequence) that permits duplicate elements and positional (index) access. |
-| **`ArrayList`** | A `List` backed by a resizable array; fast random access, fast append. |
-| **`Set`** | A collection that contains no duplicate elements. |
-| **`HashSet`** | A `Set` backed by a hash table; near-constant-time `add`/`contains`, no ordering guarantee. |
-| **`Map`** | An object that maps unique keys to values; not a `Collection` but part of the framework. |
-| **`HashMap`** | A `Map` backed by a hash table; near-constant-time `get`/`put`, no ordering guarantee. |
-| **Key / Value** | In a `Map`, the identifier used for lookup (key) and the associated data (value). |
-| **Entry** | A single key→value pair (`Map.Entry`). |
-| **Generics** | Type parameters (e.g., `List<Product>`) that give collections compile-time type safety. |
-| **`equals()`** | Method defining logical equality between two objects. |
-| **`hashCode()`** | Method returning an `int` bucket hint used by hash-based collections; must be consistent with `equals`. |
-| **Iterator** | An object that traverses a collection one element at a time and can safely remove during traversal. |
-| **View** | A live collection backed by another structure (e.g., `map.keySet()`), reflecting changes both ways. |
-| **Time complexity (Big-O)** | Notation describing how an operation's cost grows with the number of elements. |
+|------|------------|
+| **Collection** | An object that groups multiple elements into a single unit. In Java, the root interface for lists/sets/queues (Maps are related but separate). |
+| **Java Collections Framework (JCF)** | The standard set of interfaces and classes in `java.util` for storing and manipulating groups of objects. |
+| **`List`** | An **ordered** collection that allows **duplicate** elements and provides **index-based** access. |
+| **`ArrayList`** | The most common `List` implementation, backed by a resizable array. Fast random access, fast append. |
+| **`Set`** | A collection that contains **no duplicate** elements. Models the mathematical notion of a set. |
+| **`HashSet`** | The most common `Set` implementation, backed by a hash table. Fast add/contains, no ordering guarantee. |
+| **`Map`** | An object that maps **keys to values**; each key is unique. Not a subtype of `Collection`. |
+| **`HashMap`** | The most common `Map` implementation, backed by a hash table. Fast `put`/`get` by key. |
+| **Generics** | Compile-time type parameters (e.g., `List<Product>`) that give type safety and remove the need for casts. |
+| **`equals()`** | Method that defines logical equality between two objects. Essential for `contains`, sets, and map keys. |
+| **`hashCode()`** | Method returning an integer used by hash-based collections to bucket objects. Must be consistent with `equals()`. |
+| **Iterator** | An object that traverses a collection element by element and can safely remove during iteration. |
+| **`ConcurrentModificationException`** | Runtime error thrown when a collection is structurally modified during a for-each iteration. |
+| **Autoboxing** | Automatic conversion between primitives (`int`) and wrapper types (`Integer`) required because collections store objects. |
+| **Entry** | A single key-value pair inside a `Map`, exposed via `Map.Entry<K,V>`. |
 
 ---
 
 ## 7. Achievement / self-check checklist
 
-Tick each item once you can do it **without looking at notes**:
+Tick each item honestly. If you cannot tick it, revisit the linked session before the corte-3 assessment.
 
-- [ ] I can explain the difference between a collection *interface* and its *implementation*.
-- [ ] I can declare and populate an `ArrayList<T>` and access elements by index.
-- [ ] I can use a `HashSet<T>` to remove duplicates and test membership with `contains`.
-- [ ] I can state, for a given requirement, whether a `List`, `Set`, or `Map` fits best — and why.
-- [ ] I can create a `HashMap<K,V>`, put and get entries, and use `getOrDefault`.
-- [ ] I can iterate a map with `entrySet()` and print each key and value.
-- [ ] I can override `equals()` and `hashCode()` consistently for a value object.
-- [ ] I can build a small `Inventory` class that stores `Product` objects in a `HashMap`.
-- [ ] I can explain why using a raw type (`List` without `<>`) is discouraged.
+- [ ] I can explain the difference between `List`, `Set`, and `Map` in one sentence each.
+- [ ] I can declare a generic collection and add typed objects to it.
+- [ ] I can iterate a `List` with an enhanced for-loop and with an `Iterator`.
+- [ ] Given a requirement, I can justify choosing `ArrayList` vs `HashSet` vs `HashMap`.
+- [ ] I can explain why duplicates disappear when I add them to a `HashSet`.
+- [ ] I can override `equals()` and `hashCode()` so my objects behave correctly in sets and as map keys.
+- [ ] I can store and retrieve objects by key using a `HashMap`.
+- [ ] I can implement an `Inventory` class that hides a `HashMap` behind clean methods.
+- [ ] I can remove elements during iteration without throwing `ConcurrentModificationException`.
+- [ ] I can read a small program using `entrySet()` and predict its output.
 
 ---
 
 ## 8. Resources index
 
-| Resource | Location | Purpose |
-|---|---|---|
-| Session 1 notes | [`01-session/README.md`](01-session/README.md) | Lists, Sets, and how to choose |
-| Session 2 notes | [`02-session/README.md`](02-session/README.md) | Maps and the HashMap inventory |
-| Reading & download area | [`material/README.md`](material/README.md) | Curated readings + PDF download |
-| Optional activity | [`optional-activity/README.md`](optional-activity/README.md) | Extra practice submitted via GitHub |
+- **Session 1 notes and exercises** → [`./01-session/README.md`](./01-session/README.md)
+- **Session 2 notes and exercises** → [`./02-session/README.md`](./02-session/README.md)
+- **Curated readings + downloadable PDF** → [`./material/README.md`](./material/README.md)
+- **Optional GitHub challenge + rubric** → [`./optional-activity/README.md`](./optional-activity/README.md)
 
-### External references (authoritative)
-- Oracle, *The Java Tutorials — Collections*: https://docs.oracle.com/javase/tutorial/collections/
-- Oracle, *Java SE API — `java.util` package summary*: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/package-summary.html
-- Bloch, J. *Effective Java* (3rd ed.), Items 10–11 (`equals`/`hashCode`) and Item 64 (refer to objects by their interfaces).
+**External references (see `/material` for annotated summaries):**
+
+- Oracle, *The Java Tutorials — Collections trail*.
+- Oracle, *Java SE API documentation* — `java.util.List`, `Set`, `Map`, `ArrayList`, `HashSet`, `HashMap`.
+- Bloch, J. *Effective Java* (3rd ed.), Items on `equals`/`hashCode` and generics.
 
 ---
 
-## 9. Assessment note (Corte 3)
-
-Week 12 belongs to the **third assessment period (corte 3)**. The in-class exit tickets are
-formative (feedback only). The **optional GitHub activity** is a graded enrichment task; its
-rubric is defined in [`optional-activity/README.md`](optional-activity/README.md). Bring a
-laptop with JDK 17+ and an IDE (IntelliJ IDEA, Eclipse, or VS Code with the Java extension pack).
+*Prepared for CORHUILA — Object-Oriented Programming and Design (2026-B), Unit 3, Week 12, Corte 3.*

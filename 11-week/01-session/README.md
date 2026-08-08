@@ -339,9 +339,9 @@ Work in pairs. Build a program that counts the words in a text file and never cr
      (`FileNotFoundException`).
    - Any other I/O problem → print a generic I/O message (`IOException`).
 5. Print the total word count on success.
-6. Add a `catch`-free confirmation... actually, print a final "Done." line **using nothing
-   but the automatic close** (i.e., no manual `finally` for closing — that is the point of
-   try-with-resources).
+6. After the `try`/`catch`, print a final `"Done."` line. Note that you do **not** write a
+   manual `finally` to close the reader — `try`-with-resources already closed it. That is the
+   whole point of the construct.
 
 ### Starter skeleton
 
@@ -397,6 +397,7 @@ public class SafeFileWordCounter {
             System.out.println("Could not read the file: " + e.getMessage());
         }
         // No manual close needed: try-with-resources already closed the reader.
+        System.out.println("Done.");
     }
 }
 ```

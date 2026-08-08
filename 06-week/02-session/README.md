@@ -1,327 +1,371 @@
-# Week 06 · Session 02 — Constructor chaining with `super()` and specializing behavior
+# Week 06 - Session 2
 
-> **Unit 2:** Design principles and modularity · **Assessment period:** Corte 2
-> **RAA:** `90_82759`
+## Reusing behavior with `super.method()`, overriding, and the limits of inheritance
+
+**Course:** Object-Oriented Programming and Design | **Unit 2** - Design principles and modularity
+**Duration:** ~2 hours | **Assessment period:** Corte 2
 
 ---
 
 ## 1. Session objective
 
-By the end of this session, the student will **use `super(...)` to invoke a parent constructor and
-reuse inherited behavior**, initializing a multi-level hierarchy so that every object's inherited
-fields hold the intended values, and will **specialize** behavior by extending — not replacing — parent
-methods via `super.method()`, without duplicating parent code.
+By the end of this session the student will be able to **override** a parent method to specialize behavior, **reuse the parent's implementation** with `super.method()` instead of copying it, choose the right **access modifier** for members shared with subclasses, and **explain why Java uses single inheritance** and where inheritance stops being the right tool.
 
 ---
 
-## 2. Timed agenda (110 min)
+## 2. Timed agenda
 
 | Time | Activity |
-|:---:|---|
-| 0:00 – 0:08 | Recap of Session 01 + the "who initializes the parent?" question. |
-| 0:08 – 0:35 | Theory: constructor chaining, `super(...)`, the implicit `super()`, initialization order. |
-| 0:35 – 0:50 | Theory: `super.member` to reuse/extend behavior; `super()` vs `super.method()`. |
-| 0:50 – 1:20 | Worked example: three-level `Person → Student → GraduateStudent` hierarchy. |
-| 1:20 – 1:42 | Guided in-class practice: `Shape → Rectangle → Square`. |
-| 1:42 – 1:50 | Wrap-up + exit ticket. |
+|---|---|
+| 0:00 - 0:10 | Warm-up: recall the constructor chain |
+| 0:10 - 0:35 | Theory: method overriding and `@Override` |
+| 0:35 - 0:55 | Theory: reusing behavior with `super.method()` |
+| 0:55 - 1:10 | Theory: access modifiers across a hierarchy |
+| 1:10 - 1:30 | Theory: single vs. multiple inheritance, limits |
+| 1:30 - 1:55 | Worked example + guided practice |
+| 1:55 - 2:00 | Wrap-up, exit ticket, forum launch |
 
 ---
 
-## 3. Recap and the driving question (8 min)
+## 3. Warm-up (10 min) - Recall the chain
 
-Last session we set fields directly (`m.baseSalary = 4000;`). Real classes use **constructors**. But
-we also learned that **constructors are not inherited**. So if a `Manager` object contains an
-`Employee` part, and the code that knows how to initialize that part lives in `Employee`'s
-constructor… **who calls it?**
+Without running it, predict the output:
 
-The answer is `super(...)`: the child's constructor asks the parent's constructor to initialize the
-inherited part first, then adds its own.
+```java
+class A {
+    A() { System.out.println("A built"); }
+}
+class B extends A {
+    B() { System.out.println("B built"); }
+}
+class C extends B {
+    C() { System.out.println("C built"); }
+}
+// new C();
+```
+
+**Answer:**
+```
+A built
+B built
+C built
+```
+
+The implicit `super()` in each constructor walks **up** to `A` first; construction then completes **downward**. This is the mental model we build on today.
 
 ---
 
 ## 4. Theory notes
 
-### 4.1 An object is built parent-first
+### 4.1 Method overriding
 
-A subclass object physically contains the fields declared by every ancestor. Java guarantees those
-layers are initialized **top-down**: the parent's constructor runs to completion **before** the child's
-constructor body begins. Conceptually:
-
-```
-new GraduateStudent(...)          Memory layout of ONE object
-        │                         ┌───────────────────────────┐
-        ▼                         │ Person part   (name, age)  │ ← initialized 1st
-  Object()  runs                  ├───────────────────────────┤
-  Person(...)  runs               │ Student part  (program)    │ ← initialized 2nd
-  Student(...)  runs              ├───────────────────────────┤
-  GraduateStudent(...) runs       │ GraduateStudent (advisor)  │ ← initialized 3rd
-                                  └───────────────────────────┘
-```
-
-### 4.2 `super(...)` — calling the parent constructor
-
-`super(arguments)` invokes a constructor of the direct parent. Two hard rules:
-
-1. If present, `super(...)` **must be the very first statement** of the constructor. Nothing (except
-   comments) may come before it.
-2. It selects the parent constructor whose parameters match the arguments — just like overload
-   resolution.
+**Overriding** means redefining, in a subclass, a method that already exists in the superclass, using the **same signature** (same name, same parameter list). The subclass version *replaces* the parent version for objects of the subclass. This is how we **specialize behavior**.
 
 ```java
-class Person {
-    protected String name;
-    protected int age;
-    Person(String name, int age) {      // no no-arg constructor here!
-        this.name = name;
-        this.age  = age;
-    }
+class Animal {
+    void makeSound() { System.out.println("Some generic sound"); }
 }
 
-class Student extends Person {
-    private String program;
-    Student(String name, int age, String program) {
-        super(name, age);       // ← must be first; initializes the Person part
-        this.program = program; // ← then the Student part
-    }
+class Dog extends Animal {
+    @Override
+    void makeSound() { System.out.println("Woof!"); } // specialized
 }
 ```
 
-### 4.3 The implicit `super()` — and when it breaks
+Calling `makeSound()` on a `Dog` prints `Woof!`; the parent's generic version is overridden.
 
-If you do **not** write `super(...)` as the first line, the compiler silently inserts a call to the
-parent's **no-argument** constructor, `super()`.
+**Overriding vs. overloading (do not confuse them):**
 
-```java
-class Student extends Person {
-    Student() {
-        // compiler inserts an implicit: super();
-    }
-}
-```
-
-This works **only if the parent actually has a no-arg constructor**. In §4.2, `Person` declares a
-constructor with parameters, so Java does **not** provide a default no-arg one. Therefore:
-
-```java
-class Student extends Person {
-    Student() { }   // ❌ COMPILE ERROR:
-                    // "There is no default constructor available in 'Person'"
-}
-```
-
-**Fix:** call the existing parent constructor explicitly:
-
-```java
-class Student extends Person {
-    Student() {
-        super("Unknown", 0);   // ✅ explicit call satisfies Person
-    }
-}
-```
-
-> **Takeaway.** The implicit `super()` is a convenience, not a guarantee. The moment a parent defines
-> any constructor with parameters (and no no-arg one), every child **must** call `super(...)` explicitly.
-
-### 4.4 `super()` vs `super.method()` — two different tools
-
-These look similar but do opposite-scope jobs:
-
-| Form | Where it is used | What it does |
+| | Overriding | Overloading |
 |---|---|---|
-| `super(args);` | **First line** of a *constructor* only. | Runs the parent **constructor**. |
-| `super.method(args)` | Anywhere inside an *instance method* of the child. | Calls the parent's **version** of that method. |
-| `super.field` | Inside the child. | Reads the parent's field (rarely needed; useful when names collide). |
+| Where | Across parent/child | Within one class (or inherited) |
+| Signature | **Same** signature | **Different** parameter list |
+| Purpose | Specialize inherited behavior | Offer method variants |
 
-`super.method()` lets you **extend** parent behavior instead of throwing it away:
+### 4.2 The `@Override` annotation
+
+Placing `@Override` above a method tells the compiler: "I intend this to override a superclass method - verify it." If you misspell the name or get the parameters wrong, you get a **compile error** instead of a silent bug where you accidentally created a brand-new method.
 
 ```java
-class Person {
-    String describe() { return name + ", age " + age; }
-}
-class Student extends Person {
-    String program;
+class Dog extends Animal {
     @Override
-    String describe() {
-        // reuse the parent's work, then add to it — no duplication
-        return super.describe() + ", studying " + program;
-    }
+    void makeSuond() { ... } // COMPILE ERROR: nothing to override -> typo caught
 }
 ```
 
-Without `super.describe()`, we would have to re-type the `name + ", age " + age` logic — the very
-duplication inheritance is meant to remove.
+**Always use `@Override`** when you mean to override. It is free insurance against a whole class of bugs.
 
-### 4.5 A note on `@Override`
+### 4.3 Reusing parent behavior with `super.method()`
 
-When a child provides its own version of a method that already exists in the parent, that is
-**overriding**. Annotating it with `@Override` asks the compiler to verify the signature really matches
-a parent method — catching typos early. We use it here as good hygiene; full polymorphism is next
-week's topic.
-
----
-
-## 5. Fully worked example — a three-level hierarchy
-
-**Goal:** build `Person → Student → GraduateStudent`, initializing every layer through `super(...)`
-chains and extending `describe()` at each level with `super.describe()`.
+Overriding does not have to mean *throwing away* the parent's work. Often you want to **extend** it: do what the parent does, **plus** something extra. `super.method()` calls the parent's version from inside the override.
 
 ```java
-class Person {
+class Employee {
     protected String name;
-    protected int age;
+    protected double baseSalary;
 
-    Person(String name, int age) {
+    Employee(String name, double baseSalary) {
         this.name = name;
-        this.age  = age;
-        System.out.println("  [Person ctor] " + name);
+        this.baseSalary = baseSalary;
     }
 
-    String describe() {
-        return name + " (age " + age + ")";
+    double calculateSalary() {
+        return baseSalary;
+    }
+
+    void printPayslip() {
+        System.out.println(name + " earns " + calculateSalary());
     }
 }
 
-class Student extends Person {
-    protected String program;
+class Manager extends Employee {
+    private double bonus;
 
-    Student(String name, int age, String program) {
-        super(name, age);              // initialize the Person layer first
-        this.program = program;
-        System.out.println("  [Student ctor] " + program);
+    Manager(String name, double baseSalary, double bonus) {
+        super(name, baseSalary);
+        this.bonus = bonus;
     }
 
     @Override
-    String describe() {
-        return super.describe() + ", enrolled in " + program;   // reuse + extend
-    }
-}
-
-class GraduateStudent extends Student {
-    private String advisor;
-
-    GraduateStudent(String name, int age, String program, String advisor) {
-        super(name, age, program);     // initialize the Student (and thus Person) layers
-        this.advisor = advisor;
-        System.out.println("  [GraduateStudent ctor] advised by " + advisor);
-    }
-
-    @Override
-    String describe() {
-        return super.describe() + ", advised by " + advisor;    // reuse + extend again
-    }
-}
-
-public class Campus {
-    public static void main(String[] args) {
-        System.out.println("Creating a GraduateStudent:");
-        GraduateStudent g = new GraduateStudent("Lucia", 24, "Mechatronics", "Dr. Rojas");
-
-        System.out.println("\nDescribe():");
-        System.out.println(g.describe());
+    double calculateSalary() {
+        return super.calculateSalary() + bonus; // reuse parent, then add bonus
     }
 }
 ```
 
-### 5.1 Expected output
+`Manager.calculateSalary()` does **not** re-implement the base-salary logic; it calls `super.calculateSalary()` and adds the bonus. If the base-salary rule ever changes, it changes in **one** place - the parent.
+
+> **`super.method()` vs. `super(...)`.** `super(...)` (with parentheses right after `super`) is a **constructor** call, allowed only as the first line of a constructor. `super.method(...)` is a **method** call, allowed anywhere in the subclass, to reach the parent's version of a member.
+
+### 4.4 Access modifiers across a hierarchy
+
+Choosing the right visibility is a design decision, not an afterthought.
+
+| Modifier | Same class | Same package | Subclass (any package) | World |
+|---|:---:|:---:|:---:|:---:|
+| `private` | yes | no | no | no |
+| *(package-private)* | yes | yes | no | no |
+| `protected` | yes | yes | yes | no |
+| `public` | yes | yes | yes | yes |
+
+- Use **`private`** by default; expose through methods. Encapsulation still wins.
+- Use **`protected`** for a field or helper method that subclasses genuinely need to reuse or override - like `baseSalary` above.
+- Avoid making everything `public` just to make inheritance "easier"; that leaks internal detail and increases coupling.
+
+### 4.5 Single inheritance and the diamond problem
+
+Java allows a class to `extends` **exactly one** direct superclass - **single inheritance**. Some languages (like C++) allow a class to inherit from several classes at once - **multiple inheritance** - which creates the **diamond problem**:
 
 ```
-Creating a GraduateStudent:
-  [Person ctor] Lucia
-  [Student ctor] Mechatronics
-  [GraduateStudent ctor] advised by Dr. Rojas
-
-Describe():
-Lucia (age 24), enrolled in Mechatronics, advised by Dr. Rojas
+        A               If B and C both override greet(),
+      /   \             and D inherits from BOTH B and C,
+     B     C            which greet() does D get?
+      \   /             --> ambiguous. This is the diamond problem.
+        D
 ```
 
-### 5.2 Reading the output
+If `D` inherited from both `B` and `C`, and both redefined a member from `A`, the compiler could not decide which version `D` should use, and there could even be two copies of `A`'s state. To avoid this ambiguity and keep the object model simple, **Java forbids multiple inheritance of classes.**
 
-- **Constructor order.** Even though we called `new GraduateStudent(...)`, the first line printed is
-  `[Person ctor]`. Each `super(...)` climbs up before its own body runs, so construction completes
-  **top-down**: Person → Student → GraduateStudent.
-- **No duplication in `describe()`.** Each level added exactly one clause and delegated the rest to
-  `super.describe()`. The string `"Lucia (age 24)"` is produced by `Person` alone and reused twice.
-- **Single point of change.** If the age format ever changes, we edit `Person.describe()` once and all
-  three levels update.
+Java still lets a type conform to **many contracts** through **interfaces** (a class can `implements` several interfaces). Interfaces carry no conflicting instance state, so they sidestep the diamond problem. We study interfaces in a later week; for now, remember: **one superclass, many possible interfaces.**
 
-### 5.3 Common error to recognize
+### 4.6 The limits of inheritance
 
-If a student forgets `super(name, age, program)` in `GraduateStudent` and the parent `Student` has no
-no-arg constructor, the compiler reports:
+Inheritance is powerful but easily misused. Know its limits:
 
-```
-error: constructor Student in class Student cannot be applied to given types;
-  required: String,int,String   found: no arguments
-```
+1. **Tight coupling.** A subclass depends on its superclass's internal behavior; a change upstream can break it - the **fragile base class** problem.
+2. **"is-a" misuse.** Extending a class only to reuse a couple of methods, when the relationship is not truly "is-a", produces confusing hierarchies (e.g., `Stack extends Vector` is a classic mistake).
+3. **Deep hierarchies are hard to follow.** Behavior scattered across five levels is difficult to reason about and test.
+4. **Composition is often better.** "Favor composition over inheritance": when the relationship is "has-a" or when you need flexibility, hold a collaborator as a field instead of extending it.
 
-This is the implicit-`super()` rule from §4.3 firing three levels deep.
+> **Design heuristic.** Reach for inheritance when there is a genuine, stable "is-a" relationship and real shared behavior. When in doubt, prefer composition.
 
 ---
 
-## 6. Guided in-class practice — `Shape → Rectangle → Square` (22 min)
+## 5. Worked example (fully solved) - `Employee` -> `Manager`
 
-Work in pairs; compile after each step.
+**Problem.** A company pays every employee a base salary. Managers earn their base salary **plus** a bonus. The payslip format must be identical for everyone and must not be duplicated. When we print a manager's payslip, it must show the *total* (base + bonus).
 
-**Step 1 — Base class `Shape`.**
-- field `protected String color;`
-- constructor `Shape(String color)` that assigns it.
-- method `String describe()` returning `"A " + color + " shape"`.
+**Solution.**
 
-**Step 2 — `Rectangle extends Shape`.**
-- fields `protected double width, height;`
-- constructor `Rectangle(String color, double width, double height)` — call `super(color)` **first**,
-  then set width/height.
-- method `double area()` returning `width * height`.
-- override `describe()` to return `super.describe() + " (rectangle " + width + "x" + height + ")"`.
-
-**Step 3 — `Square extends Rectangle`.**
-- constructor `Square(String color, double side)` — call `super(color, side, side)`. (A square **is a**
-  rectangle with equal sides; reuse, do not re-implement `area()`.)
-- do **not** rewrite `area()`; it is inherited and already correct.
-
-**Step 4 — Driver.**
 ```java
-Square s = new Square("blue", 4);
-System.out.println(s.describe());
-System.out.println("area = " + s.area());
+public class Employee {
+    protected String name;
+    protected double baseSalary;
+
+    public Employee(String name, double baseSalary) {
+        this.name = name;
+        this.baseSalary = baseSalary;
+    }
+
+    public double calculateSalary() {
+        return baseSalary;
+    }
+
+    public void printPayslip() {
+        System.out.printf("%s -> total pay: %.2f%n", name, calculateSalary());
+    }
+}
+
+public class Manager extends Employee {
+    private double bonus;
+
+    public Manager(String name, double baseSalary, double bonus) {
+        super(name, baseSalary);   // reuse parent construction
+        this.bonus = bonus;
+    }
+
+    @Override
+    public double calculateSalary() {
+        return super.calculateSalary() + bonus; // reuse parent logic, then specialize
+    }
+}
+
+public class Company {
+    public static void main(String[] args) {
+        Employee e = new Employee("Carlos", 2_000_000);
+        Manager  m = new Manager("Diana", 2_000_000, 800_000);
+
+        e.printPayslip();
+        m.printPayslip();
+    }
+}
 ```
 
 **Expected output:**
+
 ```
-A blue shape (rectangle 4.0x4.0)
-area = 16.0
+Carlos -> total pay: 2000000.00
+Diana -> total pay: 2800000.00
 ```
 
-**Checkpoint questions:**
-1. How many times is `area()` implemented in the whole hierarchy? (Expected: **once**, in `Rectangle`.)
-2. What happens if you remove `super(color, side, side)` from `Square`? Predict the compiler message,
-   then verify.
-3. Rewrite `Square`'s reasoning as an "is-a" sentence. Is inheritance justified here? Discuss the
-   subtle geometry-vs-code debate ("is a Square really a Rectangle in code?") as a preview of
-   inheritance's *limits*.
+**Why this is good design:**
+- `printPayslip()` is written **once** in `Employee` and reused by `Manager`.
+- When `printPayslip()` calls `calculateSalary()`, the **manager's overridden version** runs (dynamic dispatch), so Diana's payslip shows `2,800,000` - base plus bonus - even though the print logic lives in the parent.
+- `Manager` reused, rather than copied, the base-salary rule via `super.calculateSalary()`.
 
 ---
 
-## 7. Wrap-up (8 min)
+## 6. Guided in-class practice (25 min) - Remove duplication from shapes
 
-- Objects are built **parent-first**; each layer's constructor runs before the child's body.
-- `super(...)` calls the parent constructor and **must be the first statement**.
-- The compiler inserts an implicit `super()` only when a **no-arg** parent constructor exists.
-- `super.method()` **reuses and extends** parent behavior with zero duplication.
-- `super(...)` (constructor) and `super.method()` (parent behavior) are different tools — do not confuse
-  them.
+Work in pairs. You are given duplicated code; refactor it into a clean hierarchy.
 
-**Bridge to Week 07:** you have now seen methods redefined in subclasses (`describe()`) and marked with
-`@Override`. Next week formalizes this as **method overriding and polymorphism** — how one reference
-type can invoke many behaviors at runtime.
+**Starter (do NOT keep this - it duplicates code):**
+
+```java
+class Circle {
+    double radius;
+    String color;
+    void describe() { System.out.println("A " + color + " shape"); }
+    double area() { return Math.PI * radius * radius; }
+}
+
+class Rectangle {
+    double width, height;
+    String color;
+    void describe() { System.out.println("A " + color + " shape"); }
+    double area() { return width * height; }
+}
+```
+
+**Your tasks:**
+
+1. Create a parent `Shape` that owns `color` and the shared `describe()`, plus a method `double area()` returning `0` by default.
+2. Make `Circle extends Shape` and `Rectangle extends Shape`. Each **overrides** `area()` with `@Override`.
+3. Each subclass constructor uses `super(color)` to set the inherited `color`.
+4. In `describe()` of each subclass, reuse the parent message with `super.describe()` and then add the area, e.g. `"...with area 78.54"`.
+5. In `main`, create one `Circle` and one `Rectangle` and call `describe()` on both.
+
+**Checkpoints (instructor verifies):**
+- [ ] `color` and the base `describe()` message exist **only** in `Shape`.
+- [ ] Both subclasses use `@Override` on `area()`.
+- [ ] Both subclass constructors start with `super(color)`.
+- [ ] The subclass `describe()` calls `super.describe()` instead of retyping the message.
+
+**Reference solution (reveal after attempting):**
+
+```java
+public class Shape {
+    protected String color;
+
+    public Shape(String color) { this.color = color; }
+
+    public double area() { return 0.0; }
+
+    public void describe() { System.out.println("A " + color + " shape"); }
+}
+
+public class Circle extends Shape {
+    private double radius;
+
+    public Circle(String color, double radius) {
+        super(color);
+        this.radius = radius;
+    }
+
+    @Override
+    public double area() { return Math.PI * radius * radius; }
+
+    @Override
+    public void describe() {
+        super.describe(); // reuse parent message
+        System.out.printf("...with area %.2f%n", area());
+    }
+}
+
+public class Rectangle extends Shape {
+    private double width, height;
+
+    public Rectangle(String color, double width, double height) {
+        super(color);
+        this.width = width;
+        this.height = height;
+    }
+
+    @Override
+    public double area() { return width * height; }
+
+    @Override
+    public void describe() {
+        super.describe();
+        System.out.printf("...with area %.2f%n", area());
+    }
+
+    public static void main(String[] args) {
+        Shape c = new Circle("red", 5);
+        Shape r = new Rectangle("blue", 4, 3);
+        c.describe();
+        r.describe();
+    }
+}
+```
+
+**Expected output:**
+
+```
+A red shape
+...with area 78.54
+A blue shape
+...with area 12.00
+```
 
 ---
 
-## 8. Exit ticket (submit before leaving)
+## 7. Wrap-up, exit ticket, and forum launch
 
-1. Given `class A { A(int x) {} }` and `class B extends A { B() {} }`, does `B` compile? Explain in one
-   sentence and give the fix.
-2. Order these by the moment their constructor **body** starts running for `new C()`, where
-   `C extends B` and `B extends A`: A, B, C.
-3. Write a one-line `describe()` in a subclass that appends `" [verified]"` to the parent's description
-   **without** re-typing the parent's text.
+**Summary.** Overriding specializes inherited behavior; `@Override` catches mistakes; `super.method()` reuses the parent's implementation instead of copying it; `protected` shares members with subclasses without going fully public; Java uses single inheritance to avoid the diamond problem, and offers interfaces for multiple *types*; inheritance has real limits, and composition is often the better choice.
+
+**Exit ticket (5 min).** Answer briefly:
+
+1. What does `@Override` protect you from?
+2. Inside `Manager.calculateSalary()`, what is the difference between calling `calculateSalary()` and `super.calculateSalary()`? (Hint: one recurses infinitely.)
+3. Give one situation where you would choose composition over inheritance.
+
+> Expected: (1) accidentally *not* overriding (typos / wrong signature). (2) `calculateSalary()` calls the manager's own version - infinite recursion; `super.calculateSalary()` calls the `Employee` version. (3) open, e.g. a `Car` that *has* an `Engine`.
+
+### Forum launch (graded discussion - objective 5)
+
+Post a substantive reply (150-250 words) to the Week 06 forum thread:
+
+> **Prompt:** "Which concrete problems does inheritance solve, and where are its limits? Describe one scenario where inheritance clearly helped you avoid duplication, and one scenario where inheritance would be the *wrong* tool (and what you would use instead)."
+
+Requirements: cite at least one concrete example (from class or your own code), name at least one limit of inheritance (fragile base class, tight coupling, or "is-a" misuse), and reply thoughtfully to **one** classmate before the end of the week.

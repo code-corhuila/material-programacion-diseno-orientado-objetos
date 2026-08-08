@@ -1,156 +1,135 @@
-# Week 01 — Optional Activity: "My Environment Works" + First Packaged Program
+# Week 01 — Optional Activity: "My Java Environment & First Objects" (Submit via GitHub)
 
-**Object-Oriented Programming and Design** · Unit 1 · Corte 1
-Type: **optional** practice (formative; strengthens the environment and package skills from Session 2).
-Delivery: **via GitHub** — **not** through Moodle.
+**Course:** Object-Oriented Programming and Design · **Week:** 01 · **Unit:** 1 — Fundamentals of OOP
+**Assessment period:** Corte 1 · **RAA:** 90_82759
+**Type:** Optional (reinforcement / extra credit) · **Submission channel:** **GitHub (NOT Moodle)**
 
-> **Why optional and why GitHub?** This activity is not required to pass the week, but it is strongly recommended: it forces you to *prove* your toolchain works and to organize code into packages before Week 02 depends on it. You deliver through **a public GitHub repository** so you begin building the version-control and portfolio habits used all semester. Nothing is uploaded to Moodle for this task.
+> This activity is optional but strongly recommended. It cements the two goals of Week 01: proving your environment works and taking your very first step from *procedural* to *object-oriented* code. You will also practice the professional habit of publishing code to a Git repository.
 
 ---
 
 ## 1. Problem statement
 
-You have just configured your Java environment. Prove it — and show you can organize code into a **coherent package structure** — by building a tiny, correct program and publishing it on GitHub.
+You will build a tiny, self-contained Java project that (a) reports on your working environment and (b) models a single real-world entity as an object — demonstrating the shift from "just printing" to "creating and using objects."
 
-Model a very small slice of a university domain (reusing the Session 1 scenario). You will create **two classes in two packages**, make them collaborate, and print a short report to the console. No inheritance, no interfaces, no collections yet — just clean structure and a program that compiles and runs.
+**Theme:** a **Student ID card**. Model a student as an object with state and behavior, create a couple of instances in `main`, and print a small report. The program must be organized into a proper package and must compile and run on any classmate's machine that has the JDK installed.
 
 ---
 
 ## 2. Requirements
 
-### 2.1 Functional
+### 2.1 Functional requirements
+1. Create a package using CORHUILA's reversed-domain convention plus your identifier, for example:
+   `co.edu.corhuila.oop.week01.<yourlastname>`
+2. Create a class **`Student`** with:
+   - **State (private fields):** `fullName` (String), `studentCode` (String), `program` (String), `enrolledCredits` (int).
+   - **A constructor** that initializes all four fields.
+   - **Behavior (methods):**
+     - `String getFullName()`, `String getStudentCode()`, `String getProgram()`, `int getEnrolledCredits()` — accessors.
+     - `boolean isFullTime()` — returns `true` if `enrolledCredits >= 12`.
+     - `String idCard()` — returns a formatted one-line summary, e.g. `"[C001] Ana Pérez — Software Engineering — 15 cr (Full-time)"`.
+3. Create a class **`App`** (with `main`) in the same package that:
+   - Creates **at least two** `Student` objects with different data.
+   - Prints each student's `idCard()`.
+   - Prints a final line with how many of them are full-time.
+4. The program must run correctly from the command line **and** produce identical output in your IDE.
 
-1. Create a class **`Student`** in package `co.edu.corhuila.oop.week01.model` with:
-   - private attributes `fullName` (String) and `studentId` (String);
-   - a constructor that sets both;
-   - a method `String describe()` returning e.g. `"Student #A00123 — Ana Gómez"`.
-2. Create a class **`Course`** in package `co.edu.corhuila.oop.week01.model` with:
-   - a private attribute `name` (String) and a constructor;
-   - a method `String describe()`.
-3. Create a class **`Main`** in package `co.edu.corhuila.oop.week01` with a `main` method that:
-   - creates **one** `Student` object and **one** `Course` object;
-   - sends each a `describe()` message and prints both results;
-   - prints one extra line stating who is enrolled in which course.
+### 2.2 Encapsulation requirement (this is the learning point)
+- All `Student` fields must be **`private`**. The only way to read them from `App` is through the accessor methods. Do **not** make fields public. This is your first hands-on encapsulation.
 
-### 2.2 Technical / structural
-
-- The **directory structure must mirror the packages** exactly (see §4).
-- **Naming conventions:** lowercase packages, `PascalCase` classes, `camelCase` methods/fields.
-- Attributes are **private** (a first taste of encapsulation); access is only through methods.
-- The program must **compile with `javac`** and **run with `java`** using the fully-qualified main-class name.
-- Include a short **`README.md`** at the repository root (see §5).
-
-### 2.3 Constraints
-
-- **No IDE-only project files as the deliverable** — the code must compile from the command line. (You may still use an IDE to write it.)
-- Do **not** commit compiled output; add a `.gitignore` that excludes `out/`, `*.class`, and IDE folders (`.idea/`, `.vscode/`, `bin/`).
+### 2.3 Non-functional / project requirements
+- **JDK 17+ (LTS).** State the version you used in the README.
+- **No external libraries** — plain Java only.
+- **Correct package/folder mapping** (folders must mirror the package name).
+- **A `.gitignore`** that excludes compiled output (`out/`, `*.class`, IDE folders like `.idea/`, `.vscode/`, `bin/`).
+- **A repository `README.md`** (see deliverable below).
 
 ---
 
 ## 3. Expected deliverable
 
-A **public GitHub repository** named `oop-week01-<yourusername>` containing:
+A **public GitHub repository** named `oop-week01-<yourlastname>` containing:
 
 ```
-oop-week01-<yourusername>/
-├── README.md                 # what it is + how to compile & run (see §5)
-├── .gitignore                # excludes out/, *.class, IDE folders
+oop-week01-<yourlastname>/
+├── README.md            # how to compile & run, JDK version, screenshot(s)
+├── .gitignore
 └── src/
-    └── co/edu/corhuila/oop/week01/
-        ├── Main.java
-        └── model/
-            ├── Student.java
-            └── Course.java
+    └── co/edu/corhuila/oop/week01/<yourlastname>/
+        ├── Student.java
+        └── App.java
 ```
 
-**Expected console output (example):**
+The repository **README.md** must include:
+1. Your full name and student code.
+2. The JDK version (`java -version` output) and the IDE you used.
+3. Exact commands to compile and run from the command line.
+4. At least one screenshot of the program running (terminal or IDE).
+5. One short paragraph (3–5 sentences) answering: *"How is this version more object-oriented than simply printing four `System.out.println` lines?"*
 
+**Example of expected program output:**
 ```
-Student #A00123 — Ana Gómez
-Course: Object-Oriented Programming and Design
-Ana Gómez is enrolled in Object-Oriented Programming and Design
+[C001] Ana Pérez — Software Engineering — 15 cr (Full-time)
+[C002] Luis Gómez — Systems Engineering — 9 cr (Part-time)
+Full-time students: 1
 ```
 
 ---
 
-## 4. Step-by-step: build, run, and submit via GitHub
+## 4. How to submit via GitHub (step by step)
 
-### 4.1 Build and run locally
+> We use **GitHub, not Moodle**, for this activity. If you do not have an account yet, create a free one at https://github.com. Do **not** put passwords or tokens in your code or commits.
 
-```bash
-# from the repository root
-javac -d out src/co/edu/corhuila/oop/week01/Main.java \
-             src/co/edu/corhuila/oop/week01/model/Student.java \
-             src/co/edu/corhuila/oop/week01/model/Course.java
-
-java -cp out co.edu.corhuila.oop.week01.Main
-```
-
-Confirm the output matches §3 before you publish.
-
-### 4.2 Publish to GitHub
-
-1. Create a **new, public** repository on GitHub named `oop-week01-<yourusername>` (empty, no template).
-2. In your project folder, initialize and push:
-
+1. **Create the repository** on GitHub named `oop-week01-<yourlastname>`, set to **Public**, and initialize with a README.
+2. **Clone it** locally:
    ```bash
-   git init
-   git add .
-   git commit -m "Week 01: first packaged Java program"
-   git branch -M main
-   git remote add origin https://github.com/<yourusername>/oop-week01-<yourusername>.git
-   git push -u origin main
+   git clone https://github.com/<your-username>/oop-week01-<yourlastname>.git
+   cd oop-week01-<yourlastname>
    ```
+3. **Add your project** files (the `src/...` tree, `.gitignore`, and the completed `README.md`).
+4. **Compile and run** to confirm everything works before committing:
+   ```bash
+   javac -d out src/co/edu/corhuila/oop/week01/<yourlastname>/*.java
+   java -cp out co.edu.corhuila.oop.week01.<yourlastname>.App
+   ```
+5. **Commit and push** with clear messages:
+   ```bash
+   git add .
+   git commit -m "Week 01: Student object + environment report"
+   git push origin main
+   ```
+6. **Submit the link.** Paste the URL of your repository (e.g. `https://github.com/<your-username>/oop-week01-<yourlastname>`) into the Week 01 "Optional activity link" field in the LMS. **Only the link is submitted** — the code itself lives on GitHub.
 
-3. Open the repository in a browser and confirm the folder structure and `README.md` render correctly.
-4. **Submit the repository URL** through the channel the instructor announces for GitHub links (e.g., a shared roster or the forum thread) — **not** as a Moodle file upload.
-
-> **Note on submission mechanics:** publishing a public repository and sending its URL are actions you perform yourself. This guide does not push to any remote on your behalf.
-
----
-
-## 5. Repository `README.md` — required content
-
-Keep it short (about 10–15 lines):
-
-- **Title** and one-sentence description.
-- **How to compile and run** (the two commands from §4.1).
-- **Expected output** (paste it).
-- **What you learned** in one or two sentences (e.g., how packages map to folders).
-- Your **name** and **student ID**.
+> Deadline: end of Corte 1 (see the LMS calendar). Late-but-working submissions are still worth doing for the learning value.
 
 ---
 
-## 6. Assessment criteria / rubric
+## 5. Assessment criteria / rubric
 
-Although optional, work is given formative feedback on the scale below (0.0–5.0). It reuses the course **Coding-workshop base rubric** ([`../../00-course/README.md`](../../00-course/README.md#72-base-rubric--coding-workshop--practical-deliverable)), adapted to Week 01's scope.
+Total: **100 points** (applied as reinforcement/extra credit per the course grading policy).
 
-| Criterion | Weight | Excellent (5.0–4.5) | Satisfactory (4.4–3.5) | Minimal (3.4–3.0) | Insufficient (<3.0) |
-|---|---|---|---|---|---|
-| **Compiles & runs** | 30 % | Compiles with `javac` and runs with `java`; output matches spec exactly | Runs with a minor output deviation | Runs only from the IDE / needs fixes | Does not compile |
-| **Package structure** | 25 % | Folders mirror packages perfectly; correct naming conventions throughout | One small mismatch | Packages present but inconsistent | No packages / flat structure |
-| **OOP basics (encapsulation)** | 20 % | All fields private; interaction only via methods; objects collaborate cleanly | Mostly private; minor leak | Some public fields | Procedural code, no real objects |
-| **GitHub delivery** | 15 % | Public repo, clean history, working `.gitignore`, clear `README.md` | Repo fine; README or `.gitignore` thin | Repo present but messy (committed `out/`/`.class`) | No repo / private / URL missing |
-| **Code quality & docs** | 10 % | Readable, consistent, brief comments; helpful README | Generally clean | Readable but inconsistent | Hard to read; no README |
+| Criterion | Excellent (full) | Acceptable (partial) | Missing (0) | Max pts |
+|-----------|------------------|----------------------|-------------|---------|
+| **Compiles & runs** | Compiles with no errors/warnings and runs from CLI producing correct output. | Runs only in the IDE, or has minor warnings. | Does not compile. | 25 |
+| **Encapsulation** | All fields private; state accessed only via methods. | Some fields exposed but mostly correct. | Public fields / no encapsulation. | 20 |
+| **Correct package & structure** | Package name follows `co.edu.corhuila...`; folders mirror it exactly. | Minor naming/structure issues. | Wrong or no package. | 15 |
+| **Object modeling** | `Student` has meaningful state + behavior; `isFullTime()` and `idCard()` correct; ≥2 objects created and used. | Class present but logic incomplete. | No real object usage. | 20 |
+| **Repository quality** | Clear README (run instructions, JDK version, screenshot, reflection); working `.gitignore`; clean commit history. | README incomplete or `.gitignore` missing. | No README / not usable. | 15 |
+| **Reflection paragraph** | Insightful explanation of why the code is object-oriented. | Superficial. | Missing. | 5 |
 
-**Passing threshold:** 3.0. A submission that compiles, runs, uses correct packages, and is delivered as a clean public repo comfortably clears it.
-
----
-
-## 7. Stretch goals (extra, ungraded)
-
-For students who finish early:
-
-1. Add a third package `...week01.report` with a `TranscriptPrinter` class whose method takes a `Student` and a `Course` and prints the enrollment line — moving the printing responsibility out of `Main`.
-2. Add basic validation in a constructor (e.g., reject an empty `studentId`) — a preview of the encapsulation work in Corte 1.
-3. Add a second `Course` and print both, hinting at why collections (Corte 3) will be useful.
+**Bonus (up to +5):** add a third class (e.g., `Course`) and have `Student` reference it, or add a `toString()` override — a preview of Week 02.
 
 ---
 
-## 8. Academic integrity
+## 6. Academic integrity
 
-Write your own code. You may discuss ideas with peers, but the repository must be your own work; copied repositories are easy to detect through commit history and will be treated under the institutional integrity policy. Reusing the course's `HelloOOP`/`Course` examples as a *starting point* is fine and expected — extending them into the required structure is the point of the activity.
+You may discuss ideas with classmates, but the code and the reflection must be **your own**. Copy-pasted repositories will receive zero. Attribute any snippet you adapt from the official Java tutorials in your README.
 
 ---
 
-*Optional activity for Week 01, aligned to RAA 90_82759 (Corte 1). Delivery is by GitHub; no Moodle submission is required for this task.*
+## 7. Related folders
+
+- Week guide: [`../README.md`](../README.md)
+- Session 01 (theory): [`../01-session/README.md`](../01-session/README.md)
+- Session 02 (environment + first program): [`../02-session/README.md`](../02-session/README.md)
+- Study material (PDF download area): [`../material/README.md`](../material/README.md)

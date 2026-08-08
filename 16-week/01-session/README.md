@@ -1,255 +1,264 @@
-# Week 16 - Session 1: Final project presentations & co-evaluation
+# Week 16 - Session 1: Consolidation and project presentations
 
-**Subject:** Object-Oriented Programming and Design - 2026-B
-**Unit 3:** Practical application of OOP in Java · **Corte 3**
-**RAA:** 90_82759
-**Duration:** 2 hours (120 min)
+> **Subject:** Object-Oriented Programming and Design - 2026-B
+> **Unit 3:** Practical application of OOP in Java
+> **Assessment period:** Corte 3
+> **RAA:** 90_82759
 
 ---
 
 ## 1. Session objective
 
-Students **demonstrate** their final Java project — explicitly locating the four OOP pillars and good design practices in real code — and **conduct structured peer review** of classmates' work using a shared co-evaluation rubric. By the end of the session each student will have presented (as a team) and produced at least two rubric-based peer reviews.
+Consolidate the whole course into a single mental model (the four OOP pillars + good practices as an **assessment lens**), and run the **final project defenses** so that each student presents working Java code, justifies design decisions, and receives **structured peer feedback (co-evaluation)**.
 
-This maps to weekly objectives **1, 2 and 5** and to RAA 90_82759 (implement, communicate and evaluate object-oriented solutions).
-
----
-
-## 2. Timed agenda
-
-| Time | Block | Activity |
-|------|-------|----------|
-| 0:00-0:10 | Framing | Ground rules for demos and for giving feedback; how the rubrics work |
-| 0:10-0:25 | Consolidation | Mini-review of the four pillars via one worked example (below) |
-| 0:25-1:25 | Presentations | Teams present in rotation, ~12 min each (8 present + ~4 Q&A/feedback) |
-| 1:25-1:50 | Co-evaluation | Silent, individual rubric-based peer-review writing |
-| 1:50-2:00 | Wrap-up | Synthesis + exit ticket |
-
-> Scale the number of presentation slots to class size. With many teams, run two parallel rooms or split presentations across both sessions and move part of the reflection work to homework.
+By the end of the session the student will be able to:
+- Locate, in their own code, concrete evidence of abstraction, encapsulation, inheritance and polymorphism.
+- Deliver a 10-12 minute technical defense with a live demo.
+- Score a peer's project with the co-evaluation rubric, producing specific, actionable comments.
 
 ---
 
-## 3. Theory notes: consolidation of OOP for the demo
+## 2. Timed agenda (110 minutes)
 
-The purpose of this block is not to teach new material but to give students a **shared checklist and vocabulary** so both presenters and reviewers can point precisely at the pillars in code.
+| Time | Activity |
+|---|---|
+| 0:00-0:10 | Welcome, goals of the closing week, how corte 3 is scored. |
+| 0:10-0:30 | **Consolidation:** course synthesis map (Units 1-3) and the four pillars as an assessment lens. |
+| 0:30-0:45 | The good-practices checklist and what "good evidence" looks like in code. |
+| 0:45-0:55 | How the defense works; the co-evaluation rubric walk-through. |
+| 0:55-1:40 | **Project presentations / defenses** (rotating; ~12 min each incl. Q&A). |
+| 1:40-1:48 | Guided practice: everyone completes a co-evaluation form for the presentations seen. |
+| 1:48-1:50 | Wrap-up and exit ticket. |
 
-### 3.1 The four pillars, restated for demonstration
+*(Presentation slots continue in the scheduled block; if the cohort is large, defenses span both sessions with reflection interleaved.)*
 
-- **Abstraction** — *"What does this type promise, ignoring how?"* Look for `abstract class` / `interface`, method names that describe intent, and models that omit irrelevant detail. In a demo, abstraction is visible when the presenter can describe a class by its responsibility in one sentence without mentioning implementation.
+---
 
-- **Encapsulation** — *"Who is allowed to touch this state, and under what rules?"* Look for `private` fields, controlled mutation through methods that protect invariants (not just trivial getters/setters), and validation inside constructors/setters. A telling demo sign: the object cannot be put into an invalid state from outside.
+## 3. Theory notes
 
-- **Inheritance** — *"Is this an 'is-a' relationship, and is behaviour genuinely reused/specialised?"* Look for `extends`, `super(...)`, and overridden methods (`@Override`). Warning sign to discuss: inheritance used only to share code where composition would be cleaner.
+### 3.1 Consolidation: the course as one story
 
-- **Polymorphism** — *"Can I call the same method on different types and get correct, type-specific behaviour?"* Look for a loop or method that operates over a supertype/interface reference while the concrete type varies at runtime.
-
-### 3.2 How the pillars interlock (text diagram)
+The three units form a progression from *ideas* to *working software*:
 
 ```
-                    +---------------------------+
-                    |        ABSTRACTION        |
-                    |  (define the contract:    |
-                    |   interface / abstract)   |
-                    +------------+--------------+
-                                 |  enables
-                 +---------------+----------------+
-                 |                                |
-        +--------v---------+            +---------v----------+
-        |   INHERITANCE    |            |   POLYMORPHISM     |
-        | (specialise the  |  supports  | (one call ->       |
-        |  contract via    +----------->|  many runtime      |
-        |  extends/@Override|           |  behaviours)       |
-        +--------+---------+            +---------+----------+
-                 |                                |
-                 |  both rely on                  |
-        +--------v--------------------------------v----------+
-        |                 ENCAPSULATION                      |
-        |   (each type guards its own state & invariants)    |
-        +----------------------------------------------------+
+UNIT 1                     UNIT 2                        UNIT 3
+Fundamentals of OOP   -->  Design with classes      -->  Practical application
+- objects & classes        - relationships (assoc.,      in Java
+- the four pillars           aggregation, composition)   - full programs
+- Java syntax basics       - abstraction & interfaces    - exceptions, collections
+                           - UML class diagrams          - testing, packaging
+                           - responsibility assignment   - version control (Git)
+
+        \___________________________|___________________________/
+                                     |
+                          FINAL PROJECT (defended in Week 16)
+                                     |
+                              RAA 90_82759
 ```
 
-### 3.3 Good-design vocabulary reviewers should use
+The final project is where all of this converges. Your defense should tell that same story: *"here is the problem, here is the design, here is the code that realizes it, and here is why it is good."*
 
-- **High cohesion / low coupling.** Does each class do one thing? Do classes depend on abstractions rather than concretions?
-- **Single Responsibility.** Can you state each class's single reason to change?
-- **Clear naming and small methods.** Do names reveal intent? Are methods short enough to read at a glance?
-- **Error handling.** Are exceptions used deliberately, not swallowed?
+### 3.2 The four pillars as an assessment lens
+
+During the defense you are not asked to *define* the pillars — you are asked to **show them in your code**. This table describes what strong evidence looks like.
+
+| Pillar | The idea | Strong evidence in code | Weak / missing |
+|---|---|---|---|
+| **Abstraction** | Expose *what*, hide *how*. | An `interface` or `abstract class` with a clear contract that clients depend on. | Everything concrete; no contracts; clients reach into internals. |
+| **Encapsulation** | Protect state; control access. | `private` fields, validated setters/constructors, invariants enforced inside the class. | Public mutable fields; no validation; broken invariants. |
+| **Inheritance** | Reuse and specialize a genuine "is-a". | A subclass that overrides/extends behavior meaningfully; base class not instantiated directly when abstract. | Inheritance used only to share code that has no "is-a" relationship (should be composition). |
+| **Polymorphism** | One reference, many behaviors. | Client code calls a method on a supertype/interface and the correct override runs (dynamic dispatch). | `if (obj instanceof X) ... else if (obj instanceof Y)` chains that a polymorphic call would remove. |
+
+### 3.3 Good-practices checklist (defense-ready)
+
+```
+[ ] Naming        Classes are nouns; methods are verbs; names reveal intent.
+[ ] Cohesion      Each class has one clear responsibility.
+[ ] Coupling      Classes depend on abstractions, not on each other's internals.
+[ ] Encapsulation Fields private; access controlled; invariants protected.
+[ ] Exceptions    Invalid states raise exceptions; no silent failures.
+[ ] Testing       At least the core logic has unit tests that pass.
+[ ] Docs          A README explains how to build/run; key classes are commented.
+[ ] Version ctrl  Git history shows incremental, meaningful commits.
+```
+
+### 3.4 Anatomy of a 10-12 minute defense
+
+```
+1. Problem & scope          (1 min)  What does the app do and for whom?
+2. Design overview          (2 min)  Class diagram; key relationships.
+3. Pillars walk-through     (4 min)  Show the FOUR pillars in real code.
+4. Good practices           (2 min)  Point to tests, exceptions, naming, Git.
+5. Live demo                (2 min)  Run it; show the happy path + one error case.
+6. Reflection & Q&A         (1-2 min) One trade-off you'd revisit; answer questions.
+```
 
 ---
 
-## 4. Fully worked example: locating the four pillars in one small system
+## 4. Fully worked example
 
-Below is a compact, self-contained **payment-processing** example. It is deliberately small so the whole class can read it and rehearse *pointing at the pillars* — the exact skill needed for a good presentation and a good review.
+Below is a compact but complete example that a student could use as a **model** of how to *show* all four pillars and good practices in a defense. Domain: a tiny **payroll** module.
 
-### 4.1 The code
+### 4.1 The code (evidence of all four pillars)
 
 ```java
-// ---------- ABSTRACTION ----------
-// PaymentMethod defines WHAT every payment can do, not HOW.
-public interface PaymentMethod {
-    // Returns a human-readable confirmation; throws if the payment cannot proceed.
-    String pay(double amount);
-    String label();
+// ---------- ABSTRACTION: a contract, not an implementation ----------
+public interface Payable {
+    /** Gross monthly pay in COP. Must never be negative. */
+    double monthlyGrossPay();
 }
 
-// ---------- ABSTRACTION + INHERITANCE (shared base) ----------
-public abstract class CardPayment implements PaymentMethod {
+// ---------- ENCAPSULATION + base for INHERITANCE ----------
+public abstract class Employee implements Payable {
+    private final String name;          // private: state is protected
+    private final String documentId;
 
-    // ---------- ENCAPSULATION ----------
-    private final String cardHolder;
-    private final String maskedNumber;   // only last 4 digits kept
-
-    protected CardPayment(String cardHolder, String fullNumber) {
-        if (cardHolder == null || cardHolder.isBlank())
-            throw new IllegalArgumentException("Card holder is required");
-        if (fullNumber == null || fullNumber.length() < 4)
-            throw new IllegalArgumentException("Invalid card number");
-        this.cardHolder = cardHolder;
-        this.maskedNumber = "**** **** **** " + fullNumber.substring(fullNumber.length() - 4);
+    protected Employee(String name, String documentId) {
+        if (name == null || name.isBlank())
+            throw new IllegalArgumentException("name is required"); // invariant
+        if (documentId == null || documentId.isBlank())
+            throw new IllegalArgumentException("documentId is required");
+        this.name = name;
+        this.documentId = documentId;
     }
 
-    // Controlled, read-only access to protected state.
-    protected String cardHolder() { return cardHolder; }
-    public String maskedNumber()  { return maskedNumber; }
+    public String getName() { return name; }          // controlled access
+    public String getDocumentId() { return documentId; }
 
-    // Common validation reused by every card subtype (inheritance of behaviour).
-    protected void validateAmount(double amount) {
-        if (amount <= 0) throw new IllegalArgumentException("Amount must be positive");
-    }
+    // Subclasses MUST define how they are paid -> abstraction + polymorphism
+    @Override
+    public abstract double monthlyGrossPay();
 }
 
-// ---------- INHERITANCE + POLYMORPHISM ----------
-public class CreditCardPayment extends CardPayment {
-    private final double creditLimit;
+// ---------- INHERITANCE + POLYMORPHISM (override) ----------
+public class SalariedEmployee extends Employee {
+    private final double monthlySalary;
 
-    public CreditCardPayment(String holder, String number, double creditLimit) {
-        super(holder, number);              // reuse base construction/validation
-        this.creditLimit = creditLimit;
+    public SalariedEmployee(String name, String documentId, double monthlySalary) {
+        super(name, documentId);
+        if (monthlySalary < 0)
+            throw new IllegalArgumentException("salary cannot be negative");
+        this.monthlySalary = monthlySalary;
     }
 
     @Override
-    public String pay(double amount) {      // specialised behaviour
-        validateAmount(amount);
-        if (amount > creditLimit)
-            throw new IllegalStateException("Amount exceeds credit limit");
-        return "Charged " + amount + " to credit card " + maskedNumber();
-    }
-
-    @Override
-    public String label() { return "Credit card (" + cardHolder() + ")"; }
+    public double monthlyGrossPay() { return monthlySalary; }
 }
 
-public class DebitCardPayment extends CardPayment {
-    private double balance;                  // encapsulated, mutable, guarded
+public class HourlyEmployee extends Employee {
+    private final double hourlyRate;
+    private final double hoursWorked;
 
-    public DebitCardPayment(String holder, String number, double openingBalance) {
-        super(holder, number);
-        if (openingBalance < 0) throw new IllegalArgumentException("Balance cannot be negative");
-        this.balance = openingBalance;
+    public HourlyEmployee(String name, String documentId,
+                          double hourlyRate, double hoursWorked) {
+        super(name, documentId);
+        if (hourlyRate < 0 || hoursWorked < 0)
+            throw new IllegalArgumentException("rate/hours cannot be negative");
+        this.hourlyRate = hourlyRate;
+        this.hoursWorked = hoursWorked;
     }
 
     @Override
-    public String pay(double amount) {      // different specialised behaviour
-        validateAmount(amount);
-        if (amount > balance)
-            throw new IllegalStateException("Insufficient funds");
-        balance -= amount;                  // invariant preserved: balance >= 0
-        return "Debited " + amount + "; remaining balance " + balance;
-    }
-
-    @Override
-    public String label() { return "Debit card (" + cardHolder() + ")"; }
+    public double monthlyGrossPay() { return hourlyRate * hoursWorked; }
 }
 
-// ---------- POLYMORPHISM IN USE ----------
-public class Checkout {
-    // Depends on the ABSTRACTION, not on any concrete card -> low coupling.
-    public void process(java.util.List<PaymentMethod> methods, double amount) {
-        for (PaymentMethod m : methods) {          // same call...
-            try {
-                System.out.println(m.label() + " -> " + m.pay(amount)); // ...many behaviours
-            } catch (RuntimeException ex) {
-                System.out.println(m.label() + " -> FAILED: " + ex.getMessage());
-            }
+// ---------- CLIENT uses POLYMORPHISM (no instanceof chains) ----------
+import java.util.List;
+
+public class Payroll {
+    /** Total gross pay for any mix of employee types. */
+    public double totalGrossPay(List<Payable> employees) {
+        double total = 0;
+        for (Payable p : employees) {     // dynamic dispatch does the work
+            total += p.monthlyGrossPay();
         }
+        return total;
     }
 }
 ```
 
-### 4.2 Reading the pillars out loud (the presentation skill)
+### 4.2 How this maps to the assessment lens
 
-| Pillar | Where | One-sentence justification a presenter should give |
-|--------|-------|----------------------------------------------------|
-| Abstraction | `interface PaymentMethod` | "Callers depend only on `pay`/`label`; they never need to know it is a credit or debit card." |
-| Encapsulation | `private` fields + `maskedNumber`, guarded `balance` | "The full card number never leaves the object, and `balance` can never go negative because mutation is controlled." |
-| Inheritance | `CardPayment` + `extends` + `super(...)` | "Both card types reuse holder validation and amount checking from a common base." |
-| Polymorphism | `Checkout.process` loop over `PaymentMethod` | "The same `m.pay(amount)` call runs credit-limit logic or balance logic depending on the runtime type." |
+| Requirement | Where it is evidenced |
+|---|---|
+| Abstraction | `Payable` interface + `abstract class Employee` define a contract. |
+| Encapsulation | `private final` fields, validation in constructors, getters only. |
+| Inheritance | `SalariedEmployee` / `HourlyEmployee` `extends Employee`. |
+| Polymorphism | `Payroll.totalGrossPay` calls `monthlyGrossPay()` on `Payable`; the correct override runs. |
+| Good practice: exceptions | Invalid arguments throw `IllegalArgumentException`. |
+| Good practice: naming | Class = noun, method = verb-phrase revealing intent. |
+| Good practice: low coupling | `Payroll` depends on `Payable`, not on concrete classes. |
 
-### 4.3 A design critique to model for reviewers
+### 4.3 A minimal test (good practice: testing)
 
-Even good code invites critique — model it:
+```java
+import org.junit.jupiter.api.Test;
+import java.util.List;
+import static org.junit.jupiter.api.Assertions.*;
 
-- **Strength:** `Checkout` depends on the interface, so adding `WalletPayment` needs no change to `Checkout` (open for extension). 
-- **Improvement:** `pay` returning a `String` mixes result and presentation; a richer `PaymentResult` type would separate concerns.
-- **Question:** "How would you test `DebitCardPayment` to prove the balance invariant holds after a failed payment?"
+class PayrollTest {
 
-This "strength / improvement / question" shape is exactly the structure students must reproduce in co-evaluation.
+    @Test
+    void totalMixesSalariedAndHourly() {
+        var payroll = new Payroll();
+        double total = payroll.totalGrossPay(List.of(
+            new SalariedEmployee("Ana", "1001", 3_000_000),
+            new HourlyEmployee("Luis", "1002", 20_000, 100) // 2,000,000
+        ));
+        assertEquals(5_000_000, total, 0.001);
+    }
+
+    @Test
+    void negativeSalaryIsRejected() {
+        assertThrows(IllegalArgumentException.class,
+            () -> new SalariedEmployee("X", "9", -1));
+    }
+}
+```
+
+**How you would present this in 30 seconds:** *"`Payroll` never asks what kind of employee it has. It depends on the `Payable` abstraction; encapsulation guarantees no employee can exist in an invalid state; inheritance lets me add a new employee type without touching `Payroll`; and the test proves the polymorphic sum is correct."*
 
 ---
 
 ## 5. Guided in-class practice
 
-**Part A — Pillar-spotting drill (during presentations, ~throughout the 60-min block).**
-As each team presents, every student fills a quick capture grid for that project:
+Work in the same rotation as the defenses. Two parts.
 
-```
-Project: ____________________   Reviewer: ____________________
-Abstraction  : evidence -> ______________________________________
-Encapsulation: evidence -> ______________________________________
-Inheritance  : evidence -> ______________________________________
-Polymorphism : evidence -> ______________________________________
-Design note  : cohesion/coupling/naming observation -> ___________
-```
+### Part A — "Find the pillars" (in pairs, 10 min)
+Take the payroll example above (or your own project) and, on paper or a shared doc, write **one sentence per pillar** naming the exact class/method that evidences it. Then identify **one good practice that is missing** and how you would add it (e.g., "add a test for `HourlyEmployee` with zero hours").
 
-**Part B — Structured co-evaluation writing (1:25-1:50).**
-Each student writes **two** complete peer reviews (choose two teams other than their own) using the rubric in section 6. A complete review contains:
+### Part B — Live co-evaluation (during each defense)
+While each classmate defends, complete the co-evaluation form below. Score each criterion 1-4 and write at least one **specific, actionable** comment.
 
-1. **One strength** — specific and tied to observed evidence.
-2. **One concrete improvement** — actionable, not "make it better".
-3. **One clarifying question** — something you genuinely could not tell from the demo.
-4. **Rubric scores** — one level per criterion.
+**Co-evaluation rubric (per project, 1 = Insufficient, 2 = In progress, 3 = Competent, 4 = Excellent)**
 
-**Facilitation tips for the instructor:**
-- Enforce a hard time-box per team so all teams present.
-- Require presenters to *name the pillar and point at the line*, not just describe features.
-- Keep feedback about the artefact ("the `Order` class has two responsibilities"), never the person.
-- Collect capture grids and reviews as evidence for the co-evaluation grade.
+| Criterion | 1 | 2 | 3 | 4 | Score | Comment |
+|---|---|---|---|---|---|---|
+| Four pillars evidenced in code | | | | | | |
+| Good practices (naming, exceptions, tests, Git) | | | | | | |
+| Design clarity (cohesion, coupling, diagram) | | | | | | |
+| Working demo (runs; handles an error case) | | | | | | |
+| Communication (clear, justified decisions, Q&A) | | | | | | |
 
----
+**Rules for good feedback (the "SBI + suggestion" pattern):**
+- **Situation:** where you observed it ("in the `Order` class...").
+- **Behavior/observation:** what you saw ("...fields are `public`...").
+- **Impact:** why it matters ("...so any code can break the total.").
+- **Suggestion:** what to try ("make them `private` and validate in the constructor.").
 
-## 6. Co-evaluation rubric
-
-Reviewers assign one level per criterion. Levels: **4 Excellent · 3 Proficient · 2 Developing · 1 Beginning.**
-
-| Criterion | 4 Excellent | 3 Proficient | 2 Developing | 1 Beginning |
-|-----------|-------------|--------------|--------------|-------------|
-| **Four pillars demonstrated** | All four shown in real code with clear justification | All four present, justification mostly clear | 2-3 shown or weakly justified | Pillars asserted but not located in code |
-| **Design quality** | High cohesion, low coupling, clear responsibilities | Mostly clean; minor issues | Noticeable coupling / mixed responsibilities | Tangled design; unclear responsibilities |
-| **Working demo** | Runs cleanly; handles edge cases live | Runs; minor hiccups | Partial run / needs rescue | Does not run |
-| **Communication** | Clear narrative, confident Q&A | Clear; some gaps in Q&A | Hard to follow in places | Disorganised |
-| **Code readability** | Excellent naming, small methods, comments where useful | Generally readable | Inconsistent naming / long methods | Hard to read |
-
-**Presentation rubric (instructor-graded)** uses the same five criteria; "Proficient (3)" on every row is the pass threshold for weekly objective 1.
+Avoid vague praise ("nice work") and personal remarks; comment on the **artifact**, not the person.
 
 ---
 
-## 7. Wrap-up & exit ticket
+## 6. Wrap-up and exit ticket
 
-**Synthesis (2-3 min):** The instructor highlights two or three recurring strengths and two or three recurring improvement areas seen across the demos, reinforcing the shared design vocabulary.
+**Wrap-up (2 min):** Restate the key idea — in a strong OOP project the four pillars are not decorations, they *earn their place* by making the code easier to change and harder to break. Your defense should show exactly that.
 
-**Exit ticket (submit before leaving):**
-1. Name one design idea you saw in a classmate's project that you would adopt in your own, and why (2-3 sentences).
-2. Of the four pillars, which was *hardest to demonstrate clearly* in projects today, and what would make it clearer?
-3. One thing you will change in your own repository before the portfolio is due.
+**Exit ticket (hand in before leaving):**
+1. Name the **one class/method in your project** where polymorphism does the most work, and say what `if/else` chain it removes.
+2. Name **one good practice** you will add to your project before final submission.
+3. From the co-evaluations you completed, write **one comment you received or gave** that you found most useful, and why.
 
-Exit tickets feed directly into Session 2's reflective work.
+---
+
+*Next: `02-session/README.md` — reflective assessment and portfolio.*

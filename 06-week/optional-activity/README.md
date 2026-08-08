@@ -1,192 +1,190 @@
-# Week 06 · Optional Activity — Modeling a hierarchy with inheritance and `super()`
+# Week 06 - Optional Activity
 
-> **Course:** Object-Oriented Programming and Design · **Term:** 2026-B
-> **Unit 2:** Design principles and modularity · **Topic:** Inheritance and `super()`
-> **Assessment period:** Corte 2 · **RAA:** `90_82759`
-> **Type:** Optional (bonus credit) · **Submission channel:** **GitHub** (NOT Moodle)
+## Build a small class hierarchy with `extends` and `super()`
 
----
-
-## 1. Purpose
-
-This optional activity lets you practice, end to end, the two skills of the week: **modeling an "is-a"
-hierarchy with single inheritance** and **wiring constructors with `super(...)`** so behavior is reused
-instead of duplicated. It also asks you to reflect on the *limits* of inheritance — the same theme you
-discuss in the forum.
-
-Completing it well earns **bonus credit toward Corte 2** under the rubric in §7.
+**Course:** Object-Oriented Programming and Design | **Unit 2** - Design principles and modularity
+**Assessment period:** Corte 2 | **Submission channel:** GitHub (NOT Moodle)
 
 ---
 
-## 2. Problem statement
+> **This activity is optional.** It gives you extra practice and bonus recognition toward Corte 2 according to the rubric below. It is **submitted through GitHub**, not through Moodle. If you have never used GitHub, follow Section 5 step by step.
 
-You are building the domain model for a small **library management system**. The library lends
-different kinds of **items**, and every item shares common data (a title and a catalog id) and a common
-behavior (producing a one-line catalog label). Specific item types add their own data and specialize
-the label.
+---
 
-Model the following "is-a" family using **single inheritance**:
+## 1. Problem statement
+
+A small library wants to model the items it lends. Every **library item** has a title and a unique catalog code, and can be checked out and returned. The library lends two specialized kinds of items:
+
+- A **Book**, which additionally has an author and a number of pages.
+- A **DVD**, which additionally has a duration in minutes and an age rating.
+
+The library also wants a clear, per-item description. Books and DVDs describe themselves slightly differently, but the common part (title + code) must **not** be duplicated.
+
+Your job is to model this with **single inheritance** so that the shared state and behavior live in a parent class and each specialized item reuses the parent through `super(...)` and `super.method()`.
+
+---
+
+## 2. Requirements
+
+Implement the following in Java.
+
+### 2.1 Parent class `LibraryItem`
+
+- `protected` fields: `title` (String), `catalogCode` (String), and `checkedOut` (boolean, starts `false`).
+- Constructor `LibraryItem(String title, String catalogCode)` that sets the two fields (leave `checkedOut` as `false`).
+- `void checkOut()` - if the item is already checked out, print `"<title> is already out"`; otherwise set `checkedOut = true` and print `"<title> checked out"`.
+- `void returnItem()` - if the item is not checked out, print `"<title> was not out"`; otherwise set `checkedOut = false` and print `"<title> returned"`.
+- `String describe()` - returns `"[<catalogCode>] <title>"`.
+
+### 2.2 Subclass `Book extends LibraryItem`
+
+- `private` fields: `author` (String), `pages` (int).
+- Constructor `Book(String title, String catalogCode, String author, int pages)` that calls `super(title, catalogCode)` **as its first statement**, then sets the new fields.
+- **Override** `describe()` so it returns the parent description **plus** ` - Book by <author>, <pages>p`. You **must reuse** `super.describe()` (do not retype the `[code] title` part). Use `@Override`.
+
+### 2.3 Subclass `DVD extends LibraryItem`
+
+- `private` fields: `minutes` (int), `rating` (String).
+- Constructor `DVD(String title, String catalogCode, int minutes, String rating)` that calls `super(title, catalogCode)` first, then sets the new fields.
+- **Override** `describe()` so it returns the parent description **plus** ` - DVD, <minutes> min, rated <rating>`, reusing `super.describe()`. Use `@Override`.
+
+### 2.4 Driver class `Library` with `main`
+
+- Create at least one `Book` and one `DVD`.
+- Print each item's `describe()`.
+- Check out an item, try to check it out again (to show the "already out" branch), then return it.
+
+### 2.5 Constraints (these are graded)
+
+- **No duplicated code:** `title`/`catalogCode` must be declared and initialized **only** in `LibraryItem`. The `describe()` prefix must come from `super.describe()`.
+- Every override must carry the `@Override` annotation.
+- Every subclass constructor's **first statement** must be `super(...)`.
+- The program must **compile and run** with no errors.
+
+---
+
+## 3. Expected deliverable
+
+A GitHub repository (or a folder inside your course repository) containing:
 
 ```
-                 LibraryItem            (id, title)  — the base class
-                /     |      \
-           Book    Magazine   DVD
+week06-library/
+├── LibraryItem.java
+├── Book.java
+├── DVD.java
+├── Library.java
+└── README.md        (short: how to compile & run, plus a sample of the output)
 ```
 
-- A **Book** *is a* `LibraryItem` that also has an `author` and a number of `pages`.
-- A **Magazine** *is a* `LibraryItem` that also has an `issueNumber` and a `month`.
-- A **DVD** *is a* `LibraryItem` that also has a `director` and a `durationMinutes`.
-
-Then create **one deeper level** to demonstrate a multi-step `super(...)` chain:
-
-- A **Textbook** *is a* `Book` (a specialized book) that also has an `edition` and a `subject`.
+### Expected output (yours may differ slightly in the values you choose):
 
 ```
-        LibraryItem
-             ▲
-           Book
-             ▲
-         Textbook       ← three-level chain: Textbook → Book → LibraryItem
+[B-001] Clean Code - Book by Robert C. Martin, 464p
+[D-014] Interstellar - DVD, 169 min, rated PG-13
+Clean Code checked out
+Clean Code is already out
+Clean Code returned
+```
+
+Your `README.md` in the repo should include the exact commands to build and run, for example:
+
+```
+javac *.java
+java Library
 ```
 
 ---
 
-## 3. Requirements
+## 4. Reference UML sketch (for your design)
 
-Your solution **must**:
+```
+                +-----------------------+
+                |     LibraryItem       |
+                +-----------------------+
+                | # title : String      |
+                | # catalogCode : String|
+                | # checkedOut : boolean |
+                +-----------------------+
+                | + checkOut()          |
+                | + returnItem()        |
+                | + describe() : String |
+                +-----------------------+
+                          ^  extends
+              +-----------+-----------+
+              |                       |
+   +----------------------+  +----------------------+
+   |         Book         |  |          DVD         |
+   +----------------------+  +----------------------+
+   | - author : String    |  | - minutes : int      |
+   | - pages : int        |  | - rating : String    |
+   +----------------------+  +----------------------+
+   | + describe() : String |  | + describe() : String |
+   +----------------------+  +----------------------+
 
-1. **Base class `LibraryItem`**
-   - `protected` fields `String id;` and `String title;`.
-   - A constructor `LibraryItem(String id, String title)` that initializes both.
-   - A method `String label()` returning `"[" + id + "] " + title`.
-
-2. **Single inheritance with `extends`**
-   - `Book`, `Magazine`, and `DVD` each `extends LibraryItem`.
-   - `Textbook extends Book`.
-   - No field declared in a parent may be **redeclared** in a child.
-
-3. **Constructor chaining with `super(...)`**
-   - Every subclass constructor must call `super(...)` as its **first statement**.
-   - The `Textbook` constructor must chain through `Book` (which itself chains through `LibraryItem`),
-     demonstrating a **three-level** `super(...)` chain.
-
-4. **Specialization without duplication**
-   - Each subclass overrides `label()` and must call `super.label()` to reuse the parent's text, then
-     append its own detail. **Do not** re-type the parent's formatting logic anywhere.
-   - Example expected labels:
-     - Book → `[B-01] Clean Code — by Robert C. Martin, 464 p.`
-     - Textbook → `[T-09] Calculus — by James Stewart, 1368 p. — 8th ed., subject: Mathematics`
-     - Magazine → `[M-14] Nature — issue 42 (March)`
-     - DVD → `[D-07] Interstellar — dir. Christopher Nolan, 169 min`
-
-5. **A runnable demo (`Library` class with `main`)**
-   - Create at least one instance of **each** of the five classes.
-   - Store them in a `LibraryItem[]` (or `List<LibraryItem>`), loop once, and print `label()` for each,
-     showing that a single base-typed collection holds the whole family.
-
-6. **Zero duplicated logic**
-   - No method body may be copy-pasted between classes. The base formatting appears **once**, in
-     `LibraryItem.label()`, and is reused via `super.label()` everywhere else.
-
-**Constraints:** Plain Java (JDK 17+), no external libraries. Standard naming conventions
-(`PascalCase` classes, `camelCase` members). Code must compile with `javac` and run with `java`.
+   (#) protected   (-) private   (+) public
+```
 
 ---
 
-## 4. Expected deliverable
+## 5. How to submit via GitHub (step by step)
 
-A **public GitHub repository** named `oop-week06-inheritance-<yoursurname>` containing:
+> **Reminder:** submission is on **GitHub**, not Moodle. Do not upload a `.zip` to Moodle for this activity.
 
-```
-oop-week06-inheritance-<surname>/
-├── src/
-│   ├── LibraryItem.java
-│   ├── Book.java
-│   ├── Magazine.java
-│   ├── DVD.java
-│   ├── Textbook.java
-│   └── Library.java        // contains main()
-├── README.md               // see §5
-└── .gitignore              // ignore /out, *.class, IDE files
-```
-
-- The program must **compile and run**. Include the exact commands in your README.
-- The repository README must show a **short "is-a" analysis** (one sentence per subclass) and a
-  **paste of the actual program output**.
-
----
-
-## 5. Repository README must include
-
-1. **Title and author** (your full name and student id).
-2. **How to compile and run**, e.g.:
-   ```bash
-   javac -d out src/*.java
-   java -cp out Library
+1. **Create a repository.** On GitHub, click *New repository*. Name it `oop-week06-library` (or add the code to your existing course repo under a `week06-library/` folder). Make it **public** or add the instructor as a collaborator if it is private.
+2. **Clone it locally.**
    ```
-3. **The "is-a" analysis** — one justified sentence per subclass (e.g., "A `Textbook` *is a* `Book`
-   because…").
-4. **Actual program output** pasted in a code block.
-5. **Reflection (4–6 sentences):** name one problem inheritance solved in this design and one situation
-   where composition would have been the better choice. Connect this to the week's forum discussion.
-
----
-
-## 6. Submission instructions (GitHub — NOT Moodle)
-
-1. Create a **new public repository** on GitHub named `oop-week06-inheritance-<yoursurname>`.
-2. Initialize, commit, and push your work. Suggested commands:
-   ```bash
-   git init
+   git clone https://github.com/<your-username>/oop-week06-library.git
+   cd oop-week06-library
+   ```
+3. **Add your files** (`LibraryItem.java`, `Book.java`, `DVD.java`, `Library.java`, `README.md`).
+4. **Verify it compiles and runs** before committing:
+   ```
+   javac *.java
+   java Library
+   ```
+5. **Commit with clear messages.**
+   ```
    git add .
-   git commit -m "Week 06: library inheritance hierarchy with super() chaining"
-   git branch -M main
-   git remote add origin https://github.com/<your-username>/oop-week06-inheritance-<surname>.git
-   git push -u origin main
+   git commit -m "Week 06: LibraryItem hierarchy with extends and super()"
    ```
-3. Make **at least two meaningful commits** (e.g., one for the base + subclasses, one for the demo and
-   README) so your progress is visible in the history.
-4. **Submit the repository URL** through the channel the instructor announced for GitHub links (course
-   GitHub Classroom link or the designated submission form). **Do not upload a ZIP to Moodle** — this
-   activity is tracked on GitHub only.
-5. Ensure the repository is **public** (or that the instructor's GitHub account has access) before the
-   deadline, so it can be cloned and graded.
+6. **Push.**
+   ```
+   git push origin main
+   ```
+7. **Submit the link.** Paste your repository URL where the instructor requested (course channel / assignment link). Make sure the repo is accessible.
 
-> **Deadline:** end of Week 06 (Corte 2). Late pushes are visible in the commit timestamps.
+**Good practice:** make at least two meaningful commits (e.g., "add parent class", then "add Book and DVD subclasses") so your history shows incremental work. Include a `.gitignore` that ignores compiled `*.class` files.
 
 ---
 
-## 7. Assessment criteria / rubric (100 points)
+## 6. Assessment criteria / rubric
 
-| Criterion | Excellent (full) | Acceptable (partial) | Insufficient (0) | Pts |
-|---|---|---|---|:--:|
-| **Correct "is-a" modeling** | All five classes model genuine is-a relationships with `extends`; hierarchy matches the spec. | Minor modeling slip (e.g., one questionable relationship) but compiles. | Uses composition where inheritance was required, or hierarchy wrong. | 20 |
-| **`super(...)` constructor chaining** | Every subclass calls `super(...)` first; the `Textbook→Book→LibraryItem` three-level chain works. | `super(...)` used but chain incomplete or one constructor sets fields redundantly. | Missing `super(...)`, or code does not compile due to constructor errors. | 20 |
-| **Reuse via `super.label()` (no duplication)** | Base formatting written once; every override reuses it via `super.label()`. | Reuse mostly correct but one method duplicates parent text. | Parent logic copy-pasted across classes. | 20 |
-| **Working demo & polymorphic collection** | Compiles, runs, iterates a `LibraryItem[]`/`List` of all five, prints correct labels. | Runs but omits the base-typed collection or one item type. | Does not compile or run. | 15 |
-| **Code quality & conventions** | Clean naming, correct access modifiers (`protected`/`private`), readable structure, `.gitignore` present. | Minor style issues. | Poor naming, wrong modifiers, no structure. | 10 |
-| **README: is-a analysis & output** | Clear per-subclass is-a justification + pasted real output + compile/run commands. | Partially complete README. | Missing or trivial README. | 10 |
-| **Reflection on inheritance limits** | Thoughtful 4–6 sentence reflection naming a real benefit and a real limit/composition case. | Present but shallow. | Missing. | 5 |
+Total: **100 points** (this optional activity contributes bonus recognition toward Corte 2).
 
-**Total: 100.** Bonus credit toward Corte 2 is awarded proportionally to the score obtained.
+| Criterion | Excellent (full) | Acceptable (partial) | Missing (0) | Points |
+|---|---|---|---|:---:|
+| **Correct "is-a" modeling** - `Book` and `DVD` extend `LibraryItem`; shared state lives only in the parent | Both subclasses extend the parent; no duplicated fields | One subclass correct, or minor duplication | No inheritance used | 20 |
+| **Constructor chaining with `super(...)`** - first statement, correct arguments | Both constructors chain correctly | One correct, or `super` not first | No `super(...)` | 20 |
+| **Reuse via `super.method()`** - `describe()` reuses the parent, no retyped prefix | Both overrides call `super.describe()` | One reuses, one retypes | Prefix duplicated in children | 20 |
+| **Overriding done right** - `@Override` present, correct signatures | `@Override` on both, correct | Missing on one | No overriding | 15 |
+| **Compiles & runs, output matches spec** | Compiles, runs, output as specified | Compiles with warnings / minor output diff | Does not compile | 15 |
+| **GitHub delivery quality** - clear commits, README with build/run steps, `.gitignore` | Clean history + complete README | Repo present but thin README/history | Not on GitHub / inaccessible | 10 |
 
----
+**Bonus (up to +5):** add a third subclass (e.g., `Magazine`) that also reuses `super.describe()`, demonstrating that the parent's behavior scales to new items with no duplication.
 
-## 8. Self-check before you submit
+### Self-check before you submit
 
-- [ ] All five classes compile with `javac -d out src/*.java`.
-- [ ] `java -cp out Library` prints the expected labels for every item type.
-- [ ] Every subclass constructor's **first statement** is `super(...)`.
-- [ ] `Textbook` reaches `LibraryItem` through a **three-level** `super(...)` chain.
-- [ ] No parent field is redeclared and no parent method body is copy-pasted.
-- [ ] README contains commands, is-a analysis, real output, and the reflection.
-- [ ] Repository is **public**, has ≥2 commits, and the URL is submitted **via GitHub**, not Moodle.
+- [ ] `title`/`catalogCode` appear **only** in `LibraryItem`.
+- [ ] Each subclass constructor starts with `super(...)`.
+- [ ] Each `describe()` override uses `super.describe()` and `@Override`.
+- [ ] `javac *.java` produces no errors; `java Library` prints the expected output.
+- [ ] The repository is pushed and its URL is submitted (GitHub, not Moodle).
 
 ---
 
-## 9. Navigation
+## 7. Related links
 
 - Week guide: [`../README.md`](../README.md)
-- Session 01 notes: [`../01-session/README.md`](../01-session/README.md)
-- Session 02 notes: [`../02-session/README.md`](../02-session/README.md)
-- Reading & resources (PDF download): [`../material/README.md`](../material/README.md)
+- Session 1 (extends + `super()`): [`../01-session/README.md`](../01-session/README.md)
+- Session 2 (overriding + `super.method()`): [`../02-session/README.md`](../02-session/README.md)
+- Reading & download area: [`../material/README.md`](../material/README.md)

@@ -1,119 +1,122 @@
-# Week 13 — Reading Material and Resources
+# Week 13 · Course Material — Reading and writing files in Java (.txt and .csv)
 
-**Object-Oriented Programming and Design** · CORHUILA · Mechatronics Engineering
-**Unit 3 · Corte 3 · Week 13 — Reading and writing files in Java (`.txt` and `.csv`)**
+**Course:** Object-Oriented Programming and Design · **Term:** 2026-B · **Corte 3**
+**Unit 3:** Practical application of OOP in Java · **RAA:** 90_82759
 
-> **What this folder is.** This is the **download area** for the week's supporting material. The consolidated PDF for Week 13 is provided here for you to **download and read**. This is *not* a Moodle submission box — nothing is turned in here. Deliverables (when applicable) go through the channels named in each activity (the optional practice is submitted via **GitHub**, see [`../optional-activity/README.md`](../optional-activity/README.md)).
+> 📥 **This is a DOWNLOAD area.** The consolidated reading for this week is provided
+> here as a PDF for offline study. This is **not** a submission box — you do not
+> upload anything here. (Graded work for this week is the optional activity, which is
+> submitted via **GitHub** — see [`../optional-activity/README.md`](../optional-activity/README.md).)
 
 ---
 
 ## 1. How to use this material
 
-1. **Download** the week's PDF from this folder and read it before Session 2. It condenses the two session guides into a single printable document.
-2. Use the **curated resources** below (official documentation first) to go deeper on any concept you found shaky in class.
-3. Keep the **quick reference** (§4) open while coding the practices — it is the cheat-sheet for the APIs used this week.
-4. Self-check with the **achievement checklist** in the [week README](../README.md#7-achievement--self-check-checklist).
+1. **Download** the week's PDF (link/file below) and read it *before* Session 1.
+2. Keep it open while you work through the two session guides — the PDF, the
+   sessions, and the code examples reinforce the same content.
+3. Use the **curated references** in §4 when you want the authoritative source or a
+   deeper dive.
+4. Finish with the **self-check** in §5 to confirm you are ready for the assessment.
 
 ---
 
-## 2. Curated readings and resources
+## 2. Downloadable PDF
 
-### 2.1 Primary — official Java documentation (authoritative, free)
+| File | Description | Suggested name |
+|------|-------------|----------------|
+| Week 13 consolidated reading | Full theory + worked examples for `.txt`/`.csv` I/O, exceptions, and the Repository pattern, formatted for print/offline reading. | `week13-file-io-java.pdf` |
 
-| # | Resource | Why read it | Focus sections |
-|---|---|---|---|
-| 1 | **Oracle Java Tutorials — "Basic I/O"** (`java.io`) | The canonical introduction to streams, readers/writers, and buffering. | Character Streams; Buffered Streams. |
-| 2 | **Oracle Java Tutorials — "File I/O (Featuring NIO.2)"** | The modern `Path`/`Files` API used throughout this week. | The `Path` Class; Reading, Writing, and Creating Files. |
-| 3 | **Java API — `java.nio.file.Files`** | Reference for `readAllLines`, `lines`, `write`, `newBufferedReader/Writer`, `exists`. | Method summary. |
-| 4 | **Java API — `java.io.BufferedReader` / `BufferedWriter`** | The classic line-oriented reading/writing you must recognize. | `readLine()`, `newLine()`. |
-| 5 | **Java Language Spec / Tutorial — "The try-with-resources Statement"** | Deterministic resource release and `AutoCloseable`. | Whole page. |
-| 6 | **Java API — `java.nio.charset.StandardCharsets`** | Why and how to always pass `UTF_8`. | `UTF_8` field. |
-
-### 2.2 Complementary — books (align with the course bibliography)
-
-| Reference | Relevance to this week |
-|---|---|
-| Sommerville, I. (2011). *Software Engineering* (9th ed.). Pearson. | Situates persistence and data management within software design and quality. |
-| Bloch, J. *Effective Java* (3rd ed.). | Item on `try-with-resources` over `try-finally`; input validation; static factory methods (`fromCsv`). |
-| Horstmann, C. *Core Java, Vol. II — Advanced Features*. | Detailed treatment of the I/O and NIO.2 streams used here. |
-
-### 2.3 On the CSV format specifically
-
-| Resource | Note |
-|---|---|
-| **RFC 4180 — "Common Format and MIME Type for CSV Files"** | The de-facto CSV specification: records, delimiters, and the **quoting rules** that a naive `split(",")` ignores. Read to understand *why* embedded commas and quotes are tricky. |
-| **Apache Commons CSV** / **OpenCSV** (library docs) | Production-grade CSV parsing/writing that handles quoting correctly. Referenced as the "next step" beyond hand-rolled parsing; not required for the graded work. |
+> Instructor note: place the exported PDF in this folder alongside this README so
+> students can download it directly from the course repository/LMS file view.
+> The PDF content mirrors this week's `README.md` and both session guides.
 
 ---
 
-## 3. Short summary notes (the week in one page)
+## 3. What this week covers (executive summary)
 
-- **A file is bytes.** Text meaning comes from an **encoding** — always specify **UTF-8**.
-- **Paths:** *absolute* is unambiguous; *relative* resolves against the working directory (`user.dir`). Prefer `Path.of(...)`.
-- **Streams:** character streams (`Reader`/`Writer`) for text; wrap them in **buffered** wrappers for speed and for `readLine()`/`newLine()`.
-- **Two APIs:** classic `BufferedReader`/`BufferedWriter`, and modern **NIO.2** (`Files.readAllLines`, `Files.lines`, `Files.write`, `Files.newBufferedReader`). Prefer NIO.2; recognize both.
-- **Robustness:** `IOException` is **checked** — handle or declare it. Use **`try-with-resources`** so `close()` (and the flush it triggers) always runs.
-- **Append vs. overwrite:** `StandardOpenOption.APPEND` keeps data; `Files.write` truncates by default.
-- **CSV:** one record per line, fields joined by a delimiter, optional header. `String.join` to write, `split(",", -1)` to read; then **parse** text into typed fields.
-- **Naive-`split` traps:** embedded delimiters and dropped trailing empties — validate the field count and guard your data.
-- **Object ↔ text mapping:** `toCsv()` (serialize) and `static fromCsv(String)` (deserialize) as a symmetric pair.
-- **Design:** put all file access in a **repository/DAO**; keep domain classes I/O-free (Single Responsibility Principle).
-- **The definitive test:** a **round-trip** — save a collection, load it back, and confirm equality; ensure malformed lines are reported and skipped, not fatal.
+Reading and writing files is how a Java program achieves **persistence** — keeping
+object state after the JVM exits. This week you learn to:
 
----
-
-## 4. Quick reference (cheat-sheet)
-
-```java
-// ---- Paths (NIO.2) ----
-Path p = Path.of("data", "products.csv");   // portable relative path
-p.toAbsolutePath();                          // see where it really is
-
-// ---- Read all lines (small files) ----
-List<String> lines = Files.readAllLines(p, StandardCharsets.UTF_8);
-
-// ---- Read lazily (large files) — MUST close the stream ----
-try (Stream<String> s = Files.lines(p, StandardCharsets.UTF_8)) {
-    s.filter(l -> !l.isBlank()).forEach(System.out::println);
-}
-
-// ---- Read line-by-line (classic) ----
-try (BufferedReader r = Files.newBufferedReader(p, StandardCharsets.UTF_8)) {
-    String line;
-    while ((line = r.readLine()) != null) { /* use line */ }
-}
-
-// ---- Write / overwrite all lines ----
-Files.write(p, lines, StandardCharsets.UTF_8);   // truncates by default
-
-// ---- Append (create if missing) ----
-try (BufferedWriter w = Files.newBufferedWriter(p, StandardCharsets.UTF_8,
-        StandardOpenOption.CREATE, StandardOpenOption.APPEND)) {
-    w.write("a,b,c"); w.newLine();
-}
-
-// ---- CSV field ops ----
-String rec = String.join(",", "1", "Mouse", "45000.0", "40");
-String[] f = rec.split(",", -1);                 // keep trailing empties
-int id = Integer.parseInt(f[0].strip());
-
-// ---- Existence / size / delete ----
-Files.exists(p); Files.size(p); Files.deleteIfExists(p);
-```
+- Use Java's **character streams** (`Reader`/`Writer`) and their **buffered**
+  variants for text, and the modern **NIO.2 `Files`/`Path`** helpers.
+- **Read** `.txt` and `.csv` files line by line and **parse** each line into objects.
+- **Write/append** object state to `.txt` and `.csv` files.
+- Handle **checked I/O exceptions** (`IOException`, `FileNotFoundException`) and
+  always release resources with **try-with-resources**.
+- Understand the **CSV format**: delimiters, header rows, and the quoting/escaping
+  rule for commas inside fields (RFC 4180).
+- Architect persistence cleanly with the **Repository / DAO** pattern, keeping I/O
+  out of the domain model.
 
 ---
 
-## 5. Related material in this week
+## 4. Curated references (with short summary notes)
 
-| Resource | Location |
-|---|---|
-| Week overview | [`../README.md`](../README.md) |
-| Session 1 — foundations & text I/O | [`../01-session/README.md`](../01-session/README.md) |
-| Session 2 — CSV & repository pattern | [`../02-session/README.md`](../02-session/README.md) |
-| Interactive OVA (SCORM, Spanish) | [`../01-session/index.html`](../01-session/index.html) |
-| Optional practice (submitted via GitHub) | [`../optional-activity/README.md`](../optional-activity/README.md) |
-| Course overview & rubrics | [`../../00-course/README.md`](../../00-course/README.md) |
+### Primary / official
+- **Oracle — The Java Tutorials: Basic I/O.**
+  Canonical introduction to byte vs. character streams, buffered streams, and the
+  `java.io` classes. *Read the "Character Streams" and "Buffered Streams" pages.*
+- **Oracle — The Java Tutorials: File I/O (Featuring NIO.2).**
+  The modern `java.nio.file` API: `Path`, `Paths`, and the `Files` utility methods
+  (`readAllLines`, `write`, `newBufferedReader`, `exists`/`notExists`). *This is the
+  API style used in our examples.*
+- **Oracle — API docs: `java.io.BufferedReader`, `java.io.BufferedWriter`,
+  `java.io.PrintWriter`, `java.nio.file.Files`.**
+  Method-level reference. *Bookmark `Files` — it is the fastest way to do common I/O.*
+- **The Java Language Specification / Oracle Tutorial — try-with-resources &
+  `AutoCloseable`.**
+  Explains automatic resource management: why the resource closes even on exception,
+  and the reverse-order closing rule.
+
+### CSV format
+- **RFC 4180 — Common Format and MIME Type for CSV Files.**
+  The short, readable de-facto specification. *Focus on the quoting rules: fields
+  containing commas, quotes, or newlines are wrapped in double quotes, and internal
+  quotes are doubled.*
+
+### Libraries for production CSV (beyond hand-rolled parsing)
+- **OpenCSV.**
+  Popular library that reads/writes CSV robustly, including bean ⇄ row mapping.
+  *Use when data may contain commas/quotes/newlines you must not mis-parse.*
+- **Apache Commons CSV.**
+  Well-maintained alternative with configurable formats (Excel, RFC 4180, TDF) and
+  header handling. *Great for reading files exported by spreadsheets.*
+
+### Practical tutorials (free)
+- **Baeldung — "Reading a File in Java" / "Java Write to File" / "Java CSV".**
+  Concise, example-driven articles that parallel this week's material. *Good for a
+  quick second explanation of the same APIs.*
+- **Jenkov — "Java IO Tutorial".**
+  Clear diagrams of the stream class hierarchy and buffering. *Useful visual mental
+  model.*
 
 ---
 
-*Compiled for the 2026-B semester. Official documentation links are stable Oracle/IETF references; consult the JDK version installed in the lab for exact method signatures.*
+## 5. Pre-class checklist
+
+Before Session 1, make sure you can already:
+
+- [ ] Create a class with fields, a constructor, and getters.
+- [ ] Use an `ArrayList<T>` and iterate with a `for-each` loop.
+- [ ] Use `String` methods: `split`, `trim`, `join`, `isBlank`.
+- [ ] Recall what an exception is and the shape of a `try/catch` block.
+- [ ] Have a JDK (17+) and your IDE (IntelliJ IDEA / VS Code / Eclipse) working.
+
+After the week, confirm you can:
+
+- [ ] Read a text/CSV file line by line and build objects from it.
+- [ ] Write/append object state to a text/CSV file.
+- [ ] Skip a header row and handle blank/malformed lines.
+- [ ] Wrap every file resource in try-with-resources.
+- [ ] Explain the CSV quoting rule for embedded commas.
+- [ ] Separate persistence into a Repository class.
+
+---
+
+## 6. Companion files in this week's folder
+
+- [`../README.md`](../README.md) — Week overview, objectives, glossary, agenda.
+- [`../01-session/README.md`](../01-session/README.md) — Session 1: Java I/O foundations + `.txt`.
+- [`../02-session/README.md`](../02-session/README.md) — Session 2: CSV, object mapping, Repository, workshop.
+- [`../optional-activity/README.md`](../optional-activity/README.md) — Optional graded practice (submit via GitHub).

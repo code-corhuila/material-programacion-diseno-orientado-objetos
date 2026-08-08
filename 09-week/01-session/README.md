@@ -1,417 +1,308 @@
-# Week 09 - Session 1: Modeling "has-a" relationships with composition
+# Week 09 - Session 1: Modeling "has-a" with composition and delegation
 
 **Subject:** Object-Oriented Programming and Design (2026-B)
-**Unit 2 - Design principles and modularity | Corte 2**
-**RAA:** 90_82759
+**Unit 2:** Design principles and modularity
+**Assessment period:** Corte 2
 
 ---
 
 ## 1. Session objective
 
-Model real-world *"has-a"* relationships using **composition** between objects, distinguishing
-composition from association and aggregation, and implementing the relationship in code through
-**delegation** and **constructor injection**.
+At the end of this session the student will be able to **model and implement a "has-a" relationship using composition**, distinguish composition from aggregation by lifecycle ownership, and use **delegation** to forward responsibilities from a whole object to its parts without leaking their internals.
 
-At the end of the session the student produces a UML class diagram and working code for at least
-one composed object.
+This maps to weekly objectives **1 and 4**.
 
 ---
 
 ## 2. Timed agenda (110 minutes)
 
 | Time | Activity |
-|------|----------|
-| 0:00 – 0:10 | Warm-up: "Is a car a kind of engine, or does a car have an engine?" quick discussion. |
-| 0:10 – 0:35 | Theory: association vs. aggregation vs. composition; UML notation; ownership & lifetime. |
-| 0:35 – 0:55 | Theory: delegation and constructor injection; reading the worked example together. |
-| 0:55 – 1:20 | Worked example walkthrough: the `Car` / `Engine` / `GPS` system. |
-| 1:20 – 1:45 | Guided in-class practice: model and code a `Playlist` of `Song`s (aggregation) and an `Order` of `OrderLine`s (composition). |
-| 1:45 – 1:55 | Wrap-up, common mistakes, exit ticket. |
+|---|---|
+| 0:00 - 0:10 | Warm-up: "list five things a `Car` *has*" — surfacing has-a intuition |
+| 0:10 - 0:35 | Theory: object relationships (is-a / has-a / uses-a) and UML notation |
+| 0:35 - 0:55 | Theory: composition vs. aggregation (lifecycle ownership) + delegation |
+| 0:55 - 1:20 | Worked example: `Car` / `Engine` and `Playlist` / `Song` in code |
+| 1:20 - 1:45 | Guided in-class practice (`DigitalWallet`) |
+| 1:45 - 1:50 | Wrap-up and exit ticket |
 
 ---
 
 ## 3. Theory notes
 
-### 3.1 Why relationships matter
+### 3.1 Three ways objects relate
 
-An object rarely lives alone. Real systems are **networks of collaborating objects**. How we
-wire those objects together determines whether our software is flexible or rigid, testable or
-untestable. Object-oriented design gives us a vocabulary for these connections:
+Object-oriented design gives us a small vocabulary for how one type relates to another. Getting the *relationship* right is more important than getting the syntax right, because the relationship drives the whole design.
 
-- **Dependency** – "uses temporarily"
-- **Association** – "knows / is linked to"
-- **Aggregation** – "has, but does not own"
-- **Composition** – "owns; controls the lifetime of"
+| Relationship | Question it answers | Example | Language mechanism |
+|---|---|---|---|
+| **Generalization** | "**is-a**?" | A `Dog` **is an** `Animal` | Inheritance (`extends`) |
+| **Composition / Aggregation** | "**has-a**?" | A `Car` **has an** `Engine` | A field/attribute holding another object |
+| **Dependency** | "**uses-a**?" | A `Printer` **uses** a `Document` (passed to `print()`) | A method parameter / local variable |
 
-All four are *"has-a"-family* relationships (as opposed to inheritance, which is *"is-a"*). This
-session focuses on **composition** and its close cousin **aggregation**, because they are the
-building blocks of modular, component-oriented design.
+> **Design rule of thumb:** before writing `extends`, say the relationship out loud. If "X is-a Y" sounds wrong but "X has-a Y" sounds right, you want composition, not inheritance.
 
-### 3.2 The four relationships, precisely
+### 3.2 Composition = whole owns its parts
 
-#### Dependency (the weakest link)
-One class uses another only *transiently* — as a method parameter, a return type, or a local
-variable — without keeping a reference to it as a field.
+**Composition** models a whole-part relationship where the **whole controls the lifecycle of its parts**. The parts do not exist independently of the whole; when the whole is destroyed, the parts go with it.
 
 ```
-class InvoicePrinter {
-    void print(Invoice invoice) {   // depends on Invoice, but does not store it
-        // ...
-    }
-}
+        Car  ◆────────>  Engine
+       (whole)  "has-a"   (part)
+
+   Filled diamond (◆) sits on the WHOLE side.
+   Meaning: no Car, no Engine. The Engine is created and
+   owned by the Car; nobody outside holds a reference to it.
 ```
 
-UML: dashed arrow `- - ->`.
+Typical sign of composition in code: the whole **creates** its part internally (often in its constructor) and never hands out a raw reference to it.
 
-#### Association (a stored link between peers)
-One object holds a reference to another, and both live independent lives. Neither creates nor
-destroys the other.
+### 3.3 Aggregation = whole references parts it does not own
 
-```
-class Doctor {
-    private List<Patient> patients;   // the doctor knows patients
-}
-```
-
-A patient exists with or without this doctor; a doctor exists with or without patients. UML:
-solid line, optionally with multiplicities (`1`, `*`, `0..1`).
-
-#### Aggregation (has-a, shared/independent parts)
-A specialized association meaning "whole–part", but the **part can outlive the whole** and may
-be shared by several wholes.
+**Aggregation** is a *weaker* has-a. The whole holds a reference to parts, but the parts can exist on their own and may be shared. When the whole disappears, the parts survive.
 
 ```
-class Team {
-    private List<Player> players;   // players exist before/after the team
-}
+     University  ◇────────>  Professor
+       (whole)   "has-a"      (part)
+
+   Hollow diamond (◇) on the WHOLE side.
+   Meaning: a Professor still exists if the University closes,
+   and could belong to more than one department.
 ```
 
-If the `Team` object is garbage-collected, the `Player` objects are not necessarily gone — they
-might belong to another team or to the league. UML: **hollow (white) diamond** on the whole's
-side.
+Typical sign of aggregation in code: the part is **passed in** from outside (constructor parameter or setter) rather than created internally.
 
-#### Composition (owns-a, exclusive parts bound in lifetime)
-The strongest whole–part relationship. The **part's lifetime is controlled by the whole**: when
-the whole is created it (typically) creates its parts, and when the whole is destroyed its parts
-are destroyed too. Parts are **not shared**.
+| | Composition | Aggregation |
+|---|---|---|
+| UML diamond | Filled ◆ | Hollow ◇ |
+| Lifecycle | Part dies with whole | Part outlives whole |
+| Ownership | Exclusive | Shared / borrowed |
+| Code smell | Part `new`-ed inside | Part injected from outside |
 
-```
-class House {
-    private final List<Room> rooms = new ArrayList<>();  // rooms belong to THIS house
-}
-```
+> In everyday conversation many developers say "composition" for both. For this course, when precision matters, use the lifecycle test: **"If I destroy the whole, must the part be destroyed too?"** Yes → composition. No → aggregation.
 
-If you demolish the house, the rooms cease to exist. You cannot move room #3 into another house.
-UML: **filled (black) diamond** on the whole's side.
+### 3.4 Delegation: the engine that makes composition useful
 
-### 3.3 The one question that decides aggregation vs. composition
-
-> **"If the whole is destroyed, must the part be destroyed too?"**
->
-> - **Yes, and the part is not shared** → composition (filled diamond).
-> - **No, the part can live on / be shared** → aggregation (hollow diamond).
-
-Ownership and **lifetime** — not the shape of the code — are what separate the two. Two classes
-can both hold a `List<X>` field; whether it is aggregation or composition depends on the *meaning*
-you assign to ownership.
-
-### 3.4 UML cheat sheet (ASCII)
+Composition by itself only says "object A holds object B". **Delegation** is what makes it powerful: when someone asks A to do something, A **forwards** ("delegates") the request to B, and B does the actual work.
 
 ```
-Dependency:    InvoicePrinter - - - - -> Invoice        (dashed arrow)
-
-Association:   Doctor ─────────────── Patient           (solid line)
-                     1              *
-
-Aggregation:   Team ◇─────────────── Player             (hollow diamond on whole)
-                    1              *
-
-Composition:   House ◆─────────────── Room              (filled diamond on whole)
-                     1              1..*
+   caller ──start()──> Car ──start()──> Engine
+                        │  (delegates)      │
+                        └── returns B's answer to caller
 ```
 
-### 3.5 Composition in code: delegation
+Delegation keeps A's public interface clean while reusing B's behavior — **without inheriting** from B. This is the core mechanic behind "favor composition over inheritance", which we study in Session 2.
 
-Composition on its own just means "holding a reference". It becomes powerful through
-**delegation**: the whole object receives a request and *forwards* (delegates) part of the work
-to a contained object.
-
-```
-class Car {
-    private final Engine engine;          // composition: the car owns its engine
-
-    void start() {
-        engine.ignite();                  // delegation: forward the work to the engine
-    }
-}
-```
-
-The `Car` does not know *how* an engine ignites; it only knows *whom to ask*. This is the heart
-of component-oriented design: **assemble behavior from parts and delegate to them**.
-
-### 3.6 Where do the parts come from? Injection vs. internal creation
-
-There are two ways for a whole to obtain its parts:
-
-**(a) Internal instantiation** — the whole creates its own parts (typical for true composition
-where the part cannot be shared):
-
-```
-class House {
-    private final List<Room> rooms = new ArrayList<>();
-    House(int roomCount) {
-        for (int i = 0; i < roomCount; i++) rooms.add(new Room());  // house makes its rooms
-    }
-}
-```
-
-**(b) Constructor injection (dependency injection)** — the collaborator is passed in from the
-outside:
-
-```
-class Car {
-    private final Engine engine;
-    Car(Engine engine) {            // the engine is injected
-        this.engine = engine;
-    }
-}
-```
-
-Injection is the design lever that makes composition *flexible* and *testable*: because the
-`Car` receives an `Engine`, we can hand it a real engine in production and a **fake/mock engine**
-in a unit test. We will exploit this heavily in Session 2 and in the optional activity.
-
-> **Rule of thumb:** use internal instantiation when the part is an exclusive, hidden
-> implementation detail; use injection when you want to swap the part (for testing,
-> configuration, or extension).
+**Encapsulation matters:** a well-designed whole delegates to its part but does **not** expose the part directly. Prefer `car.start()` over `car.getEngine().start()`. The second form ("train wreck") leaks the internal structure and couples callers to it.
 
 ---
 
-## 4. Fully worked example: a modular `Car`
+## 4. Worked example (fully solved)
 
-### 4.1 Problem statement
+### 4.1 `Car` has-an `Engine` (composition + delegation)
 
-Model a `Car` that has an `Engine` (composition — the engine belongs to this car) and can hold a
-`GpsNavigator` (an *optional*, replaceable component, injected from outside). The car should be
-able to `start()`, `stop()`, and `navigateTo(destination)` by **delegating** to its components.
-
-### 4.2 UML class diagram (ASCII)
-
-```
-                 ┌───────────────────────────┐
-                 │            Car            │
-                 ├───────────────────────────┤
-                 │ - engine : Engine         │
-                 │ - navigator : GpsNavigator│
-                 ├───────────────────────────┤
-                 │ + start() : void          │
-                 │ + stop() : void           │
-                 │ + navigateTo(String):void │
-                 └───────────────────────────┘
-                    ◆                    ◇
-                    │ 1                  │ 0..1
-                    │                    │
-        ┌───────────▼──────┐   ┌─────────▼──────────┐
-        │      Engine      │   │    GpsNavigator    │
-        ├──────────────────┤   ├────────────────────┤
-        │ - running:boolean│   │ + route(String):.. │
-        ├──────────────────┤   └────────────────────┘
-        │ + ignite():void  │
-        │ + shutOff():void │
-        └──────────────────┘
-
-  ◆ filled diamond = composition (Car OWNS its Engine)
-  ◇ hollow diamond = aggregation  (Car USES a GpsNavigator that can be shared/replaced)
-```
-
-### 4.3 Implementation (Java)
+We model a `Car` that owns its `Engine`. The car exposes `start()` and `stop()`, delegating to the engine. The engine is created inside the car and never handed out.
 
 ```java
-// ---------- Engine: an exclusive part, created by the Car ----------
+// Engine.java — the PART
 public class Engine {
+    private final int horsepower;
     private boolean running = false;
 
-    public void ignite() {
-        running = true;
-        System.out.println("Engine: vroom, running.");
+    public Engine(int horsepower) {
+        this.horsepower = horsepower;
     }
 
-    public void shutOff() {
+    public void start() {
+        running = true;
+        System.out.println("Engine (" + horsepower + " hp) started.");
+    }
+
+    public void stop() {
         running = false;
-        System.out.println("Engine: off.");
+        System.out.println("Engine stopped.");
     }
 
     public boolean isRunning() {
         return running;
     }
 }
+```
 
-// ---------- GpsNavigator: an optional, replaceable collaborator ----------
-public class GpsNavigator {
-    public String route(String destination) {
-        return "Calculating route to " + destination + "...";
-    }
-}
-
-// ---------- Car: composes an Engine and (optionally) a GpsNavigator ----------
+```java
+// Car.java — the WHOLE (composition: it creates and owns the Engine)
 public class Car {
-    private final Engine engine;            // COMPOSITION: created & owned by the Car
-    private final GpsNavigator navigator;   // AGGREGATION: injected, may be null/shared
+    private final String model;
+    private final Engine engine;   // <-- the "has-a" relationship
 
-    // Constructor injection for the optional navigator; internal creation for the engine.
-    public Car(GpsNavigator navigator) {
-        this.engine = new Engine();         // the car makes its own engine
-        this.navigator = navigator;         // the navigator comes from outside
+    public Car(String model, int horsepower) {
+        this.model = model;
+        this.engine = new Engine(horsepower);  // created & owned internally
     }
 
+    // Delegation: Car forwards start()/stop() to its Engine.
     public void start() {
-        engine.ignite();                    // DELEGATION
+        System.out.println(model + " turning the key...");
+        engine.start();
     }
 
     public void stop() {
-        engine.shutOff();                   // DELEGATION
+        engine.stop();
+        System.out.println(model + " parked.");
     }
 
-    public void navigateTo(String destination) {
-        if (navigator == null) {
-            System.out.println("No GPS installed.");
-            return;
-        }
-        System.out.println(navigator.route(destination));  // DELEGATION
+    public boolean isRunning() {
+        return engine.isRunning();  // delegates the query too
     }
+    // Note: there is NO getEngine(). The Engine stays encapsulated.
 }
+```
 
-// ---------- Client code ----------
+```java
+// Demo.java
 public class Demo {
     public static void main(String[] args) {
-        Car car = new Car(new GpsNavigator());   // inject a navigator
-        car.start();                              // Engine: vroom, running.
-        car.navigateTo("CORHUILA campus");        // Calculating route to CORHUILA campus...
-        car.stop();                               // Engine: off.
+        Car car = new Car("Corolla", 132);
+        car.start();
+        System.out.println("Running? " + car.isRunning());
+        car.stop();
     }
 }
 ```
 
-### 4.4 What to notice
+**Expected output:**
+```
+Corolla turning the key...
+Engine (132 hp) started.
+Running? true
+Engine stopped.
+Corolla parked.
+```
 
-1. **The `Car` never exposes its `Engine`.** Clients call `car.start()`, not
-   `car.getEngine().ignite()`. Delegation keeps the internals hidden (encapsulation).
-2. **The engine is composition, the navigator is aggregation.** The engine is born and dies with
-   the car; the navigator is handed in and could be shared or swapped.
-3. **Injection enables substitution.** Because the navigator is injected, we could pass a
-   `FakeNavigator` in a test, or a `PremiumNavigator` subclass in production, *without changing
-   the `Car` class*.
-4. **This is already component-oriented design.** The `Car` is an *assembly* of small,
-   single-responsibility parts, not a monolith.
+**Why this is composition, not inheritance:** a car is *not* a kind of engine, so `class Car extends Engine` would be nonsense (a car would inherit `isRunning`, `horsepower`, etc., as if it *were* an engine). A car **has** an engine — the field models exactly that. And because the engine is created inside the car and dies with it, this is *composition*, not aggregation.
+
+### 4.2 A contrast: `Playlist` has-many `Song` (aggregation)
+
+Now a case where the parts are **shared** and **outlive** the whole. The same `Song` can appear in many playlists, so we *inject* songs rather than create them.
+
+```java
+import java.util.ArrayList;
+import java.util.List;
+
+public class Song {
+    private final String title;
+    private final int seconds;
+    public Song(String title, int seconds) {
+        this.title = title; this.seconds = seconds;
+    }
+    public int getSeconds() { return seconds; }
+    public String getTitle() { return title; }
+}
+
+public class Playlist {
+    private final String name;
+    private final List<Song> songs = new ArrayList<>();  // references, not owns
+
+    public Playlist(String name) { this.name = name; }
+
+    public void add(Song song) { songs.add(song); }   // song comes from OUTSIDE
+
+    // Delegation: total duration is computed by asking each Song.
+    public int totalSeconds() {
+        int total = 0;
+        for (Song s : songs) total += s.getSeconds();  // delegates getSeconds()
+        return total;
+    }
+}
+```
+
+```java
+Song s = new Song("Clocks", 307);
+Playlist workout = new Playlist("Workout");
+Playlist focus   = new Playlist("Focus");
+workout.add(s);
+focus.add(s);   // SAME song shared by two playlists -> aggregation
+```
+
+**Key contrast:** deleting the `workout` playlist must *not* delete the `Song "Clocks"` — it still lives in `focus`. That shared, outliving lifecycle is the signature of **aggregation**. Contrast with the engine, which has no meaningful existence outside its car.
 
 ---
 
 ## 5. Guided in-class practice
 
-Work in pairs. You will model and implement two systems: one aggregation, one composition.
+### Problem: `DigitalWallet`
 
-### Part A — Aggregation: `Playlist` of `Song`s
-A `Playlist` contains `Song`s, but songs exist independently and can appear in many playlists.
+Model a `DigitalWallet` that **has-a** `Balance` and **has-many** `Card`s, then delegate operations.
 
-**Tasks:**
-1. Draw the UML with the correct diamond (hollow → aggregation).
-2. Implement `Song` (fields: `title`, `artist`) and `Playlist` (a `List<Song>`, plus
-   `add(Song)`, `totalCount()`, and `play()` that delegates by printing each song).
-3. Create two playlists that **share** the same `Song` object to prove the part outlives/serves
-   multiple wholes.
+**Requirements:**
+1. Create a `Balance` class with `amount` (in cents) and methods `deposit(int cents)`, `withdraw(int cents)` (throw / reject if insufficient), and `getCents()`.
+2. Create a `Card` class with `last4` (last four digits) and `network` (e.g., "VISA").
+3. Create a `DigitalWallet` that:
+   - **Composes** a `Balance` (create it inside the wallet — the balance has no life outside its wallet → composition).
+   - **Aggregates** `Card`s via an `addCard(Card c)` method (cards are created outside and passed in → aggregation).
+   - Delegates `pay(int cents)` to the balance's `withdraw`, and `topUp(int cents)` to the balance's `deposit`.
+   - Exposes `balanceCents()` by delegating to the balance — but does **not** expose the `Balance` object itself.
 
-**Skeleton:**
+**Guiding questions (discuss while coding):**
+- Which relationship is composition and which is aggregation here? Justify by the lifecycle test.
+- Why should `DigitalWallet` *not* have a `getBalance()` that returns the `Balance` object?
+- Where does delegation happen in your code? Point to the exact lines.
+
+**Reference solution sketch:**
+
 ```java
-public class Song {
-    private final String title;
-    private final String artist;
-    // constructor + getters
-    public String describe() { return title + " — " + artist; }
+public class Balance {
+    private int cents = 0;
+    public void deposit(int c) {
+        if (c <= 0) throw new IllegalArgumentException("deposit must be positive");
+        cents += c;
+    }
+    public void withdraw(int c) {
+        if (c > cents) throw new IllegalStateException("insufficient funds");
+        cents -= c;
+    }
+    public int getCents() { return cents; }
 }
 
-public class Playlist {
-    private final String name;
-    private final List<Song> songs = new ArrayList<>();
-    public Playlist(String name) { this.name = name; }
-    public void add(Song song) { songs.add(song); }        // aggregation: song comes from outside
-    public int totalCount() { return songs.size(); }
-    public void play() {
-        for (Song s : songs) System.out.println("Now playing: " + s.describe());
+public class Card {
+    private final String last4;
+    private final String network;
+    public Card(String last4, String network) {
+        this.last4 = last4; this.network = network;
     }
+    public String describe() { return network + " ****" + last4; }
+}
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class DigitalWallet {
+    private final Balance balance = new Balance();   // COMPOSITION (owned)
+    private final List<Card> cards = new ArrayList<>(); // AGGREGATION (injected)
+
+    public void addCard(Card c) { cards.add(c); }     // card comes from outside
+
+    public void topUp(int cents) { balance.deposit(cents); }  // delegation
+    public void pay(int cents)   { balance.withdraw(cents); } // delegation
+    public int balanceCents()    { return balance.getCents(); } // delegation
+    // No getBalance(): Balance stays encapsulated.
 }
 ```
 
-### Part B — Composition: `Order` with `OrderLine`s
-An `Order` is composed of `OrderLine`s. A line has no meaning outside its order and must not be
-shared; if the order is deleted, its lines disappear.
-
-**Tasks:**
-1. Draw the UML with the correct diamond (filled → composition).
-2. Implement `OrderLine` (fields: `product`, `quantity`, `unitPrice`; method `subtotal()`).
-3. Implement `Order` so that it **creates its own lines internally** via
-   `addLine(String product, int qty, double price)` (do *not* accept a pre-built `OrderLine`
-   from outside — that is what makes it composition here).
-4. Add `total()` that **delegates** to each line's `subtotal()` and sums them.
-
-**Skeleton:**
-```java
-public class OrderLine {
-    private final String product;
-    private final int quantity;
-    private final double unitPrice;
-    OrderLine(String product, int quantity, double unitPrice) { /* ... */ }
-    public double subtotal() { return quantity * unitPrice; }
-}
-
-public class Order {
-    private final List<OrderLine> lines = new ArrayList<>();
-    public void addLine(String product, int qty, double price) {
-        lines.add(new OrderLine(product, qty, price));   // COMPOSITION: order builds its own lines
-    }
-    public double total() {
-        double sum = 0;
-        for (OrderLine line : lines) sum += line.subtotal();   // DELEGATION
-        return sum;
-    }
-}
-```
-
-**Discussion questions (answer in your notes):**
-- Why is `Playlist`/`Song` aggregation but `Order`/`OrderLine` composition?
-- What would change if two orders needed to share the same line? (Hint: it would no longer be
-  composition.)
-- Where did you use delegation?
+**Stretch goal (if time permits):** add a `CashbackRule` object composed into the wallet so that each `pay()` credits a percentage back. Notice you can swap the cashback behavior by composing a *different* rule object — a preview of the flexibility argument in Session 2.
 
 ---
 
-## 6. Common mistakes to avoid
+## 6. Wrap-up and exit ticket
 
-- **Confusing the code shape with the relationship.** A `List<X>` field can be either aggregation
-  or composition — the *meaning of ownership* decides, not the syntax.
-- **Exposing internal parts.** Returning the internal `Engine`/`OrderLine` breaks encapsulation.
-  Prefer delegating methods.
-- **Calling it composition when parts are shared or injected from outside and survive the whole.**
-  That is aggregation.
-- **Forgetting `final` on owned parts** when the reference should never change after construction.
+### Wrap-up
+- Composition and aggregation both model **has-a**; they differ in **who owns the lifecycle**.
+- **Delegation** is how a whole reuses its parts' behavior *without inheritance*.
+- Keep parts **encapsulated**: delegate through clean methods, don't hand out internal objects.
 
----
-
-## 7. Wrap-up and exit ticket
-
-### Key takeaways
-- Composition and aggregation are both "has-a"; the difference is **ownership and lifetime**.
-- **Delegation** is how a composed object gets work done — it forwards requests to its parts.
-- **Constructor injection** makes components swappable and testable.
-- Assembling small parts (component-oriented design) is the modular alternative to inheritance,
-  which we will contrast in Session 2.
-
-### Exit ticket (hand in before leaving — 5 minutes)
+### Exit ticket (hand in a single index card or short text)
 Answer briefly:
+1. Give one real-world "has-a" pair from your own life that is **composition** and one that is **aggregation**, and justify each with the lifecycle test.
+2. In the `Car`/`Engine` example, why is there no `getEngine()` method? What would break if we added one and callers used it?
+3. In one sentence: what does "delegation" mean?
 
-1. In one sentence, distinguish **aggregation** from **composition** using the word "lifetime".
-2. Give one real-world example of each (not from this document).
-3. In the `Car` example, which relationship is the `Engine` and which is the `GpsNavigator`, and
-   why?
-4. Write one line of code that shows **delegation**.
-
-> Bring your `Order`/`Playlist` code to Session 2 — we will refactor a related design.
+> Preview of Session 2: we will use everything from today to argue *why* composition is often preferable to inheritance — and refactor a real design that got it wrong.

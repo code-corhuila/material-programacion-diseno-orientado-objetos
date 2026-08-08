@@ -1,214 +1,117 @@
-# Week 07 - Reading & Resource Materials (Download Area)
+# Week 07 - Readings and Resources (Download Area)
 
 ## Polymorphism and Method Overriding (Dynamic Dispatch)
 
-**Course:** Object-Oriented Programming and Design (2026-B)
-**Unit 2:** Design principles and modularity
-**Assessment period:** Corte 2 · **RAA:** 90_82759
+**Unit 2 - Design principles and modularity | Corte 2 | RAA 90_82759**
 
-> **What this folder is.** This is a **download area**. The consolidated reading
-> for the week is provided as a **PDF** you can download and read offline. This
-> is **not** a submission box — you do not upload anything here. (Graded work for
-> the optional practice is submitted via **GitHub**; see
-> [`../optional-activity/README.md`](../optional-activity/README.md).)
+---
+
+> **What this folder is.** This is a **download area**. The consolidated weekly reading is
+> distributed here as a **PDF** for offline study. This is **not** a Moodle submission box —
+> you do not upload anything here. Graded/optional deliverables for the week are handled in
+> [`../optional-activity/README.md`](../optional-activity/README.md) via GitHub.
 
 ---
 
 ## 1. How to use this material
 
-1. **Download** the week's PDF (see §2) and read it *before* or *alongside* the
-   two sessions.
-2. Use the **summary notes** in §3 as a fast reference while you code.
-3. Work through the **guided readings** in §4 for depth on specific points.
-4. Test yourself with the **practice questions** in §6; solutions are in the PDF.
-
-Estimated reading + practice time: **90-120 minutes**.
-
----
-
-## 2. Primary download (PDF)
-
-| Item | Suggested file name | Notes |
-|------|--------------------|-------|
-| Week 07 reading pack | `week07-polymorphism-dynamic-dispatch.pdf` | Consolidated theory, all worked examples, diagrams, and self-test solutions. |
-
-> The PDF mirrors and expands the two session READMEs, adds fully solved
-> versions of the practice questions in §6, and includes larger diagrams of the
-> vtable / MRO mechanics. Place the PDF in this folder for students to download.
+1. **Download** the weekly PDF (link/attachment provided by the instructor in this folder).
+2. **Read** the core sources in the order below *before* Session 2 — Session 1 assumes you
+   have at least skimmed items 1 and 2.
+3. **Bring questions.** Mark anything about the vtable model or static-vs-dynamic type you
+   want clarified; we open Session 2 with a short Q&A.
+4. **Practice as you read.** Every code snippet in the sessions is runnable; type it, run it,
+   and change one thing to see what breaks.
 
 ---
 
-## 3. Summary notes (quick reference)
+## 2. Core readings (read these)
 
-### 3.1 The one-paragraph summary
+### 2.1 Language reference — overriding and dispatch
 
-Polymorphism lets a single call written against a **supertype** run
-type-specific behavior chosen by each object's **actual class** at runtime. You
-enable it by **overriding** inherited methods in subclasses and calling them
-through **parent-type references**. The runtime uses **dynamic dispatch** (a
-vtable lookup in Java/C++, an MRO walk in Python) to pick the right
-implementation. Well-designed polymorphic code names only the supertype, so new
-subtypes extend the system without modifying existing code (Open-Closed),
-provided each subtype honors its parent's contract (Liskov).
+- **Oracle, *The Java Tutorials* — "Overriding and Hiding Methods" and "Polymorphism".**
+  The authoritative, concise description of the overriding rules, method hiding, and the
+  `@Override` annotation, with small runnable examples.
+  *Summary:* Defines when a subclass method overrides vs. hides a superclass method,
+  explains that instance methods are dynamically dispatched while `static` methods and
+  fields are bound to the declared type, and shows the canonical animal/shape polymorphism
+  example. **Read for:** Session 1 §3.2-3.4 and Session 2 §3.2.
 
-### 3.2 Decision table - overriding vs. overloading vs. hiding
+### 2.2 Design principle — why polymorphism matters
 
-| Question | Overriding | Overloading | Hiding |
-|----------|-----------|-------------|--------|
-| Same name? | Yes | Yes | Yes |
-| Same parameters? | Yes | No | Yes |
-| Member kind | instance method | any | `static` / field |
-| Bound | runtime | compile time | compile time |
-| Driven by | actual type | argument types | declared type |
+- **Robert C. Martin, *Agile Software Development, Principles, Patterns, and Practices* — chapters on OCP (Open/Closed) and LSP (Liskov Substitution).**
+  Explains why replacing type-based conditionals with polymorphism produces software that is
+  open for extension but closed for modification, and what makes a subtype a *safe*
+  substitute.
+  *Summary:* OCP is achieved in practice through abstraction plus dynamic dispatch; LSP is
+  the contract a correct override must respect. **Read for:** Session 1 §3.5 and Session 2
+  §3.3 (pitfall 3).
 
-### 3.3 "Which type wins?" cheat sheet
+### 2.3 Foundational OO text
 
-| Expression | Winner | Why |
-|-----------|--------|-----|
-| overridden instance method | **actual** type | dynamic dispatch |
-| field access | declared type | fields are hidden |
-| `static` method | declared type | statically bound |
-| `private` / `final` method | defining class | not virtual |
-| overload selection | declared arg types | compile-time |
+- **Bruce Eckel, *Thinking in Java* — chapter "Polymorphism".**
+  A teaching-oriented walkthrough of upcasting, late binding, the "shape" example, and the
+  constructor-calls-overridable-method pitfall.
+  *Summary:* Builds intuition for why late binding is the "twist" that makes OO powerful, and
+  demonstrates the constructor pitfall with a traceable example. **Read for:** Session 1 §4
+  and Session 2 §3.3 (pitfall 2).
 
-### 3.4 Minimal template to imitate
+---
 
-```java
-abstract class Base {                 // 1. general type
-    abstract Result operate();        // 2. abstract = force specialization
-    void common() { ... operate() ... }   // 3. reuse via polymorphic call
-}
-class Special extends Base {
-    @Override Result operate() { ... }     // 4. specialize
-}
-// 5. process uniformly
-for (Base b : items) b.operate();     // dynamic dispatch per element
+## 3. Supplementary readings (recommended, not required)
+
+| Source | What it adds | Maps to |
+|--------|--------------|---------|
+| Gamma, Helm, Johnson, Vlissides, *Design Patterns* — *Strategy* and *Template Method* | Shows polymorphism as the engine of two foundational patterns. | Session 1 §3.5; Session 2 §3.1 |
+| Joshua Bloch, *Effective Java* — items on `equals`/`hashCode` and "Design and document for inheritance or else prohibit it" | Deep, practical rules for correct overriding. | Session 2 §3.3 (pitfalls 2, 4) |
+| Barbara Liskov & Jeannette Wing, "A Behavioral Notion of Subtyping" | The original, formal statement of substitutability. | Session 2 §3.3 (pitfall 3) |
+| Language docs for **C#** (`virtual`/`override`), **C++** (`virtual`, vtables), **Kotlin** (`open`/`override`), **Python** (duck typing, MRO) | Contrasts how other languages express the same idea. | Cross-language notes in both sessions |
+
+---
+
+## 4. Quick-reference cheat sheet
+
+```
+STATIC TYPE   (declared)  -> what you MAY call          -> compile time
+DYNAMIC TYPE  (actual)    -> which override RUNS         -> run time
+
+OVERRIDE  : same signature, subclass, @Override  -> DISPATCHED (polymorphic)
+OVERLOAD  : same name, different params           -> compile-time pick
+HIDE      : static method / field, same name      -> bound to static type (NOT polymorphic)
+
+Dispatched?  instance method, non-final, non-private, non-static -> YES
+             fields, static methods, private methods             -> NO
+
+super.m()  -> call the parent's version (extend, don't replace)
 ```
 
 ---
 
-## 4. Guided readings (curated)
+## 5. Glossary (quick recall)
 
-Each entry lists *why* it matters and *what to focus on*.
-
-1. **Oracle Java Tutorials — "Polymorphism"**
-   *Focus:* the `Bicycle`/`MountainBike` example; how one reference type calls
-   overridden methods. *Why:* canonical, minimal, official.
-
-2. **Oracle Java Tutorials — "Overriding and Hiding Methods"**
-   *Focus:* the explicit contrast between overriding (instance) and hiding
-   (`static`). *Why:* nails the single most-confused distinction of the week.
-
-3. **Bloch, J. — *Effective Java*, 3rd ed.**
-   - *Item 40:* "Consistently use the `@Override` annotation." *Why:* explains
-     the real bugs the annotation prevents.
-   - *Item 52:* "Use overloading judiciously." *Why:* shows how overloading
-     (compile-time) trips people who expect polymorphism.
-   - *Items 19-20:* designing for inheritance and preferring interfaces. *Why:*
-     how to make types that are *safe* to override.
-
-4. **Martin, R. C. — *Agile Software Development: Principles, Patterns, and
-   Practices*.**
-   *Focus:* the Open-Closed Principle and Liskov Substitution Principle
-   chapters, including the Rectangle/Square example. *Why:* the design rationale
-   behind *why* we use polymorphism at all.
-
-5. **Gamma, Helm, Johnson, Vlissides — *Design Patterns*.**
-   *Focus:* **Strategy** and **Template Method** patterns. *Why:* both are
-   polymorphism applied deliberately — the abstract-method-plus-override shape
-   you practiced this week is literally Template Method.
-
-6. **Python Docs — "The Python Tutorial: Classes" + `__mro__`.**
-   *Focus:* method resolution order and C3 linearization. *Why:* shows the same
-   polymorphism achieved without static types or vtables.
+| Term | One-line meaning |
+|------|------------------|
+| Polymorphism | One call site, many implementations, chosen by the object's actual type. |
+| Overriding | New body for an inherited instance method with the same signature. |
+| Dynamic dispatch / late binding | Run-time selection of the overriding implementation. |
+| Static type | Declared type; governs what the compiler allows. |
+| Dynamic type | Actual instantiated class; governs which override runs. |
+| vtable | Per-class table the runtime uses to route virtual calls. |
+| Overloading | Same name, different parameters; resolved at compile time. |
+| Hiding | `static` method / field masking; not polymorphic. |
+| Covariant return | An override may return a subtype of the declared return type. |
+| LSP | A subtype must be a safe substitute for its supertype. |
 
 ---
 
-## 5. Concept map (text form)
+## 6. Suggested study plan (approx. 90 minutes of self-study)
 
-```
-                         POLYMORPHISM
-                              |
-      +-----------------------+------------------------+
-      |                       |                        |
-  enabled by              powered by              constrained by
-      |                       |                        |
-  OVERRIDING            DYNAMIC DISPATCH          CONTRACTS (LSP)
-      |                       |                        |
-  @Override,            declared type ->          subtype must be
-  super, covariant      "what you may call"       substitutable
-  returns               actual type ->                 |
-      |                 "which code runs"          enables OCP:
-  specializes           via vtable (Java)          extend without
-  behavior per          / MRO (Python)             modifying
-  subclass                                         existing code
-      |
-      +--> processed by a POLYMORPHIC ROUTINE
-           (loop over List<Supertype>, no instanceof)
-```
+1. **(20 min)** Read §2.1 (Oracle) and reproduce the `Payment` example from Session 1.
+2. **(20 min)** Read §2.3 (Eckel, Polymorphism) and run the constructor pitfall to see the `null`.
+3. **(20 min)** Read §2.2 (OCP/LSP) and re-read Session 2 §3.1 on collections.
+4. **(20 min)** Do the Session 2 refactor (payroll ladder) on your own.
+5. **(10 min)** Fill in the self-check checklist in the week [`README.md`](../README.md).
 
----
-
-## 6. Self-test questions (solutions in the PDF)
-
-1. **Predict the output.**
-   ```java
-   class A { String m() { return "A.m"; } String call() { return m(); } }
-   class B extends A { @Override String m() { return "B.m"; } }
-   A a = new B();
-   System.out.println(a.call());
-   ```
-   *(What does `call()`, defined in `A`, print — and why?)*
-
-2. **Overriding or hiding?** For each, state which and what it prints:
-   ```java
-   class P { static String s() { return "P.s"; } String i() { return "P.i"; } }
-   class C extends P { static String s() { return "C.s"; } @Override String i() { return "C.i"; } }
-   P p = new C();
-   System.out.println(p.s() + " / " + p.i());
-   ```
-
-3. **Refactor.** Rewrite the following as polymorphic code with no `instanceof`:
-   ```java
-   double tax(Object account) {
-       if (account instanceof Savings)  return ...;
-       if (account instanceof Checking) return ...;
-       return 0;
-   }
-   ```
-
-4. **Contract reasoning.** Give a concrete `Rectangle`/`Square` sequence of calls
-   whose result reveals an LSP violation, and state the wrong value produced.
-
-5. **Covariant returns.** Write a base method returning `Shape` and an override
-   returning `Circle`, and explain why the compiler accepts it.
-
-6. **Conceptual.** In three sentences, explain how a vtable makes dynamic
-   dispatch roughly constant-time and why that beats an `instanceof` chain in
-   both speed and maintainability.
-
----
-
-## 7. Glossary (condensed)
-
-- **Dynamic dispatch:** runtime selection of a method by the object's actual
-  class.
-- **Declared vs. actual type:** compiler-visible type vs. real runtime class.
-- **vtable / MRO:** the lookup structures that make dispatch fast.
-- **Overriding / overloading / hiding:** replace / same-name-diff-params /
-  static-shadow.
-- **Upcast / downcast:** subtype->supertype (safe) / supertype->subtype (risky).
-- **LSP / OCP:** substitutability / extend-without-modify.
-
-*(Full definitions: see the course glossary in
-[`../README.md`](../README.md#6-key-concepts-glossary).)*
-
----
-
-## 8. Checklist before moving on
-
-- [ ] I downloaded and read the week's PDF.
-- [ ] I can answer all six self-test questions and checked them against the
-  solutions.
-- [ ] I reviewed the "which type wins?" cheat sheet until it felt automatic.
-- [ ] I am ready to attempt the optional GitHub activity.
+> All external titles above are references for you to locate through the university library
+> or official documentation sites; the consolidated **PDF in this folder** contains the
+> instructor's condensed notes and the full worked examples for offline reading.

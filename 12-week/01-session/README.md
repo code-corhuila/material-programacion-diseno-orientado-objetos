@@ -1,377 +1,352 @@
-# Week 12 · Session 1 — Lists, Sets, and choosing the right collection
+# Week 12 - Session 1: Lists and Sets (`ArrayList`, `HashSet`) and iteration
 
-**Course:** Object-Oriented Programming and Design (2026-B) · **Unit 3** · **Corte 3**
-**RAA:** 90_82759
-**Prerequisites:** classes and objects, generics basics, `toString()`, interfaces.
+> **Subject:** Object-Oriented Programming and Design (2026-B)
+> **Unit 3 - Practical application of OOP in Java · Corte 3**
+> **Estimated duration:** 2 hours (120 min)
 
 ---
 
 ## 1. Session objective
 
-Students will **use `ArrayList` and `HashSet` to store and retrieve objects**, will
-**iterate** over them effectively, and will be able to **select between a `List` and a
-`Set`** for a stated requirement, justifying the choice by ordering, uniqueness, and access
-pattern.
+By the end of this session the student will be able to **store groups of objects in an
+`ArrayList`, guarantee uniqueness with a `HashSet`, iterate both safely, and explain why
+`equals()` and `hashCode()` matter** — laying the foundation for the `Map`-based inventory
+built in Session 2.
+
+Concretely, the student will:
+
+1. Create and manipulate a generic `List<T>` using `ArrayList`.
+2. Create a generic `Set<T>` using `HashSet` and observe duplicate elimination.
+3. Iterate collections with the enhanced for-loop and with an explicit `Iterator`.
+4. Override `equals()` and `hashCode()` in a domain class and see the effect on a `HashSet`.
 
 ---
 
-## 2. Timed agenda (110 minutes)
+## 2. Timed agenda
 
 | Time | Segment | Activity |
-|---|---|---|
-| 0:00–0:10 | Hook & recap | Problem: "store 500 students and find one fast." Why arrays hurt. |
-| 0:10–0:35 | Theory A | The Collections Framework: interfaces vs. implementations; the hierarchy. |
-| 0:35–0:55 | Theory B | `List` / `ArrayList`: operations, iteration, complexity. |
-| 0:55–1:15 | Theory C | `Set` / `HashSet`: uniqueness, `contains`, `equals`/`hashCode` intro. |
-| 1:15–1:25 | Worked example | De-duplicating and reporting a list of course enrollments. |
-| 1:25–1:45 | Guided practice | Students extend the example live. |
-| 1:45–1:50 | Wrap-up & exit ticket | Decision drill + 3 quick questions. |
+|------|---------|----------|
+| 0:00 – 0:10 | Warm-up | Recap of arrays and their limits; the "many objects" problem |
+| 0:10 – 0:35 | Theory | The Collections Framework map; `List`/`ArrayList` |
+| 0:35 – 0:55 | Worked example | Building and iterating a list of `Product` objects |
+| 0:55 – 1:20 | Theory + demo | `Set`/`HashSet`, `equals()`/`hashCode()` |
+| 1:20 – 1:50 | Guided practice | Students code a de-duplicating registry |
+| 1:50 – 2:00 | Wrap-up | Exit ticket + preview of Session 2 |
 
 ---
 
 ## 3. Theory notes
 
-### 3.1 The problem with plain arrays
+### 3.1 Why not just use arrays?
 
-A Java array has a **fixed length** decided at creation. To model something that grows —
-a shopping cart, a list of enrolled students, search results — you would have to:
+A Java array (`Product[] products = new Product[10];`) has a **fixed size** decided at
+creation. If a store adds an eleventh product, you must create a bigger array and copy
+everything. Arrays also give you almost no built-in behavior: no `add`, no `remove`, no
+`contains`. You end up writing bookkeeping code by hand and getting it wrong.
 
-- guess a capacity up front,
-- track how many slots are actually used,
-- allocate a bigger array and copy everything when you run out,
-- shift elements manually when inserting or deleting in the middle.
+The **Java Collections Framework (JCF)**, living in `java.util`, solves this with
+resizable, feature-rich data structures. The three families you must master are:
 
-That is repetitive, error-prone plumbing. The **Java Collections Framework (JCF)**, in the
-`java.util` package, solves it once, correctly, and offers different data structures tuned
-for different access patterns.
+```
+                       Iterable
+                          |
+                     Collection                        Map  (separate hierarchy!)
+                    /     |     \                        |
+                 List    Set    Queue                 HashMap
+                  |       |                            TreeMap
+              ArrayList  HashSet                       LinkedHashMap
+              LinkedList LinkedHashSet
+                         TreeSet
+```
 
-### 3.2 Interfaces vs. implementations — the central idea
+Key mental model:
 
-The framework deliberately separates **what** a container does from **how** it does it.
+| Interface | One-line contract | "Think of it as..." |
+|-----------|-------------------|---------------------|
+| `List`  | Ordered, indexed, duplicates allowed | A numbered shopping list |
+| `Set`   | No duplicates, no index | A bag of unique stickers |
+| `Map`   | Key → value, keys unique | A dictionary / phone book |
 
-- **Interfaces** describe the contract: `List`, `Set`, `Queue`, `Map`.
-- **Implementations** are concrete classes: `ArrayList`, `LinkedList`, `HashSet`,
-  `TreeSet`, `HashMap`, `TreeMap`.
+> **Important:** `Map` is **not** a `Collection`. It sits in its own branch because it
+> stores *pairs*, not single elements. We cover it fully in Session 2.
 
-Best practice (Effective Java, Item 64): **declare variables by the interface type** and
-choose the implementation only at construction:
+### 3.2 Generics in one paragraph
+
+Collections are **generic**: you tell the compiler what type they hold using angle
+brackets. `List<Product>` is "a list of `Product`". This gives **type safety** (the
+compiler rejects `list.add("hello")` if the list holds `Product`) and removes the need for
+manual casts when reading elements. Because collections store *objects*, primitives are
+**autoboxed**: `List<Integer>` accepts `int` values, which Java wraps into `Integer`
+automatically.
+
+### 3.3 `List` and `ArrayList`
+
+A `List` is an **ordered** sequence with **index-based** access (position `0` is the
+first element) that **allows duplicates**. `ArrayList` is the default implementation,
+backed internally by a resizable array — excellent for random access (`get(i)`) and for
+appending to the end.
+
+Essential operations:
 
 ```java
-List<String> names = new ArrayList<>();   // program to the interface
-Set<String>  tags  = new HashSet<>();
+List<String> names = new ArrayList<>();   // program to the interface (List), not ArrayList
+names.add("Ana");            // append -> ["Ana"]
+names.add("Luis");           // append -> ["Ana", "Luis"]
+names.add("Ana");            // duplicates allowed -> ["Ana", "Luis", "Ana"]
+
+String first = names.get(0); // "Ana"     (index access)
+names.set(1, "Luisa");       // replace   -> ["Ana", "Luisa", "Ana"]
+int n = names.size();        // 3
+boolean has = names.contains("Ana");  // true
+int pos = names.indexOf("Luisa");     // 1
+names.remove("Ana");         // removes FIRST occurrence -> ["Luisa", "Ana"]
+names.remove(0);             // removes BY INDEX -> ["Ana"]
 ```
 
-If later you need predictable iteration order, you swap **one word** —
-`new ArrayList<>()` → `new LinkedList<>()`, or `new HashSet<>()` →
-`new LinkedHashSet<>()` — and the rest of the code is untouched. That is polymorphism
-paying rent.
+> **Trap:** `remove(int)` removes by **index**; `remove(Object)` removes by **value**.
+> With a `List<Integer>`, `list.remove(2)` deletes position 2, while
+> `list.remove(Integer.valueOf(2))` deletes the value 2. Know which one you want.
 
-### 3.3 The collection hierarchy (text diagram)
+`ArrayList` vs `LinkedList` (brief): both implement `List`. `ArrayList` wins for random
+access and is the everyday default. `LinkedList` can be faster for frequent
+insertions/removals at the front. Default to `ArrayList` unless you have a measured reason.
 
-```
-              Iterable<E>
-                  |
-             Collection<E>
-        ________|________________
-       |            |            |
-     List<E>      Set<E>      Queue<E>
-       |            |
-   ArrayList     HashSet
-   LinkedList    LinkedHashSet
-                 TreeSet   (via SortedSet/NavigableSet)
+### 3.4 `Set` and `HashSet`
 
-
-   Map<K,V>          <-- NOT a Collection, but part of the framework
-      |
-   HashMap
-   LinkedHashMap
-   TreeMap
-```
-
-Two things to notice:
-
-1. `List`, `Set`, and `Queue` all extend `Collection`, so they share `add`, `remove`,
-   `contains`, `size`, `isEmpty`, and iteration.
-2. **`Map` is not a `Collection`.** It models *associations*, not a bag of elements, so it
-   sits on its own branch. (We cover `Map` in Session 2.)
-
-### 3.4 `List` and `ArrayList`
-
-A **`List`** is an **ordered** collection (a *sequence*). It:
-
-- keeps insertion order,
-- allows **duplicates**,
-- supports **positional access** by index (`get(i)`, `set(i, e)`, `add(i, e)`).
-
-`ArrayList` is the default `List`, backed by a resizable array.
-
-**Core operations:**
+A `Set` models a mathematical set: **no duplicates**, and (for `HashSet`) **no guaranteed
+order** and **no index access**. Adding an element that is already present simply has no
+effect and `add` returns `false`.
 
 ```java
-List<String> cart = new ArrayList<>();
-
-cart.add("Keyboard");        // append
-cart.add("Mouse");
-cart.add("Keyboard");        // duplicates are allowed
-
-String first = cart.get(0);  // "Keyboard"  (index access)
-cart.set(1, "Trackpad");     // replace at index 1
-cart.remove("Keyboard");     // removes the FIRST matching element
-int n = cart.size();         // number of elements
-boolean has = cart.contains("Trackpad");  // true
+Set<String> emails = new HashSet<>();
+emails.add("a@x.com");           // true  (added)
+emails.add("b@x.com");           // true  (added)
+boolean added = emails.add("a@x.com");  // false (already there, ignored)
+System.out.println(emails.size());       // 2
+System.out.println(emails.contains("b@x.com")); // true
 ```
 
-**Iteration — three idioms:**
+Implementation choices (brief):
+- **`HashSet`** — fastest, no ordering. The default.
+- **`LinkedHashSet`** — preserves **insertion order**.
+- **`TreeSet`** — keeps elements **sorted** (requires `Comparable` or a `Comparator`).
+
+### 3.5 The critical detail: `equals()` and `hashCode()`
+
+How does a `HashSet` know that two objects are "the same" and therefore a duplicate? It
+uses two methods every object inherits from `Object`:
+
+1. `hashCode()` returns an `int` used to pick a **bucket**.
+2. `equals()` compares objects within that bucket for **logical equality**.
+
+The default `Object.equals()` compares **references** (identity), so two *different*
+`Product` instances with identical data are considered different. That is usually **not**
+what we want. If you want two products with the same `code` to count as duplicates, you
+must **override both methods** consistently:
+
+> **The contract:** if `a.equals(b)` is `true`, then `a.hashCode() == b.hashCode()` must
+> also be `true`. Break this and hash-based collections misbehave (duplicates leak in,
+> lookups fail). Always override **both** together.
 
 ```java
-// (a) enhanced for-each — preferred when you only read
-for (String item : cart) {
-    System.out.println(item);
+@Override
+public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    Product other = (Product) o;
+    return code.equals(other.code);   // identity based on the business key
 }
 
-// (b) indexed loop — when you need the position
-for (int i = 0; i < cart.size(); i++) {
-    System.out.println(i + ": " + cart.get(i));
+@Override
+public int hashCode() {
+    return Objects.hash(code);        // consistent with equals
+}
+```
+
+### 3.6 Iterating collections
+
+Three ways you will use constantly:
+
+```java
+// (a) Enhanced for-loop — the everyday choice for read-only traversal
+for (Product p : products) {
+    System.out.println(p.getName());
 }
 
-// (c) Iterator — when you must remove during traversal
-Iterator<String> it = cart.iterator();
+// (b) Iterator — needed to REMOVE safely during traversal
+Iterator<Product> it = products.iterator();
 while (it.hasNext()) {
-    if (it.next().isEmpty()) {
-        it.remove();   // safe removal; cart.remove(...) inside a for-each throws
+    Product p = it.next();
+    if (p.getQuantity() == 0) {
+        it.remove();          // safe removal
     }
 }
+
+// (c) forEach + lambda — concise for simple actions
+products.forEach(p -> System.out.println(p.getName()));
 ```
 
-> **Pitfall:** modifying a collection with its own `add`/`remove` *while* iterating it with
-> a for-each loop throws `ConcurrentModificationException`. Use the `Iterator`'s `remove()`
-> instead.
-
-**Cost intuition (Big-O) for `ArrayList`:**
-
-| Operation | Cost | Why |
-|---|---|---|
-| `get(i)` / `set(i)` | O(1) | direct array indexing |
-| `add(e)` (append) | O(1) amortized | occasional resize/copy |
-| `add(i, e)` / `remove(i)` middle | O(n) | must shift elements |
-| `contains(e)` | O(n) | linear scan |
-
-### 3.5 `Set` and `HashSet`
-
-A **`Set`** models a collection with **no duplicates** — it mirrors the mathematical idea
-of a set. Its headline operations are **membership** (`contains`) and **de-duplication**
-(adding an element that already exists is a no-op that returns `false`).
-
-`HashSet` is the default `Set`, backed by a hash table. Its `add`, `remove`, and
-`contains` run in **near-constant O(1)** time on average — dramatically faster than a
-`List`'s O(n) `contains` for large data.
+> **`ConcurrentModificationException`:** if you call `products.remove(p)` *inside* an
+> enhanced for-loop, Java throws this at runtime. To remove during iteration, use the
+> `Iterator.remove()` shown above (or `removeIf(...)`).
 
 ```java
-Set<String> tags = new HashSet<>();
-
-boolean a = tags.add("java");    // true  — newly added
-boolean b = tags.add("oop");     // true
-boolean c = tags.add("java");    // false — already present, set unchanged
-
-System.out.println(tags.size()); // 2
-System.out.println(tags.contains("oop")); // true  (fast)
+// Cleanest removal-by-condition:
+products.removeIf(p -> p.getQuantity() == 0);
 ```
-
-**`HashSet` gives no ordering guarantee.** If you need order, choose a different
-implementation of the *same* `Set` interface:
-
-| Implementation | Ordering | Notes |
-|---|---|---|
-| `HashSet` | none (unpredictable) | fastest; the default choice |
-| `LinkedHashSet` | insertion order | remembers the order you added elements |
-| `TreeSet` | sorted order | keeps elements sorted; O(log n) operations |
-
-### 3.6 Why `equals` and `hashCode` matter (introduction)
-
-`HashSet` (and `HashMap`) decide "have I seen this object before?" using **two** methods:
-
-1. `hashCode()` chooses a bucket.
-2. `equals()` compares candidates inside that bucket.
-
-For `String` and the wrapper types (`Integer`, `Double`, …) these are already implemented,
-so sets of strings "just work." But for **your own classes**, the default `equals`/`hashCode`
-inherited from `Object` compare **memory identity**, not logical content. That means two
-`Product` objects with the same code would be treated as different — breaking de-duplication.
-
-```java
-// Without overriding equals/hashCode, this set holds TWO "equal" products:
-Set<Product> products = new HashSet<>();
-products.add(new Product("P-100", "Cable"));
-products.add(new Product("P-100", "Cable"));
-System.out.println(products.size()); // 2  (probably not what you wanted!)
-```
-
-We fix this in Session 2 by overriding both methods consistently. For now, remember the
-rule: **if you put your own objects in a `HashSet`/`HashMap`, override `equals` and
-`hashCode` together.**
-
-### 3.7 Choosing between `List` and `Set` — a decision framework
-
-Ask three questions, in order:
-
-```
-1. Do duplicates carry meaning?
-      YES  -> you need a List.
-      NO   -> continue.
-
-2. Do you need to look elements up by a key?
-      YES  -> you need a Map (Session 2).
-      NO   -> continue.
-
-3. Do you mostly test membership / enforce uniqueness?
-      YES  -> use a Set (HashSet by default).
-      NO, and order/index matters -> use a List (ArrayList by default).
-```
-
-| Requirement (example) | Best fit | Why |
-|---|---|---|
-| Shopping cart lines (same item can repeat) | `List` | order + duplicates matter |
-| Unique student IDs seen so far | `Set` | uniqueness, fast `contains` |
-| "Has this email already registered?" | `Set` | membership test |
-| Ranked search results | `List` | position is meaningful |
-| Distinct tags on an article | `Set` | no duplicates by definition |
 
 ---
 
-## 4. Fully worked example — enrollment de-duplication report
+## 4. Fully worked example
 
-**Scenario.** A registration export contains one line per enrollment attempt. Because the
-web form let students click twice, some names appear multiple times. We must produce:
-
-1. the **total** number of raw entries (a `List`), and
-2. the list of **distinct** students (a `Set`), sorted alphabetically for the report.
+**Problem.** Model a small catalog of products. Store them in a `List` (order matters, a
+product may legitimately appear once but the list keeps insertion order), print the
+catalog, compute total inventory value, then build a `Set` of unique category names.
 
 ```java
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
-public class EnrollmentReport {
+class Product {
+    private final String code;
+    private final String name;
+    private final String category;
+    private double price;
+    private int quantity;
 
+    public Product(String code, String name, String category, double price, int quantity) {
+        this.code = code;
+        this.name = name;
+        this.category = category;
+        this.price = price;
+        this.quantity = quantity;
+    }
+
+    public String getCode()     { return code; }
+    public String getName()     { return name; }
+    public String getCategory() { return category; }
+    public double getPrice()    { return price; }
+    public int getQuantity()    { return quantity; }
+
+    public double lineValue() { return price * quantity; }
+
+    @Override
+    public String toString() {
+        return String.format("%s - %-12s (%s) x%d @ $%.2f", code, name, category, quantity, price);
+    }
+
+    // Two products are "the same" when they share a code.
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        return code.equals(((Product) o).code);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(code);
+    }
+}
+
+public class CatalogDemo {
     public static void main(String[] args) {
-        // 1) Raw entries as they arrived — duplicates are meaningful data here.
-        List<String> rawEntries = new ArrayList<>();
-        rawEntries.add("Ana Ruiz");
-        rawEntries.add("Carlos Pérez");
-        rawEntries.add("Ana Ruiz");        // duplicate click
-        rawEntries.add("Diana Gómez");
-        rawEntries.add("Carlos Pérez");    // duplicate click
+        // 1. Store products in a List (ordered, indexed)
+        List<Product> catalog = new ArrayList<>();
+        catalog.add(new Product("P001", "Keyboard", "Peripherals", 45.00, 10));
+        catalog.add(new Product("P002", "Mouse",    "Peripherals", 25.50, 20));
+        catalog.add(new Product("P003", "Monitor",  "Displays",    180.00, 5));
+        catalog.add(new Product("P004", "Cable",    "Peripherals", 5.00, 100));
 
-        System.out.println("Raw enrollment attempts: " + rawEntries.size()); // 5
-
-        // 2) Distinct students. TreeSet keeps them sorted automatically.
-        Set<String> distinctStudents = new TreeSet<>(rawEntries);
-        System.out.println("Distinct students: " + distinctStudents.size()); // 3
-
-        // 3) Print the clean, sorted roster.
-        System.out.println("\n--- Official roster ---");
-        int position = 1;
-        for (String student : distinctStudents) {
-            System.out.println((position++) + ". " + student);
+        // 2. Iterate and print
+        System.out.println("=== Catalog ===");
+        for (Product p : catalog) {
+            System.out.println(p);
         }
 
-        // 4) How many duplicate clicks did we absorb?
-        int duplicates = rawEntries.size() - distinctStudents.size();
-        System.out.println("\nDuplicate submissions removed: " + duplicates); // 2
+        // 3. Compute total value using an accumulator
+        double total = 0.0;
+        for (Product p : catalog) {
+            total += p.lineValue();
+        }
+        System.out.printf("Total inventory value: $%.2f%n", total);
+
+        // 4. Build a Set of unique categories (duplicates auto-removed)
+        Set<String> categories = new HashSet<>();
+        for (Product p : catalog) {
+            categories.add(p.getCategory());
+        }
+        System.out.println("Distinct categories: " + categories);
+
+        // 5. Demonstrate the Set contract with Product identity
+        Set<Product> unique = new HashSet<>(catalog);
+        unique.add(new Product("P001", "Keyboard (dup)", "Peripherals", 45.00, 3)); // same code P001
+        System.out.println("Unique products by code: " + unique.size()); // 4, not 5
     }
 }
 ```
 
-**Expected output:**
+**Expected output (order of the `Set` lines may vary):**
 
 ```
-Raw enrollment attempts: 5
-Distinct students: 3
-
---- Official roster ---
-1. Ana Ruiz
-2. Carlos Pérez
-3. Diana Gómez
-
-Duplicate submissions removed: 2
+=== Catalog ===
+P001 - Keyboard     (Peripherals) x10 @ $45.00
+P002 - Mouse        (Peripherals) x20 @ $25.50
+P003 - Monitor      (Displays) x5 @ $180.00
+P004 - Cable        (Peripherals) x100 @ $5.00
+Total inventory value: $1910.00
+Distinct categories: [Displays, Peripherals]
+Unique products by code: 4
 ```
 
 **What to notice:**
-
-- We used a **`List`** where duplicates were *real data* (attempts), and a **`Set`** where
-  duplicates were *noise* (distinct people).
-- Passing a collection to the `TreeSet(Collection)` constructor is a one-line
-  de-duplicate-and-sort idiom.
-- The variables are typed by the **interface** (`List`, `Set`) — only the constructor names
-  the implementation.
+- The `List` kept insertion order and allowed us to iterate and accumulate.
+- The `HashSet<String>` collapsed three "Peripherals" strings into one entry.
+- Because `Product` overrides `equals`/`hashCode` on `code`, adding a second `P001`
+  did **not** grow the set — it stayed at 4. Remove those overrides and it becomes 5.
 
 ---
 
 ## 5. Guided in-class practice
 
-Work in pairs. Start from the worked example and extend it. Commit nothing yet — this is
-formative practice.
+**Goal:** build a small "student registry" that ignores duplicate enrollments.
 
-**Task 1 — Membership check.**
-Add a `Set<String> blockedStudents` containing `"Carlos Pérez"`. Before printing the
-roster, skip any student who is blocked, and print how many were filtered out.
+Work in pairs. Create a class `Student` with fields `id` (String) and `name` (String),
+plus a constructor, getters, and a `toString()`. Then, in a `main`:
 
-**Task 2 — Two `Set` implementations, one interface.**
-Change `distinctStudents` from `TreeSet` to `LinkedHashSet` and re-run. Explain in one
-sentence how the output order changed and why. Then switch back to `TreeSet`.
+1. Create a `List<Student>` and add five students — but deliberately add one student
+   **twice** (same `id`). Print the list size (should be 5, duplicates allowed).
+2. Create a `Set<Student>` from that list: `new HashSet<>(list)`. Print its size.
+   - **Question:** why is it still 5 and not 4? *(Hint: you haven't overridden `equals`/`hashCode` yet.)*
+3. Override `equals()` and `hashCode()` on `Student` based on `id`. Re-run.
+   - Now the set size should drop to 4. Explain why in a code comment.
+4. Iterate the `Set` with an enhanced for-loop and print each student.
+5. Using an `Iterator`, remove any student whose `name` starts with `"A"`, then print the
+   remaining set. (Do **not** use `set.remove()` inside a for-each — trigger and then fix
+   the `ConcurrentModificationException` to feel the difference.)
 
-**Task 3 — Safe removal with an `Iterator`.**
-Given a `List<String> pending` of task names, remove every entry that starts with `"DONE:"`
-using an `Iterator` and its `remove()` method. Explain why a for-each loop would fail here.
+**Checkpoints the instructor will look for:**
+- Correct generic types (`List<Student>`, `Set<Student>`).
+- `equals`/`hashCode` overridden *together* and based on the same field.
+- Safe removal via `Iterator.remove()` (or `removeIf`).
 
-**Stretch (optional).**
-Write a method `List<String> topN(List<String> items, int n)` that returns the first `n`
-items (or all of them if the list is smaller). Decide what your method does when `n` is
-negative and document that decision.
-
-**Reference solution sketch for Task 1:**
-
-```java
-Set<String> blocked = new HashSet<>();
-blocked.add("Carlos Pérez");
-
-int filtered = 0;
-for (String student : distinctStudents) {
-    if (blocked.contains(student)) {   // O(1) membership test
-        filtered++;
-        continue;
-    }
-    System.out.println(student);
-}
-System.out.println("Filtered (blocked): " + filtered);
-```
+**Stretch (optional):** replace step 5's `Iterator` with a single `set.removeIf(...)` call.
 
 ---
 
 ## 6. Wrap-up and exit ticket
 
-**Key takeaways:**
+**Summary.** Today you learned that collections replace hand-rolled arrays; that `List`
+(via `ArrayList`) is ordered/indexed and allows duplicates; that `Set` (via `HashSet`)
+enforces uniqueness using `equals()`/`hashCode()`; and that safe iteration uses the
+enhanced for-loop for reading and `Iterator`/`removeIf` for removing.
 
-- The Collections Framework separates **interfaces** (`List`, `Set`) from
-  **implementations** (`ArrayList`, `HashSet`); program to the interface.
-- Use a **`List`** when order or duplicates matter; use a **`Set`** for uniqueness and fast
-  membership tests.
-- `ArrayList.get(i)` is O(1); `ArrayList.contains(e)` is O(n); `HashSet.contains(e)` is
-  ~O(1).
-- Iterate with for-each to read; use an `Iterator` to remove during traversal.
-- For **your own classes** in a `Set`, override `equals` and `hashCode` (Session 2).
+**Exit ticket (submit before leaving — 5 short answers):**
 
-**Exit ticket (submit on paper or the LMS discussion, 5 minutes):**
+1. In one sentence each, contrast `List` and `Set`.
+2. What does `list.remove(1)` do on a `List<Integer>`, and how do you instead remove the *value* 1?
+3. Why must `equals()` and `hashCode()` be overridden *together*?
+4. Which loop/technique lets you remove elements during iteration without an exception?
+5. Predict the output: adding `"x"` three times to a `HashSet<String>` — what is its final `size()`?
 
-1. A feature must store the **distinct hashtags** used in a post. Which collection do you
-   choose, and which one *concrete* implementation, and why?
-2. Explain in one sentence why `ArrayList.contains` gets slower with more elements but
-   `HashSet.contains` does not.
-3. What exception can you get by calling `list.remove(x)` inside a `for (String x : list)`
-   loop, and how do you avoid it?
-
-*Model answers:* (1) a `Set`; `HashSet` if order is irrelevant, `LinkedHashSet` if you want
-to preserve the order they appeared. (2) `ArrayList` scans element by element (O(n)) while
-`HashSet` jumps straight to a bucket via `hashCode` (~O(1)). (3)
-`ConcurrentModificationException`; use `Iterator.remove()` instead.
+**Preview of Session 2:** we introduce `Map`/`HashMap` for instant key-based lookup and
+use it to build a real `Inventory` class — the centerpiece of the corte-3 practical work.

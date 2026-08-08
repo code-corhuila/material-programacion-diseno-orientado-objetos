@@ -1,261 +1,287 @@
-# Week 08 - Session 2: Interfaces and Combining Abstractions
+# Week 08 - Session 2: Interfaces and combined design
 
-**Course:** Object-Oriented Programming and Design (2026-B)
-**Unit 2:** Design principles and modularity
-**Session focus:** Interfaces as contracts; choosing between abstract classes and
-interfaces; combining both in one hierarchy
-**Reference language:** Java
+**Subject:** Object-Oriented Programming and Design | **Unit 2** | **Corte 2**
+**Duration:** 120 minutes | **Reference language:** Java (JDK 11+)
 
 ---
 
 ## 1. Session objective
 
-By the end of this session the student will be able to **design an interface that
-specifies a contract decoupled from implementation, provide two independent
-implementations of it, choose correctly between an abstract class and an interface for a
-given scenario, and model a hierarchy that combines an abstract class, an interface, and
-concrete classes**.
+By the end of this session the student will be able to **design and implement an interface as a
+contract, provide two independent implementations of it, decide between an abstract class and an
+interface for a given scenario, and model a small hierarchy that combines an abstract class, one or
+more interfaces, and concrete classes**.
+
+This maps to Week 08 objectives 1, 3, 4, and 5.
 
 ---
 
-## 2. Timed agenda (110 minutes)
+## 2. Timed agenda
 
 | Time | Segment | Activity |
 |---|---|---|
-| 0:00 - 0:10 | Warm-up | Recap Session 1; the "capability" question. |
-| 0:10 - 0:40 | Theory | Interfaces, contracts, default/static methods, multiple implementation. |
-| 0:40 - 0:55 | Decision framework | Abstract class vs. interface comparison and rules of thumb. |
-| 0:55 - 1:20 | Worked example | `Payable` interface + notification services with two implementations. |
-| 1:20 - 1:40 | Mini-workshop | Combined hierarchy: interface + abstract class + concrete classes. |
-| 1:40 - 1:50 | Wrap-up | Summary, common mistakes, exit ticket. |
+| 0:00 - 0:15 | Recap & bridge | Abstract-class recap; the "several capabilities" problem interfaces solve. |
+| 0:15 - 0:50 | Theory | Interfaces, multiple implementation, default/static methods, constants, abstract-vs-interface decision rule. |
+| 0:50 - 1:15 | Worked example | `Payable` + `Printable` payment processing across unrelated types. |
+| 1:15 - 1:50 | Workshop | Notification system combining abstract class + interfaces + concrete classes. |
+| 1:50 - 2:00 | Wrap-up | Decision-rule summary + exit ticket. |
 
 ---
 
-## 3. Warm-up (framing question)
+## 3. Recap and bridge (15 min)
 
-> Session 1 gave us the `Shape` hierarchy: every shape *is a* Shape and shares the field
-> `name`. But consider "can be saved to disk", "can be compared for sorting", or "can be
-> drawn on screen". These are **capabilities** that unrelated classes might share -
-> a `Document`, an `Invoice`, and a `Photo` could all be "savable" without being the same
-> kind of thing. **How do we model a shared capability across classes that do not belong
-> to the same family?**
+### Recap of Session 1
 
-That is precisely what an **interface** is for.
+- An **abstract class** captures an "is-a" family with shared state and behavior plus abstract
+  methods subclasses must implement. It cannot be instantiated.
 
----
+### The limitation
 
-## 4. Theory notes
+Java (like C#) allows a class to `extends` **only one** parent. So a hierarchy can express only one
+"is-a" line. But real objects often need to advertise **several independent capabilities**:
 
-### 4.1 The interface: a pure contract
+- A `SavingsAccount` *is an* `Account` (one inheritance line) **and** can be *serialized*, *compared*,
+  and *audited* (three unrelated capabilities).
+- An `Invoice` and a `TimeSheet` are completely unrelated types, yet both need to be *payable*.
 
-An **interface** declares *what* operations a type offers, with no instance state and
-(classically) no implementation. It is a **contract**: any class that `implements` the
-interface promises to provide the declared operations.
+You cannot force `Invoice` and `TimeSheet` into the same "is-a" family just so they share a `pay()`
+method — that would be a false hierarchy. What they share is a **capability**, not an identity. That
+is exactly what an **interface** models.
 
-```java
-public interface Drawable {
-    void draw();                 // implicitly public and abstract
-}
-```
-
-A class fulfils (or *realizes*) the contract with `implements`:
-
-```java
-public class Circle extends Shape implements Drawable {
-    // ... inherited Shape members ...
-    @Override
-    public void draw() {
-        System.out.println("Drawing a circle");
-    }
-}
-```
-
-Key facts about interfaces in modern Java:
-
-- All method declarations are implicitly `public abstract` (unless `default`/`static`).
-- Fields are implicitly `public static final` - i.e. **constants**, never instance state.
-- A class may implement **many** interfaces: `class C implements A, B, D { ... }`.
-- An interface can extend one or more other interfaces.
-
-### 4.2 Multiple implementation: capabilities, not families
-
-Java allows a class to extend **only one** superclass but to implement **any number** of
-interfaces. This is the crucial modeling power of interfaces:
-
-```java
-public class SmartPhone extends Device
-        implements Callable, Camera, GpsLocator {
-    // one family (Device), three capabilities
-}
-```
-
-You read this as: *a SmartPhone is a Device, and it can also make calls, take photos, and
-locate itself.* Interfaces model **"can do"** (capabilities); inheritance models
-**"is a"** (family/identity).
-
-### 4.3 Default methods
-
-Since Java 8, an interface may provide a **default method** with a body. This lets an
-interface evolve without breaking existing implementers, and lets it offer sensible
-shared behavior:
-
-```java
-public interface Notifier {
-    void send(String message);          // must be implemented
-
-    default void sendUrgent(String message) {   // optional, has a body
-        send("[URGENT] " + message);
-    }
-}
-```
-
-An implementer gets `sendUrgent` for free but may override it. Note the difference from
-an abstract class: a default method still cannot use *instance fields*, because the
-interface has none.
-
-### 4.4 Static and constant members
-
-```java
-public interface HttpStatus {
-    int OK = 200;               // public static final constant
-    int NOT_FOUND = 404;
-
-    static boolean isSuccess(int code) {   // utility bound to the interface
-        return code >= 200 && code < 300;
-    }
-}
-```
-
-### 4.5 Abstract class vs. interface - the decision framework
-
-| Question | Lean **abstract class** | Lean **interface** |
-|---|---|---|
-| Do the types share **instance state / fields**? | Yes - abstract class holds fields. | No - interfaces have no instance state. |
-| Do the types form **one "is-a" family**? | Yes - single, natural parent. | They are unrelated but share a **capability**. |
-| Does a type need to belong to **several** abstractions? | No - only one superclass allowed. | Yes - implement many interfaces. |
-| Do you need **constructors** or non-public members? | Yes. | No. |
-| Is this mainly a **contract** for callers/plugins? | Secondary. | Primary purpose. |
-| Do you want to **share substantial implementation**? | Yes - concrete methods + fields. | Only stateless defaults. |
-
-**Rules of thumb**
-- If you catch yourself wanting a shared field or constructor -> abstract class.
-- If unrelated classes need the same capability -> interface.
-- If a type must be several things at once -> interfaces (you only get one superclass).
-- **Very common and idiomatic:** use *both* - an interface for the public contract and an
-  abstract class that implements it to share a skeleton (Section 4.6).
-
-### 4.6 Combining them (the idiomatic pattern)
-
-The strongest designs often layer all three building blocks:
-
-```
-        «interface» Notifier            (the CONTRACT: what callers depend on)
-                 ▲  (realization, dashed in UML)
-                 ┆
-     «abstract» AbstractNotifier        (SKELETON: shared logging, formatting, state)
-                 ▲  (generalization)
-        ┌────────┴─────────┐
-   EmailNotifier      SmsNotifier       (CONCRETE: the specific "how")
-```
-
-- The **interface** is what client code references (`Notifier n = ...;`).
-- The **abstract class** implements the interface once, capturing shared behavior and
-  state so concrete classes do not repeat it.
-- The **concrete classes** fill in only what is unique to each channel.
-
-This is exactly the mini-workshop you will build in Section 7.
+**Discussion prompt (2 min):** Name two capabilities your phone's apps share even though the apps are
+unrelated (e.g., "can receive a notification", "can be uninstalled"). Capabilities cut *across* type
+families — interfaces let us name them.
 
 ---
 
-## 5. Worked example (fully solved): the `Payable` contract
+## 4. Theory notes (35 min)
 
-**Scenario.** A payroll module must total the amount owed to very different things - an
-`Employee` and an `Invoice`. They share no family (`Employee` is not an `Invoice`), but
-both "can be paid". This is a textbook case for an interface.
+### 4.1 What is an interface?
 
-### 5.1 The interface (the contract)
+An **interface** is a **pure contract**: a named set of operations that any implementing class
+promises to provide. It declares *what* an object can do, never *how*.
 
 ```java
-// Payable.java
 public interface Payable {
-    /** @return the amount owed, in the smallest currency unit or as decimal. */
+    // implicitly public and abstract: a method signature, no body
     double amountDue();
-
-    /** Default helper: everyone who is Payable can be described the same way. */
-    default String payLabel() {
-        return String.format("Amount due: %.2f", amountDue());
-    }
+    void markPaid();
 }
 ```
 
-### 5.2 Two independent implementations
+A class fulfills the contract with `implements`:
 
 ```java
-// Employee.java
-public class Employee implements Payable {
-    private final String name;
-    private final double monthlySalary;
-
-    public Employee(String name, double monthlySalary) {
-        this.name = name;
-        this.monthlySalary = monthlySalary;
-    }
-
-    @Override
-    public double amountDue() {
-        return monthlySalary;
-    }
-
-    public String getName() { return name; }
-}
-```
-
-```java
-// Invoice.java
 public class Invoice implements Payable {
-    private final String supplier;
-    private final double unitPrice;
-    private final int quantity;
+    private double total;
+    private boolean paid;
 
-    public Invoice(String supplier, double unitPrice, int quantity) {
-        this.supplier = supplier;
-        this.unitPrice = unitPrice;
-        this.quantity = quantity;
-    }
+    public Invoice(double total) { this.total = total; }
 
-    @Override
-    public double amountDue() {
-        return unitPrice * quantity;
-    }
-
-    public String getSupplier() { return supplier; }
+    @Override public double amountDue() { return paid ? 0 : total; }
+    @Override public void markPaid()    { this.paid = true; }
 }
 ```
 
-### 5.3 A client that depends only on the contract
+Now any code can accept "anything payable" without knowing the concrete type:
 
 ```java
-// Payroll.java
+void processPayment(Payable item) {   // depends on the CONTRACT, not on Invoice
+    System.out.println("Charging: " + item.amountDue());
+    item.markPaid();
+}
+```
+
+This is **"program to an interface, not an implementation."** `processPayment` works for `Invoice`,
+`TimeSheet`, `Subscription`, or any future type — as long as it is `Payable`.
+
+### 4.2 A class can implement many interfaces
+
+This is the escape from single inheritance:
+
+```java
+public interface Printable { String render(); }
+public interface Auditable { String auditLog(); }
+
+public class Invoice implements Payable, Printable, Auditable {
+    // must provide amountDue(), markPaid(), render(), auditLog()
+}
+```
+
+`Invoice` now belongs to **three** capability types at once. Different callers see it through
+different contracts: the payment module sees a `Payable`, the printer sees a `Printable`, the
+compliance module sees an `Auditable`. None is coupled to `Invoice` itself.
+
+### 4.3 Default methods (Java 8+)
+
+An interface can provide a **default** implementation for a method, so implementers get it for free
+and may override it if needed:
+
+```java
+public interface Payable {
+    double amountDue();
+    void markPaid();
+
+    // default method: shared behavior available to every implementer
+    default boolean isFree() {
+        return amountDue() == 0.0;
+    }
+}
+```
+
+Default methods let interfaces evolve without breaking existing implementers, and let a contract
+carry small, sensible shared behavior. Use them sparingly — an interface is still primarily a
+contract, not a code-sharing mechanism (that is what abstract classes are for).
+
+### 4.4 Static methods and constants
+
+Interfaces may also declare `static` helper methods and constants (fields are implicitly
+`public static final`):
+
+```java
+public interface Currency {
+    String CODE = "COP";                 // public static final constant
+    static double round(double v) {      // static helper
+        return Math.round(v * 100.0) / 100.0;
+    }
+}
+```
+
+A **marker interface** has no methods at all; it exists only to *tag* a type with a capability the
+runtime or a framework checks (Java's `Serializable` and `Cloneable` are the classic examples).
+
+### 4.5 Interface vs. abstract class — the decision rule
+
+| Question | Abstract class | Interface |
+|---|---|---|
+| Relationship modeled | **"is-a"** (identity/family) | **"can-do" / "behaves-as"** (capability) |
+| Shared **state** (fields)? | Yes — can hold instance fields | No instance state (only constants) |
+| Shared **implemented** code? | Yes, freely | Only via `default`/`static` methods |
+| How many can a class have? | **One** (single inheritance) | **Many** |
+| Constructors? | Yes | No |
+| Typical use | A base type with common machinery and a few gaps | A capability crossing unrelated types |
+
+**Practical heuristic:**
+
+- Different implementations share **real state and behavior** and form one family → **abstract class**.
+- Unrelated types need to share a **capability / contract**, or a type needs **several** such roles →
+  **interface**.
+- When both apply, **combine them**: an abstract base class that *also* implements interfaces
+  (the workshop does exactly this).
+
+Modern guidance (Bloch, *Effective Java*, Item 20): **prefer interfaces to abstract classes** for
+public contracts because they are more flexible; use an abstract "skeletal implementation" class
+alongside the interface when you want to share code. We practice that combination below.
+
+### 4.6 Text diagram: capability vs. family
+
+```
+          «interface»            «interface»
+           Payable                Printable
+          amountDue()             render()
+          markPaid()                 ▲
+             ▲   ▲                   │ implements
+   implements│   │implements         │
+   ┌─────────┘   └─────────┐   ┌─────┴──────┐
+   │  Invoice   │          │   │ TimeSheet  │
+   │ (a doc)    │          │   │ (hours)    │
+   └────────────┘          └───┴────────────┘
+   Two UNRELATED classes, same CAPABILITY (Payable).
+   Invoice ALSO advertises Printable. No shared "is-a" needed.
+```
+
+---
+
+## 5. Worked example: payment processing (25 min)
+
+**Goal:** a payment module that charges *anything payable* and a report module that prints *anything
+printable*, with zero coupling to concrete types.
+
+### Step 1 - Contracts
+
+```java
+public interface Payable {
+    double amountDue();
+    void markPaid();
+    default boolean isFree() { return amountDue() == 0.0; }
+}
+
+public interface Printable {
+    String render();
+}
+```
+
+### Step 2 - Two unrelated concrete types, each choosing its capabilities
+
+```java
+public class Invoice implements Payable, Printable {
+    private final String number;
+    private final double total;
+    private boolean paid;
+
+    public Invoice(String number, double total) {
+        this.number = number;
+        this.total = total;
+    }
+    @Override public double amountDue() { return paid ? 0 : total; }
+    @Override public void markPaid()    { paid = true; }
+    @Override public String render()    {
+        return "INVOICE " + number + " | due: " + amountDue() + (paid ? " (PAID)" : "");
+    }
+}
+
+public class Subscription implements Payable {   // Payable, but NOT Printable
+    private final String plan;
+    private final double monthlyFee;
+    private boolean paid;
+
+    public Subscription(String plan, double monthlyFee) {
+        this.plan = plan;
+        this.monthlyFee = monthlyFee;
+    }
+    @Override public double amountDue() { return paid ? 0 : monthlyFee; }
+    @Override public void markPaid()    { paid = true; }
+}
+```
+
+### Step 3 - Modules that depend only on contracts
+
+```java
 import java.util.List;
 
-public class Payroll {
-    /** Works for ANY Payable - Employee, Invoice, or a type invented tomorrow. */
-    public static double totalOwed(List<Payable> items) {
-        double total = 0.0;
-        for (Payable p : items) {
-            System.out.println(p.payLabel());   // default method in action
-            total += p.amountDue();
+public class PaymentService {
+    // Accepts ANY Payable. Never mentions Invoice or Subscription.
+    public double chargeAll(List<Payable> items) {
+        double collected = 0;
+        for (Payable item : items) {
+            if (item.isFree()) continue;      // default method from the interface
+            collected += item.amountDue();
+            item.markPaid();
         }
-        return total;
+        return collected;
     }
+}
+```
 
+### Step 4 - Wiring it together
+
+```java
+import java.util.List;
+
+public class Billing {
     public static void main(String[] args) {
-        List<Payable> items = List.of(
-            new Employee("Ada", 4200.00),
-            new Invoice("Acme Supplies", 15.50, 30),
-            new Employee("Linus", 3800.00)
-        );
-        System.out.printf("TOTAL OWED = %.2f%n", totalOwed(items));
+        Invoice inv = new Invoice("F-1001", 250_000);
+        Subscription sub = new Subscription("Pro", 39_900);
+
+        // Payment module sees them purely as Payable
+        List<Payable> toCharge = List.of(inv, sub);
+        double total = new PaymentService().chargeAll(toCharge);
+        System.out.printf("Collected: $%.2f%n", total);
+
+        // Report module sees only Printable things.
+        // 'inv' is Printable; 'sub' is not, so it is not in this list.
+        List<Printable> toPrint = List.of(inv);
+        for (Printable p : toPrint) System.out.println(p.render());
     }
 }
 ```
@@ -263,197 +289,210 @@ public class Payroll {
 **Expected output:**
 
 ```
-Amount due: 4200.00
-Amount due: 465.00
-Amount due: 3800.00
-TOTAL OWED = 8465.00
+Collected: $289900.00
+INVOICE F-1001 | due: 0.0 (PAID)
 ```
 
-### 5.4 What to notice
+### Why this matters
 
-1. `Employee` and `Invoice` share **no common superclass**, yet the same method processes
-   both. Only an interface can express this cross-family capability.
-2. `Payroll.totalOwed` is typed by `Payable`. A new `Payable` type (say, `Subscription`)
-   requires **zero** changes to `Payroll` - this is the Open/Closed Principle in miniature.
-3. `payLabel()` is a **default method**: shared behavior living in the interface, with no
-   instance state.
+`PaymentService` and the report loop are **closed for modification** but **open for extension**: add
+a `LatePaymentFee implements Payable` and `chargeAll` handles it with no change. Two unrelated types
+(`Invoice`, `Subscription`) share the `Payable` capability without any artificial common base class.
 
 ---
 
-## 6. Second worked comparison: when to switch to an abstract class
+## 6. Workshop: combined hierarchy (35 min)
 
-Suppose all notification channels must (a) keep a `sentCount`, (b) timestamp every
-message, and (c) share formatting logic. That is **instance state and shared
-implementation** - the interface alone cannot hold `sentCount`. So we keep the interface
-as the contract *and add* an abstract class for the skeleton. That is the mini-workshop.
+This is the integrative task for RAA 90_82759. It **combines an abstract class, interfaces, and
+concrete classes** — the full toolbox of the week.
 
----
+### Scenario
 
-## 7. Mini-workshop (guided, combined hierarchy)
+Build a small **notification system** for a university platform. The system sends notifications to
+students through different channels. Requirements:
 
-**Goal:** model one hierarchy that uses **all three** building blocks - an interface, an
-abstract class, and concrete classes - and drive it with polymorphic client code.
+1. Every notification shares a **title**, a **body**, and a **timestamp** (shared state), and every
+   notification can produce a **summary** line (shared behavior). Not every notification is complete
+   on its own: how it is **delivered** depends on the channel.
+2. Notifications are delivered over different **channels**: `EmailChannel`, `SmsChannel`,
+   `PushChannel`. A channel is a **capability/contract**, not an "is-a" family.
+3. Some notifications are also **Loggable** (can produce an audit-log entry) — a second, independent
+   capability.
 
-### 7.1 Target design
+### Required design
+
+- An **abstract class** `Notification` with:
+  - shared fields `title`, `body`, `timestamp`;
+  - a concrete method `summary()` returning `"[timestamp] title"`;
+  - an **abstract** method `String format()` (each concrete notification formats its content
+    differently).
+- An **interface** `Channel` with `void send(String content)` — implemented by `EmailChannel`,
+  `SmsChannel`, `PushChannel` (three independent implementations).
+- An **interface** `Loggable` with `String toLogEntry()`.
+- Concrete notifications: e.g., `GradePostedNotification` (extends `Notification`, implements
+  `Loggable`) and `DeadlineReminderNotification` (extends `Notification`).
+- A `Notifier` service whose method `notify(Notification n, Channel c)` calls `c.send(n.format())`
+  and, **if** the notification is `Loggable`, records `((Loggable) n).toLogEntry()`.
+
+### Text model to sketch first (do this before coding)
 
 ```
-        «interface» Notifier
-        + send(msg): void
-        + sendUrgent(msg): void   (default)
-                 ▲
-                 ┆ realizes
-     «abstract» AbstractNotifier
-        - sentCount : int
-        + send(msg): void         (template: logs, then calls deliver)
-        + getSentCount(): int
-        + deliver(msg): void   *  (abstract - each channel differs)
-                 ▲
-        ┌────────┴─────────┐
-   EmailNotifier      SmsNotifier
-   + deliver(msg)     + deliver(msg)
+   «abstract» Notification            «interface» Channel      «interface» Loggable
+   - title, body, timestamp            + send(content)          + toLogEntry()
+   + summary()   (concrete)                 ▲  ▲  ▲
+   + format()    (abstract)                 │  │  │ implements
+        ▲                                   │  │  └── PushChannel
+        │ extends                           │  └───── SmsChannel
+   ┌────┴───────────────────┐              └──────── EmailChannel
+   │ GradePostedNotification │  implements Loggable
+   ├─────────────────────────┤
+   │ DeadlineReminder...      │
+   └─────────────────────────┘
 ```
 
-### 7.2 Provided starter (interface + abstract skeleton)
+### Reference solution (guide, then reveal)
 
 ```java
-// Notifier.java  (THE CONTRACT)
-public interface Notifier {
-    void send(String message);
+import java.time.LocalDateTime;
 
-    default void sendUrgent(String message) {
-        send("[URGENT] " + message);
+public abstract class Notification {
+    protected final String title;
+    protected final String body;
+    protected final LocalDateTime timestamp;
+
+    protected Notification(String title, String body) {
+        this.title = title;
+        this.body = body;
+        this.timestamp = LocalDateTime.now();
+    }
+
+    public String summary() {                 // shared, concrete
+        return "[" + timestamp + "] " + title;
+    }
+
+    public abstract String format();          // gap: each type formats differently
+}
+
+public interface Channel {
+    void send(String content);
+}
+
+public interface Loggable {
+    String toLogEntry();
+}
+
+public class EmailChannel implements Channel {
+    @Override public void send(String content) {
+        System.out.println("EMAIL >> " + content);
     }
 }
-```
-
-```java
-// AbstractNotifier.java  (THE SKELETON: shared STATE + behavior)
-public abstract class AbstractNotifier implements Notifier {
-    private int sentCount = 0;
-
-    /** Template Method: shared bookkeeping, then a subclass-specific step. */
-    @Override
-    public final void send(String message) {
-        deliver(message);          // the varying step
-        sentCount++;               // the shared step
-    }
-
-    /** Each concrete channel decides HOW a message physically goes out. */
-    protected abstract void deliver(String message);
-
-    public int getSentCount() {
-        return sentCount;
+public class SmsChannel implements Channel {
+    @Override public void send(String content) {
+        System.out.println("SMS >> " + content);
     }
 }
-```
-
-### 7.3 Your tasks
-
-1. **Implement two concrete channels.** Create `EmailNotifier` and `SmsNotifier`, each
-   extending `AbstractNotifier` and overriding `deliver` to print a channel-specific line,
-   e.g. `EMAIL >> ...` and `SMS >> ...`.
-2. **Write a polymorphic client.** In a `Demo` class, build a `List<Notifier>`, send a
-   normal message and an urgent one through each, then print each notifier's `getSentCount()`.
-3. **Stretch (optional).** Add a third capability interface `Retryable` with a method
-   `int maxRetries()` and make `SmsNotifier` implement both `Notifier` (via
-   `AbstractNotifier`) and `Retryable`. Observe that `SmsNotifier` now belongs to two
-   abstractions - impossible with single inheritance alone.
-
-### 7.4 Reference solution (for the instructor / self-check)
-
-```java
-// EmailNotifier.java
-public class EmailNotifier extends AbstractNotifier {
-    @Override
-    protected void deliver(String message) {
-        System.out.println("EMAIL >> " + message);
+public class PushChannel implements Channel {
+    @Override public void send(String content) {
+        System.out.println("PUSH >> " + content);
     }
 }
 
-// SmsNotifier.java
-public class SmsNotifier extends AbstractNotifier {
-    @Override
-    protected void deliver(String message) {
-        System.out.println("SMS   >> " + message);
+public class GradePostedNotification extends Notification implements Loggable {
+    private final String course;
+    private final double grade;
+
+    public GradePostedNotification(String course, double grade) {
+        super("Grade posted", "Your grade is available.");
+        this.course = course;
+        this.grade = grade;
+    }
+    @Override public String format() {
+        return title + ": " + course + " = " + grade;
+    }
+    @Override public String toLogEntry() {
+        return "AUDIT|" + timestamp + "|grade_posted|" + course + "|" + grade;
     }
 }
 
-// Demo.java
-import java.util.List;
+public class DeadlineReminderNotification extends Notification {  // not Loggable
+    private final String assignment;
+
+    public DeadlineReminderNotification(String assignment) {
+        super("Deadline reminder", "An assignment is due soon.");
+        this.assignment = assignment;
+    }
+    @Override public String format() {
+        return title + ": " + assignment + " is due soon!";
+    }
+}
+
+public class Notifier {
+    public void notify(Notification n, Channel c) {
+        c.send(n.format());                        // uses abstract type + interface
+        if (n instanceof Loggable) {               // capability check
+            System.out.println(((Loggable) n).toLogEntry());
+        }
+    }
+}
 
 public class Demo {
     public static void main(String[] args) {
-        List<Notifier> notifiers = List.of(new EmailNotifier(), new SmsNotifier());
-        for (Notifier n : notifiers) {
-            n.send("Your order shipped.");
-            n.sendUrgent("Server is down!");   // default method -> send() -> deliver()
-        }
-        for (Notifier n : notifiers) {
-            // getSentCount lives on AbstractNotifier; downcast to read it
-            System.out.println(((AbstractNotifier) n).getSentCount() + " messages sent");
-        }
+        Notifier notifier = new Notifier();
+
+        Notification grade = new GradePostedNotification("OOP Design", 4.6);
+        Notification deadline = new DeadlineReminderNotification("Workshop 2");
+
+        notifier.notify(grade, new EmailChannel());   // Loggable -> also audited
+        notifier.notify(deadline, new SmsChannel());  // not Loggable -> no audit
+        notifier.notify(grade, new PushChannel());    // same notification, other channel
     }
 }
 ```
 
-**Expected output:**
+**Expected output (timestamp will vary):**
 
 ```
-EMAIL >> Your order shipped.
-EMAIL >> [URGENT] Server is down!
-SMS   >> Your order shipped.
-SMS   >> [URGENT] Server is down!
-2 messages sent
-2 messages sent
+EMAIL >> Grade posted: OOP Design = 4.6
+AUDIT|2026-...|grade_posted|OOP Design|4.6
+SMS >> Deadline reminder: Workshop 2 is due soon!
+PUSH >> Grade posted: OOP Design = 4.6
+AUDIT|2026-...|grade_posted|OOP Design|4.6
 ```
 
-### 7.5 Discussion prompts
-- Why is `send` marked `final` in `AbstractNotifier`? (So subclasses cannot break the
-  bookkeeping template - they may only fill in `deliver`.)
-- Which member could **not** live in the interface, forcing the abstract class? (`sentCount`,
-  because interfaces have no instance state.)
-- If a new channel `PushNotifier` is added, which existing files change? (None - only a
-  new class is added.)
+### What to notice (assessment discussion)
+
+- **Abstract class** `Notification` = shared state + shared `summary()` + the `format()` gap → an
+  "is-a" family.
+- **Interfaces** `Channel` and `Loggable` = capabilities that cross the design; `Channel` has three
+  independent implementations, proving decoupling.
+- `Notifier` depends on the **abstract type and the interface**, never on a concrete class — swap
+  channels or add notification types freely (Open/Closed Principle, low coupling).
+
+### Workshop deliverable
+
+Working code plus your **before-coding text/UML sketch** and a 3-sentence justification of each
+abstract-class-vs-interface choice. This is the evidence collected for corte 2.
 
 ---
 
-## 8. Common mistakes to avoid
+## 7. Wrap-up and exit ticket (10 min)
 
-- **Putting instance fields in an interface.** Interface fields are `public static final`
-  constants, not per-object state.
-- **Trying to extend two classes** (`class C extends A, B`) - illegal. Use interfaces for
-  the extra abstractions.
-- **Reaching for an interface when you need shared state** - if you need fields or a
-  constructor, an abstract class (often *plus* the interface) is the right tool.
-- **Overriding a default method by accident** without understanding it - know whether you
-  are replacing shared behavior.
-- **Referencing the concrete type in client code** (`EmailNotifier n = ...`) instead of
-  the abstraction (`Notifier n = ...`) - this reintroduces the coupling interfaces exist
-  to remove.
+### Decision-rule summary (memorize this)
 
----
+> **Abstract class** = "is-a" + shared state/behavior, only one allowed.
+> **Interface** = "can-do" capability/contract, many allowed, no state.
+> Need both? A concrete class **extends** one abstract base and **implements** several interfaces.
 
-## 9. Wrap-up and exit ticket
+### Exit ticket (submit before leaving)
 
-### One-paragraph summary
-An **interface** is a pure contract: method signatures, constants, and optional default/
-static methods, but **no instance state**. It models a **capability** ("can do") that
-even unrelated classes can share, and a class may implement **many** interfaces. An
-**abstract class** models a **family** ("is-a") and can carry **shared state and
-behavior** but only one may be a superclass. Choose the interface for contracts and
-cross-family capabilities, the abstract class for shared implementation and state, and
-very often **combine both**: an interface for the contract, an abstract class for the
-skeleton, and concrete classes for the specifics.
+1. Give one scenario where an **interface** is clearly better than an abstract class, and say why in
+   one sentence.
+2. Give one scenario where an **abstract class** is clearly better than an interface, and say why.
+3. Why does `Notifier` depending on `Channel` (not on `EmailChannel`) make the system easier to
+   change? Answer in terms of coupling and the Open/Closed Principle.
 
-### Exit ticket (hand in before leaving - 3 short answers)
-1. Give one scenario where an **interface** is clearly better than an abstract class, and
-   say why in one sentence.
-2. Name one thing an **abstract class** can do that an **interface** cannot.
-3. In the mini-workshop, which single member forced us to introduce the abstract class
-   instead of putting everything in the interface?
+### Bridge to the rest of Unit 2
 
-### Looking ahead
-The optional activity ([`../optional-activity/README.md`](../optional-activity/README.md))
-lets you design your own combined hierarchy from scratch and submit it via GitHub. The
-curated readings ([`../material/README.md`](../material/README.md)) deepen every concept
-from these two sessions.
+"Program to an interface, not an implementation" is the seed of **design patterns** (Strategy,
+Factory, Observer) and of **dependency injection** and **testability** (you can substitute a fake
+`Channel` in a unit test). Every one of those later topics rests on what you built today.

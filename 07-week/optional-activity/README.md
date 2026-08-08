@@ -1,251 +1,179 @@
 # Week 07 - Optional Activity
 
-## Media Library: Polymorphic Catalog Processing
+## Polymorphic Media Library (Dynamic Dispatch in Practice)
 
-**Course:** Object-Oriented Programming and Design (2026-B)
-**Unit 2:** Design principles and modularity
-**Assessment period:** Corte 2 · **RAA:** 90_82759
-**Type:** Optional practice (formative) · **Submission:** **GitHub** (not Moodle)
+**Unit 2 - Design principles and modularity | Corte 2 | RAA 90_82759**
 
-> **Why optional?** This activity is not required to pass the corte, but it is the
-> fastest way to convert this week's theory into muscle memory. It is designed to
-> take **2-4 hours** and produces a small, portfolio-worthy program. Feedback is
-> given on your GitHub repository.
+> **Optional and formative.** This activity is not required to pass the week, but completing
+> it strengthens your grasp of overriding and dynamic dispatch and gives you feedback before
+> the corte 2 assessment. **Submission is via GitHub, not Moodle.**
 
 ---
 
-## 1. Learning goals
+## 1. Problem statement
 
-This activity exercises **all five** weekly objectives:
+You will build a small **media library** that stores different kinds of media items —
+books, audiobooks, movies, and podcast episodes — and processes them **polymorphically**.
+All items share a common supertype, but each computes some values differently (for example,
+how long it takes to consume the item, and how it should be displayed in a catalog line).
 
-1. Override inherited methods to specialize subclass behavior.
-2. Invoke methods polymorphically through parent-type references.
-3. Explain (in your README) how dynamic dispatch selects the implementation.
-4. Implement a routine that processes a **heterogeneous collection**
-   polymorphically.
-5. Differentiate overriding from overloading/hiding and preserve substitutability.
-
----
-
-## 2. Problem statement
-
-You will build a small **Media Library** application. A library holds many kinds
-of media items — **books, movies, and podcasts** — that are all catalogued and
-reported through the **same** code path, even though each computes its details
-differently.
-
-Every media item can answer three questions uniformly:
-
-- *"How long does it take to consume you?"* -> `estimatedMinutes()`
-- *"Give me a one-line catalog entry."* -> `catalogEntry()`
-- *"What category are you?"* -> `category()`
-
-...but each **type** answers `estimatedMinutes()` in its own way:
-
-| Type | `estimatedMinutes()` rule |
-|------|---------------------------|
-| **Book** | `pages x 1.5` minutes (average reader). |
-| **Movie** | its `runtimeMinutes` directly. |
-| **Podcast** | `episodes x avgEpisodeMinutes`. |
-
-A single **catalog report routine** must iterate over a mixed collection of
-media items and produce a report — with **no `instanceof`** and **no type-switch**
-in the reporting logic.
+The whole point of the exercise: **the code that iterates over the library must not know or
+test which concrete type each item is.** New media types must be addable without editing the
+processing routines. If you find yourself writing `instanceof` or a `switch` on the type,
+stop and move that logic into an overridden method.
 
 ---
 
-## 3. Functional requirements
+## 2. Requirements
 
-### R1 - Type hierarchy
+### 2.1 Domain model (the hierarchy)
 
-- An **abstract** base class `MediaItem` with at least:
-  - common fields `title` and `author` (or `creator`), set via constructor;
-  - an **abstract** method `estimatedMinutes()`;
-  - an **abstract** method `category()` returning a `String` (e.g. `"Book"`);
-  - a **concrete** method `catalogEntry()` that builds a one-line string using
-    the polymorphic calls above (reuse, do not duplicate).
-- Three subclasses — `Book`, `Movie`, `Podcast` — each:
-  - adds its own fields (see §2 table);
-  - **overrides** `estimatedMinutes()` and `category()` with `@Override`;
-  - at least **one** subclass must also **override** `catalogEntry()` and call
-    `super.catalogEntry()` (demonstrate *extension*, not just replacement).
+Create an abstract supertype `MediaItem` with at least:
 
-### R2 - Polymorphic catalog routine
+- Fields common to all media: `title` (String) and `contributor` (String — author, director, or host).
+- An **abstract** method `int durationMinutes()` — each subtype computes its consumption time.
+- An **overridable** method `String catalogLine()` with a sensible default that uses
+  `durationMinutes()` (a *template method* that subclasses may extend via `super`).
+- An **overridable** hook `String category()` returning a default like `"general"`.
 
-Implement a class `Library` (or equivalent) that holds a
-`List<MediaItem>` and provides:
+Create **at least four** concrete subclasses, each **overriding** what it must, all using the
+`@Override` annotation:
 
-- `void addItem(MediaItem item)`
-- `void printCatalog()` — prints each item's `catalogEntry()` (one per line).
-- `int totalEstimatedMinutes()` — sums `estimatedMinutes()` across all items.
-- `MediaItem longest()` — returns the item with the greatest
-  `estimatedMinutes()`.
-- `List<MediaItem> byCategory(String category)` — filters by `category()`.
+| Subclass | Extra fields | `durationMinutes()` rule (example) |
+|----------|--------------|-------------------------------------|
+| `Book` | `int pages` | pages read at ~2 minutes/page |
+| `Audiobook` | `int narratedMinutes` | the narrated length directly |
+| `Movie` | `int runtimeMinutes` | the runtime directly |
+| `PodcastEpisode` | `int episodeMinutes`, `boolean hasAds` | episode length, +10% if it has ads |
 
-**Constraint:** none of these methods may use `instanceof`, `getClass()`
-comparisons, casts to a subtype, or a `switch` on type. All behavior must come
-through polymorphic dispatch.
+(You may adjust the exact formulas, but each subtype must genuinely differ.)
 
-### R3 - Demonstration (`main`)
+### 2.2 Polymorphic processing routines
 
-- Build a library with **at least 6 items** covering **all three** types.
-- Call `printCatalog()`, print `totalEstimatedMinutes()`, print `longest()`, and
-  print the result of `byCategory("Podcast")`.
+Write a class `MediaLibrary` holding a `List<MediaItem>` and these routines, **each with a
+single loop and no type tests**:
 
-### R4 - Open-Closed proof
+1. `int totalDurationMinutes()` — sum of `durationMinutes()` across all items.
+2. `void printCatalog()` — print `catalogLine()` for every item.
+3. `List<MediaItem> longerThan(int minutes)` — filter by `durationMinutes()`.
+4. `Map<String, Integer> minutesByCategory()` — group total minutes by `category()`.
 
-- Add a **fourth** media type (your choice, e.g. `AudioBook` or `Article`) in a
-  **separate commit** whose message explicitly states that you did **not** modify
-  `Library` or the existing subclasses. This is the graded evidence that your
-  design is open-closed.
+### 2.3 Demonstrate dynamic dispatch and Open/Closed
 
-### R5 - Tests (recommended, not mandatory but rewarded)
+- In a `main` method, populate the library with a mix of all four subtypes and call every
+  routine.
+- Add a **fifth** media type (e.g., `Documentary` or `Comic`) **without modifying any routine
+  in `MediaLibrary` or the `MediaItem` base class** except to add the new item to the list.
+  Note in your README that the routines were untouched.
 
-- At least three unit tests (JUnit, `pytest`, or plain assertions) verifying
-  `estimatedMinutes()` for each type and that `longest()` picks the right item.
+### 2.4 Constraints (must hold)
 
----
+- No `instanceof` and no `switch`/`if` on an object's type anywhere in the processing routines.
+- Every override uses `@Override` (or your language's mandatory keyword).
+- At least one subclass uses `super.catalogLine()` to **extend** the base behavior rather than
+  fully replace it.
+- Code compiles and runs with a single documented command.
 
-## 4. Non-functional requirements
+### 2.5 Language
 
-- **Language:** Java is recommended (matches the course examples), but Python or
-  C# are accepted if you keep the polymorphic design intact.
-- **Style:** meaningful names, no dead code, consistent formatting.
-- **No God methods:** the reporting logic must not "know" about concrete types.
-- **Encapsulation:** fields private/protected with accessors as needed.
+Java is recommended (matches the session examples), but **C#, C++, Kotlin, or Python are
+accepted**. If you use Python, demonstrate the same idea via method overriding on a common
+base class and note where duck typing changes the picture.
 
 ---
 
-## 5. Expected deliverable
+## 3. Expected deliverable
 
 A **public GitHub repository** containing:
 
 ```
 media-library/
-├── src/                     # source code
-│   ├── MediaItem.java
-│   ├── Book.java
-│   ├── Movie.java
-│   ├── Podcast.java
-│   ├── Library.java
-│   └── Main.java
-├── test/                    # optional tests
-├── README.md                # see required content below
-└── .gitignore
+├── src/                      # your source files
+│   ├── MediaItem.(java|cs|py|...)
+│   ├── Book.(...)
+│   ├── Audiobook.(...)
+│   ├── Movie.(...)
+│   ├── PodcastEpisode.(...)
+│   └── Main.(...)            # or an equivalent entry point
+├── README.md                 # see required contents below
+└── (build file if applicable: pom.xml / build.gradle / .csproj / none)
 ```
 
-### Required `README.md` content
+Your repository `README.md` **must** include:
 
-1. **How to compile and run** (exact commands).
-2. **Sample output** of your `main` (paste it).
-3. A **short reflection (150-250 words)** answering:
-   - *Where exactly does dynamic dispatch happen in your code?* (point to the
-     line/method)
-   - *Which reference is the declared (parent) type and what is the actual type
-     at runtime?*
-   - *How did requirement R4 demonstrate the Open-Closed Principle?*
-   - *One place you could have used `instanceof` but used polymorphism instead.*
+1. **How to build and run** (exact commands).
+2. **Sample output** (paste the console output of `main`).
+3. A short section **"Where dynamic dispatch happens"** — point to the exact line(s) where a
+   supertype reference calls an overridden method, and name the static type and the possible
+   dynamic types.
+4. A short section **"Proving Open/Closed"** — describe the fifth type you added and confirm
+   which routines you did *not* have to change.
 
 ---
 
-## 6. How to submit (via GitHub, NOT Moodle)
+## 4. How to submit (via GitHub — NOT Moodle)
 
-> Do **not** upload a `.zip` to Moodle. This activity is submitted and reviewed
-> on GitHub.
-
-1. **Create a repository** named `oop-week07-media-library` (public).
-2. Initialize and make your **first commit** with the base hierarchy:
+1. **Create a new public repository** on GitHub named `oop-week07-media-library`.
+2. Initialize it locally and add your code:
    ```bash
    git init
    git add .
-   git commit -m "feat: base MediaItem hierarchy with polymorphic catalog"
-   ```
-3. Implement the requirements in **small, meaningful commits**, for example:
-   ```bash
-   git commit -m "feat: add Book, Movie, Podcast with overridden estimatedMinutes"
-   git commit -m "feat: polymorphic Library report routine (no instanceof)"
-   git commit -m "feat: add fourth media type without modifying Library (OCP proof)"
-   git commit -m "docs: add README with run instructions and reflection"
-   ```
-4. **Push** to GitHub:
-   ```bash
+   git commit -m "Week 07: polymorphic media library"
    git branch -M main
    git remote add origin https://github.com/<your-username>/oop-week07-media-library.git
    git push -u origin main
    ```
-5. **Submit the link.** Paste your repository URL where the instructor indicates
-   (course GitHub Classroom link or the designated channel). Make sure the repo
-   is **public** or the instructor is added as a collaborator.
+3. **Commit hygiene:** make at least **three meaningful commits** (e.g., "add MediaItem base",
+   "add subclasses with overrides", "add polymorphic routines + fifth type"). A single
+   "final" commit loses points on the process criterion.
+4. **Tag your submission:** create a tag so the graded state is unambiguous.
+   ```bash
+   git tag week07-submission
+   git push origin week07-submission
+   ```
+5. **Submit the link:** paste the repository URL where the instructor indicated (course
+   channel / shared sheet). **Do not upload a ZIP to Moodle** — the GitHub URL is the
+   deliverable.
 
-> **Academic integrity.** The work must be yours. You may discuss ideas, but
-> copied repositories are easy to detect via commit history. Your **commit
-> history itself is part of the evaluation** — incremental, meaningful commits
-> score better than a single "final" dump.
-
----
-
-## 7. Assessment criteria / rubric (100 points)
-
-| # | Criterion | Excellent (full) | Acceptable (~60%) | Insufficient (0) | Pts |
-|---|-----------|------------------|-------------------|------------------|-----|
-| 1 | **Correct overriding** | All subclasses override with `@Override`; signatures & contracts correct; one uses `super`. | Overrides work but `@Override` missing or `super` not demonstrated. | Methods not actually overriding (overload/hide) or broken. | 20 |
-| 2 | **Polymorphic dispatch** | Calls go through the `MediaItem` supertype; behavior clearly selected at runtime. | Mostly polymorphic with minor direct-type coupling. | Relies on concrete types to choose behavior. | 20 |
-| 3 | **Polymorphic routine (no type-switch)** | Report routine has zero `instanceof`/cast/`switch`-on-type; handles all types. | One small type check slipped in. | Logic driven by type checks. | 20 |
-| 4 | **Open-Closed proof (R4)** | Fourth type added in its own commit with no edits to `Library`/existing subclasses. | Added but required minor edits elsewhere. | Not attempted, or required rewriting the routine. | 15 |
-| 5 | **README + reflection** | Run instructions, sample output, and a precise, correct reflection. | Present but shallow or partly incorrect. | Missing or wrong. | 10 |
-| 6 | **Code quality & encapsulation** | Clean names, encapsulated fields, no dead code. | Minor style issues. | Poor structure/naming. | 10 |
-| 7 | **Git hygiene** | Meaningful, incremental commit history. | Few large commits. | Single dump / no history. | 5 |
-| 8 | **Tests (bonus)** | 3+ meaningful tests passing. | 1-2 tests. | None. | +5 (bonus) |
-
-**Passing threshold for full formative credit:** 70/100.
+> **Deadline:** end of Week 07 (see the course calendar for the exact date/time of corte 2).
+> **Academic integrity:** the work must be your own. You may discuss ideas, but code must be
+> written by you; cite any snippet you adapted from documentation.
 
 ---
 
-## 8. Hints and common pitfalls
+## 5. Assessment criteria / rubric (100 points)
 
-- **Pitfall:** overloading instead of overriding. If you change the parameter
-  list, you created a *new* method — dispatch will not pick it. `@Override`
-  catches this; use it everywhere.
-- **Pitfall:** a `static` "helper" that switches on `category()` strings — that
-  is the `instanceof` chain in disguise. Push the behavior *into* the subclass.
-- **Pitfall:** downcasting inside the report routine to reach a subclass-only
-  field. If you need that field for the report, expose it through a polymorphic
-  method on `MediaItem` instead.
-- **Tip:** start from the Session 2 `Shape` renderer (§5) and the payment
-  processor (§6) — this activity is the same shape with a new domain.
-- **Tip:** verify OCP by literally checking `git diff` when you add the fourth
-  type: only *new* files should appear.
+| Criterion | Excellent (full) | Acceptable (partial) | Insufficient (0) | Pts |
+|-----------|------------------|----------------------|------------------|-----|
+| **Correct overriding** — valid overrides with `@Override`; at least one uses `super`. | All subtypes override correctly; `super` used to extend; compiles clean. (25) | Overrides work but `@Override`/`super` missing or misused. (12) | Overrides absent or broken. (0) | 25 |
+| **Polymorphic processing** — routines use a single loop over the supertype, no type tests. | All four routines polymorphic; zero `instanceof`/type `switch`. (25) | Mostly polymorphic but 1-2 type tests remain. (12) | Type ladders drive behavior. (0) | 25 |
+| **Dynamic dispatch explained** — README correctly identifies where dispatch occurs and the static vs. dynamic types. | Precise, correct explanation with line references. (15) | Present but vague or partly wrong. (7) | Missing or incorrect. (0) | 15 |
+| **Open/Closed demonstrated** — a fifth type added without touching the routines. | Fifth type added; README confirms untouched routines. (15) | Fifth type added but some routine edited unnecessarily. (7) | Not demonstrated. (0) | 15 |
+| **Build, run, and correctness** — compiles and runs with documented command; sample output included and plausible. | Runs first try; output pasted and correct. (10) | Runs with minor fixes; output partial. (5) | Does not compile/run. (0) | 10 |
+| **Repository & process** — public repo, ≥3 meaningful commits, submission tag, clear README. | All present and clean. (10) | Repo present but weak history or missing tag. (5) | No usable repo. (0) | 10 |
+| **Total** | | | | **100** |
+
+**Passing this optional activity:** 60/100. **Distinction:** 85/100 with all constraints in §2.4 satisfied.
 
 ---
 
-## 9. Reference solution skeleton (start here)
+## 6. Self-check before you submit
 
-```java
-import java.util.*;
+- [ ] Every processing routine is a single loop with no `instanceof`/type `switch`.
+- [ ] Every override carries `@Override` (or the mandatory keyword) and the code compiles.
+- [ ] At least one override calls `super.catalogLine()`.
+- [ ] A fifth media type was added and the routines were **not** modified.
+- [ ] README explains where dynamic dispatch happens and includes sample output.
+- [ ] Repo is public, has ≥3 meaningful commits, and the `week07-submission` tag is pushed.
+- [ ] I submitted the **GitHub URL** (not a Moodle upload).
 
-abstract class MediaItem {
-    protected final String title;
-    protected final String creator;
+---
 
-    protected MediaItem(String title, String creator) {
-        this.title = title;
-        this.creator = creator;
-    }
+## 7. Extension ideas (for the curious — ungraded)
 
-    public abstract int estimatedMinutes();
-    public abstract String category();
-
-    public String catalogEntry() {
-        return String.format("[%-8s] %-25s by %-15s ~%d min",
-                             category(), title, creator, estimatedMinutes());
-    }
-}
-
-// TODO: Book (pages * 1.5), Movie (runtimeMinutes), Podcast (episodes * avg)
-// TODO: Library with printCatalog(), totalEstimatedMinutes(), longest(), byCategory()
-// TODO: Main with >= 6 items across all types
-// TODO: fourth type in its own commit (OCP proof)
-```
-
-Good luck — and remember: if you find yourself writing `instanceof`, stop and ask
-*"which object should own this decision?"*
+- Add a `Comparable<MediaItem>` ordering by `durationMinutes()` and sort the catalog
+  polymorphically.
+- Introduce an interface (e.g., `Downloadable`) implemented by only some subtypes and process
+  those uniformly — a preview of Week 08.
+- Replace one subtype's behavior with a *Strategy* object injected at construction, and
+  discuss how it relates to overriding.

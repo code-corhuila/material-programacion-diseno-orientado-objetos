@@ -1,191 +1,200 @@
-# Week 08 - Session 1: Abstract Classes and Abstract Methods
+# Week 08 - Session 1: Abstract classes and abstract methods
 
-**Course:** Object-Oriented Programming and Design (2026-B)
-**Unit 2:** Design principles and modularity
-**Session focus:** Abstraction, abstract classes, and abstract methods
-**Reference language:** Java
+**Subject:** Object-Oriented Programming and Design | **Unit 2** | **Corte 2**
+**Duration:** 120 minutes | **Reference language:** Java (JDK 11+)
 
 ---
 
 ## 1. Session objective
 
-By the end of this session the student will be able to **define abstract methods in a
-parent class and implement them correctly in two or more concrete subclasses**, and to
-**explain why an abstract class exists and why it cannot be instantiated**. The student
-will produce a small, compiling `Shape` hierarchy that demonstrates polymorphism through
-an abstract supertype.
+By the end of this session the student will be able to **declare an abstract class with at least one
+abstract method, explain why it cannot be instantiated, and implement the abstract method correctly
+in one or more concrete subclasses**, producing compiling code and a short justification of when an
+abstract class is the right modeling choice.
+
+This maps to Week 08 objectives 1, 2, and 5.
 
 ---
 
-## 2. Timed agenda (110 minutes)
+## 2. Timed agenda
 
 | Time | Segment | Activity |
 |---|---|---|
-| 0:00 - 0:10 | Warm-up | Recap of inheritance and polymorphism from Week 7; framing question. |
-| 0:10 - 0:40 | Theory | Abstraction, abstract classes, abstract methods, shared state, why no instantiation. |
-| 0:40 - 1:05 | Worked example | Building the `Shape` hierarchy step by step (live coding). |
-| 1:05 - 1:35 | Guided practice | Students extend the hierarchy with new shapes and a client loop. |
-| 1:35 - 1:45 | Wrap-up | Common mistakes, summary, exit ticket. |
+| 0:00 - 0:15 | Warm-up & recap | Polymorphism recap; the rigidity problem that motivates abstraction. |
+| 0:15 - 0:50 | Theory | Abstract classes, abstract methods, shared state, instantiation rule, Template Method idea. |
+| 0:50 - 1:15 | Worked example | `Shape` hierarchy with abstract `area()` and `perimeter()`, walked through live. |
+| 1:15 - 1:50 | Guided practice | `Employee` payroll hierarchy built together, students at keyboards. |
+| 1:50 - 2:00 | Wrap-up | Key takeaways + exit ticket. |
 
 ---
 
-## 3. Warm-up (framing question)
+## 3. Warm-up and recap (15 min)
 
-> Last week we wrote a `Shape` superclass with an `area()` method that simply returned
-> `0`, and every subclass overrode it. That "return 0" was a lie: a generic shape has no
-> meaningful area. **What if the language let us say "every shape has an area, but the
-> base class refuses to guess it"?**
+### Where we are
 
-Hold that thought. That is exactly what an *abstract method* does.
+In Unit 1 you built individual classes. Earlier in Unit 2 you saw **inheritance** (`extends`) and
+**polymorphism** (a `Dog` and a `Cat` both usable as `Animal`, each responding to `makeSound()`
+in its own way).
 
----
+### The problem abstraction solves
 
-## 4. Theory notes
-
-### 4.1 Abstraction: the idea before the keyword
-
-**Abstraction** is the act of separating *what* something does from *how* it does it.
-When you press the brake pedal of a car you rely on the *contract* ("the car slows
-down") without knowing whether the mechanism is a drum brake, a disc brake, or
-regenerative braking. In code, abstraction lets client code depend on a stable idea
-("a shape has an area") while concrete types vary freely underneath.
-
-Java gives us two language tools to express abstraction:
-
-- **Abstract classes** - a partially implemented base type (this session).
-- **Interfaces** - a pure contract (Session 2).
-
-### 4.2 The abstract method
-
-An **abstract method** is a method declared *without a body*. It states that a behavior
-must exist, but refuses to say how:
+Consider a drawing program that manages many shapes. A first attempt might do this:
 
 ```java
-public abstract double area();   // note: no braces, just a semicolon
-```
+class Circle    { double radius; }
+class Rectangle { double width, height; }
 
-An abstract method is a *promise the parent forces onto its children*. Any concrete
-subclass must provide a real implementation, or it too remains abstract.
-
-### 4.3 The abstract class
-
-A class that contains one or more abstract methods **must** be declared `abstract`. An
-abstract class:
-
-- **cannot be instantiated** with `new` - because it is incomplete; and
-- **may contain everything a normal class has**: fields (state), constructors, concrete
-  methods, and static members.
-
-This last point is the key difference from an interface: an abstract class can carry
-*shared state and shared behavior*, not just signatures.
-
-```java
-public abstract class Shape {
-    private final String name;          // shared STATE
-
-    protected Shape(String name) {      // constructor for subclasses to call
-        this.name = name;
-    }
-
-    public String getName() {           // shared CONCRETE behavior
-        return name;
-    }
-
-    public abstract double area();      // REQUIRED behavior, unspecified here
-
-    public String describe() {          // concrete method that USES the abstract one
-        return String.format("%s with area %.2f", name, area());
-    }
+// Somewhere else, to draw everything:
+for (Object s : shapes) {
+    if (s instanceof Circle)    { /* compute circle area */ }
+    else if (s instanceof Rectangle) { /* compute rectangle area */ }
+    // ...a new 'else if' for every new shape, forever
 }
 ```
 
-Notice `describe()`: it calls `area()` even though `Shape` does not know how any area is
-computed. At runtime the *actual* subclass supplies `area()`. This is polymorphism, and
-the pattern - a concrete method built on top of abstract steps - is called the
-**Template Method** pattern.
+Every time we add a shape (`Triangle`, `Hexagon`, ...) we must **edit** that loop. This is fragile,
+error-prone, and violates the Open/Closed Principle (code should be *open for extension* but
+*closed for modification*).
 
-### 4.4 Why can't we instantiate an abstract class?
-
-Because it has holes. If Java allowed `new Shape("thing")`, what would `thing.area()`
-return? There is no sensible answer. Forbidding instantiation is the compiler protecting
-you from calling a method that has no body. You *can* still hold an abstract-typed
-reference to a concrete object:
-
-```java
-Shape s = new Circle(2.0);   // legal: the object is a Circle, the reference is a Shape
-// Shape s = new Shape("x"); // COMPILE ERROR: Shape is abstract
-```
-
-### 4.5 Text UML of the hierarchy
-
-Abstract members are shown in *italics* in real UML; here we mark them with `«abstract»`
-and a trailing `*`.
-
-```
-                 ┌───────────────────────────┐
-                 │      «abstract» Shape      │
-                 ├───────────────────────────┤
-                 │ - name : String           │
-                 ├───────────────────────────┤
-                 │ + getName() : String      │
-                 │ + describe() : String     │
-                 │ + area() : double   *      │   (* = abstract, no body)
-                 └────────────▲──────────────┘
-                              │  (generalization / "is-a")
-          ┌───────────────────┼────────────────────┐
-          │                   │                     │
- ┌────────┴───────┐  ┌────────┴────────┐  ┌─────────┴────────┐
- │     Circle     │  │    Rectangle    │  │     Triangle     │
- ├────────────────┤  ├─────────────────┤  ├──────────────────┤
- │ - radius       │  │ - width         │  │ - base           │
- │                │  │ - height        │  │ - height         │
- ├────────────────┤  ├─────────────────┤  ├──────────────────┤
- │ + area():double│  │ + area():double │  │ + area():double  │
- └────────────────┘  └─────────────────┘  └──────────────────┘
-```
-
-The hollow triangle arrow (`▲`) is UML **generalization**: "Circle *is a* Shape".
+**Discussion prompt (2 min, in pairs):** What do all shapes have in common that the program needs?
+*(Expected answer: every shape can report an `area()` and a `perimeter()` — but the formula differs.
+That "same operation, different formula" is exactly what abstraction captures.)*
 
 ---
 
-## 5. Worked example (fully solved)
+## 4. Theory notes (35 min)
 
-We build the complete `Shape` hierarchy and a client that treats every shape uniformly.
+### 4.1 What is an abstract class?
 
-### 5.1 The abstract base
+An **abstract class** is a class that:
+
+- **Cannot be instantiated directly** — you cannot write `new Shape()`.
+- **May declare abstract methods** — methods with a signature but *no body*, which subclasses must
+  implement.
+- **May also contain concrete methods, fields, and constructors** — real, shared, implemented
+  behavior and state.
+
+It sits *between* a fully abstract contract (an interface) and a fully concrete class. It says:
+"Here is what all my subclasses share, and here are the gaps each subclass must fill in."
+
+In Java you use the `abstract` keyword:
 
 ```java
-// Shape.java
 public abstract class Shape {
+    // shared state
     private final String name;
 
+    // constructor (yes, abstract classes have constructors —
+    // they run when a subclass object is created)
     protected Shape(String name) {
         this.name = name;
     }
 
+    // concrete method: shared behavior, fully implemented here
     public String getName() {
         return name;
     }
 
-    /** Every concrete shape MUST define how its area is computed. */
+    // abstract methods: NO body. Every concrete subclass MUST implement them.
     public abstract double area();
+    public abstract double perimeter();
 
-    /** Concrete behavior built on top of the abstract step (Template Method). */
+    // a concrete method that DEPENDS on abstract ones (Template Method flavor)
     public String describe() {
-        return String.format("%s -> area = %.2f", name, area());
+        return String.format("%s -> area=%.2f, perimeter=%.2f",
+                             name, area(), perimeter());
     }
 }
 ```
 
-### 5.2 Three concrete subclasses
+### 4.2 Abstract method
+
+An **abstract method** is declared with the `abstract` modifier and terminated by a semicolon instead
+of a body:
 
 ```java
-// Circle.java
+public abstract double area();   // no { } — the subclass supplies it
+```
+
+Rules:
+
+- If a class has **at least one** abstract method, the class **must** be declared `abstract`.
+- A subclass that does **not** implement every inherited abstract method must itself be `abstract`.
+- The first concrete (non-abstract) subclass in the chain must implement *all* remaining abstract
+  methods.
+
+### 4.3 Why can't we instantiate an abstract class?
+
+Because it is **incomplete**. `Shape.area()` has no formula. If Java allowed `new Shape("x")`, then
+calling `.area()` would have nothing to run. The compiler forbids it:
+
+```java
+Shape s = new Shape("mystery"); // COMPILE ERROR: Shape is abstract; cannot be instantiated
+```
+
+But you *can* declare a variable of the abstract type and point it at a concrete subclass — this is
+polymorphism in action:
+
+```java
+Shape s = new Circle("c1", 2.0); // OK: Circle is concrete and completes the contract
+```
+
+### 4.4 Abstract classes hold *shared state and behavior*
+
+This is the key difference from interfaces (Session 2). An abstract class can carry fields
+(`name` above), a constructor to initialize them, and fully written helper methods (`getName`,
+`describe`). Subclasses inherit all of that for free and only supply what is genuinely different.
+
+### 4.5 The Template Method idea
+
+Notice `describe()`: it is fully implemented in the abstract class, yet it *calls* the abstract
+methods `area()` and `perimeter()`. The abstract class fixes the **skeleton** of the algorithm
+("print name, then area, then perimeter") and defers the **variable steps** to subclasses. This is
+the **Template Method** design pattern — a natural and very common use of abstract classes.
+
+```
+        Shape (abstract)
+        ├── fields:   name
+        ├── concrete: getName(), describe()   <-- skeleton lives here
+        └── abstract: area(), perimeter()     <-- filled by subclasses
+                 ▲                 ▲
+                 │  extends        │  extends
+        ┌────────┴──────┐  ┌───────┴─────────┐
+        │   Circle      │  │   Rectangle     │
+        │  area()=πr²   │  │ area()=w*h      │
+        │  perimeter()  │  │ perimeter()     │
+        └───────────────┘  └─────────────────┘
+```
+
+### 4.6 When to reach for an abstract class
+
+Use an abstract class when **all** of the following tend to be true:
+
+- The subclasses form a genuine **"is-a"** family (a `Circle` *is a* `Shape`).
+- They share **state** (fields) and/or **implemented behavior** you don't want to duplicate.
+- You want to **guarantee** certain operations exist while providing default machinery around them.
+
+(The full decision rule, including when an interface is better, is completed in Session 2.)
+
+---
+
+## 5. Worked example: the `Shape` hierarchy (25 min)
+
+We now complete and run the `Shape` design. Follow along in your IDE.
+
+### Step 1 - The abstract base (already shown in 4.1)
+
+Keep the `Shape` class from section 4.1.
+
+### Step 2 - Concrete subclass `Circle`
+
+```java
 public class Circle extends Shape {
     private final double radius;
 
-    public Circle(double radius) {
-        super("Circle");
+    public Circle(String name, double radius) {
+        super(name);                 // call the abstract class constructor
+        if (radius <= 0) throw new IllegalArgumentException("radius must be positive");
         this.radius = radius;
     }
 
@@ -193,17 +202,25 @@ public class Circle extends Shape {
     public double area() {
         return Math.PI * radius * radius;
     }
+
+    @Override
+    public double perimeter() {
+        return 2 * Math.PI * radius;
+    }
 }
 ```
 
+### Step 3 - Concrete subclass `Rectangle`
+
 ```java
-// Rectangle.java
 public class Rectangle extends Shape {
     private final double width;
     private final double height;
 
-    public Rectangle(double width, double height) {
-        super("Rectangle");
+    public Rectangle(String name, double width, double height) {
+        super(name);
+        if (width <= 0 || height <= 0)
+            throw new IllegalArgumentException("dimensions must be positive");
         this.width = width;
         this.height = height;
     }
@@ -212,47 +229,35 @@ public class Rectangle extends Shape {
     public double area() {
         return width * height;
     }
-}
-```
-
-```java
-// Triangle.java
-public class Triangle extends Shape {
-    private final double base;
-    private final double height;
-
-    public Triangle(double base, double height) {
-        super("Triangle");
-        this.base = base;
-        this.height = height;
-    }
 
     @Override
-    public double area() {
-        return 0.5 * base * height;
+    public double perimeter() {
+        return 2 * (width + height);
     }
 }
 ```
 
-### 5.3 A polymorphic client
+### Step 4 - Using the hierarchy polymorphically
 
 ```java
-// Main.java
-public class Main {
-    public static void main(String[] args) {
-        // The array is typed by the ABSTRACTION, not by any concrete class.
-        Shape[] shapes = {
-            new Circle(2.0),
-            new Rectangle(3.0, 4.0),
-            new Triangle(6.0, 5.0)
-        };
+import java.util.List;
 
-        double total = 0.0;
-        for (Shape s : shapes) {      // we never ask "what kind of shape is this?"
+public class Drawing {
+    public static void main(String[] args) {
+        // A list of the ABSTRACT type; each element is a concrete subclass.
+        List<Shape> shapes = List.of(
+            new Circle("C1", 2.0),
+            new Rectangle("R1", 3.0, 4.0),
+            new Circle("C2", 1.5)
+        );
+
+        double totalArea = 0;
+        for (Shape s : shapes) {
+            // No 'instanceof', no 'if' ladder. Each object knows its own area().
             System.out.println(s.describe());
-            total += s.area();        // the RIGHT area() runs for each object
+            totalArea += s.area();
         }
-        System.out.printf("Total area = %.2f%n", total);
+        System.out.printf("Total area = %.2f%n", totalArea);
     }
 }
 ```
@@ -260,98 +265,151 @@ public class Main {
 **Expected output:**
 
 ```
-Circle -> area = 12.57
-Rectangle -> area = 12.00
-Triangle -> area = 15.00
-Total area = 39.57
+C1 -> area=12.57, perimeter=12.57
+R1 -> area=12.00, perimeter=14.00
+C2 -> area=7.07, perimeter=9.42
+Total area = 31.63
 ```
 
-### 5.4 What to notice
+### Why this is better
 
-1. `Shape` declares `area()` abstract, so `describe()` and `Main` can rely on it existing.
-2. `Main` never uses `instanceof` and never switches on a type - the correct `area()` is
-   chosen automatically (dynamic dispatch). Adding a new shape does **not** change `Main`.
-3. `super("Circle")` shows an abstract class can have a constructor, called by subclasses.
+To add a `Triangle`, you write **one new class** that extends `Shape` and implements `area()` and
+`perimeter()`. **You touch no existing code** — not `Shape`, not `Drawing`. That is the Open/Closed
+Principle delivered by abstraction. The compiler even *enforces* that your new shape provides `area()`
+and `perimeter()`; you cannot forget.
 
 ---
 
-## 6. Guided in-class practice
+## 6. Guided in-class practice (35 min)
 
-Work in pairs. Start from the worked-example code above.
+**Scenario:** A company needs a payroll module. Every employee has a name and an ID, and every
+employee can report their **monthly pay** — but the pay is computed differently per employee type.
 
-### Task A - Add a new shape (individual, ~10 min)
-Create a `Square` class. Decide honestly: should `Square extends Rectangle`, or
-`Square extends Shape`? Write one sentence justifying your choice, then implement it and
-add a `Square(4.0)` to the `shapes` array. Confirm the total updates without editing the
-loop.
+- **Salaried employee:** fixed monthly salary.
+- **Hourly employee:** hourly rate x hours worked this month.
+- **Commissioned employee:** base salary + commission rate x sales this month.
 
-### Task B - Add abstract behavior (pairs, ~10 min)
-Add a second abstract method to `Shape`:
+### Your task (build it together, step by step)
+
+1. Create an **abstract class** `Employee` with:
+   - `protected` fields `name` and `id` (shared state),
+   - a constructor initializing them,
+   - a **concrete** method `getName()`,
+   - an **abstract** method `double monthlyPay()`,
+   - a **concrete** method `String payslip()` that returns `name + " (" + id + "): $" + monthlyPay()`
+     — a Template Method that reuses the abstract operation.
+
+2. Create three **concrete** subclasses that each implement `monthlyPay()`:
+   - `SalariedEmployee(name, id, monthlySalary)`
+   - `HourlyEmployee(name, id, hourlyRate, hoursWorked)`
+   - `CommissionedEmployee(name, id, baseSalary, commissionRate, sales)`
+
+3. In a `Payroll` class, build a `List<Employee>`, print every payslip, and compute the total payroll
+   cost using a single loop over the abstract type.
+
+### Reference solution (reveal after students attempt it)
 
 ```java
-public abstract double perimeter();
-```
+public abstract class Employee {
+    protected final String name;
+    protected final String id;
 
-Now the code will not compile until every subclass implements `perimeter()`. Fix each
-subclass. This demonstrates the compiler *enforcing* the contract - the whole point of
-abstract methods.
-
-### Task C - Use the abstraction in a utility (pairs, ~10 min)
-Write a static method that works on *any* shape through the abstraction:
-
-```java
-public static Shape largest(Shape[] shapes) {
-    Shape biggest = shapes[0];
-    for (Shape s : shapes) {
-        if (s.area() > biggest.area()) {
-            biggest = s;
-        }
+    protected Employee(String name, String id) {
+        this.name = name;
+        this.id = id;
     }
-    return biggest;
+
+    public String getName() { return name; }
+
+    public abstract double monthlyPay();          // the gap subclasses fill
+
+    public String payslip() {                      // shared skeleton
+        return String.format("%s (%s): $%.2f", name, id, monthlyPay());
+    }
+}
+
+public class SalariedEmployee extends Employee {
+    private final double monthlySalary;
+    public SalariedEmployee(String name, String id, double monthlySalary) {
+        super(name, id);
+        this.monthlySalary = monthlySalary;
+    }
+    @Override public double monthlyPay() { return monthlySalary; }
+}
+
+public class HourlyEmployee extends Employee {
+    private final double hourlyRate;
+    private final double hoursWorked;
+    public HourlyEmployee(String name, String id, double hourlyRate, double hoursWorked) {
+        super(name, id);
+        this.hourlyRate = hourlyRate;
+        this.hoursWorked = hoursWorked;
+    }
+    @Override public double monthlyPay() { return hourlyRate * hoursWorked; }
+}
+
+public class CommissionedEmployee extends Employee {
+    private final double baseSalary;
+    private final double commissionRate;
+    private final double sales;
+    public CommissionedEmployee(String name, String id, double baseSalary,
+                                double commissionRate, double sales) {
+        super(name, id);
+        this.baseSalary = baseSalary;
+        this.commissionRate = commissionRate;
+        this.sales = sales;
+    }
+    @Override public double monthlyPay() { return baseSalary + commissionRate * sales; }
+}
+
+import java.util.List;
+public class Payroll {
+    public static void main(String[] args) {
+        List<Employee> staff = List.of(
+            new SalariedEmployee("Ana",  "E01", 3_500_000),
+            new HourlyEmployee  ("Beto", "E02", 25_000, 160),
+            new CommissionedEmployee("Cris", "E03", 1_000_000, 0.05, 40_000_000)
+        );
+        double total = 0;
+        for (Employee e : staff) {
+            System.out.println(e.payslip());
+            total += e.monthlyPay();
+        }
+        System.out.printf("Total payroll = $%.2f%n", total);
+    }
 }
 ```
 
-Call it from `main` and print `largest(shapes).describe()`. Discuss: why can this method
-accept a `Circle`, a `Triangle`, and a `Square` without any changes?
+### Extension challenges (for fast finishers)
 
-### Checkpoint questions (discuss with your pair)
-1. What happens if you try `new Shape("x")`? Try it and read the compiler error.
-2. If you *remove* `area()` from `Rectangle`, what error appears and why?
-3. Where does the shared field `name` live - in `Shape` or in each subclass?
-
----
-
-## 7. Common mistakes to avoid
-
-- **Giving an abstract method a body** (`public abstract double area() { return 0; }`).
-  Abstract means *no body*; a body makes it concrete.
-- **Forgetting `@Override`.** It is optional but it lets the compiler catch a mistyped
-  signature that would otherwise silently create a new, unrelated method.
-- **Trying to instantiate the abstract class.** Instantiate a concrete subclass instead.
-- **Duplicating shared state in every subclass** instead of lifting it into the abstract
-  parent.
-- **Making the base method return a fake value** (like `0`) rather than declaring it
-  abstract - this hides bugs when a subclass forgets to override.
+- Add a `BonusEmployee` (salary + fixed year-end bonus averaged monthly) **without editing any
+  existing class**. Confirm `Payroll` still works untouched — this *is* the Open/Closed Principle.
+- Try to write `new Employee("x", "y")`. Read the compiler error and explain it in one sentence.
+- Add validation in the constructors (negative pay throws `IllegalArgumentException`).
 
 ---
 
-## 8. Wrap-up and exit ticket
+## 7. Wrap-up and exit ticket (10 min)
 
-### One-paragraph summary
-An **abstract class** is an incomplete base type: it can hold shared state and concrete
-methods, but it declares **abstract methods** with no body that every concrete subclass
-must implement. Because it is incomplete, it **cannot be instantiated**, yet it is a
-perfectly good *reference type*, which is what makes polymorphism possible: client code
-depends on the abstract type and the correct subclass behavior runs automatically.
+### Key takeaways
 
-### Exit ticket (hand in before leaving - 3 short answers)
-1. In one sentence, why can an abstract class not be instantiated?
-2. Write the single line of Java that declares an abstract method named `render` that
-   returns `void` and takes no parameters.
-3. Give one concrete example (not `Shape`) where an abstract class with one abstract
-   method would be a good design, and name the abstract method.
+- An **abstract class** models an incomplete "is-a" family: shared state and behavior plus gaps
+  (**abstract methods**) that subclasses must fill.
+- It **cannot be instantiated**, but it can be a variable/parameter type used polymorphically.
+- Concrete methods can call abstract ones — the **Template Method** pattern.
+- Abstraction lets you **add subtypes without modifying existing code** (Open/Closed Principle).
 
-### Looking ahead
-Session 2 asks: *what if a type only needs to promise behavior and has no shared state
-to offer?* That is the job of an **interface** - and we will learn how to combine
-interfaces with the abstract classes from today.
+### Exit ticket (submit before leaving — 1-2 sentences each)
+
+1. In your own words, why can't an abstract class be instantiated?
+2. Give one real-world example (not `Shape` or `Employee`) that fits an abstract class, and name one
+   field and one abstract method it would have.
+3. What compiler error do you get if a concrete subclass forgets to implement an inherited abstract
+   method? Why is that a *good* thing?
+
+### Looking ahead to Session 2
+
+Abstract classes force a single-inheritance "is-a" line. But what if a class needs to advertise
+several unrelated capabilities — e.g., something that can be *saved*, *printed*, **and** *compared*?
+For that we need **interfaces**. Bring your `Employee` solution; we will make employees `Payable`
+and `Comparable` next session.

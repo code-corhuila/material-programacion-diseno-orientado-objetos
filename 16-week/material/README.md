@@ -1,82 +1,84 @@
-# Week 16 - Readings & Resources (Download Area)
+# Week 16 - Material and downloads
 
-**Subject:** Object-Oriented Programming and Design - 2026-B
-**Unit 3:** Practical application of OOP in Java · **Corte 3**
-**RAA:** 90_82759
+> **Subject:** Object-Oriented Programming and Design - 2026-B
+> **Unit 3:** Practical application of OOP in Java
+> **Week 16:** Course closure - consolidation, presentations and reflective assessment
+> **RAA:** 90_82759
 
-> **This is a DOWNLOAD area, not a submission box.** Use it to obtain the week's PDF and the curated readings below. There is nothing to upload here. The optional practice is submitted via **GitHub** (see [`../optional-activity/README.md`](../optional-activity/README.md)); project, portfolio and reflection deliverables are handled in the two session plans.
+This folder is a **download area**. Place the week's consolidated study guide here as a **PDF** for students to download directly. It is **not** a Moodle submission box — nothing is turned in here. Students only *download* from this folder; deliverables are handled as described in each session and in `optional-activity/`.
 
----
-
-## 1. Week PDF
-
-- **File:** `week16-course-closure.pdf` *(place the exported PDF of this week's guide here for download).*
-- **Contents:** The Week 16 guide, both session plans, rubrics, and the portfolio traceability template, packaged for offline reading and printing.
-- **How to use it:** Download before Session 1, skim the rubrics, and bring the traceability template to Session 2.
+> **Instructor note:** export the consolidated guide as `week16-course-closure-guide.pdf` and drop it in this folder. Keep the filename stable so links elsewhere do not break.
 
 ---
 
-## 2. Curated readings
+## 1. What to download
 
-Readings are grouped by the week's three themes. Each entry has a short summary and a reason to read it. Prefer the most recent editions available in the CORHUILA library or the official documentation online.
-
-### Theme A — Consolidating OOP & good design
-
-1. **Bloch, J. — *Effective Java* (3rd ed.), Items 15-18, 20, 52.**
-   *Summary:* Concise, authoritative guidance on minimising accessibility (encapsulation), favouring composition over inheritance, designing for interfaces, and using overloading/overriding correctly.
-   *Why read it:* These items map directly onto the pillars you must demonstrate; Items 16-18 sharpen the encapsulation and inheritance arguments reviewers will look for.
-
-2. **Oracle — *The Java Tutorials: "Object-Oriented Programming Concepts" and "Interfaces and Inheritance".**
-   *Summary:* The official, example-driven reference for classes, inheritance, interfaces and polymorphism.
-   *Why read it:* Ground-truth terminology; useful when you need the precise definition to justify a design choice in your demo.
-
-3. **Martin, R. C. — *Clean Code*, ch. 2 (Names), ch. 3 (Functions), ch. 10 (Classes).**
-   *Summary:* Practical rules for readable names, small single-purpose functions, and cohesive classes.
-   *Why read it:* The "code readability" and "design quality" rows of the co-evaluation rubric are essentially this material.
-
-### Theme B — Technical communication & demos
-
-4. **A short guide to *"How to give a technical demo"* (any reputable engineering-blog or conference talk).**
-   *Summary:* Structure a demo as problem -> design -> code -> live run -> reflection; always prepare a fallback (recording/screenshots).
-   *Why read it:* Session 1 grades communication; a clear narrative and a contingency plan are the difference between Proficient and Excellent.
-
-5. **Institutional slide/style template (CORHUILA), if available.**
-   *Summary:* Keep slides sparse, show code not bullet points, and rehearse to the time-box.
-   *Why read it:* Ensures your presentation looks professional and fits the 10-12 minute window.
-
-### Theme C — Peer review, reflection & portfolios
-
-6. **Gibbs, G. — *Learning by Doing: A Guide to Teaching and Learning Methods* (the Gibbs reflective cycle).**
-   *Summary:* A six-stage reflective cycle (description, feelings, evaluation, analysis, conclusion, action plan).
-   *Why read it:* A ready scaffold for the reflective essay; the "action plan" stage is exactly the "Now what?" the rubric rewards.
-
-7. **Schön, D. — *The Reflective Practitioner* (introductory chapters).**
-   *Summary:* The classic account of reflection-in-action and reflection-on-action in professional work.
-   *Why read it:* Explains *why* reflection makes practitioners better — motivation for taking the essay seriously.
-
-8. **A practical guide to *giving and receiving code review* (e.g., Google's Engineering Practices "Code Review" documentation).**
-   *Summary:* How to write specific, kind, actionable review comments and how to respond to feedback without defensiveness.
-   *Why read it:* Directly supports the co-evaluation task; the "strength / improvement / question" structure comes from practices like these.
+| File | Description | Status |
+|---|---|---|
+| `week16-course-closure-guide.pdf` | Printable consolidation guide: the four pillars as an assessment lens, good-practices checklist, defense structure, co-evaluation rubric, reflection scaffold, and portfolio template. | Place PDF here |
 
 ---
 
-## 3. Quick reference: rubrics & templates in this week
+## 2. Curated readings and resources
 
-| Instrument | Where |
-|-----------|-------|
-| Presentation & co-evaluation rubrics | [`../01-session/README.md`](../01-session/README.md) |
-| Portfolio checklist + reflective-writing rubric | [`../02-session/README.md`](../02-session/README.md) |
-| Traceability matrix template | [`../02-session/README.md`](../02-session/README.md) (section 4.2) |
-| Optional-activity rubric | [`../optional-activity/README.md`](../optional-activity/README.md) |
+The list is grouped by the purpose it serves this week. Each entry has a short summary so you can choose what to read given your remaining time.
+
+### 2.1 Core OOP references (consolidation)
+
+- **Oracle — *The Java Tutorials*: "Object-Oriented Programming Concepts"** and "Interfaces and Inheritance."
+  *Summary:* The authoritative, free primer on the four pillars in Java, with the exact syntax for `interface`, `abstract`, `extends`, and overriding. Use it to double-check terminology before your defense.
+
+- **Joshua Bloch — *Effective Java* (3rd ed.), Items on classes and interfaces.**
+  *Summary:* Practical rules that raise code quality: *"minimize the accessibility of classes and members"* (encapsulation), *"favor composition over inheritance,"* and *"prefer interfaces to abstract classes."* Directly relevant to justifying design decisions in Q&A.
+
+- **Robert C. Martin — *Clean Code*, chapters on Naming, Functions, and Classes.**
+  *Summary:* Why good names and small, cohesive classes matter. Gives you the vocabulary to explain *why* your code is readable and maintainable — a graded good practice.
+
+### 2.2 Design and modeling
+
+- **Craig Larman — *Applying UML and Patterns*, chapters on responsibility-driven design (GRASP).**
+  *Summary:* How to decide *which class should do what* (cohesion, coupling, information expert). Useful for the "design overview" part of your defense and for the portfolio's UML entry.
+
+- **UML class diagram quick reference (any reputable cheat sheet).**
+  *Summary:* Notation for association, aggregation, composition, generalization and interface realization. You will reference these relationships when presenting your design.
+
+### 2.3 Good practices for the final project
+
+- **JUnit 5 User Guide (junit.org).**
+  *Summary:* How to write and run unit tests (`@Test`, assertions). Even a handful of tests around your core logic is strong evidence of the "testing" good practice.
+
+- **Pro Git (git-scm.com/book), chapters 1-3.**
+  *Summary:* Basics of a clean commit history and meaningful commit messages. Your Git log is itself portfolio evidence of incremental, disciplined work.
+
+### 2.4 Reflection and assessment
+
+- **Graham Gibbs — *Learning by Doing* (reflective cycle).**
+  *Summary:* The six-stage reflective cycle (description → feelings → evaluation → analysis → conclusion → action plan) used as the scaffold for this week's reflection. Focus on the *analysis* and *action plan* stages.
+
+- **Guidance on effective peer feedback (any teaching-and-learning centre resource).**
+  *Summary:* Feedback should be specific, kind, and actionable; comment on the work, not the person. Reinforces the "SBI + suggestion" pattern used in the co-evaluation rubric.
 
 ---
 
-## 4. Summary notes (one-minute recap of the week)
+## 3. Templates included in the course material
 
-- **Consolidate:** be able to *point at* each of the four pillars in real code and justify it in one sentence.
-- **Communicate:** structure the demo as problem -> design -> code -> run -> reflection, with a fallback ready.
-- **Co-evaluate:** feedback = one strength + one concrete improvement + one honest question, tied to evidence.
-- **Reflect:** move past "what I did" to "what I now do differently"; anchor every claim to an artefact.
-- **Trace:** every portfolio deliverable maps to RAA 90_82759 with a *because* clause.
+These are provided in the session guides; copy them into your own documents:
 
-> Reminder: cite any external code, libraries or ideas you use. Academic integrity applies to the portfolio and to code shown in the demo.
+- **Co-evaluation rubric** — `../01-session/README.md`, §5.
+- **Defense structure (10-12 min)** — `../01-session/README.md`, §3.4.
+- **Reflection scaffold (Gibbs)** — `../02-session/README.md`, §3.1.
+- **Portfolio index table** — `../02-session/README.md`, §4.2.
+- **Improvement-plan table** — `../02-session/README.md`, §5.
+
+---
+
+## 4. How to use this material
+
+1. **Download** the PDF guide and skim §2 references according to your gaps.
+2. **Before the defense:** re-read the four-pillars assessment lens and the good-practices checklist (Session 1).
+3. **After the defense:** use the reflection scaffold and portfolio template (Session 2).
+4. Remember: this folder is **download-only**; graded work is defended in class and (for the optional activity) submitted via **GitHub**, never here.
+
+---
+
+*Return to the [Week 16 guide](../README.md).*

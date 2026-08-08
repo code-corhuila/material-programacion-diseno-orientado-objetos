@@ -1,285 +1,253 @@
-# Week 12 · Session 2 — Maps and a HashMap-based inventory
+# Week 12 - Session 2: Maps (`HashMap`), choosing a collection, and building an inventory
 
-**Course:** Object-Oriented Programming and Design (2026-B) · **Unit 3** · **Corte 3**
-**RAA:** 90_82759
-**Prerequisites:** Session 1 (`List`, `Set`, `equals`/`hashCode` introduction).
+> **Subject:** Object-Oriented Programming and Design (2026-B)
+> **Unit 3 - Practical application of OOP in Java · Corte 3**
+> **Estimated duration:** 2 hours (120 min)
 
 ---
 
 ## 1. Session objective
 
-Students will **use `HashMap` to store and retrieve objects by key**, **iterate** maps with
-their view collections, and **implement a basic inventory** by encapsulating a
-`HashMap<String, Product>` inside a class model that exposes safe operations. They will also
-override `equals`/`hashCode` correctly so hash-based collections behave as intended.
+By the end of this session the student will be able to **associate keys with values using
+a `HashMap`, choose the correct collection for a stated requirement, and implement a
+working `Inventory` class that internally uses a `HashMap<String, Product>`** to add,
+find, update, remove, and list products.
+
+Concretely, the student will:
+
+1. Use `HashMap` core operations: `put`, `get`, `getOrDefault`, `containsKey`, `remove`.
+2. Iterate a map with `keySet()`, `values()`, and `entrySet()`.
+3. Apply a decision rule to select `List` vs `Set` vs `Map` for real requirements.
+4. Encapsulate a `HashMap` inside an `Inventory` class exposing a clean, safe API.
 
 ---
 
-## 2. Timed agenda (110 minutes)
+## 2. Timed agenda
 
 | Time | Segment | Activity |
-|---|---|---|
-| 0:00–0:10 | Recap & bridge | From "is it present?" (`Set`) to "give me the one with this key" (`Map`). |
-| 0:10–0:35 | Theory A | `Map`/`HashMap`: put, get, `getOrDefault`, `containsKey`, remove. |
-| 0:35–0:50 | Theory B | Iterating maps: `keySet`, `values`, `entrySet`; `computeIfAbsent`, `merge`. |
-| 0:50–1:05 | Theory C | `equals`/`hashCode` done right for a value object. |
-| 1:05–1:30 | Worked example | Design and build the `Product` + `Inventory` model. |
-| 1:30–1:50 | Guided practice | Extend the inventory (low-stock report, restock, total value). |
-| 1:50–1:55 | Wrap-up & exit ticket | Recap + hand-off to the optional GitHub activity. |
+|------|---------|----------|
+| 0:00 – 0:10 | Warm-up | Review exit ticket from Session 1; "look up by key" motivation |
+| 0:10 – 0:35 | Theory | `Map`/`HashMap`: put/get/iterate |
+| 0:35 – 0:50 | Decision framework | Choosing `List` vs `Set` vs `Map` |
+| 0:50 – 1:20 | Worked example | Full `Inventory` class backed by `HashMap` |
+| 1:20 – 1:50 | Guided practice | Students extend the inventory |
+| 1:50 – 2:00 | Wrap-up | Exit ticket + bridge to optional activity |
 
 ---
 
 ## 3. Theory notes
 
-### 3.1 What a `Map` is (and why it is not a `Collection`)
+### 3.1 The problem a `Map` solves
 
-A **`Map<K, V>`** associates **unique keys** with **values**. Think of a dictionary: you
-look up a *word* (key) to get its *definition* (value). A map answers a different question
-than a `List` or `Set`:
-
-- `List` — "what is at position *i*?"
-- `Set` — "is element *x* present?"
-- `Map` — "**what value is associated with key *k*?**"
-
-Because it stores *pairs*, not single elements, `Map` is **not** a subtype of `Collection`.
-Keys form a set (no duplicate keys); each key maps to exactly one value. `HashMap` is the
-default implementation, backed by a hash table with **near-constant-time** `get` and `put`.
+With a `List<Product>`, finding the product with code `"P003"` means scanning the list
+element by element until you find it — `O(n)` work. For an inventory where you constantly
+look things up **by code**, that is the wrong tool. A **`Map`** stores **key → value**
+associations and finds a value **by its key almost instantly** (`O(1)` on average for
+`HashMap`). Think of a phone book: you don't scan every entry, you jump straight to the
+name.
 
 ```
-   Map<String, Product>
-   ┌───────────┬──────────────────────────┐
-   │   KEY     │          VALUE            │
-   ├───────────┼──────────────────────────┤
-   │ "P-100"   │ Product(P-100, Cable, 12) │
-   │ "P-205"   │ Product(P-205, Mouse, 40) │
-   │ "P-330"   │ Product(P-330, Webcam, 5) │
-   └───────────┴──────────────────────────┘
-        keySet()          values()
-        \________ entrySet() = the pairs _______/
+   Map<String, Product>          key (String)     value (Product)
+   +-------------------------+   ------------      ------------------------------
+   | "P001" -> Product(...)  |   "P001"      ->    Keyboard, $45.00, qty 10
+   | "P002" -> Product(...)  |   "P002"      ->    Mouse,    $25.50, qty 20
+   | "P003" -> Product(...)  |   "P003"      ->    Monitor,  $180.00, qty 5
+   +-------------------------+
+        keys are unique              lookup by key is direct, not a scan
 ```
 
-### 3.2 Core `HashMap` operations
+Rules of a `Map`:
+- **Keys are unique.** `put` with an existing key **replaces** the old value (and returns it).
+- **Values may repeat.** Two keys can map to equal values.
+- A `Map` is **not** a `Collection`; you iterate it via its key set, value collection, or entry set.
+- The **key type** must have sensible `equals()`/`hashCode()`. `String` and `Integer`
+  already do; a custom class used as a key must override both (same rule as Session 1).
+
+### 3.2 `HashMap` core operations
 
 ```java
-Map<String, Integer> stock = new HashMap<>();
+Map<String, Product> byCode = new HashMap<>();
 
-stock.put("apple", 10);          // insert
-stock.put("banana", 5);
-stock.put("apple", 12);          // same key -> REPLACES the old value (now 12)
+// put: insert or replace
+byCode.put("P001", keyboard);
+byCode.put("P002", mouse);
+Product replaced = byCode.put("P001", keyboardV2); // returns the OLD value for P001
 
-int apples  = stock.get("apple");            // 12
-Integer none = stock.get("kiwi");            // null  (missing key)
-int safe    = stock.getOrDefault("kiwi", 0); // 0     (default when absent)
+// get: retrieve by key (null if absent)
+Product p = byCode.get("P002");          // the Mouse
+Product missing = byCode.get("P999");    // null  -> beware NullPointerException
 
-boolean hasBanana = stock.containsKey("banana"); // true
-stock.remove("banana");                          // delete the pair
-int size = stock.size();                         // number of pairs
+// getOrDefault: safe read with a fallback
+int qty = byCode.getOrDefault("P999", null) == null ? 0 : byCode.get("P999").getQuantity();
+
+// containsKey / containsValue
+boolean exists = byCode.containsKey("P001");   // true
+
+// remove by key (returns the removed value, or null)
+Product removed = byCode.remove("P002");
+
+// size
+int count = byCode.size();
 ```
 
-> **Pitfall:** `get` on a missing key returns `null`, not zero. Auto-unboxing a `null`
-> `Integer` into an `int` throws `NullPointerException`. Prefer `getOrDefault` (or
-> `containsKey` first) whenever a key might be absent.
+> **Trap:** `get` returns `null` when the key is absent. Always check `containsKey(...)`
+> first, or use `getOrDefault(...)`, to avoid a `NullPointerException` down the line.
 
-### 3.3 Iterating a map — the three views
+### 3.3 Iterating a `Map`
 
-A `Map` exposes three **views**, each itself iterable:
+There are three views. `entrySet()` is the most efficient when you need both key and value.
 
 ```java
-// (a) keys only
-for (String key : stock.keySet()) {
-    System.out.println(key);
+// (a) keySet — iterate keys, look up values as needed
+for (String code : byCode.keySet()) {
+    System.out.println(code + " -> " + byCode.get(code));
 }
 
-// (b) values only
-for (int qty : stock.values()) {
-    System.out.println(qty);
+// (b) values — iterate values only (keys not needed)
+for (Product p : byCode.values()) {
+    System.out.println(p.getName());
 }
 
-// (c) key + value together — PREFERRED when you need both
-for (Map.Entry<String, Integer> entry : stock.entrySet()) {
-    System.out.println(entry.getKey() + " -> " + entry.getValue());
+// (c) entrySet — iterate key+value pairs together (preferred)
+for (Map.Entry<String, Product> entry : byCode.entrySet()) {
+    String code = entry.getKey();
+    Product p   = entry.getValue();
+    System.out.println(code + " => " + p.getName());
 }
+
+// (d) forEach + lambda
+byCode.forEach((code, product) ->
+    System.out.println(code + " : " + product.getName()));
 ```
 
-Use `entrySet()` when you need both key and value: it visits each pair once, whereas calling
-`get(key)` inside a `keySet()` loop looks the value up a second time.
+Implementation choices (brief):
+- **`HashMap`** — no ordering, fastest. The default.
+- **`LinkedHashMap`** — preserves **insertion order** of keys.
+- **`TreeMap`** — keeps keys **sorted**.
 
-### 3.4 Higher-level methods that remove boilerplate
+### 3.4 Choosing the right collection — a decision framework
 
-Modern `Map` methods make counting and grouping concise and correct:
+Ask three questions about the requirement:
 
-```java
-// Count word frequencies (classic "merge" idiom).
-Map<String, Integer> counts = new HashMap<>();
-for (String word : words) {
-    counts.merge(word, 1, Integer::sum);   // if absent -> 1; else old + 1
-}
+```
+1. Do I need to look things up by a KEY (id, code, name)?
+        YES -> use a Map (HashMap)
+        NO  -> go to question 2
 
-// Group values into per-key lists (classic "computeIfAbsent" idiom).
-Map<String, List<String>> byCategory = new HashMap<>();
-for (Product p : products) {
-    byCategory
-        .computeIfAbsent(p.getCategory(), k -> new ArrayList<>())
-        .add(p.getName());
-}
+2. Must elements be UNIQUE (no duplicates allowed)?
+        YES -> use a Set (HashSet)
+        NO  -> go to question 3
 
-// Insert only if the key is not already present.
-stock.putIfAbsent("apple", 0);
+3. Do I need ORDER / positional access / duplicates?
+        YES -> use a List (ArrayList)
 ```
 
-| Method | Meaning |
-|---|---|
-| `getOrDefault(k, d)` | value for `k`, or `d` if absent |
-| `putIfAbsent(k, v)` | set only if `k` has no value yet |
-| `computeIfAbsent(k, f)` | if `k` absent, compute a value with `f` and store it; return the value |
-| `merge(k, v, fn)` | if absent store `v`; else store `fn(old, v)` — perfect for counters |
+Worked judgments:
 
-### 3.5 `equals` and `hashCode` — the contract that makes maps work
+| Requirement | Best choice | Why |
+|-------------|-------------|-----|
+| "Keep the order in which orders arrive." | `List` (`ArrayList`) | Order matters; duplicates possible |
+| "Store unique student emails." | `Set` (`HashSet`) | Uniqueness is the whole point |
+| "Find a product instantly by its code." | `Map` (`HashMap`) | Key-based lookup |
+| "Count how many times each word appears." | `Map<String,Integer>` | Word → count association |
+| "A queue of print jobs, first in first out." | `Queue`/`LinkedList` | FIFO ordering |
+| "A leaderboard sorted by score." | `TreeMap` / sorted `List` | Ordering by a comparable key |
 
-A `HashMap` locates a key by:
+### 3.5 Designing the `Inventory` class (encapsulation)
 
-1. calling `hashCode()` to pick a bucket, then
-2. calling `equals()` to find the exact key inside that bucket.
+We do **not** expose the raw `HashMap`. Instead we wrap it in an `Inventory` class that
+offers meaningful operations and protects invariants (e.g., quantities never go negative,
+codes are unique). This is OOP: the data structure is an **implementation detail** hidden
+behind a clean API.
 
-If two objects are **`equals`**, they **must** return the **same `hashCode`**. Violating
-this contract makes keys "disappear": you `put` with one object and `get(equalKey)` returns
-`null`. For a **value object** (identity defined by its fields), override both together.
-
-```java
-import java.util.Objects;
-
-public final class Product {
-    private final String code;   // natural identity of a product
-    private String name;
-    private int quantity;
-
-    public Product(String code, String name, int quantity) {
-        this.code = Objects.requireNonNull(code, "code");
-        this.name = name;
-        this.quantity = quantity;
-    }
-
-    public String getCode()     { return code; }
-    public String getName()     { return name; }
-    public int getQuantity()    { return quantity; }
-    public void setName(String name)        { this.name = name; }
-    public void setQuantity(int quantity)   { this.quantity = quantity; }
-
-    // Two products are the same product when they share the same code.
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Product)) return false;
-        Product other = (Product) o;
-        return code.equals(other.code);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(code);   // consistent with equals (same field)
-    }
-
-    @Override
-    public String toString() {
-        return String.format("Product{code=%s, name=%s, qty=%d}", code, name, quantity);
-    }
-}
 ```
-
-> **Rules of thumb:** override `equals` and `hashCode` **together**, base both on the **same
-> fields**, and prefer **immutable** identity fields (here, `code` is `final`). Changing a
-> field that participates in `hashCode` *after* inserting the object into a hash-based
-> collection corrupts it — so keep identity fields stable.
-
-Note: when the **key** is a `String` (as in the inventory below), you rely on `String`'s
-built-in `equals`/`hashCode`. You still override them on `Product` so it also behaves
-correctly if ever placed in a `HashSet` or used as a key elsewhere.
++--------------------------------------------------+
+|                   Inventory                      |
++--------------------------------------------------+
+| - products : Map<String, Product>   (private)    |
++--------------------------------------------------+
+| + addProduct(Product) : void                     |
+| + removeProduct(String code) : boolean           |
+| + findByCode(String code) : Optional<Product>    |
+| + updateQuantity(String code, int delta) : void  |
+| + totalValue() : double                          |
+| + listAll() : List<Product>                      |
++--------------------------------------------------+
+```
 
 ---
 
-## 4. Fully worked example — a `HashMap`-based inventory
+## 4. Fully worked example — a complete inventory
 
-**Requirement.** Build a small warehouse inventory that can:
-
-- add a product (reject a duplicate code),
-- find a product by its code,
-- increase/decrease quantity (restock / sell), never going below zero,
-- remove a product,
-- list all products and compute how many distinct products are stored.
-
-We **encapsulate** the `HashMap` inside an `Inventory` class so callers use meaningful
-operations, not raw map calls — this is the object-oriented way to protect an invariant
-(e.g., "quantity is never negative").
+This example reuses the `Product` class from Session 1 (with `equals`/`hashCode` on
+`code`). Here is a full, runnable `Inventory` plus a demo.
 
 ```java
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class Inventory {
-
-    // The Map is PRIVATE: callers never touch it directly.
+    // Encapsulated: the outside world never touches the map directly.
     private final Map<String, Product> products = new HashMap<>();
 
-    /** Adds a new product. Returns false if the code already exists. */
-    public boolean add(Product product) {
+    /** Adds a product. Rejects duplicates (same code) to protect the invariant. */
+    public void addProduct(Product product) {
+        Objects.requireNonNull(product, "product must not be null");
         if (products.containsKey(product.getCode())) {
-            return false;                       // no silent overwrite
+            throw new IllegalArgumentException(
+                "A product with code " + product.getCode() + " already exists");
         }
         products.put(product.getCode(), product);
-        return true;
     }
 
-    /** Retrieves a product by code, or null if not found. */
-    public Product findByCode(String code) {
-        return products.get(code);
+    /** Removes a product by code. Returns true if something was removed. */
+    public boolean removeProduct(String code) {
+        return products.remove(code) != null;
     }
 
-    /** Increases the quantity of an existing product (restock). */
-    public boolean restock(String code, int amount) {
-        if (amount <= 0) return false;
+    /** Finds a product by code; Optional avoids returning null. */
+    public Optional<Product> findByCode(String code) {
+        return Optional.ofNullable(products.get(code));
+    }
+
+    /** Adjusts stock by delta (positive = restock, negative = sale). */
+    public void updateQuantity(String code, int delta) {
         Product p = products.get(code);
-        if (p == null) return false;
-        p.setQuantity(p.getQuantity() + amount);
-        return true;
-    }
-
-    /** Decreases quantity (a sale). Fails if there is not enough stock. */
-    public boolean sell(String code, int amount) {
-        if (amount <= 0) return false;
-        Product p = products.get(code);
-        if (p == null || p.getQuantity() < amount) {
-            return false;                       // protects the invariant
+        if (p == null) {
+            throw new NoSuchElementException("No product with code " + code);
         }
-        p.setQuantity(p.getQuantity() - amount);
-        return true;
+        int updated = p.getQuantity() + delta;
+        if (updated < 0) {
+            throw new IllegalArgumentException("Quantity cannot go below zero");
+        }
+        p.setQuantity(updated);
     }
 
-    /** Removes a product entirely. Returns the removed product, or null. */
-    public Product remove(String code) {
-        return products.remove(code);
+    /** Total monetary value of all stock. */
+    public double totalValue() {
+        double total = 0.0;
+        for (Product p : products.values()) {
+            total += p.lineValue();
+        }
+        return total;
     }
 
-    /** Number of distinct products held. */
-    public int distinctCount() {
+    /** Returns a defensive copy so callers cannot mutate the internal map. */
+    public List<Product> listAll() {
+        return new ArrayList<>(products.values());
+    }
+
+    public int size() {
         return products.size();
     }
+}
+```
 
-    /** A read-only view of all products (defensive: callers can't mutate the map). */
-    public Collection<Product> all() {
-        return Collections.unmodifiableCollection(products.values());
-    }
+The `Product` class needs a small addition — a setter for quantity used by `updateQuantity`:
 
-    /** Prints a formatted report. */
-    public void printReport() {
-        System.out.println("=== Inventory (" + distinctCount() + " products) ===");
-        for (Map.Entry<String, Product> entry : products.entrySet()) {
-            Product p = entry.getValue();
-            System.out.printf("%-8s %-12s qty=%d%n",
-                    entry.getKey(), p.getName(), p.getQuantity());
-        }
-    }
+```java
+public void setQuantity(int quantity) {
+    if (quantity < 0) throw new IllegalArgumentException("quantity < 0");
+    this.quantity = quantity;
 }
 ```
 
@@ -290,119 +258,119 @@ public class InventoryDemo {
     public static void main(String[] args) {
         Inventory inv = new Inventory();
 
-        inv.add(new Product("P-100", "USB Cable", 12));
-        inv.add(new Product("P-205", "Mouse",     40));
-        inv.add(new Product("P-330", "Webcam",     5));
+        inv.addProduct(new Product("P001", "Keyboard", "Peripherals", 45.00, 10));
+        inv.addProduct(new Product("P002", "Mouse",    "Peripherals", 25.50, 20));
+        inv.addProduct(new Product("P003", "Monitor",  "Displays",    180.00, 5));
 
-        // Duplicate code is rejected.
-        boolean added = inv.add(new Product("P-100", "USB Cable v2", 99));
-        System.out.println("Second P-100 added? " + added);   // false
+        // Lookup by key (fast, direct)
+        inv.findByCode("P003")
+           .ifPresent(p -> System.out.println("Found: " + p));
 
-        // Retrieve and mutate through safe operations.
-        System.out.println("Lookup P-205: " + inv.findByCode("P-205"));
-        inv.sell("P-330", 2);      // ok, 5 -> 3
-        inv.sell("P-330", 10);     // rejected: not enough stock
-        inv.restock("P-100", 8);   // 12 -> 20
+        // A sale of 3 monitors
+        inv.updateQuantity("P003", -3);      // 5 -> 2
+        // A restock of 15 mice
+        inv.updateQuantity("P002", 15);      // 20 -> 35
 
-        inv.printReport();
-        System.out.println("Distinct products: " + inv.distinctCount());
+        // Attempt an invalid removal amount (caught)
+        try {
+            inv.updateQuantity("P001", -50); // would go negative
+        } catch (IllegalArgumentException e) {
+            System.out.println("Rejected: " + e.getMessage());
+        }
+
+        // Remove a product
+        boolean removed = inv.removeProduct("P001");
+        System.out.println("Removed P001? " + removed);
+
+        // List everything
+        System.out.println("=== Current inventory ===");
+        for (Product p : inv.listAll()) {
+            System.out.println(p);
+        }
+        System.out.printf("Products: %d | Total value: $%.2f%n",
+                          inv.size(), inv.totalValue());
     }
 }
 ```
 
-**Expected output (map order may vary — `HashMap` is unordered):**
+**Expected output (list order may vary — `HashMap` is unordered):**
 
 ```
-Second P-100 added? false
-Lookup P-205: Product{code=P-205, name=Mouse, qty=40}
-=== Inventory (3 products) ===
-P-100    USB Cable    qty=20
-P-205    Mouse        qty=40
-P-330    Webcam       qty=3
-Distinct products: 3
+Found: P003 - Monitor      (Displays) x5 @ $180.00
+Rejected: Quantity cannot go below zero
+Removed P001? true
+=== Current inventory ===
+P002 - Mouse        (Peripherals) x35 @ $25.50
+P003 - Monitor      (Displays) x2 @ $180.00
+Products: 2 | Total value: $1252.50
 ```
 
-**Design points to highlight in class:**
-
-- The `Map` is `private final`; the invariant *"quantity ≥ 0"* is enforced by `sell`, not by
-  hope. This is **encapsulation** protecting a rule.
-- `add` uses `containsKey` to refuse silent overwrites — `put` alone would replace the
-  existing product.
-- `all()` returns an **unmodifiable** view, so callers can read but not corrupt the map.
-- The public API speaks the domain language (`restock`, `sell`) rather than exposing `put`
-  and `get`.
+**What to notice:**
+- The map key is the product `code`; lookups (`findByCode`) are direct, not scans.
+- `updateQuantity` enforces the "no negative stock" invariant — the map alone could not.
+- `listAll()` returns a **defensive copy**, so a caller cannot corrupt the internal map.
+- `Optional<Product>` communicates "maybe absent" without returning a dangerous `null`.
 
 ---
 
 ## 5. Guided in-class practice
 
-Extend `Inventory`. Test each method from `InventoryDemo` as you go.
+**Goal:** extend the `Inventory` class with reporting features that exercise map iteration.
 
-**Task 1 — Low-stock report.**
-Add `List<Product> lowStock(int threshold)` returning every product whose quantity is at or
-below `threshold`. Iterate with `values()`.
+Starting from the worked example, add and test these methods:
 
-**Task 2 — Total units.**
-Add `int totalUnits()` returning the sum of all quantities across the inventory.
+1. **`Map<String, Integer> countByCategory()`** — returns how many *distinct products*
+   exist per category. Iterate `products.values()` and accumulate into a `HashMap`
+   using `merge` or `getOrDefault`:
+   ```java
+   result.merge(p.getCategory(), 1, Integer::sum);
+   ```
+2. **`List<Product> lowStock(int threshold)`** — returns all products whose quantity is
+   below `threshold`, using an enhanced for-loop over `products.values()`.
+3. **`Optional<Product> mostValuable()`** — returns the product with the highest
+   `lineValue()`. Iterate and track the running maximum.
+4. **`boolean restock(String code, int amount)`** — a thin, safe wrapper over
+   `updateQuantity` that returns `false` if the code does not exist instead of throwing.
 
-**Task 3 — Rename safely.**
-Add `boolean rename(String code, String newName)` that updates a product's name only if the
-code exists. Return whether it succeeded.
+**Test harness:** in a `main`, populate the inventory with at least five products across
+three categories, then print the results of each new method. Verify:
+- `countByCategory()` sums to the total product count.
+- `lowStock(5)` includes only the products you expect.
+- `mostValuable()` returns the correct product (compute by hand to check).
 
-**Task 4 — Group by first letter (stretch).**
-Add `Map<Character, List<Product>> groupByInitial()` that buckets products by the first
-letter of their name, using `computeIfAbsent`.
+**Checkpoints the instructor will look for:**
+- The internal `Map` stays `private`; new methods do not leak it.
+- Correct use of `entrySet()`/`values()` for iteration.
+- No `NullPointerException` from `get` on a missing key.
 
-**Reference solution sketch (Tasks 1 & 2):**
-
+**Stretch (optional):** rewrite `lowStock` and `mostValuable` using Streams:
 ```java
-public List<Product> lowStock(int threshold) {
-    List<Product> result = new ArrayList<>();
-    for (Product p : products.values()) {
-        if (p.getQuantity() <= threshold) {
-            result.add(p);
-        }
-    }
-    return result;
-}
-
-public int totalUnits() {
-    int total = 0;
-    for (Product p : products.values()) {
-        total += p.getQuantity();
-    }
-    return total;
-}
+products.values().stream()
+        .filter(p -> p.getQuantity() < threshold)
+        .collect(Collectors.toList());
 ```
 
 ---
 
 ## 6. Wrap-up and exit ticket
 
-**Key takeaways:**
+**Summary.** A `Map` associates unique keys with values and enables near-instant lookup by
+key — the right structure whenever you retrieve things by an id or code. You iterate maps
+with `keySet`, `values`, or (preferably) `entrySet`. You applied a three-question
+framework to pick `List` vs `Set` vs `Map`, and you built an `Inventory` class that hides a
+`HashMap` behind a clean, invariant-protecting API — the exact pattern used in the
+corte-3 practical work.
 
-- A `Map` answers "what value is associated with this key?"; `HashMap` does it in ~O(1).
-- Guard missing keys with `getOrDefault`/`containsKey`; `get` returns `null` when absent.
-- Iterate with `entrySet()` when you need both key and value; use `keySet`/`values`
-  otherwise.
-- `computeIfAbsent` and `merge` make grouping and counting concise and correct.
-- Override `equals` and `hashCode` **together**, on the **same immutable fields**, so
-  hash-based collections work.
-- **Encapsulate** a collection inside a class to protect its invariants and expose a
-  domain-oriented API.
+**Exit ticket (submit before leaving — 5 short answers):**
 
-**Exit ticket (5 minutes):**
+1. What does `map.put(key, value)` return when `key` already exists?
+2. Why is `HashMap` a better fit than `List` for "find a product by code"?
+3. Name the three ways to iterate a `Map` and say which one gives you both key and value.
+4. Why does `Inventory` return `Optional<Product>` (or a copy) instead of exposing its map?
+5. Choose the collection for: "store the set of unique tags on an article." Justify in one line.
 
-1. Why does `Inventory.add` call `containsKey` before `put`? What would break if it didn't?
-2. You store `Product` objects in a `HashSet` and two of them have the same `code` but you
-   forgot to override `hashCode`. What goes wrong, and why?
-3. Write the single line that returns the price/quantity for key `"P-205"`, or `0` if the
-   key is missing (assume a `Map<String, Integer>`).
-
-*Model answers:* (1) to refuse silent overwrites — without it, adding an existing code would
-replace the stored product and its quantity. (2) the two products land in different buckets
-(default `hashCode` uses identity), so the set stores both and treats them as distinct —
-de-duplication fails. (3) `map.getOrDefault("P-205", 0);`
-
-**Hand-off:** you are now ready for the graded enrichment task in
-[`../optional-activity/README.md`](../optional-activity/README.md), submitted via **GitHub**.
+**Bridge to the optional activity.** The [optional GitHub challenge](../optional-activity/README.md)
+asks you to grow this inventory into a small command-line application with a menu, more
+robust validation, and unit-testable methods — submitted via GitHub (not Moodle). The
+curated readings in [/material](../material/README.md) support both the challenge and the
+corte-3 assessment.

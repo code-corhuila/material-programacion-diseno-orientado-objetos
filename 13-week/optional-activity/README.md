@@ -1,141 +1,164 @@
-# Week 13 — Optional Activity: A File-Backed Contact Manager
+# Week 13 · Optional Activity — "PocketLibrary": a CSV-backed book catalog
 
-**Object-Oriented Programming and Design** · CORHUILA · Mechatronics Engineering
-**Unit 3 · Corte 3 · Week 13 — Reading and writing files in Java (`.txt` and `.csv`)**
-
-> **Optional and formative.** This activity is **not** graded in the gradebook and is **not** submitted through Moodle. It is deliberate extra practice to consolidate the week's skills. You submit it via **GitHub** (see §5) so you also practice version-control discipline — a Corte 3 good-practice objective. The rubric in §6 is for **self- and peer-assessment**.
+**Course:** Object-Oriented Programming and Design · **Term:** 2026-B · **Corte 3**
+**Unit 3:** Practical application of OOP in Java · **RAA:** 90_82759
+**Submission channel:** ⭐ **GitHub** (a public repository link) — **NOT Moodle.**
 
 ---
 
-## 1. Context and goal
+## 1. Purpose
 
-You have learned to read and write `.txt` and `.csv` files, to handle I/O exceptions, to close resources with `try-with-resources`, and to isolate persistence in a repository. This activity asks you to combine all of it into one small, complete, **object-oriented application that remembers its data between runs**.
+Consolidate this week's learning outcome by building, end to end, a small
+object-oriented application that **persists its objects to a `.csv` file** and
+**loads them back on the next run**, with clean exception handling, safe resource
+management, and a proper persistence layer. This mirrors the Session 2 workshop but
+with a different domain so you demonstrate the skill on your own.
 
-You will build a **command-line Contact Manager**: it loads contacts from a CSV file at startup, lets the user add and list contacts, and saves them back so the next run remembers everything. The point is not the menu — it is a **correct, robust persistence layer** wrapped around clean domain objects.
+This activity is **optional** but strongly recommended: it is the most direct
+rehearsal for the Corte 3 assessment and produces a portfolio-worthy GitHub repo.
 
 ---
 
 ## 2. Problem statement
 
-Build a Java console application named **`ContactManager`** that persists a list of contacts to a CSV file (`contacts.csv`) and reloads them on the next launch.
+Build **PocketLibrary**, a console application that manages a personal book catalog.
+The catalog must **survive between runs**: when the program starts, it loads all
+previously saved books from `books.csv`; when the user adds, edits, or removes a
+book, the change is persisted back to the same CSV file.
 
-A **contact** has:
+A `Book` has at least the following fields:
 
-| Field | Type | Rules |
-|---|---|---|
-| `id` | `int` | Unique, positive; auto-assigned as max existing id + 1. |
-| `name` | `String` | Non-blank; must not contain the CSV delimiter. |
-| `email` | `String` | Non-blank; must contain `@`. |
-| `phone` | `String` | Digits only, 7–15 characters. |
-
-The program starts by **loading** existing contacts from `contacts.csv` (or starting empty if the file does not exist), presents a menu, and **saves** on exit.
-
-```
-Contact Manager
-  1) List contacts
-  2) Add contact
-  3) Search by name
-  4) Save and exit
-Choose an option:
-```
+| Field | Type | Notes |
+|-------|------|-------|
+| `id` | `int` | Unique identifier |
+| `title` | `String` | Book title |
+| `author` | `String` | Author name |
+| `year` | `int` | Publication year |
+| `available` | `boolean` | `true` if the book is on the shelf, `false` if lent out |
 
 ---
 
-## 3. Requirements
+## 3. Functional requirements
 
-**Functional**
+Your program must support, through a simple text menu (`Scanner`):
 
-1. **Load on start.** Read `contacts.csv` into a `List<Contact>`. A missing file is normal on the first run — start with an empty list, do not crash.
-2. **Add.** Validate every field per §2; reject invalid input with a clear message and re-prompt (do not store bad data).
-3. **List.** Print all contacts in a readable, aligned format; show a friendly message when empty.
-4. **Search.** Find contacts whose name contains a keyword (case-insensitive).
-5. **Save on exit.** Write the whole list back to `contacts.csv` with a header row, overwriting the old file.
-6. **Round-trip integrity.** After save→exit→relaunch, every previously added contact must reappear unchanged.
+1. **List** all books (loaded from `books.csv`).
+2. **Add** a new book; the new book is persisted immediately.
+3. **Search** books by title *or* by author (case-insensitive, partial match allowed).
+4. **Toggle availability** of a book by `id` (lend / return) and persist the change.
+5. **Delete** a book by `id` and persist the change.
+6. **Exit** cleanly.
 
-**Technical (these are what the rubric checks)**
-
-7. **Separation of concerns.** A `Contact` domain class (with `toCsv()` and `static fromCsv(String)`) and a separate `ContactRepository` (a DAO) that owns **all** file access. No file code in `Contact`; no business logic in the repository.
-8. **Encoding.** Every read and write uses `StandardCharsets.UTF_8` explicitly.
-9. **Resource management.** Every file resource is released via `try-with-resources` or a one-shot `Files` helper.
-10. **Exception handling.** Catch `IOException`; on read, skip and **report** malformed lines instead of crashing; validate parsed numbers.
-11. **No external CSV library** — implement the parsing yourself (this is the learning objective). You may, as a stretch, add a second branch using a library and compare.
-
-**Constraints**
-
-- Java 17 or newer; standard library only for the required part.
-- The app must compile and run from the command line (`javac` / `java`) or from any IDE without modification.
-- The data file path is relative (`contacts.csv`) so the project is portable.
+**Persistence rules:**
+- On startup, load the catalog from `books.csv`. If the file does not exist, start
+  with an empty catalog (no crash) and create the file on first save.
+- The CSV must include a **header row**: `id,title,author,year,available`.
+- After any mutation (add/toggle/delete), the file must reflect the new state.
 
 ---
 
-## 4. Expected deliverable
+## 4. Technical / design requirements (these are graded)
 
-A GitHub repository containing:
+- **OOP separation.** At minimum three classes:
+  - `Book` — a clean domain model (POJO); **no file logic inside it**.
+  - `BookRepository` — **all** CSV read/write logic lives here (the Repository/DAO).
+  - `PocketLibraryApp` (with `main`) — the menu/UI, which only *calls* the repository.
+- **Object ↔ CSV mapping.** Provide symmetric conversion (e.g. `toCsv(Book)` /
+  `fromCsv(String)`), correctly handling the header and blank/malformed lines.
+- **Resource safety.** Every file open must use **try-with-resources**. No manual
+  `close()` in a `finally`.
+- **Exception handling.** Catch `IOException`; report a useful message; a single
+  malformed row must be **skipped and reported**, not fatal.
+- **Encoding.** Read and write with `StandardCharsets.UTF_8` explicitly.
+- **Robustness.** The program must not crash on: missing file, empty file,
+  header-only file, or a malformed data row.
+
+**Optional bonus (up to +1.0):** make your CSV mapping quoting-aware (RFC 4180) so a
+title containing a comma (e.g. `"Java, A Beginner's Guide"`) round-trips correctly,
+**or** integrate OpenCSV / Apache Commons CSV and document why in your README.
+
+---
+
+## 5. Expected deliverable
+
+A **public GitHub repository** containing:
 
 ```
-contact-manager/
-├── README.md                 # how to compile & run; a screenshot or sample session
+pocketlibrary/
 ├── src/
-│   ├── Contact.java          # domain object + toCsv()/fromCsv()
-│   ├── ContactRepository.java# all file access (load/save/append)
-│   └── ContactManager.java   # menu / application entry point (main)
-├── sample-data/
-│   └── contacts.sample.csv   # a few example records to demo loading
-└── .gitignore                # ignores compiled *.class and the live contacts.csv
+│   ├── Book.java
+│   ├── BookRepository.java
+│   └── PocketLibraryApp.java
+├── books.csv            (a sample with at least 5 books, including the header)
+├── README.md            (see required contents below)
+└── .gitignore           (optional; e.g. ignore /out, /target, *.class)
 ```
 
-Your `README.md` must include: a one-paragraph description, exact **compile and run** commands, and a short **sample session** (paste of the console interaction) that demonstrates a successful **round-trip** (add contacts, exit, relaunch, list shows them). Optionally include the stretch goals you attempted.
+Your repository **`README.md`** must include:
+- A one-paragraph description of the app.
+- **How to compile and run** it (exact commands), e.g.:
+  ```
+  javac -d out src/*.java
+  java -cp out PocketLibraryApp
+  ```
+- A short section **"How persistence works"** explaining your object↔CSV mapping and
+  where the file logic lives (the repository).
+- A sample of the `books.csv` format.
+- (If you did the bonus) a note on how you handle commas inside fields.
 
 ---
 
-## 5. How to submit — via GitHub (not Moodle)
+## 6. Submission instructions (GitHub — not Moodle)
 
-1. **Create a public repository** named `oop-week13-contact-manager` on your own GitHub account.
-2. Structure it as in §4. Commit in **small, meaningful steps** with clear messages — e.g., `feat: add Contact domain class with CSV mapping`, `feat: add repository load/save`, `fix: skip malformed lines on load`. History quality is part of the good-practice objective.
-3. Ensure a `.gitignore` excludes `*.class` and the runtime `contacts.csv` (commit only `sample-data/contacts.sample.csv`).
-4. Confirm the repo builds from a **fresh clone** (test in an empty folder) — a reviewer must reproduce your result.
-5. **Share the repository URL** through the channel your instructor indicates for optional practice (e.g., the course forum or peer-review thread). **Do not upload to Moodle** — this activity lives on GitHub.
-6. For **peer review (co-evaluation)**, clone a classmate's repo, run it, and leave feedback as a GitHub **Issue** using the rubric criteria in §6.
+1. Create a **new public repository** named `pocketlibrary-oop-2026b` (or similar).
+2. Commit your source, the sample `books.csv`, and the `README.md`.
+   - Use meaningful commit messages (e.g. `feat: add BookRepository CSV load/save`).
+   - At least **3 commits** that show incremental progress (not a single dump).
+3. Ensure the project **compiles and runs** from a clean clone using the commands in
+   your README.
+4. **Submit the repository URL** through the channel the instructor designated for
+   GitHub links (course GitHub Classroom assignment or the shared submission form).
+   **Do not upload a ZIP to Moodle.**
 
-> This is an optional, formative activity. If you prefer not to publish publicly, a private repo with the instructor and one peer added as collaborators is acceptable.
+> ⚠️ Verify your repo is **public** (or that the instructor/org has access). A link
+> that cannot be opened cannot be graded.
 
----
-
-## 6. Assessment criteria / rubric (self- and peer-assessment)
-
-Score each criterion 0–5; the reference weighting mirrors the Corte 3 practical rubric in the [course overview](../../00-course/README.md).
-
-| # | Criterion | Weight | Excellent (5–4.5) | Satisfactory (4.4–3.5) | Minimal (3.4–3.0) | Insufficient (<3.0) |
-|---|---|:--:|---|---|---|---|
-| 1 | **Round-trip correctness** | 25% | Save→relaunch→load reproduces all contacts exactly; append/list/search all correct. | Round-trip works; minor display issues. | Basic save/load works; some data lost or mis-parsed. | Data not persisted or corrupted on reload. |
-| 2 | **I/O robustness & exceptions** | 20% | Missing file, malformed lines, and bad input all handled gracefully with clear messages; never crashes. | Handles the common failures. | Handles some failures; a few crashes. | Crashes on missing file or bad input. |
-| 3 | **Resource management** | 15% | Every resource via `try-with-resources`/`Files` helper; UTF-8 everywhere. | Resources closed; UTF-8 mostly specified. | Some resources risk leaking; encoding implicit. | Resources leaked; no encoding control. |
-| 4 | **Separation of concerns (design)** | 20% | Clean `Contact` / `ContactRepository` split; `toCsv`/`fromCsv` symmetric; no I/O in domain. | Mostly clean; minor leakage. | Some mixing of concerns. | File code inside the domain class; no repository. |
-| 5 | **Input validation** | 10% | All field rules enforced with re-prompting; no bad data stored. | Most rules enforced. | Minimal validation. | No validation. |
-| 6 | **Code quality & documentation** | 5% | Clear naming, Javadoc where useful, readable, consistent style. | Generally clean. | Readable but inconsistent. | Hard to read. |
-| 7 | **Version-control discipline** | 5% | Meaningful, incremental commits; working `.gitignore`; builds from fresh clone; clear README. | Good history; builds. | Few large commits; builds. | One dump commit or does not build. |
-
-**Passing reference:** a weighted average of **3.0** or above indicates you have met the week's learning outcome. Use any unchecked criterion as a to-do before the Corte 3 workshop.
+**Suggested deadline:** before the start of Week 14's first session. (Confirm the
+exact date with your instructor.)
 
 ---
 
-## 7. Stretch goals (optional, for a stronger portfolio)
+## 7. Assessment criteria / rubric (100 pts)
 
-- **Delete and edit** a contact by id (menu options 5 and 6), then re-verify the round-trip.
-- **Export to `.txt`** a human-friendly report (one contact per block, not CSV) alongside the CSV — practice both formats.
-- **Configurable delimiter** (comma vs. semicolon) chosen at startup, proving your parser is not hard-coded.
-- **Second CSV branch** using a library (Apache Commons CSV or OpenCSV); write a short note in your README comparing hand-rolled vs. library parsing (quoting, embedded commas — see RFC 4180 in [`../material/README.md`](../material/README.md)).
-- **Unit tests** (JUnit) for `Contact.fromCsv(Contact.toCsv(c)).equals(c)` — automate the round-trip check.
+| Criterion | Excellent (full) | Acceptable (partial) | Missing (0) | Weight |
+|-----------|------------------|----------------------|-------------|:------:|
+| **Correct persistence** — saves and reloads books across runs; header handled | Loads and saves reliably; state survives restart; header written & skipped | Works but with minor bugs (e.g. header parsed as data occasionally) | Does not persist / cannot reload | **25** |
+| **OOP design** — `Book` / `BookRepository` / App separation; no I/O in the model | Clean 3-class separation; repository isolates all I/O | Some mixing of concerns but mostly separated | Everything in one class / no repository | **20** |
+| **Object ↔ CSV mapping** — symmetric, correct parsing of all fields incl. boolean/int | Robust `toCsv`/`fromCsv`; all fields round-trip correctly | Minor parsing issues on some fields | Mapping absent or broken | **15** |
+| **Exception & resource handling** — try-with-resources, IOException caught, bad rows skipped | All resources auto-closed; useful messages; malformed rows skipped | Handles the happy path; some gaps on errors | No handling; crashes on errors | **15** |
+| **Functionality** — list/add/search/toggle/delete all work via the menu | All six menu features work correctly | Most features work | Few/none work | **10** |
+| **Robustness** — no crash on missing/empty/header-only/malformed file | Survives all edge cases gracefully | Survives some edge cases | Crashes on common cases | **10** |
+| **Repository quality** — README with run instructions, meaningful commits, sample CSV | Clear README, ≥3 meaningful commits, sample data | README/commits present but thin | No README / single commit | **5** |
+| **Bonus (optional)** — RFC 4180 quoting or a CSV library, documented | +1.0 point (added to final, capped at 100) | — | — | +1.0 |
 
----
-
-## 8. Hints
-
-- Start from the `ProductRepository` you built in [Session 2](../02-session/README.md); rename and adapt it — the shape is identical.
-- Auto-assign `id` as `1 + max(existing ids)` (or `1` when the list is empty) so ids stay unique across runs.
-- Read the whole file into a `List` on start, mutate it in memory during the session, and write the whole list back on exit — the simplest correct model for a small dataset.
-- Test the failure paths on purpose: delete `contacts.csv`, corrupt a line, type letters where a number is expected. Robustness is graded.
+**Grading scale:** 90–100 = A · 80–89 = B · 70–79 = C · 60–69 = D · <60 = must revise.
 
 ---
 
-*Optional formative activity for the 2026-B semester. Aligned to Week 13 objectives (read/write files, handle I/O exceptions, close resources, build a save/load application) and to the Corte 3 good-practice and version-control objectives.*
+## 8. Tips for success
+
+- Start from the Session 2 `StudentRepository` pattern and adapt it to `Book`.
+- Test the **empty/missing file** case *first* — it is the most common oversight.
+- Remember the `boolean` field: parse with `Boolean.parseBoolean(...)`.
+- Keep titles/authors comma-free unless you attempt the bonus.
+- Run your program, close it, run it again — if your books are still there, you have
+  achieved the learning outcome. 🎉
+
+---
+
+## 9. Related resources
+
+- Week overview & glossary: [`../README.md`](../README.md)
+- Session 1 (foundations + `.txt`): [`../01-session/README.md`](../01-session/README.md)
+- Session 2 (CSV + Repository + workshop): [`../02-session/README.md`](../02-session/README.md)
+- Curated readings & PDF: [`../material/README.md`](../material/README.md)

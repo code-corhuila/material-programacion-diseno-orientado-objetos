@@ -11,153 +11,134 @@
 
 ## 1. Overview
 
-Week 09 is the pivot point of Unit 2. In the previous weeks you learned how to model
-generalization/specialization with **inheritance**. This week we study the second great
-mechanism for building objects out of other objects: **composition**. You will learn to
-model *"has-a"* relationships, to decide *rationally* between inheritance and composition
-using the classic guideline **"favor composition over inheritance"**, and to **refactor**
-a fragile inheritance hierarchy into a flexible, component-oriented design.
+Weeks 5 through 8 focused on inheritance as the primary tool for reusing behavior and expressing relationships between types. This week we deliberately step back and examine the *other* — and, in modern practice, more frequently recommended — mechanism for reuse: **composition**.
 
-The week closes the loop of Unit 2: small, single-responsibility components that are
-**assembled** (composed) rather than **extended** (inherited) are the foundation of
-modular, testable, and maintainable software.
+Composition is the technique of building complex objects out of simpler ones, so that an object *owns* or *uses* other objects and delegates part of its work to them. Where inheritance answers the question **"is-a?"** (a `SavingsAccount` **is an** `Account`), composition answers the question **"has-a?"** (a `Car` **has an** `Engine`) and **"uses-a?"** (an `OrderService` **uses a** `PaymentGateway`).
 
-> Mental model for the week: *a class is not only what it IS; it is also what it HAS.*
-> Good design usually comes from wiring together small parts, not from growing tall
-> family trees of classes.
+The industry guideline **"favor composition over inheritance"** (popularized by the *Gang of Four*, 1994) is not a ban on inheritance. It is a design heuristic: when both mechanisms could technically solve a problem, composition usually produces designs that are more flexible, easier to change at runtime, and less prone to the fragilities of deep inheritance hierarchies. By the end of the week you will be able to justify, in concrete terms, *when* and *why* to choose one over the other.
+
+This is a **corte 2** week: the concepts, the worked refactoring, and the quiz all contribute to the second grading period.
 
 ---
 
-## 2. RAA and competencies addressed
+## 2. Learning outcome and competencies
 
 ### Learning outcome (RAA 90_82759)
-> The student designs modular object-oriented solutions by correctly applying association,
-> aggregation and composition relationships, justifying the choice between inheritance and
-> composition, and refactoring designs to improve cohesion, reduce coupling and increase
-> reusability.
 
-### Competencies developed this week
+> The student designs modular software solutions by correctly applying object-relationship mechanisms — inheritance and composition — selecting the appropriate mechanism for each modeling situation and justifying the decision using recognized design principles.
 
-| Type | Competency |
-|------|------------|
-| **Cognitive** | Distinguishes inheritance ("is-a") from composition ("has-a") and explains the trade-offs of each. |
-| **Procedural** | Implements composition in code (delegation, dependency injection) and refactors inheritance into composition. |
-| **Attitudinal** | Values simplicity, low coupling and high cohesion as professional quality criteria. |
-| **Communicative** | Documents design decisions with UML class diagrams and clear technical justifications. |
+### Competencies addressed this week
+
+| Competency type | Description |
+|---|---|
+| **Cognitive** | Distinguishes "is-a", "has-a", and "uses-a" relationships and maps each to the correct language mechanism. |
+| **Procedural** | Implements composition (with delegation) in code and refactors an inheritance-based design into a composition-based one. |
+| **Attitudinal / professional** | Argues design trade-offs responsibly, values maintainability, and recognizes that "clever" reuse is not always good reuse. |
 
 ---
 
-## 3. Learning objectives (measurable)
+## 3. Objectives (measurable)
 
-By the end of Week 09, the student will be able to:
+By the end of Week 09 the student will be able to:
 
-1. **Model** at least one real "has-a" relationship using composition between objects,
-   producing a UML class diagram and its corresponding code.
-2. **Differentiate** association, aggregation and composition, identifying the correct
-   relationship for a given scenario in at least 8 out of 10 cases.
-3. **Compare** inheritance and composition, listing at least three concrete trade-offs, and
-   **apply** the "favor composition over inheritance" guideline to justify a design choice.
-4. **Refactor** a given design that misuses inheritance (e.g., a subclass that breaks the
-   Liskov Substitution Principle) into a composition-based solution that compiles and passes
-   the provided tests.
-5. **Complete** the end-of-unit quiz distinguishing inheritance from composition, achieving
-   the passing threshold.
+1. **Model** at least one "has-a" relationship between objects using composition (and distinguish it from aggregation) in a UML class diagram and in code.
+2. **Compare** inheritance and composition across at least four criteria (coupling, flexibility, runtime behavior change, encapsulation) and state the "favor composition" guideline in his/her own words.
+3. **Refactor** a given design that misuses inheritance so that it uses composition + delegation, preserving external behavior.
+4. **Apply** delegation to forward responsibilities from a container object to its component objects without exposing the components' internals.
+5. **Complete** the end-of-corte quiz, correctly classifying scenarios as inheritance vs. composition with at least 80% accuracy.
+
+Each objective is measurable: objectives 1, 3, and 4 are evidenced by code/diagrams; objective 2 by a written comparison; objective 5 by the quiz score.
 
 ---
 
 ## 4. Contents outline
 
-1. **Relationships between objects revisited**
-   - Association, aggregation, composition, dependency: definitions and UML notation.
-   - Lifetime and ownership: the difference that really matters.
-2. **Composition and delegation**
-   - The "has-a" relationship in code.
-   - Delegation: forwarding work to a contained object.
-   - Constructor injection vs. internal instantiation.
-3. **Inheritance vs. composition**
-   - What inheritance gives you and what it costs (tight coupling, fragile base class,
-     the "gorilla/banana/jungle" problem).
-   - The Liskov Substitution Principle as a litmus test for inheritance.
-   - The guideline: *favor composition over inheritance* (GoF).
-4. **Component-oriented design and modularization**
-   - Small components with a single responsibility.
-   - Assembling behavior at runtime (strategy-like designs).
-   - How composition enables testing with test doubles.
-5. **Refactoring inheritance into composition**
-   - Detecting the smell.
-   - Step-by-step transformation (extract component, delegate, inject).
+1. **Relationships between objects**
+   - "is-a" (generalization) vs. "has-a" (composition/aggregation) vs. "uses-a" (dependency)
+   - UML notation: filled diamond (composition), hollow diamond (aggregation), plain arrow (dependency)
+2. **Composition in depth**
+   - Whole-part relationships, lifetime ownership, and encapsulation
+   - Composition vs. aggregation: who controls the lifecycle?
+3. **Delegation**
+   - Forwarding calls from container to component
+   - Delegation as the runtime engine that makes composition useful
+4. **Inheritance vs. composition**
+   - The fragile base class problem
+   - Tight coupling to a superclass; the "gorilla/banana/jungle" problem
+   - Runtime flexibility: swapping behavior via composed objects vs. fixed-at-compile-time inheritance
+5. **The "favor composition over inheritance" guideline**
+   - What it means, what it does *not* mean
+   - Signs of inheritance misuse (subclass overrides most of parent; "is-a" is really "has-a"; explosion of subclasses)
+6. **Refactoring toward composition**
+   - Replace inheritance with delegation (strategy-style extraction)
+   - Component-oriented design: small, replaceable parts
 
 ---
 
 ## 5. Session-by-session agenda
 
 | Session | Focus | Main deliverable |
-|---------|-------|------------------|
-| **Session 1** – Modeling "has-a" with composition | Association vs. aggregation vs. composition; delegation; a fully worked `Car`/`Engine` example. | In-class UML + code for a composed object. |
-| **Session 2** – Inheritance vs. composition & refactoring | The "favor composition" guideline; LSP violations; refactoring the classic `Stack extends ArrayList` / `Penguin extends Bird` smells. | A refactored design replacing bad inheritance with composition. |
+|---|---|---|
+| **Session 1** — Modeling "has-a": composition and delegation | Theory of object relationships; composition & aggregation; delegation; a fully worked `Car`/`Engine` + `Playlist`/`Song` example | In-class practice: model and implement a composed system |
+| **Session 2** — Inheritance vs. composition & refactoring | The fragile base class problem; "favor composition"; a full before/after refactoring of a misused inheritance hierarchy | In-class practice: refactor a broken hierarchy; exit ticket |
 
-Full timed agendas are inside each session's `README.md`:
-- [`01-session/README.md`](01-session/README.md)
-- [`02-session/README.md`](02-session/README.md)
+Detailed timed agendas are inside each session's `README.md`.
 
 ---
 
 ## 6. Key-concepts glossary
 
 | Term | Definition |
-|------|------------|
-| **Association** | A general "uses/knows" relationship between two independent objects (e.g., a `Doctor` and a `Patient`). Neither owns the other. |
-| **Aggregation** | A "has-a" relationship where the part can exist independently of the whole (e.g., a `Team` has `Players`; players survive if the team dissolves). Hollow diamond in UML. |
-| **Composition** | A strong "has-a"/"owns-a" relationship where the part's lifetime is bound to the whole; if the whole is destroyed, so are its parts (e.g., a `House` and its `Rooms`). Filled diamond in UML. |
-| **Dependency** | A transient "uses" relationship, typically a method parameter or local variable, not stored as a field. |
-| **Delegation** | A technique where an object handles a request by forwarding it to a contained (delegate) object. The mechanical heart of composition. |
-| **Inheritance ("is-a")** | A mechanism where a subclass acquires the structure/behavior of a superclass and can specialize it. |
-| **Composition ("has-a")** | Building an object's behavior by holding references to other objects and delegating to them. |
-| **Coupling** | The degree to which one module depends on the internals of another. Composition tends to produce looser coupling than inheritance. |
-| **Cohesion** | The degree to which the elements of a module belong together. Small components favor high cohesion. |
-| **Liskov Substitution Principle (LSP)** | Objects of a subclass must be usable anywhere the superclass is expected without breaking correctness. A failed LSP test signals that inheritance is the wrong tool. |
-| **Fragile base class** | The problem where a change in a superclass unexpectedly breaks subclasses. |
-| **Dependency injection (DI)** | Passing a component's collaborators from the outside (usually via the constructor) instead of creating them internally, enabling substitution and testing. |
-| **Favor composition over inheritance** | GoF design guideline: prefer assembling behavior from parts over extending classes, unless a true "is-a" relationship with substitutability exists. |
+|---|---|
+| **Composition** | A "has-a" relationship in which a whole object owns its parts and controls their lifecycle; if the whole is destroyed, its parts are destroyed with it. Represented in UML by a filled diamond. |
+| **Aggregation** | A weaker "has-a" relationship in which the whole references parts it does *not* own; the parts can outlive the whole. UML: hollow diamond. |
+| **Delegation** | The act of an object handing off ("forwarding") a request to one of its component objects to fulfill, rather than doing the work itself. |
+| **Inheritance** | An "is-a" relationship in which a subclass derives structure and behavior from a superclass. |
+| **Dependency ("uses-a")** | A transient relationship in which one object uses another (e.g., receives it as a method parameter) without owning it. |
+| **Coupling** | The degree to which one module depends on the internals of another. Lower coupling is generally better. |
+| **Fragile base class problem** | A defect where seemingly safe changes to a superclass break subclasses in unexpected ways, because subclasses depend on the superclass's implementation details. |
+| **Favor composition over inheritance** | A design guideline: prefer assembling behavior from composed objects over deriving it through class inheritance, because composition yields lower coupling and greater runtime flexibility. |
+| **Component-oriented design** | Designing systems as assemblies of small, self-contained, replaceable parts, each with a clear responsibility and interface. |
+| **Refactoring** | Restructuring existing code to improve its internal design without changing its external behavior. |
 
 ---
 
 ## 7. Achievement / self-check checklist
 
-Mark each item once you can do it *without help*:
+Use this list before the quiz. Tick each item only when you can do it *without notes*.
 
-- [ ] I can define association, aggregation and composition and draw each in UML.
-- [ ] I can explain the difference between "is-a" and "has-a" with my own example.
-- [ ] I can implement composition in code using fields and delegation.
-- [ ] I can inject a collaborator through a constructor and explain why that helps testing.
-- [ ] I can state at least three trade-offs between inheritance and composition.
-- [ ] I can recognize a Liskov Substitution Principle violation in a hierarchy.
-- [ ] I can refactor a class that misuses inheritance into a composition-based design.
-- [ ] I can justify, in writing, when inheritance is still the right choice.
-- [ ] I scored the passing threshold on the inheritance-vs-composition quiz.
+- [ ] I can state the difference between "is-a", "has-a", and "uses-a" and give an example of each.
+- [ ] I can draw the UML for composition (filled diamond) and aggregation (hollow diamond) and explain the lifecycle difference.
+- [ ] I can write a class that composes another class and delegates a method to it.
+- [ ] I can explain the fragile base class problem with a concrete example.
+- [ ] I can list at least three warning signs that inheritance is being misused.
+- [ ] I can state the "favor composition over inheritance" guideline and explain that it is a heuristic, not an absolute rule.
+- [ ] I can take an inheritance-based design and refactor it to use composition + delegation while keeping behavior identical.
+- [ ] I can decide, for a new scenario, whether inheritance or composition is more appropriate and defend the choice.
 
 ---
 
 ## 8. Resources index
 
 | Resource | Location | Purpose |
-|----------|----------|---------|
-| Session 1 notes & worked example | [`01-session/README.md`](01-session/README.md) | Modeling "has-a" with composition and delegation. |
-| Session 2 notes & refactoring lab | [`02-session/README.md`](02-session/README.md) | Inheritance vs. composition; refactoring practice. |
-| Curated readings (PDF download area) | [`material/README.md`](material/README.md) | Reference readings and summary notes for offline study. |
-| Optional practice (GitHub submission) | [`optional-activity/README.md`](optional-activity/README.md) | Extra hands-on refactoring challenge with rubric. |
+|---|---|---|
+| Session 1 notes & worked example | `./01-session/README.md` | Composition, aggregation, delegation |
+| Session 2 notes & refactoring | `./02-session/README.md` | Inheritance vs. composition, refactoring |
+| Curated readings (PDF download area) | `./material/README.md` | Deeper study, references |
+| Optional practice (GitHub submission) | `./optional-activity/README.md` | Extra practice + rubric |
+
+### Core references
+- Gamma, Helm, Johnson, Vlissides. *Design Patterns: Elements of Reusable Object-Oriented Software*. Addison-Wesley, 1994 — origin of "favor composition over inheritance".
+- Bloch, J. *Effective Java* (3rd ed.), Item 18: "Favor composition over inheritance". Addison-Wesley, 2018.
+- Martin, R. C. *Agile Software Development, Principles, Patterns, and Practices*. Prentice Hall, 2002.
 
 ---
 
-## 9. Recommended study path
+## 9. How this week is assessed (corte 2)
 
-1. Read this guide and the glossary.
-2. Work through **Session 1** (composition/delegation) and complete its exit ticket.
-3. Work through **Session 2** (inheritance vs. composition + refactoring).
-4. Download and skim the readings in [`material/`](material/README.md).
-5. Attempt the **optional activity** to consolidate the skill before the quiz.
-6. Take the end-of-unit quiz.
+- **Formative (not graded):** in-class practices and exit tickets in each session.
+- **Summative (graded, corte 2):**
+  - The end-of-corte **quiz** distinguishing inheritance from composition (objective 5).
+  - The **optional activity** (see `./optional-activity/`) can contribute bonus points, submitted via **GitHub** (not Moodle).
 
-> **Assessment note (Corte 2):** This week feeds directly into the Corte 2 evaluation.
-> The in-class deliverables and the quiz are graded; the optional GitHub activity provides
-> bonus practice and formative feedback.
+> Academic integrity: composition and refactoring exercises must be your own work. You may discuss concepts with peers, but submitted code and diagrams must be individually produced unless the instructor states otherwise.

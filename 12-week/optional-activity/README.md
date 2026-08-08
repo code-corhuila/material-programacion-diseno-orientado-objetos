@@ -1,185 +1,158 @@
-# Week 12 — Optional Activity: "Mini-Store Inventory with Collections"
+# Week 12 - Optional activity: Command-line Inventory Manager
 
-**Course:** Object-Oriented Programming and Design (2026-B) · **Unit 3** · **Corte 3**
-**Topic:** Collections and data structures — `List`, `Map`, `Set`
-**RAA:** 90_82759
-**Type:** Optional graded enrichment · **Individual** · **Estimated time:** 3–4 hours
-**Submission channel:** **GitHub repository** (NOT Moodle)
-
-> This activity is **optional** but **graded**. It lets you consolidate the week's outcomes
-> by building a slightly larger program than the in-class demo and by submitting it the way
-> professional developers do — through a public Git repository.
+> **Subject:** Object-Oriented Programming and Design (2026-B)
+> **Unit 3 - Practical application of OOP in Java · Corte 3**
+> **Topic:** Collections and data structures — `List`, `Map`, `Set`
+> **Modality:** Optional practice · **Submission channel: GitHub (NOT Moodle)**
 
 ---
 
-## 1. Problem statement
+## 1. Purpose
 
-You will build a **command-oriented mini-store inventory** in Java that manages a catalog of
-products. The program must use **all three** collection families intentionally, each where it
-genuinely fits:
-
-- a **`Map`** to store and retrieve products by their unique code,
-- a **`Set`** to enforce/track uniqueness (e.g., the set of distinct categories),
-- a **`List`** where order or duplicates are meaningful (e.g., a chronological sale log).
-
-The point is not size — it is **choosing the right structure for each job** and justifying
-that choice.
+This optional challenge lets you consolidate the week's learning outcome
+(**RAA `90_82759`**) by turning the in-class `Inventory` prototype into a small but complete
+**command-line application**. It rewards clean use of collections, correct
+`equals()`/`hashCode()`, and good encapsulation. It is optional but strongly recommended:
+it is the best possible preparation for the corte-3 practical assessment.
 
 ---
 
-## 2. Domain model (required)
+## 2. Problem statement
 
-Create at least these classes:
+Build a **console-based Inventory Manager** for a small shop. The program keeps an
+in-memory catalog of products and lets a user manage stock through a text menu. All product
+storage must use the **Java Collections Framework** — specifically a
+`HashMap<String, Product>` keyed by product code, with `List` and/or `Set` used where
+appropriate for reports.
 
-### `Product`
-- Fields: `String code` (unique, immutable identity), `String name`, `String category`,
-  `double price`, `int quantity`.
-- Override `equals` and `hashCode` based on `code`.
-- Override `toString` for readable output.
-
-### `Inventory`
-Encapsulates a **`private final Map<String, Product>`** and exposes:
-
-| Method | Behavior |
-|---|---|
-| `boolean add(Product p)` | add; reject a duplicate code (return `false`) |
-| `Product findByCode(String code)` | return the product or `null` |
-| `boolean restock(String code, int amount)` | increase quantity; validate `amount > 0` |
-| `boolean sell(String code, int amount)` | decrease quantity; reject if insufficient stock |
-| `boolean remove(String code)` | remove a product |
-| `List<Product> lowStock(int threshold)` | products with `quantity <= threshold` |
-| `Set<String> categories()` | the **distinct** categories present |
-| `double totalInventoryValue()` | sum of `price * quantity` over all products |
-| `List<Product> sortedByName()` | all products, sorted alphabetically by name |
-
-### `SaleLog` (uses a `List`)
-- Keeps a **chronological `List`** of sale records (code + amount + timestamp string).
-  Duplicates are allowed and order matters — hence a `List`, not a `Set`.
-- Method `List<String> history()` returns the log lines in order.
-
-### `StoreApp` (driver)
-- A `main` method that demonstrates every operation above with printed output.
-  A menu/console loop is welcome but not required — a scripted `main` is acceptable.
+The application runs in a loop, showing a menu and reacting to the user's choice until they
+choose to exit.
 
 ---
 
 ## 3. Functional requirements
 
-1. Seed the inventory with **at least 6 products across at least 3 categories**.
-2. Demonstrate a **rejected duplicate** `add` (same code).
-3. Perform at least **two sales** (one that succeeds, one rejected for insufficient stock)
-   and record the successful ones in the `SaleLog`.
-4. Perform at least **one restock**.
-5. Print: the full catalog **sorted by name**, the **distinct categories** (`Set`), a
-   **low-stock report**, the **total inventory value**, and the **sale history**.
-6. **No raw types** — every collection must be generic (`Map<String, Product>`, etc.).
-7. **No crashes** on missing keys — guard with `getOrDefault`/`containsKey` as needed.
+Your program must support **at least** the following operations:
+
+1. **Add product** — read code, name, category, price, quantity; reject a duplicate code.
+2. **Remove product** — by code; report whether anything was removed.
+3. **Find product** — by code; print its details or a "not found" message.
+4. **Update quantity** — restock (+) or record a sale (−); never allow negative stock.
+5. **List all products** — printed in a readable, aligned table.
+6. **Report: total inventory value** — sum of `price * quantity` across all products.
+7. **Report: products by category** — a `Map<String, List<Product>>` or a
+   `Map<String, Integer>` count per category.
+8. **Report: low stock** — all products below a user-supplied threshold.
+9. **Exit** — leave the loop cleanly.
+
+**Data model requirements**
+
+- A `Product` class with `code`, `name`, `category`, `price`, `quantity`; sensible
+  constructor, getters, a controlled `setQuantity`, and a `toString()`.
+- `Product` must override `equals()` and `hashCode()` based on `code`.
+- An `Inventory` class that **encapsulates** a `private Map<String, Product>` and exposes
+  the operations above through clean methods. The raw map must never be returned directly
+  (return a defensive copy or an unmodifiable view).
+
+**Quality requirements**
+
+- Handle invalid input gracefully (non-numeric price/quantity, unknown code, empty catalog)
+  without crashing.
+- No `NullPointerException` from `map.get` on a missing key — use `containsKey` /
+  `getOrDefault` / `Optional`.
+- Meaningful class and method names; no dead code; no `System.out.println` debugging left in.
+
+**Stretch goals (optional, for extra polish — not required to pass)**
+
+- Persist the catalog to a text/CSV file on exit and reload it on start.
+- Add a "most valuable product" report using Streams.
+- Add simple JUnit tests for `Inventory` (add/remove/update/find).
 
 ---
 
-## 4. Non-functional / quality requirements
-
-- Meaningful names; each method does one thing.
-- The `Map`/`List`/`Set` fields are `private`; callers use domain methods, not raw
-  collection calls.
-- Consistent formatting; no compiler warnings.
-- A short `README.md` in your repo (see deliverable) explaining **why** you chose each
-  collection type.
-
----
-
-## 5. Expected deliverable
+## 4. Expected deliverable
 
 A **public GitHub repository** containing:
 
 ```
-mini-store-inventory/
+inventory-manager/
 ├── src/
 │   ├── Product.java
 │   ├── Inventory.java
-│   ├── SaleLog.java
-│   └── StoreApp.java
-├── README.md          <- see required content below
-└── .gitignore         <- ignore /out, /bin, *.class, IDE folders
+│   └── Main.java          (the menu loop / entry point)
+├── README.md              (see required contents below)
+└── (optional) tests/ or a /test folder with JUnit tests
 ```
 
-**Repository `README.md` must include:**
-1. Your full name and the course/week.
-2. How to compile and run (`javac`/`java` commands, or IDE steps).
-3. A **"Design decisions"** section: for each of `List`, `Set`, and `Map`, one or two
-   sentences on *why* you used it where you did.
-4. A short sample of the program's console output (paste it in a code block).
+Your repository `README.md` must include:
+- A one-paragraph description of the app.
+- **How to compile and run** it (e.g., `javac src/*.java -d out` then `java -cp out Main`).
+- A short **sample session** (copy-pasted console interaction).
+- A brief **design note**: which collection you used where, and **why** (this is where you
+  demonstrate the "select the appropriate collection" objective).
 
 ---
 
-## 6. How to submit via GitHub (step by step)
+## 5. How to submit (GitHub — not Moodle)
 
-> **Do NOT submit on Moodle.** Submission is the **URL of your public repository**, pasted
-> in the space the instructor indicates (or emailed if instructed).
+> This activity is **not** submitted through Moodle. Follow these steps exactly.
 
-1. Create a **free GitHub account** if you don't have one (github.com).
-2. Create a **new public repository** named `mini-store-inventory`.
-3. On your machine, initialize and push:
-
+1. Create a **new public repository** named `inventory-manager` (or similar) on your GitHub
+   account.
+2. Initialize it locally and commit your work in **meaningful commits** (not a single
+   "final" commit). Example commit messages: `feat: add Product with equals/hashCode`,
+   `feat: HashMap-backed Inventory`, `feat: menu loop and reports`.
+3. Push to GitHub:
    ```bash
    git init
    git add .
-   git commit -m "Week 12: mini-store inventory with List, Set, Map"
+   git commit -m "feat: initial inventory manager"
    git branch -M main
-   git remote add origin https://github.com/<your-username>/mini-store-inventory.git
+   git remote add origin https://github.com/<your-username>/inventory-manager.git
    git push -u origin main
    ```
+4. Make sure the repository is **public** (or add the instructor as a collaborator if you
+   keep it private).
+5. **Submit the repository URL** through the channel the instructor announced for GitHub
+   links (course forum / shared spreadsheet), **not** through a Moodle assignment box.
+6. Include your **full name and student code** in the repository `README.md` so your
+   submission can be identified.
 
-4. Make **at least 3 meaningful commits** as you build (not one giant commit) — this shows
-   your work progressing.
-5. Verify the repo is **public** and that the code is visible in the browser.
-6. **Submit the repository URL** (e.g., `https://github.com/<your-username>/mini-store-inventory`).
-
-**Deadline:** end of Week 12 (Corte 3). Late submissions per the course's general late policy.
-
----
-
-## 7. Assessment criteria / rubric (100 points)
-
-| Criterion | Excellent (full) | Acceptable (partial) | Missing (0) | Weight |
-|---|---|---|---|---|
-| **Correct use of `Map`** (store/retrieve by key, guards) | Encapsulated `HashMap`, all ops correct, no null crashes | Works but exposes the map or misses a guard | Not used / incorrect | 20 |
-| **Correct use of `Set`** (distinct categories) | Distinct categories via a `Set`, justified | Present but with a duplicate-handling flaw | Not used | 15 |
-| **Correct use of `List`** (ordered sale log) | Ordered log, duplicates allowed, iterated correctly | Present but order/semantics unclear | Not used | 15 |
-| **`equals`/`hashCode`** on `Product` | Both overridden on `code`, consistent | Only one overridden / inconsistent | Neither | 15 |
-| **Encapsulation & API design** | Private fields, domain methods, invariants protected | Some leakage of internal collections | Public raw collections | 10 |
-| **Functional completeness** (all §3 requirements) | All demonstrated with output | Most demonstrated | Few/none | 10 |
-| **Code quality** (naming, no raw types, no warnings) | Clean, generic, warning-free | Minor issues | Raw types / messy | 5 |
-| **Repo README & design rationale** | Clear run steps + justified choices + sample output | Partial | Missing | 5 |
-| **Git usage** (public repo, ≥3 meaningful commits) | Public, clear history | Public, single commit | Not accessible | 5 |
-
-**Total: 100 points.**
+> **Academic integrity:** the work must be your own. You may consult the Javadoc and the
+> course material, but copying another student's repository is plagiarism. Commit history
+> that shows your incremental work is your best evidence of authorship.
 
 ---
 
-## 8. Starter hints
+## 6. Assessment criteria / rubric (100 points)
 
-- Reuse the `Product` and `Inventory` skeletons from
-  [`../02-session/README.md`](../02-session/README.md) and extend them.
-- For `categories()`, build a `Set<String>` and add each product's category — duplicates
-  collapse automatically.
-- For `sortedByName()`, copy the values into a `List` and sort with a comparator:
+| Criterion | Excellent | Acceptable | Insufficient | Pts |
+|-----------|-----------|------------|--------------|-----|
+| **Correct collection choice** — `HashMap` for lookup by code; `List`/`Set` used appropriately for reports, with justification in the README | Right structures everywhere, clearly justified (20) | Mostly right, thin justification (12) | Wrong structure or no rationale (0–6) | 20 |
+| **`Product` correctness** — fields, encapsulation, `equals`/`hashCode` on `code`, controlled `setQuantity` | Complete and correct (15) | Minor gaps (9) | Missing `equals`/`hashCode` or broken invariants (0–5) | 15 |
+| **`Inventory` encapsulation & API** — map is private, defensive copies/Optional, clean methods | Fully encapsulated, safe API (20) | Mostly encapsulated (12) | Map leaked or unsafe (0–6) | 20 |
+| **Functionality** — all 9 menu operations work as specified | All work (20) | 6–8 work (12) | ≤5 work (0–6) | 20 |
+| **Robustness** — graceful handling of bad input, missing keys, empty catalog | No crashes, clear messages (10) | Handles most cases (6) | Crashes on common input (0–3) | 10 |
+| **Code quality & README** — naming, structure, run instructions, sample session, design note | Professional, complete README (10) | Runs, sparse README (6) | Poor/missing docs (0–3) | 10 |
+| **Git hygiene** — meaningful, incremental commits; public repo | Clear history (5) | One or two commits (3) | Single dump / not accessible (0–1) | 5 |
+| **TOTAL** | | | | **100** |
 
-  ```java
-  List<Product> list = new ArrayList<>(products.values());
-  list.sort(Comparator.comparing(Product::getName));
-  return list;
-  ```
-
-- For `totalInventoryValue()`, iterate `values()` and accumulate `price * quantity`.
-- Test each method from `StoreApp` right after you write it — small, frequent checks beat
-  one big debugging session at the end.
+**Stretch goals** may earn up to **+5 bonus** at the instructor's discretion, but the score
+is capped at 100.
 
 ---
 
-## 9. Academic integrity
+## 7. Self-check before you submit
 
-Write your own code. You may consult the official Java documentation and the course
-materials. Do **not** copy another student's repository. Cite any external snippet you adapt
-in your repo `README.md`. Identical submissions will be treated per the institution's
-academic integrity policy.
+- [ ] `Product` overrides `equals()` and `hashCode()` on `code`.
+- [ ] `Inventory` keeps its `Map` private and never returns it directly.
+- [ ] All 9 menu operations run without crashing on normal use.
+- [ ] Invalid input (bad number, unknown code, empty catalog) is handled with a message.
+- [ ] The program compiles from a clean checkout using the README instructions.
+- [ ] The README explains *which collection and why* for each use.
+- [ ] Commit history shows incremental work; repo is public/accessible.
+- [ ] Repository URL submitted through the GitHub channel (not Moodle).
+
+---
+
+*Optional practice designed for CORHUILA — Object-Oriented Programming and Design (2026-B), Unit 3, Week 12, Corte 3.*

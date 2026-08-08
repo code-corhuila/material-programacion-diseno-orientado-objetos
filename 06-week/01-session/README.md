@@ -1,62 +1,56 @@
-# Week 06 · Session 01 — Foundations of inheritance: the "is-a" relationship and `extends`
+# Week 06 - Session 1
 
-> **Unit 2:** Design principles and modularity · **Assessment period:** Corte 2
-> **RAA:** `90_82759`
+## "is-a", `extends`, and constructor chaining with `super()`
+
+**Course:** Object-Oriented Programming and Design | **Unit 2** - Design principles and modularity
+**Duration:** ~2 hours | **Assessment period:** Corte 2
 
 ---
 
 ## 1. Session objective
 
-By the end of this session, the student will **model an "is-a" relationship between two classes using
-single inheritance**, correctly using `extends` so that the child class inherits and reuses at least
-two members of the parent, and will be able to explain why Java restricts a class to a single direct
-superclass.
+By the end of this session the student will be able to **model an "is-a" relationship** with single inheritance, declare a subclass using `extends`, and **use `super(...)` to invoke a parent constructor** so that a child object is fully and correctly initialized without duplicating the parent's setup code.
 
 ---
 
-## 2. Timed agenda (110 min)
+## 2. Timed agenda
 
 | Time | Activity |
-|:---:|---|
-| 0:00 – 0:10 | Warm-up: spot the duplicated code (motivation). |
-| 0:10 – 0:35 | Theory: the "is-a" test, `extends`, the `Object` root, what is/ isn't inherited. |
-| 0:35 – 0:50 | Theory: why single inheritance? The diamond problem. |
-| 0:50 – 1:15 | Worked example: refactoring `Employee` / `Manager`. |
-| 1:15 – 1:40 | Guided in-class practice: the `Vehicle` hierarchy. |
-| 1:40 – 1:50 | Wrap-up + exit ticket. |
+|---|---|
+| 0:00 - 0:10 | Warm-up: the cost of duplicated code |
+| 0:10 - 0:35 | Theory: "is-a" vs. "has-a", `extends`, what is inherited |
+| 0:35 - 1:00 | Theory: the constructor chain and `super(...)` |
+| 1:00 - 1:25 | Worked example: `Account` -> `SavingsAccount` |
+| 1:25 - 1:50 | Guided practice: `Vehicle` -> `Car` |
+| 1:50 - 2:00 | Wrap-up and exit ticket |
 
 ---
 
-## 3. Warm-up — why we need inheritance (10 min)
+## 3. Warm-up (10 min) - Why we need inheritance
 
 Consider two classes written independently by two students:
 
 ```java
-class SavingsAccount {
-    String owner;
-    double balance;
-    void deposit(double amount)  { balance += amount; }
-    void withdraw(double amount) { balance -= amount; }
-    String summary() { return owner + ": " + balance; }
-    double interestRate = 0.02;
+class Dog {
+    String name;
+    int ageInYears;
+    void eat()   { System.out.println(name + " is eating."); }
+    void sleep() { System.out.println(name + " is sleeping."); }
+    void bark()  { System.out.println(name + " says: Woof!"); }
 }
 
-class CheckingAccount {
-    String owner;
-    double balance;
-    void deposit(double amount)  { balance += amount; }   // identical
-    void withdraw(double amount) { balance -= amount; }   // identical
-    String summary() { return owner + ": " + balance; }   // identical
-    double overdraftLimit = 500.0;
+class Cat {
+    String name;
+    int ageInYears;
+    void eat()   { System.out.println(name + " is eating."); }
+    void sleep() { System.out.println(name + " is sleeping."); }
+    void meow()  { System.out.println(name + " says: Meow!"); }
 }
 ```
 
-Three methods and two fields are **copied verbatim**. If we later fix a bug in `withdraw` (say, to
-forbid negative amounts), we must remember to fix it in **both** places. This is exactly the pain
-inheritance removes.
+**Discussion prompt:** How much of `Dog` and `Cat` is identical? What happens if we later add `weightInKg` and a `drink()` method to *every* animal? How many places must we edit?
 
-**Discussion prompt (whole class):** What do these two classes have in common, and what is genuinely
-different? Write the common part on the board — that common part *is* the future parent class.
+The duplication (`name`, `ageInYears`, `eat()`, `sleep()`) is the problem inheritance solves. Both are **animals**; the shared parts belong in a common `Animal` parent.
 
 ---
 
@@ -64,175 +58,193 @@ different? Write the common part on the board — that common part *is* the futu
 
 ### 4.1 The "is-a" relationship
 
-Inheritance models an **"is-a"** relationship. Before writing `extends`, say the sentence out loud:
+Inheritance models specialization. We use it only when the sentence **"a child *is a kind of* parent"** is true:
 
-> A `SavingsAccount` **is a** `BankAccount`. ✅
-> A `Manager` **is an** `Employee`. ✅
-> A `Car` **is a** `Vehicle`. ✅
+- A `SavingsAccount` **is a** `BankAccount`. Correct.
+- A `Car` **is a** `Vehicle`. Correct.
+- A `Car` **is a** `Engine`? No - a car *has an* engine. That is composition ("has-a"), not inheritance.
 
-If the sentence sounds natural and is *always* true, inheritance is a candidate. If instead you find
-yourself saying "**has a**", you want **composition**, not inheritance:
+> **Rule of thumb.** If you can say "X is-a Y", consider inheritance. If you can only say "X has-a Y", use a field (composition). Misusing inheritance for "has-a" produces fragile, confusing hierarchies.
 
-> A `Car` **has an** `Engine`. → the `Car` class holds an `Engine` field; it does **not** extend `Engine`.
-
-> **Rule of thumb.** Use inheritance for **is-a**; use a field (composition) for **has-a**.
-> "A car is an engine" is false, so `class Car extends Engine` is a design error even if it compiles.
-
-### 4.2 `extends` and the shape of a hierarchy
-
-The `extends` keyword declares that one class is a specialization of another:
+### 4.2 Declaring a subclass with `extends`
 
 ```java
-class BankAccount {              // parent / superclass / base class
-    String owner;
-    double balance;
-    void deposit(double amount)  { balance += amount; }
-    void withdraw(double amount) { balance -= amount; }
-    String summary() { return owner + ": " + balance; }
+class Animal {              // superclass (parent / base)
+    String name;
+    int ageInYears;
+    void eat()   { System.out.println(name + " is eating."); }
+    void sleep() { System.out.println(name + " is sleeping."); }
 }
 
-class SavingsAccount extends BankAccount {   // child / subclass / derived class
-    double interestRate = 0.02;              // adds new state
-    void addInterest() {                     // adds new behavior…
-        deposit(balance * interestRate);     // …reusing an inherited method
-    }
+class Dog extends Animal {  // subclass (child / derived)
+    void bark() { System.out.println(name + " says: Woof!"); } // reuses inherited 'name'
 }
 ```
 
-`SavingsAccount` did not redeclare `owner`, `balance`, `deposit`, `withdraw`, or `summary` — it
-**inherited** them. It only wrote what is *new*. This is the DRY principle in action.
+The `extends` keyword wires `Dog` to `Animal`. A `Dog` object now automatically has `name`, `ageInYears`, `eat()`, and `sleep()` **without repeating a single line**.
+
+Hierarchy sketch:
 
 ```
-        BankAccount            (owner, balance, deposit, withdraw, summary)
-             ▲
-             │  extends
-             │
-      SavingsAccount           (+ interestRate, + addInterest)
+            +----------------+
+            |     Animal     |   (superclass)
+            +----------------+
+            | - name         |
+            | - ageInYears   |
+            +----------------+
+            | + eat()        |
+            | + sleep()      |
+            +----------------+
+                    ^  extends
+        +-----------+-----------+
+        |                       |
++----------------+     +----------------+
+|      Dog       |     |      Cat       |   (subclasses)
++----------------+     +----------------+
+| + bark()       |     | + meow()       |
++----------------+     +----------------+
 ```
 
-### 4.3 Every class extends `Object`
+The arrow points **from child to parent** and reads "is-a".
 
-Even `BankAccount`, which has no `extends` clause, silently extends `java.lang.Object`. That is why
-every object already has methods such as `toString()`, `equals(Object)`, and `hashCode()`. The full
-picture is a **tree** with `Object` at the root:
+### 4.3 What a subclass inherits - and what it does not
+
+A subclass **inherits**:
+- `public` and `protected` fields and methods of the superclass;
+- package-private members **if** the subclass is in the same package.
+
+A subclass **does not inherit**:
+- **`private`** members - they exist inside every subclass object but are not directly accessible; you reach them through inherited `public`/`protected` getters/setters. Encapsulation is preserved even across inheritance.
+- **Constructors** - constructors are not inherited. This is exactly why `super(...)` exists (Section 4.4).
+
+Every class in Java that does not name a parent implicitly extends **`Object`**, the root of all class hierarchies. So the full chain for `Dog` is `Dog` -> `Animal` -> `Object`.
+
+### 4.4 Constructors and the constructor chain
+
+When you create a subclass object, **the parent part must be initialized before the child part**. Java enforces this by chaining constructors from the subclass up to `Object`.
+
+Key rules:
+
+1. The **first statement** of every constructor is a call to another constructor: either `super(...)` (a parent constructor) or `this(...)` (another constructor of the same class).
+2. If you write neither, the compiler **inserts an implicit `super()`** - a call to the parent's **no-argument** constructor.
+3. If the parent has **no** no-argument constructor (because you declared other constructors and none is parameterless), the implicit `super()` fails to compile. **You must then write `super(...)` explicitly** with the right arguments.
+
+Initialization order for `new SavingsAccount(...)`:
 
 ```
-                Object
-               /   |   \
-       BankAccount ...  String ...
-            ▲
-      SavingsAccount
+new SavingsAccount(...)
+        |
+        v
+ SavingsAccount ctor  --> super(...) --> BankAccount ctor --> super() --> Object ctor
+                                                                              |
+                        <-- returns, Object part ready ------------------------
+        <-- BankAccount fields initialized --
+   SavingsAccount fields initialized, object ready
 ```
 
-### 4.4 What is inherited — and what is not
+The parent is fully built first, then control returns down the chain and the child finishes.
 
-**Inherited by a subclass:**
+### 4.5 The `super(...)` call in practice
 
-- `public` and `protected` fields and methods of the parent.
-- Package-private members, *if* the subclass is in the same package.
-
-**NOT inherited:**
-
-- **Constructors.** A subclass does not inherit constructors; it must define its own (Session 02).
-- **`private` members' direct access.** A `private` field still *exists* inside the object, but the
-  child cannot touch it by name — it must go through an inherited `public`/`protected` accessor.
+`super(arg1, arg2, ...)` calls the matching constructor of the **direct** superclass. Use it to **reuse the parent's initialization logic** instead of re-assigning inherited fields by hand:
 
 ```java
 class BankAccount {
-    private double balance;                 // exists in every SavingsAccount…
-    protected double getBalance() { return balance; }   // …but reached only via this
+    protected String owner;
+    protected double balance;
+
+    BankAccount(String owner, double openingBalance) {
+        this.owner = owner;
+        this.balance = openingBalance;
+    }
 }
+
 class SavingsAccount extends BankAccount {
-    void report() {
-        // System.out.println(balance);     // ❌ compile error: balance is private to parent
-        System.out.println(getBalance());   // ✅ inherited accessor
+    private double annualRate;
+
+    SavingsAccount(String owner, double openingBalance, double annualRate) {
+        super(owner, openingBalance); // reuse the parent's setup - no duplication
+        this.annualRate = annualRate; // add only what is new
     }
 }
 ```
 
-### 4.5 Why only single inheritance? The diamond problem
-
-Java allows a class to `extends` **exactly one** class. Suppose it did not, and both parents defined a
-method with the same signature:
-
-```
-        A  (greet())
-       / \
-      B   C          both override greet() differently
-       \ /
-        D            D extends B, C  ← which greet() does D get?  AMBIGUOUS
-```
-
-This ambiguity is the **diamond problem**. Java sidesteps it entirely for classes by permitting a
-single parent, keeping the hierarchy an unambiguous tree. (Multiple *interface* inheritance is allowed
-because interfaces traditionally carried no state and no implementation conflict — a topic for a later
-unit.)
+Note how the child constructor sets **only** the new field `annualRate`; `owner` and `balance` are handled by the parent through `super(...)`. That is the essence of reuse without duplication.
 
 ---
 
-## 5. Fully worked example — refactoring `Employee` / `Manager`
+## 5. Worked example (fully solved) - `Account` -> `SavingsAccount`
 
-**Problem.** A payroll module has two near-identical classes. Remove the duplication using inheritance.
+**Problem.** Model a bank that has generic accounts and specialized savings accounts. Every account has an owner and a balance, and can deposit and withdraw. A savings account additionally has an annual interest rate and can apply monthly interest. Do not duplicate the deposit/withdraw logic.
 
-### 5.1 Before (duplicated)
+**Step 1 - Identify the relationship.** "A savings account **is a** bank account." -> inheritance.
+
+**Step 2 - Put the common parts in the parent.**
 
 ```java
-class Employee {
-    String name;
-    double baseSalary;
-    double monthlyPay() { return baseSalary; }
-    String card() { return name + " — pay: " + monthlyPay(); }
-}
+public class Account {
+    protected String owner;
+    protected double balance;
 
-class Manager {
-    String name;                                   // duplicated
-    double baseSalary;                             // duplicated
-    double bonus;
-    double monthlyPay() { return baseSalary + bonus; }
-    String card() { return name + " — pay: " + monthlyPay(); }  // duplicated
+    public Account(String owner, double openingBalance) {
+        this.owner = owner;
+        this.balance = openingBalance;
+    }
+
+    public void deposit(double amount) {
+        if (amount <= 0) {
+            System.out.println("Deposit must be positive.");
+            return;
+        }
+        balance += amount;
+    }
+
+    public void withdraw(double amount) {
+        if (amount <= 0) {
+            System.out.println("Withdrawal must be positive.");
+            return;
+        }
+        if (amount > balance) {
+            System.out.println("Insufficient funds.");
+            return;
+        }
+        balance -= amount;
+    }
+
+    public double getBalance() {
+        return balance;
+    }
 }
 ```
 
-### 5.2 Apply the "is-a" test
-
-> A `Manager` **is an** `Employee`. ✅ — inheritance is justified.
-
-### 5.3 After (inheritance)
+**Step 3 - Specialize in the child, reusing the parent via `super(...)`.**
 
 ```java
-class Employee {
-    String name;
-    double baseSalary;
-    double monthlyPay() { return baseSalary; }
-    String card() { return name + " — pay: " + monthlyPay(); }
-}
+public class SavingsAccount extends Account {
+    private double annualRate; // e.g. 0.06 means 6% per year
 
-class Manager extends Employee {
-    double bonus;                 // only the NEW field
+    public SavingsAccount(String owner, double openingBalance, double annualRate) {
+        super(owner, openingBalance); // reuse parent constructor - owner & balance done here
+        this.annualRate = annualRate;
+    }
 
-    // Only the behavior that actually differs is written here.
-    // (This redefinition of monthlyPay previews overriding, covered next session.)
-    double monthlyPay() { return baseSalary + bonus; }
+    // New behavior specific to savings accounts
+    public void applyMonthlyInterest() {
+        double monthly = balance * (annualRate / 12.0);
+        deposit(monthly); // reuse inherited deposit() - no duplicated balance logic
+    }
 }
 ```
 
-`Manager` no longer repeats `name`, `baseSalary`, or `card()`. Notice that `card()`, defined only in
-`Employee`, still calls `monthlyPay()` — and for a `Manager` object it will use the manager's version.
-That dynamic dispatch is the bridge to next week's polymorphism.
-
-### 5.4 Driver and expected output
+**Step 4 - Drive it from `main`.**
 
 ```java
-public class Payroll {
+public class Bank {
     public static void main(String[] args) {
-        Employee e = new Employee();
-        e.name = "Ana";  e.baseSalary = 3000;
-
-        Manager m = new Manager();
-        m.name = "Beto"; m.baseSalary = 4000; m.bonus = 1500;
-
-        System.out.println(e.card());
-        System.out.println(m.card());   // card() is inherited; monthlyPay() is the Manager's
+        SavingsAccount s = new SavingsAccount("Ana", 1000.0, 0.06);
+        s.deposit(500.0);          // inherited method
+        s.applyMonthlyInterest();  // specialized method
+        System.out.printf("Balance: %.2f%n", s.getBalance());
     }
 }
 ```
@@ -240,74 +252,116 @@ public class Payroll {
 **Expected output:**
 
 ```
-Ana — pay: 3000.0
-Beto — pay: 5500.0
+Balance: 1507.50
 ```
 
-**Why `5500.0`?** `card()` lives in `Employee`, but when it calls `monthlyPay()` on a `Manager`
-object, Java runs the `Manager` version (`4000 + 1500`). We reused the parent's `card()` unchanged and
-still got specialized behavior — zero duplication.
+**Trace of the result.** Opening balance `1000` + deposit `500` = `1500`. Monthly interest = `1500 * (0.06 / 12) = 1500 * 0.005 = 7.50`. New balance = `1507.50`.
+
+**What this demonstrates:**
+- `SavingsAccount` reused `owner`/`balance` initialization through `super(...)`.
+- `applyMonthlyInterest()` reused the inherited `deposit()` instead of touching `balance` directly.
+- Zero duplication of the deposit/withdraw rules.
 
 ---
 
-## 6. Guided in-class practice — the `Vehicle` hierarchy (25 min)
+## 6. Guided in-class practice (25 min) - `Vehicle` -> `Car`
 
-Work in pairs. Type as you go; compile after every step.
+Work in pairs. Build the hierarchy step by step; the instructor checks after each step.
 
-**Step 1 — Base class.** Create `Vehicle` with:
+**Requirements:**
 
-- fields `String brand;` and `int maxSpeed;`
-- method `String describe()` returning `brand + " (max " + maxSpeed + " km/h)"`.
+1. Create a parent class `Vehicle` with:
+   - `protected` fields `brand` (String) and `maxSpeed` (int);
+   - a constructor `Vehicle(String brand, int maxSpeed)`;
+   - a method `describe()` that prints `"<brand> reaches <maxSpeed> km/h"`.
 
-**Step 2 — Apply the test.** Confirm out loud: *"A `Motorcycle` **is a** `Vehicle`"* and
-*"A `Truck` **is a** `Vehicle`."* Both pass.
+2. Create a subclass `Car extends Vehicle` with:
+   - an extra `private int numberOfDoors`;
+   - a constructor `Car(String brand, int maxSpeed, int numberOfDoors)` that calls `super(brand, maxSpeed)` and then sets `numberOfDoors`;
+   - a method `showDoors()` that prints `"This car has <numberOfDoors> doors"`.
 
-**Step 3 — First subclass.** Create `Motorcycle extends Vehicle` that adds `boolean hasSidecar;` and a
-method `String kind()` returning `"Motorcycle"`. Do **not** redeclare `brand` or `maxSpeed`.
+3. In a `main`, create a `Car("Mazda", 200, 4)`, then call `describe()` and `showDoors()`.
 
-**Step 4 — Second subclass.** Create `Truck extends Vehicle` that adds `double cargoTons;` and a method
-`String kind()` returning `"Truck"`.
+**Checkpoints (the instructor verifies):**
+- [ ] `super(brand, maxSpeed)` is the **first** statement of the `Car` constructor.
+- [ ] `Car` does **not** re-declare `brand` or `maxSpeed`.
+- [ ] `describe()` is inherited and works on a `Car` object without being rewritten.
 
-**Step 5 — Reuse.** In a `main`, create one `Motorcycle` and one `Truck`, set their fields, and print
-`kind() + ": " + describe()` for each. Confirm `describe()` was written once yet works for both.
+**Reference solution (reveal only after attempting):**
 
-**Checkpoint questions:**
+```java
+public class Vehicle {
+    protected String brand;
+    protected int maxSpeed;
 
-1. How many times did you write the `describe()` logic? (Expected: once.)
-2. Could `Motorcycle` read a `private` field of `Vehicle` directly? Why or why not?
-3. Draw the hierarchy tree, including `Object`.
+    public Vehicle(String brand, int maxSpeed) {
+        this.brand = brand;
+        this.maxSpeed = maxSpeed;
+    }
 
-**Expected shape of the answer:**
+    public void describe() {
+        System.out.println(brand + " reaches " + maxSpeed + " km/h");
+    }
+}
+
+public class Car extends Vehicle {
+    private int numberOfDoors;
+
+    public Car(String brand, int maxSpeed, int numberOfDoors) {
+        super(brand, maxSpeed);          // first statement
+        this.numberOfDoors = numberOfDoors;
+    }
+
+    public void showDoors() {
+        System.out.println("This car has " + numberOfDoors + " doors");
+    }
+
+    public static void main(String[] args) {
+        Car c = new Car("Mazda", 200, 4);
+        c.describe();   // inherited
+        c.showDoors();  // specialized
+    }
+}
+```
+
+**Expected output:**
 
 ```
-        Object
-          ▲
-       Vehicle        (brand, maxSpeed, describe)
-        ▲    ▲
-Motorcycle   Truck    (each adds its own state + kind())
+Mazda reaches 200 km/h
+This car has 4 doors
 ```
+
+**Stretch goal (if time allows):** Add a second subclass `Motorcycle extends Vehicle` with a `boolean hasSidecar`. Notice that `describe()` is reused by *both* children with no extra code.
 
 ---
 
-## 7. Wrap-up (5 min)
+## 7. Common mistakes to avoid
 
-- Inheritance models **is-a**; composition models **has-a**.
-- `extends` gives a subclass the parent's non-private members for free — write only what is new.
-- Constructors and direct `private` access are **not** inherited.
-- Java uses **single** class inheritance to keep the hierarchy an unambiguous tree (diamond problem).
-
-**Bridge to Session 02:** we ignored constructors today by setting fields directly. Real classes
-initialize through constructors — and a child cannot initialize the parent's part alone. That is the
-job of `super(...)`, which we tackle next.
+| Mistake | Symptom | Fix |
+|---|---|---|
+| Forgetting `super(...)` when the parent has no no-arg constructor | `error: constructor Vehicle in class Vehicle cannot be applied to given types` | Add `super(brand, maxSpeed)` as the first line. |
+| Putting `super(...)` after another statement | `error: call to super must be first statement in constructor` | Move `super(...)` to the top. |
+| Re-declaring inherited fields in the child | Hidden fields, confusing bugs | Delete the redundant declarations; the parent already owns them. |
+| Making inherited fields `private` and then needing them in the child | Compile error accessing the field | Use `protected` for members meant for subclasses, or use getters. |
 
 ---
 
-## 8. Exit ticket (submit before leaving)
+## 8. Wrap-up and exit ticket
 
-Answer briefly on paper or in the LMS:
+**Summary.** Inheritance expresses "is-a"; `extends` wires child to parent; the child inherits public/protected members but not constructors; `super(...)` chains construction so the parent is initialized first and its setup logic is reused without duplication.
 
-1. Write one correct "is-a" sentence and one correct "has-a" sentence from any domain, and state which
-   one justifies `extends`.
-2. Given `class Sensor { protected int id; private int rawValue; }`, which of `id` and `rawValue` can a
-   subclass access **by name**, and why?
-3. In two sentences, explain the diamond problem and how single inheritance avoids it.
+**Exit ticket (submit before leaving - 5 min).** Answer briefly:
+
+1. Rewrite this line so it compiles, given that `Employee` only has the constructor `Employee(String name)`:
+   ```java
+   class Manager extends Employee {
+       Manager(String name, int teamSize) {
+           // ??? add the missing first line
+           this.teamSize = teamSize;
+       }
+   }
+   ```
+2. In one sentence, why are constructors *not* inherited?
+3. Give one example of an "is-a" pair and one example of a "has-a" pair from everyday software.
+
+> Expected answer to (1): `super(name);` as the first statement. (2): because each class is responsible for initializing its own fields, so construction is delegated explicitly via `super(...)`. (3): open, e.g. `SavingsAccount is-a Account`; `Car has-a Engine`.

@@ -1,166 +1,150 @@
 # Week 16 - Course closure: consolidation, project presentations and reflective assessment
 
-**Subject:** Object-Oriented Programming and Design
-**Program period:** 2026-B
-**Unit:** Unit 3 - Practical application of OOP in Java
-**Week:** 16 (Corte 3 - final assessment period)
-**Learning outcome (RAA):** 90_82759
+> **Subject:** Object-Oriented Programming and Design
+> **Program period:** 2026-B
+> **Unit:** Unit 3 - Practical application of OOP in Java
+> **Week:** 16 (final week of the course)
+> **Assessment period:** Corte 3 (final grading cut)
+> **Learning outcome (RAA):** 90_82759
 
 ---
 
 ## 1. Overview
 
-Week 16 is the closing week of the course. There is **no new technical content** to introduce; instead, the week is designed to **consolidate** what students have built across the three units and to make their learning **visible and assessable**. The week revolves around three interlocking activities:
+Week 16 is the **closing week** of the course. There is no new theory to introduce; instead, the week is designed to **consolidate** everything learned across the three units, give students a formal space to **present their final project**, exchange **structured peer feedback (co-evaluation)**, **reflect** on their own learning, and assemble a **portfolio** that traces each deliverable back to the subject learning outcome (RAA 90_82759).
 
-1. **Final project presentations**, where each team demonstrates that its Java application applies the four pillars of Object-Oriented Programming (abstraction, encapsulation, inheritance, polymorphism) together with sound design practices.
-2. **Structured peer feedback (co-evaluation)**, where students assess one another's projects against a shared rubric, practising professional, evidence-based critique.
-3. **Reflective assessment and portfolio compilation**, where each student looks back over the whole course, articulates what they have appropriated, and assembles a portfolio that traces every deliverable back to the subject learning outcome (RAA 90_82759).
+This week converts a semester of accumulated work into three visible artifacts:
 
-This is an **assessment week (Corte 3)**. The grades collected here are summative: they certify the degree to which the learning outcome has been achieved. The pedagogical aim, however, is not merely to grade but to help students internalise a professional habit — *presenting, critiquing, and reflecting on software as engineers do in industry*.
+1. A **defended final project** that demonstrates the four pillars of OOP and good engineering practices.
+2. A completed **co-evaluation** (feedback given to peers and feedback received).
+3. A **reflective portfolio** that maps every deliverable to the RAA and to the competencies of the course.
 
----
-
-## 2. Assessment period (Corte 3)
-
-| Item | Detail |
-|------|--------|
-| Assessment period | Corte 3 (final third of the course) |
-| Nature | Summative + formative (co-evaluation and self-assessment) |
-| Weighting suggestion | Final project 60%, portfolio 20%, co-evaluation participation 10%, reflective essay 10% (adjust to institutional weighting) |
-| Evidence collected | Project demo + repository, peer-feedback forms, portfolio document, reflective essay/exit tickets |
-| Instruments | Presentation rubric, co-evaluation rubric, portfolio checklist, reflective-writing guide |
-
-> **Note.** All rubrics in this week are criterion-referenced: a student can score highly regardless of how classmates perform. Co-evaluation contributes to the *formative* dimension and to a small participation grade; it does not by itself determine a classmate's project grade, which is decided by the instructor.
+Because this is corte 3, the activities of this week carry the final summative weight. Students are assessed on evidence they produce and defend in class, not on new content.
 
 ---
 
-## 3. RAA and competencies addressed
+## 2. Learning outcome (RAA) and competencies addressed
 
-**RAA 90_82759** — *The student designs and implements object-oriented solutions in Java, applying the four pillars of OOP and good design practices to solve well-defined problems, and communicates and evaluates those solutions with professional criteria.*
+### 2.1 Learning outcome
 
-Competencies exercised this week:
+**RAA 90_82759** — The student applies the principles of object-oriented programming and design (abstraction, encapsulation, inheritance and polymorphism) together with good software-engineering practices to model and implement a working solution in Java, and justifies the design decisions taken.
 
-- **Disciplinary / technical.** Demonstrate, on a working artefact, correct use of abstraction, encapsulation, inheritance and polymorphism; justify design decisions (class responsibilities, relationships, use of interfaces, exception handling).
-- **Communicative.** Present a software solution clearly to a technical audience; defend design choices under questioning.
-- **Evaluative / critical.** Apply a rubric to a peer's work; give and receive feedback that is specific, actionable and respectful.
-- **Metacognitive.** Reflect on one's own learning trajectory, recognise gaps, and connect concrete deliverables to declared learning outcomes.
-- **Ethical / professional.** Attribute sources, respect academic integrity, and document work honestly in a portfolio.
+### 2.2 Competencies addressed this week
 
----
-
-## 4. Weekly objectives (measurable)
-
-By the end of Week 16, the student will be able to:
-
-1. **Present** the final project in a 10-12 minute demonstration that explicitly identifies where each of the four OOP pillars appears in the code, achieving at least **"Proficient"** on every row of the presentation rubric.
-2. **Provide** at least **two** structured written peer reviews using the co-evaluation rubric, each containing a minimum of one strength, one concrete improvement, and one clarifying question grounded in the observed artefact.
-3. **Reflect**, in a 500-700 word essay, on personal learning across Units 1-3, naming at least **three** concepts appropriated and **one** persistent difficulty, with a plan to address it.
-4. **Compile** a portfolio that maps **every** major deliverable of the course to RAA 90_82759, with a one-sentence justification per item, passing all rows of the portfolio checklist.
-5. **Evaluate** the quality of a peer's software solution against defined criteria, distinguishing between surface style issues and substantive design problems in the feedback given.
+| Competency | How it is exercised in Week 16 |
+|---|---|
+| **Technical (disciplinary)** | Presenting a working Java program that evidences the four OOP pillars, sound class design, and good practices (naming, encapsulation, error handling, testing, version control). |
+| **Communicative** | Defending design decisions orally, answering questions, and giving written peer feedback that is specific and actionable. |
+| **Critical-reflective** | Self-assessing personal learning across the three units and identifying strengths and gaps against the RAA. |
+| **Ethical-collaborative** | Practicing honest, respectful co-evaluation; acknowledging sources and teammates' contributions. |
 
 ---
 
-## 5. Contents outline
+## 3. Objectives (measurable)
 
-1. **Consolidation of OOP.** A synthesising review of the four pillars and how they interrelate; the vocabulary of good design (cohesion, coupling, responsibility, SOLID at an introductory level).
-2. **Technical communication.** How to structure a software demo; the "problem -> design -> code -> demo -> reflection" narrative; live-demo discipline and contingency.
-3. **Peer review / co-evaluation.** What makes feedback useful; rubric-based assessment; separating the person from the work; giving and receiving critique.
-4. **Reflective practice.** Metacognition in learning to program; evidence-based self-assessment; identifying transferable skills.
-5. **Portfolio construction.** Purpose of a learning portfolio; traceability from deliverable to learning outcome; curating evidence.
+By the end of Week 16 the student will be able to:
 
----
-
-## 6. Session-by-session agenda
-
-The week is delivered in **two sessions**. Detailed plans live in the linked folders.
-
-### [Session 1 — Final project presentations & co-evaluation](./01-session/README.md)
-Teams present their final projects; the class conducts structured peer review against the co-evaluation rubric. Focus: demonstrating the four pillars on a real artefact and practising professional feedback.
-
-| Time | Activity |
-|------|----------|
-| 0:00-0:10 | Framing, ground rules for demos and feedback |
-| 0:10-0:25 | Consolidation mini-review of the four pillars (worked example) |
-| 0:25-1:25 | Project presentations (rotating; ~12 min each incl. Q&A) |
-| 1:25-1:50 | Structured co-evaluation writing round |
-| 1:50-2:00 | Wrap-up and exit ticket |
-
-### [Session 2 — Reflective assessment & portfolio compilation](./02-session/README.md)
-Students write their reflective essay, compile the portfolio, and map deliverables to RAA 90_82759. Focus: metacognition and traceability.
-
-| Time | Activity |
-|------|----------|
-| 0:00-0:10 | Objectives; what a learning portfolio is and why it matters |
-| 0:10-0:30 | Guided reflection workshop (prompts + worked example) |
-| 0:30-1:10 | Portfolio assembly with the traceability matrix |
-| 1:10-1:40 | Peer portfolio walkthrough (pairs) |
-| 1:40-2:00 | Course closure, synthesis, and final exit ticket |
+1. **Present** the final project in a timed defense (10-12 min), explicitly pointing to code where **each of the four OOP pillars** (abstraction, encapsulation, inheritance, polymorphism) is applied, achieving at least "Competent" on every rubric criterion.
+2. **Provide** structured written peer feedback on **at least two** classmates' projects using the co-evaluation rubric, with each comment tied to a concrete observation and a suggested improvement.
+3. **Produce** a written reflection (350-500 words) that connects personal learning to the RAA and identifies at least **three** concrete learnings and **two** areas for future improvement.
+4. **Compile** a portfolio index that links **every** graded deliverable of the course to the RAA 90_82759 and to at least one OOP pillar or good practice, with working links/paths to each artifact.
+5. **Apply** at least **three good software-engineering practices** (e.g., meaningful naming, encapsulation, exception handling, unit tests, README, version control) and locate them in the submitted code during the defense.
 
 ---
 
-## 7. Key-concepts glossary
+## 4. Contents outline
+
+- **Consolidation of the course:** a synthesis map of Units 1-3 (fundamentals → design with classes and relationships → practical application in Java).
+- **The four OOP pillars revisited** as an assessment lens: what "good evidence" of each pillar looks like in code.
+- **Good practices checklist** for the defense: naming, cohesion/coupling, encapsulation, exceptions, testing, documentation, version control.
+- **Project defense:** structure of an effective 10-12 minute technical presentation and live demo.
+- **Co-evaluation:** how to give feedback that is specific, kind, and actionable; using the co-evaluation rubric.
+- **Reflective assessment:** guided self-reflection and metacognition against the RAA.
+- **Portfolio:** what a traceability portfolio is, how to build the RAA-to-evidence mapping table.
+
+---
+
+## 5. Session-by-session agenda
+
+The week is organized into two sessions. Detailed plans (theory, worked examples, guided practice, exit tickets) are in each session's `README.md`.
+
+### Session 1 — Consolidation and project presentations (`01-session/`)
+- Course synthesis: mapping Units 1-3 and the four pillars.
+- What the defense must evidence (pillars + good practices) and how it is scored.
+- **Project presentations / live defenses** with Q&A.
+- Structured **peer co-evaluation** during and after each presentation.
+
+### Session 2 — Reflective assessment and portfolio (`02-session/`)
+- Reflection and metacognition: the reflection framework and worked example.
+- Building the **RAA-to-evidence traceability portfolio**.
+- Consolidating co-evaluation feedback received into an improvement plan.
+- Course wrap-up, final checklist, and next steps.
+
+---
+
+## 6. Key-concepts glossary
 
 | Term | Definition |
-|------|-----------|
-| **Abstraction** | Modelling a concept by exposing only the features relevant to the problem and hiding incidental detail (e.g., an `abstract class Shape` declaring `area()` without saying how each shape computes it). |
-| **Encapsulation** | Bundling state and the operations on it within a class and restricting direct access to internal state (private fields + public methods / getters-setters with invariants). |
-| **Inheritance** | Deriving a new class from an existing one so it reuses and specialises behaviour (`class Circle extends Shape`). Models an "is-a" relationship. |
-| **Polymorphism** | The ability to treat different types through a common interface so the same call runs different implementations at runtime (`for (Shape s : shapes) s.area();`). |
-| **Cohesion** | The degree to which the elements of a class belong together and serve one clear responsibility. High cohesion is desirable. |
-| **Coupling** | The degree of interdependence between classes. Low (loose) coupling is desirable because it eases change. |
-| **Single Responsibility** | A class should have one reason to change (the first letter of SOLID). |
-| **Interface (Java)** | A contract of method signatures a class promises to implement; a key mechanism for polymorphism and loose coupling. |
-| **Co-evaluation** | Assessment of students by their peers against shared criteria; here, rubric-based review of projects. |
-| **Reflective assessment** | Assessment in which the learner analyses their own learning process and evidence, not only the product. |
-| **Learning portfolio** | A curated, purposeful collection of a learner's work that demonstrates achievement against outcomes. |
-| **Traceability matrix** | A table linking each deliverable to the learning outcome(s) it evidences. |
-| **Learning outcome (RAA)** | *Resultado de Aprendizaje* — an observable, assessable statement of what a student can do after instruction. |
-| **Exit ticket** | A short end-of-session response used to check understanding and gather reflection. |
+|---|---|
+| **Consolidation** | The deliberate process of integrating and connecting knowledge acquired in separate units into a coherent whole that can be applied and defended. |
+| **RAA (Resultado de Aprendizaje del Aprendizaje / Learning Outcome)** | A statement of what a student can demonstrably do at the end of the course; here, RAA 90_82759. All final evidence must trace to it. |
+| **Abstraction** | Modeling a concept by exposing only its essential features and hiding incidental detail (e.g., an `abstract class` or `interface` describing *what* an object does, not *how*). |
+| **Encapsulation** | Bundling data with the methods that operate on it and controlling access (private fields, public methods/getters/setters, invariants protected inside the class). |
+| **Inheritance** | Deriving a class from another to reuse and specialize behavior (`extends`), modeling an "is-a" relationship. |
+| **Polymorphism** | The ability of a single reference type to invoke behavior that varies by the actual object type (method overriding, dynamic dispatch, programming to an interface). |
+| **Good practices** | Engineering habits that make software readable, correct and maintainable: meaningful naming, high cohesion / low coupling, encapsulation, exception handling, unit testing, documentation, and version control. |
+| **Defense (viva)** | A short oral presentation plus live demo in which the author justifies design decisions and answers questions. |
+| **Co-evaluation (peer assessment)** | Structured evaluation of a peer's work against shared criteria, producing specific and actionable feedback. |
+| **Rubric** | A scoring guide listing criteria and performance levels used to make assessment transparent and consistent. |
+| **Reflection / metacognition** | Thinking about one's own learning: what was learned, how, what remains difficult, and what to do next. |
+| **Portfolio** | A curated collection of evidence organized to demonstrate achievement of the learning outcome. |
+| **Traceability** | An explicit link between each piece of evidence and the outcome/criterion it satisfies (evidence ↔ RAA). |
 
 ---
 
-## 8. Achievement / self-check checklist
+## 7. Achievement / self-check checklist
 
-Tick each item before you consider the week complete.
+Use this before your defense. Aim for every box ticked.
 
-**Project & presentation**
-- [ ] My repository builds and runs from a clean clone (documented in the README).
-- [ ] I can point to concrete code where **abstraction** appears and explain why.
-- [ ] I can point to concrete code where **encapsulation** appears and explain why.
-- [ ] I can point to concrete code where **inheritance** appears and explain why.
-- [ ] I can point to concrete code where **polymorphism** appears and explain why.
-- [ ] I have a contingency (screenshots / recording) in case the live demo fails.
-- [ ] My presentation fits within the time limit and follows the required narrative.
+**Project (code and design)**
+- [ ] My project compiles and runs from a clean checkout.
+- [ ] I can point to code that evidences **abstraction** (abstract class or interface with a clear contract).
+- [ ] I can point to code that evidences **encapsulation** (private state, controlled access, protected invariants).
+- [ ] I can point to code that evidences **inheritance** used to reuse/specialize (a genuine "is-a").
+- [ ] I can point to code that evidences **polymorphism** (overriding / programming to an interface).
+- [ ] I applied at least three good practices (naming, exceptions, tests, README, version control) and can find each in the code.
+
+**Presentation**
+- [ ] My defense fits in 10-12 minutes with a working live demo.
+- [ ] I explain design decisions and trade-offs, not just features.
+- [ ] I prepared answers to likely questions ("why an interface here?", "how do you handle invalid input?").
 
 **Co-evaluation**
-- [ ] I submitted at least two peer reviews using the rubric.
-- [ ] Each review contains a strength, a concrete improvement, and a question.
-- [ ] My feedback is specific and refers to observed evidence, not opinion alone.
+- [ ] I completed the co-evaluation rubric for at least two peers.
+- [ ] Each comment I gave is specific and includes a suggested improvement.
 
-**Reflection & portfolio**
-- [ ] My reflective essay is 500-700 words and names three appropriated concepts and one difficulty.
-- [ ] My portfolio lists every major deliverable of the course.
-- [ ] Each portfolio item is mapped to RAA 90_82759 with a one-sentence justification.
-- [ ] My portfolio and repository links work for someone who is not me.
+**Reflection and portfolio**
+- [ ] I wrote a 350-500 word reflection linked to the RAA.
+- [ ] My portfolio index maps every deliverable to RAA 90_82759 and to at least one pillar/practice.
+- [ ] Every link/path in the portfolio actually opens the artifact.
 
 ---
 
-## 9. Resources index
+## 8. Resources index
 
 | Resource | Location | Purpose |
-|----------|----------|---------|
-| Session 1 plan | [`./01-session/README.md`](./01-session/README.md) | Presentations & co-evaluation |
-| Session 2 plan | [`./02-session/README.md`](./02-session/README.md) | Reflection & portfolio |
-| Readings & downloads | [`./material/README.md`](./material/README.md) | Curated readings + PDF download area |
-| Optional activity | [`./optional-activity/README.md`](./optional-activity/README.md) | Extra GitHub-submitted practice + rubric |
+|---|---|---|
+| Session 1 plan | [`01-session/README.md`](01-session/README.md) | Consolidation, defense rules, presentations and co-evaluation. |
+| Session 2 plan | [`02-session/README.md`](02-session/README.md) | Reflective assessment, portfolio construction, course wrap-up. |
+| Curated readings and downloads | [`material/README.md`](material/README.md) | Reading list, summaries, and the downloadable PDF area. |
+| Optional activity | [`optional-activity/README.md`](optional-activity/README.md) | Extra practice submitted via GitHub, with rubric. |
+
+**External references (see `material/README.md` for annotations)**
+- Oracle, *The Java Tutorials* — Object-Oriented Programming Concepts.
+- Robert C. Martin, *Clean Code* (naming, functions, classes).
+- Joshua Bloch, *Effective Java* (encapsulation, interfaces, inheritance vs. composition).
+- Craig Larman, *Applying UML and Patterns* (responsibility-driven design).
 
 ---
 
-## 10. How this week is graded (summary)
-
-- **Final project (presentation + repository):** graded by the instructor with the presentation rubric in Session 1.
-- **Co-evaluation participation:** graded on completion and quality of the peer-review forms.
-- **Reflective essay + portfolio:** graded with the portfolio checklist and reflective-writing guide in Session 2.
-- **Optional activity:** additional, submitted via GitHub (see the optional-activity folder), for enrichment or grade recovery at the instructor's discretion.
-
-> Academic integrity applies throughout: cite external code, libraries and ideas; the portfolio must document work you actually did.
+*End of Week 16 guide. Proceed to `01-session/README.md`.*

@@ -1,21 +1,21 @@
-# Week 14 — Session 1: Good programming practices in Java (naming, style, and code smells)
+# Week 14 · Session 1 — Java Style, Naming Conventions, and Detecting Code Smells
 
-> **Subject:** Object-Oriented Programming and Design · **Unit 3** · **Week 14** · **Corte 3**
-> **RAA:** `90_82759`
-> **Duration:** 2 hours (120 min)
+**Course:** Object-Oriented Programming and Design (2026-B)
+**Unit 3 — Practical application of OOP in Java · Corte 3**
+**Duration:** 2 academic hours (~120 min)
+**RAA:** `90_82759`
 
 ---
 
 ## 1. Session objective
 
-Apply Java naming conventions and code-style guidelines to real code, and
-**identify code smells** — the surface symptoms of poor internal quality —
-so that in Session 2 we can remove them through refactoring backed by static
-analysis tools.
+Apply Java naming conventions and code-style guidelines to real code, and use a
+static-analysis tool (Checkstyle / SonarLint) to **detect** code smells and
+style issues, correctly interpreting each reported violation.
 
-**Success criterion:** given a badly written class, you can list its naming/
-style violations and name at least five code smells, explaining *why* each one
-harms readability or maintainability.
+By the end of the session the student will produce a **style-corrected version**
+of a sample class and an **annotated list of detected smells** with their
+severity and location.
 
 ---
 
@@ -23,315 +23,296 @@ harms readability or maintainability.
 
 | Time | Activity |
 |------|----------|
-| 0:00 – 0:10 | Warm-up: read two versions of the same method, vote on which is "better" and *why*. |
-| 0:10 – 0:30 | Theory: why internal quality matters (cost of reading, technical debt). |
-| 0:30 – 0:55 | Theory: Java naming conventions & style guides. |
-| 0:55 – 1:20 | Theory: code smells catalog with examples. |
-| 1:20 – 1:45 | **Worked example**: cleaning up a badly named/styled class. |
-| 1:45 – 2:05 | **Guided practice**: smell hunt on a provided class. |
-| 2:05 – 2:20 | Wrap-up + exit ticket. |
+| 0:00 – 0:10 | Warm-up: "Which of these two classes would you rather maintain?" (side-by-side comparison) |
+| 0:10 – 0:35 | Theory: why code quality matters; naming conventions and code style |
+| 0:35 – 0:55 | Theory: code smells — catalog and how to recognize them |
+| 0:55 – 1:10 | Theory + demo: static analysis, Checkstyle and SonarLint; reading a report |
+| 1:10 – 1:20 | Worked example walkthrough (instructor-led) |
+| 1:20 – 1:50 | Guided in-class practice (pairs): find and annotate the violations |
+| 1:50 – 2:00 | Wrap-up, exit ticket, preview of Session 2 |
 
 ---
 
 ## 3. Theory notes
 
-### 3.1 Why internal quality matters
+### 3.1 Why code quality matters
 
-Software is read far more often than it is written. Studies and practitioner
-experience converge on a ratio of roughly **10 reads per 1 write**: every line
-you type will be *re-read* by teammates, reviewers, and your future self many
-times. Optimizing for the reader is therefore not a courtesy — it is the
-cheapest way to reduce the total cost of a system.
+A famous observation in software engineering is that **code is read far more
+often than it is written**. A line you write once may be read dozens of times
+during debugging, code review, onboarding, and future changes. Optimizing for
+the *reader* is therefore an economic decision, not a matter of taste.
 
-**External vs. internal quality**
+Two ideas frame the week:
 
-```
-                 Does it work?          Is it well-built?
-                 (EXTERNAL quality)     (INTERNAL quality)
-                 ------------------      ------------------
- Visible to:     users, testers         developers, maintainers
- Measured by:    features, correctness  readability, structure,
-                 performance            low coupling, low duplication
- Ignoring it:    bugs, angry users      slow changes, fear of touching
-                                        code, "technical debt interest"
-```
-
-A program can pass every test (great external quality) and still be a nightmare
-to change (terrible internal quality). This week is entirely about the second
-column.
-
-**Technical debt.** Ward Cunningham's metaphor: taking a shortcut is like
-borrowing money — it lets you ship faster *now*, but you pay **interest** every
-time you touch that code later, until you "repay the principal" by cleaning it
-up. Good practices and refactoring are how we keep the interest payments low.
+- **Technical debt.** When you take a shortcut ("I'll clean it up later"), you
+  borrow time now and pay interest later in the form of slower changes and more
+  bugs. Like financial debt, a little is manageable; unmanaged, it compounds
+  until change becomes painfully expensive.
+- **The boy-scout rule.** *"Always leave the code cleaner than you found it."*
+  Small, continuous improvements keep debt under control without needing a big,
+  risky rewrite.
 
 ```
-  Effort to add a feature
-     ^
-     |                                   ___----  high-debt codebase
-     |                          ___----
-     |                 ___----
-     |         ___----
-     |____----______________________  clean codebase (stays cheap)
-     +-------------------------------------> time / features added
+Cost of a change over a project's life
+^
+| poor quality  ...........****
+|                     ****
+|                 ****
+|              ***
+|           ***                     good quality
+|        ***                ____________________
+|     ***      ____________/
+|  ***________/
++----------------------------------------------> time
+The gap between the curves IS the technical debt you pay for.
 ```
 
 ### 3.2 Java naming conventions
 
-Names are the most frequent form of documentation in a codebase. Java has
-strong, widely shared conventions:
+Names are the primary user interface of your code. Java has strong, widely
+shared conventions. Learn them once; apply them everywhere.
 
 | Element | Convention | Example |
 |---------|-----------|---------|
-| **Class / Interface / Enum** | `UpperCamelCase`, noun phrase | `InvoiceService`, `PaymentStatus` |
-| **Method** | `lowerCamelCase`, verb phrase | `calculateTotal()`, `isValid()` |
-| **Variable / field / parameter** | `lowerCamelCase`, noun | `customerName`, `retryCount` |
+| **Class / interface / enum** | `PascalCase` (UpperCamelCase), a noun | `InvoiceService`, `PaymentGateway` |
+| **Method** | `camelCase`, a verb phrase | `calculateTotal()`, `isEligible()` |
+| **Variable / field / parameter** | `camelCase`, a noun | `customerName`, `totalAmount` |
 | **Constant** (`static final`) | `UPPER_SNAKE_CASE` | `MAX_RETRIES`, `PI` |
-| **Package** | all lowercase, dotted, reverse-domain | `co.corhuila.billing` |
+| **Package** | all lowercase, dotted, reverse-domain | `co.edu.corhuila.billing` |
 | **Type parameter (generics)** | single uppercase letter | `T`, `E`, `K`, `V` |
-| **Boolean method/field** | question form | `isEmpty()`, `hasNext()`, `enabled` |
+| **Boolean accessor** | `is`/`has`/`can` prefix | `isActive()`, `hasPermission()` |
+| **Getter / setter** | `getX()` / `setX()` | `getName()`, `setName(...)` |
 
-**Quality guidelines for names (beyond casing):**
-- Prefer **intention-revealing** names: `elapsedTimeInDays`, not `d`.
-- Avoid disinformation and noise words: not `theList`, `dataInfo`, `theManager`.
-- Make names **searchable**: a one-letter loop index is fine in a 3-line loop,
-  but a domain value deserves a real name.
-- Class names are **nouns**; method names are **verbs**. Keep them at the right
-  level of abstraction (a `Customer` should not have a method named
-  `saveToMySqlDatabase`).
+**Naming quality rules of thumb**
 
-### 3.3 Style guides and formatting
+- Use **intention-revealing** names: `elapsedTimeInDays` beats `d`.
+- Avoid **noise words** and abbreviations: `theCustomer`, `custData`, `mgr`.
+- Make names **searchable**: a constant `MAX_RETRIES` is easy to grep; the
+  literal `3` scattered around the code is not.
+- One concept, one word: don't mix `fetch`, `retrieve`, and `get` for the same
+  idea.
+- The length of a name should roughly match the size of its scope: loop counter
+  `i` is fine; a field that lives for the whole object's life deserves a full
+  name.
 
-Two references dominate Java practice:
+### 3.3 Code style / formatting
 
-- **Oracle "Code Conventions for the Java Programming Language"** — the classic
-  reference.
-- **Google Java Style Guide** — modern, precise, and the basis for many
-  automated rule sets (we will lean on this in Session 2).
+Style is about *layout*, not naming. It has no effect on what the program does,
+but a consistent layout dramatically lowers reading effort and eliminates noise
+in code reviews and diffs.
 
-Common formatting rules both endorse:
+Common Java style rules (as codified by the **Google Java Style Guide** and the
+older **Oracle Code Conventions**):
 
-- **Indentation:** consistent (Google uses 2 spaces; many teams use 4). Never
-  mix tabs and spaces.
-- **Braces:** K&R "Egyptian" style — opening brace on the same line.
-- **Line length:** keep lines reasonably short (80–120 columns).
-- **One statement per line**, one variable declaration per line.
-- **Imports:** no wildcard imports (`import java.util.*;`); no unused imports.
+- **Indentation:** spaces, consistent width (Google uses 2, many teams use 4).
+  Never mix tabs and spaces.
+- **Braces:** K&R "Egyptian" style — opening brace on the same line, and braces
+  are used **even for single-statement blocks**.
+- **Line length:** keep lines within a limit (100 columns in Google style).
+- **One statement per line**; one variable declaration per line.
+- **Imports:** no wildcard imports (`import java.util.*;`); no unused imports;
+  ordered consistently.
 - **Whitespace:** a space after keywords and around binary operators
-  (`if (a && b)`, `x = y + 1`).
+  (`a + b`, not `a+b`); a space after commas.
+- **Braces required** even for one-line `if`/`for`/`while` to prevent the
+  classic "dangling statement" bug.
 
 ```java
-// Non-conforming style              // Conforming style
-if(x>0){doIt();}                     if (x > 0) {
-                                         doIt();
-                                     }
+// Style-poor
+if(x>0)doSomething();          // no spaces, no braces
+int a=1,b=2;                   // two declarations, no spaces
+
+// Style-correct
+if (x > 0) {
+    doSomething();
+}
+int a = 1;
+int b = 2;
 ```
 
-### 3.4 Comments and Javadoc
+> A single team choice matters more than which choice: pick one style guide and
+> apply it uniformly. That is exactly what a tool like Checkstyle enforces.
 
-Good code needs *fewer* comments, not more — a well-named method often
-documents itself. Use comments to explain **why**, not **what**.
+### 3.4 Code smells
 
-```java
-// BAD: restates the obvious
-i = i + 1; // add one to i
+A **code smell** is a *surface symptom* that usually indicates a deeper problem.
+A smell is **not a bug** — the program may work perfectly — but it warns you
+that the design will resist change. Fowler and Beck popularized the catalog;
+here are the families you must recognize:
 
-// GOOD: explains a non-obvious reason
-// The vendor API rejects more than 50 items per call, so we page.
+**Bloaters** — things that have grown too big:
+- *Long Method* — a method that does too much; hard to name, hard to test.
+- *Large Class* — a class with too many fields/responsibilities (a "God class").
+- *Long Parameter List* — 4+ parameters; hard to call correctly.
+- *Primitive Obsession* — using `String`/`int` instead of small domain types
+  (e.g., a raw `String` for an email instead of an `Email` type).
+- *Data Clumps* — the same group of fields/parameters travel together
+  everywhere.
+
+**Object-orientation abusers:**
+- *Switch Statements* on a type code that should be polymorphism.
+- *Refused Bequest* — a subclass ignores most of what it inherits.
+
+**Change preventers:**
+- *Divergent Change* — one class changes for many different reasons.
+- *Shotgun Surgery* — one change forces edits in many classes.
+
+**Dispensables** — things that add no value:
+- *Dead Code*, *Duplicate Code*, *Comments that apologize for bad code*,
+  *Speculative Generality*.
+
+**Couplers:**
+- *Feature Envy* — a method more interested in another class's data than its own.
+- *Message Chains* — `a.getB().getC().getD().doThing()` (train wreck).
+
+> **Style issue vs. smell.** A *style issue* is cosmetic (wrong brace, bad
+> spacing, wrong case) and is fully mechanical to fix. A *code smell* points to a
+> **design** weakness and is fixed by **refactoring** (next session). Checkstyle
+> mostly finds style issues; SonarLint finds both smells and potential bugs.
+
+### 3.5 Static analysis
+
+**Static analysis** inspects source code **without running it**. It parses the
+code into a structure the tool can reason about and checks it against rules.
+
+```
+        SOURCE CODE (not executed)
+              |
+              v
+   +----------------------+
+   |  Static analyzer     |  parses, builds AST, applies rules
+   |  (Checkstyle /       |
+   |   SonarLint)         |
+   +----------------------+
+              |
+              v
+     REPORT: [severity] rule-id  file:line  message
 ```
 
-Use **Javadoc** (`/** ... */`) on public APIs (classes, public methods) to
-describe purpose, parameters (`@param`), return value (`@return`), and thrown
-exceptions (`@throws`).
+Contrast with **dynamic analysis** (tests, profilers, debuggers), which
+observes the program **while it runs**. The two are complementary: static
+analysis catches issues everywhere in the codebase cheaply and early; dynamic
+analysis proves runtime behavior. Static analysis **cannot** tell you your
+business logic is correct — only tests can.
 
-### 3.5 Code smells
+**Checkstyle** — enforces a *style* configuration (e.g., `google_checks.xml` or
+`sun_checks.xml`). It flags naming violations, formatting, missing Javadoc,
+line length, import order, and similar rules. Runs from the command line, Maven,
+Gradle, or as an IDE plugin.
 
-A **code smell** is a *symptom*, not a bug. The code runs, but its shape warns
-of a deeper problem. Fowler and Beck cataloged them; the most common families:
+**SonarLint** — an IDE plugin (IntelliJ, Eclipse, VS Code) that flags **bugs,
+code smells, and security issues** as you type, using the SonarSource rule set.
+Each finding links to a rule page explaining *why* it matters and *how* to fix
+it.
 
-| Family | Smell | What you see |
-|--------|-------|--------------|
-| **Bloaters** | Long Method | A method that does too much / is too long to grasp. |
-| | Large Class | A class with too many fields/responsibilities. |
-| | Long Parameter List | Methods taking 4+ parameters. |
-| | Primitive Obsession | Using primitives/strings instead of small types. |
-| **Dispensables** | Duplicated Code | The same logic copied in several places. |
-| | Dead Code | Unused variables, methods, or unreachable branches. |
-| | Comments (as deodorant) | Comments compensating for unclear code. |
-| **Object-orientation abusers** | Switch Statements | Type-checking switches that polymorphism could replace. |
-| **Couplers** | Feature Envy | A method more interested in another class's data than its own. |
-| **Others** | Magic Numbers | Unexplained literals like `if (age > 18)`. |
-| | Poor Names | `data`, `temp`, `x2`, `doStuff()`. |
-| | Deep Nesting | Arrow-shaped code from stacked `if`s. |
+**Anatomy of a report line**
 
-> Smells are heuristics, not laws. A short method with three parameters is fine.
-> The point is to *notice* and *ask whether* there is a cleaner design.
+```
+[WARN] NamingConvention: src/main/java/billing/invoice.java:12
+       Name 'Calc_Total' must match pattern '^[a-z][a-zA-Z0-9]*$'.
+  ^      ^                 ^                                ^
+severity rule/category     location (file:line)            message + expected pattern
+```
+
+To act on a finding you read: **severity** (how urgent), **rule** (what
+principle), **location** (where), **message** (what to change).
 
 ---
 
-## 4. Worked example — cleaning up a badly named/styled class
+## 4. Worked example (instructor-led)
 
-### 4.1 The starting point (smelly)
+Below is a small class that *compiles and runs* but is riddled with style
+issues and a couple of smells. We will read it as a static analyzer would.
 
 ```java
-public class calc {
-    public double d(double p,double t,int n){
-        double r;
-        if(n==1){r=p+(p*t/100);}
-        else{r=p*Math.pow(1+t/100,n);}
-        return r;
-    }
-    public double d2(double p){
-        return p*0.19;   // ???
-    }
+package Billing;                              // (1) package should be lowercase
+import java.util.*;                           // (2) wildcard import
+
+public class invoice {                        // (3) class name not PascalCase
+  public double TAX = 0.19;                   // (4) mutable "constant"-ish, bad name/case
+  private List items;                         // (5) raw type (no generics)
+
+  public double Calc(List<Double> l){         // (6) method name not camelCase / cryptic
+    double t=0;                               // (7) cryptic name, no spaces
+    for(int i=0;i<l.size();i++){t=t+l.get(i);}// (8) no spaces, cramped, one line
+    double r = t + t*0.19;                    // (9) magic number 0.19 duplicated
+    return r;
+  }
 }
 ```
 
-**What is wrong here?** Let's annotate:
+**How the tools would report it (representative):**
 
-| Issue | Category | Explanation |
-|-------|----------|-------------|
-| `calc` | Naming / style | Class name must be `UpperCamelCase` and a noun: e.g., `InterestCalculator`. |
-| `d`, `d2` | Naming | Method names must be intention-revealing verbs. |
-| `p`, `t`, `n`, `r` | Naming | Cryptic single letters; should reveal intent. |
-| `if(n==1){...}` | Style | Missing spaces, one-line blocks, cramped braces. |
-| `0.19` | Magic Number | Unexplained literal (the Colombian IVA/VAT rate). |
-| `100` | Magic Number | Repeated literal for "percent to fraction". |
-| `d`/`d2` unrelated | Large-ish / cohesion | `d2` computes tax, not interest — mixed responsibility. |
+| # | Tool | Severity | Rule | Message (paraphrased) |
+|---|------|----------|------|-----------------------|
+| 1 | Checkstyle | error | `PackageName` | Package name must be all lowercase. |
+| 2 | Checkstyle | warning | `AvoidStarImport` | Wildcard imports are not allowed. |
+| 3 | Checkstyle | error | `TypeName` | Class name `invoice` must be UpperCamelCase. |
+| 4 | SonarLint | smell | `S1104`/naming | Field is `public`; constants should be `static final` and `UPPER_SNAKE_CASE`. |
+| 5 | SonarLint | smell | `S3740` | Raw type `List` used; parameterize it. |
+| 6 | Checkstyle | error | `MethodName` | Method `Calc` must be lowerCamelCase; also non-descriptive. |
+| 7–8 | Checkstyle | warning | `WhitespaceAround`, formatting | Missing spaces; multiple statements on one line. |
+| 9 | SonarLint | smell | `S109` | Magic number `0.19`; extract a named constant. |
 
-### 4.2 The cleaned-up version (behavior preserved)
+**Reading interpretation.** Items 1–3, 6, 7–8 are **style issues** — mechanical
+fixes. Items 4, 5, 9 are **smells / potential bugs** — they hint at design and
+maintainability problems (a "constant" that can change, unsafe raw types, an
+unexplained duplicated number).
 
-```java
-/**
- * Financial helper computing simple/compound interest and VAT.
- */
-public class InterestCalculator {
-
-    /** Percent-to-fraction divisor (e.g., 19% -> 0.19). */
-    private static final double PERCENT_DIVISOR = 100.0;
-
-    /** Colombian standard VAT (IVA) rate as a fraction. */
-    private static final double STANDARD_VAT_RATE = 0.19;
-
-    /**
-     * Computes the final amount after applying interest.
-     *
-     * @param principal    the initial amount
-     * @param ratePercent  the interest rate expressed as a percentage
-     * @param periods      the number of periods; 1 means simple interest
-     * @return the amount including interest
-     */
-    public double computeInterest(double principal, double ratePercent, int periods) {
-        double rateFraction = ratePercent / PERCENT_DIVISOR;
-        if (periods == 1) {
-            return principal + (principal * rateFraction);
-        }
-        return principal * Math.pow(1 + rateFraction, periods);
-    }
-
-    /**
-     * Computes the VAT (IVA) owed on a taxable amount.
-     *
-     * @param taxableAmount the amount subject to VAT
-     * @return the VAT owed
-     */
-    public double computeVat(double taxableAmount) {
-        return taxableAmount * STANDARD_VAT_RATE;
-    }
-}
-```
-
-**Notice what did NOT change:** the numbers computed are identical. For the same
-inputs, `computeInterest` returns exactly what `d` returned, and `computeVat`
-returns exactly what `d2` returned. We improved *readability*, not *behavior* —
-that is the essence of refactoring, which we formalize in Session 2.
-
-**What improved (mapping fixes to concepts):**
-- Class renamed to a noun in `UpperCamelCase`.
-- Methods renamed to intention-revealing verbs.
-- Parameters and locals now carry meaning.
-- `100` and `0.19` promoted to named `static final` constants (magic numbers gone).
-- Consistent formatting (spaces, braces, one statement per line).
-- Javadoc documents the public API.
+*(The corrected/refactored version is the subject of Session 2 — for now we only
+**detect and interpret**, we do not yet fix.)*
 
 ---
 
-## 5. Guided in-class practice — "Smell Hunt"
+## 5. Guided in-class practice (pairs, ~30 min)
 
-Work in pairs. You are given the class below (also available in the
-[`/material`](../material/README.md) download). **Do not fix it yet** — the goal
-of Session 1 is to *see* the problems.
+You will be given the file `LegacySample.java` (in the `material/` download
+area). Working in pairs:
 
-```java
-public class order {
-    int S=0;
-    public double process(String c,double p1,int q1,double p2,int q2,boolean vip){
-        double total=0;
-        total=total+p1*q1;
-        total=total+p2*q2;
-        if(vip==true){
-            total=total-total*0.1;
-        }
-        if(total>1000000){
-            total=total-total*0.05;
-        }
-        // apply tax
-        total=total+total*0.19;
-        S=S+1;
-        System.out.println("order for "+c+" = "+total);
-        return total;
-    }
-    public void x(){
-        // TODO
-    }
-}
-```
+1. **Run or simulate the analyzer.** If Checkstyle/SonarLint is installed, run
+   it. If not, act as a "human linter" using the rules from §3.
+2. **Produce a findings table** with columns:
+   `# | line | category (style / smell) | rule name | why it matters | suggested fix`.
+3. **Classify** each finding as a *style issue* or a *code smell*.
+4. **Prioritize:** mark the top 3 findings you would fix first and justify the
+   order (impact on readability/maintainability vs. cost).
+5. **Do NOT fix anything yet** — detection and interpretation only. Fixing is
+   Session 2.
 
-**Tasks:**
-1. List every **naming** violation and give the corrected name.
-2. List every **style/formatting** violation.
-3. Identify at least **five distinct code smells** and name each using the
-   catalog in §3.5.
-4. For each magic number, state what it *means* and propose a constant name.
-5. Write one sentence: *what single change would most improve this class?*
+**Sample starter (what your table should look like):**
 
-**Facilitator answer key (for the instructor):**
-- Naming: class `order` → `Order`; field `S` → `processedOrderCount`; method
-  `process` params (`c`,`p1`,`q1`,…) cryptic; method `x` meaningless.
-- Style: no spaces around operators, `vip==true`, missing indentation
-  consistency, one-line blocks.
-- Smells: **Long Parameter List** (6 params → introduce an `OrderLine`/`Order`
-  object — *Long Parameter List / Primitive Obsession*), **Magic Numbers**
-  (`0.1`, `1000000`, `0.05`, `0.19`), **Long Method** (`process` does pricing +
-  discount + tax + logging + counting = mixed responsibilities), **Dead Code**
-  (`x()` is an empty TODO), **Boolean comparison smell** (`vip==true`),
-  **Feature Envy / mixed concern** (printing inside a calculation method).
-- Constants: `VIP_DISCOUNT_RATE = 0.10`, `BULK_THRESHOLD = 1_000_000`,
-  `BULK_DISCOUNT_RATE = 0.05`, `VAT_RATE = 0.19`.
-- Biggest single win: **Extract** the pricing logic and remove side effects
-  (printing/counting) from the calculation — sets up Session 2 refactoring.
+| # | line | category | rule | why it matters | suggested fix |
+|---|------|----------|------|----------------|---------------|
+| 1 | 3 | style | TypeName | Inconsistent class casing confuses readers/tools | Rename to `PascalCase` |
+| 2 | 9 | smell | S109 Magic Number | Unexplained literal, duplicated | Extract `static final` constant |
+
+**Deliverable of the practice:** the completed findings table (at least 8
+findings, correctly classified), saved as `session1-findings.md` and kept for
+Session 2 (you will fix these next session).
 
 ---
 
-## 6. Wrap-up
+## 6. Wrap-up and exit ticket
 
 **Key takeaways**
-- Internal quality (readability, structure) is separate from "does it work".
-- Java naming conventions are shared vocabulary: `UpperCamelCase` types,
-  `lowerCamelCase` members, `UPPER_SNAKE_CASE` constants.
-- Style guides (Oracle, Google) make formatting a solved, automatable problem.
-- Code smells are early-warning signs; naming them is the first step to fixing
-  them.
 
-**Bridge to Session 2:** We spotted the smells by eye. Next session we let
-**Checkstyle** and **SonarLint** find them *automatically*, and then we
-**refactor** to remove them — safely, with a test proving behavior is unchanged.
+- Code is read more than written; conventions and style lower reading cost.
+- Naming: `PascalCase` types, `camelCase` methods/vars, `UPPER_SNAKE_CASE`
+  constants, lowercase packages.
+- A **style issue** is cosmetic and mechanical; a **code smell** signals a
+  design weakness.
+- **Static analysis** finds issues without running the code; Checkstyle enforces
+  style, SonarLint finds smells/bugs/security.
+- We *detect and interpret* this session; we *refactor to fix* next session.
 
-### Exit ticket (submit before leaving)
-Answer on one index card / one short message:
-1. Rewrite these correctly: class `dataManager`, constant `maxSize`, method
-   `GetTotal`.
-2. Name **two** code smells you found in the practice class and, for each, one
-   sentence on why it hurts maintainability.
-3. In one sentence: what is the difference between *external* and *internal*
-   quality?
+**Exit ticket (answer in 3–4 sentences, hand in before you leave):**
+
+1. Give one Java identifier that is written correctly and one that violates a
+   naming convention; name the rule broken.
+2. In your own words, what is the difference between a *style issue* and a *code
+   smell*?
+3. Name one thing static analysis **cannot** verify that only tests can.
+
+**Preview of Session 2:** We take the findings you produced today and **fix**
+them through disciplined **refactoring**, protected by a test safety net, so
+behavior stays identical while quality improves.

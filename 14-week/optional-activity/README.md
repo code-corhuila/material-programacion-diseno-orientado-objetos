@@ -1,186 +1,198 @@
-# Week 14 — Optional Activity: "Refactor the Legacy Class" (submitted via GitHub)
+# Week 14 — Optional Activity: Refactor a Smelly Java Project
 
-> **Subject:** Object-Oriented Programming and Design · **Unit 3** · **Week 14** · **Corte 3**
-> **RAA:** `90_82759`
-> **Modality:** Individual · **Optional** (formative + bonus evidence)
-> **Submission:** **GitHub repository** — **not** Moodle.
+**Course:** Object-Oriented Programming and Design (2026-B)
+**Unit 3 — Practical application of OOP in Java · Corte 3**
+**Topic:** Good programming practices and refactoring with static analysis tools
+**RAA:** `90_82759`
+**Type:** Optional (bonus) · Individual or pairs
+**Submission channel:** **GitHub repository** (NOT Moodle)
 
----
-
-## 1. Purpose
-
-Consolidate the week's skills on a piece of code larger than the in-class
-samples: run static-analysis tools, remove code smells, and **refactor without
-changing behavior**, all proven by an automated test. This mirrors what happens
-on a real team when you inherit a "legacy" class nobody wants to touch.
+> This activity is **optional** and deepens the week's skills. It is submitted by
+> **sharing a GitHub repository link**, not through a Moodle submission box.
 
 ---
 
-## 2. Problem statement
+## 1. Problem statement
 
-You inherit `LibraryFineCalculator`, a class that computes late-return fines for
-a small library. It works — the numbers are correct — but it is painful to read
-and change. Your job is to **make it clean and maintainable without altering a
-single computed result.**
+You have inherited a small, working Java program called **`GradeBook`** that
+compiles and produces correct results but is a maintenance nightmare: cryptic
+names, a giant method, magic numbers everywhere, duplicated logic, deep nesting,
+and inconsistent formatting.
 
-**Starter code** (create it as `LibraryFineCalculator.java`):
+Your job as a professional is to **refactor it into clean, standards-compliant
+code without changing its behavior**, guided and verified by static analysis
+tools and a test suite.
+
+### Starting code (`GradeBook.java`)
 
 ```java
-public class libraryfinecalc {
-    public double f(int d,String t,boolean s,int age){
-        double fine=0;
-        if(d>0){
-            if(t.equals("BOOK")){ fine=d*500; }
-            else if(t.equals("DVD")){ fine=d*1000; }
-            else if(t.equals("MAGAZINE")){ fine=d*300; }
-            else{ fine=d*500; }
-            if(d>30){ fine=fine+10000; }
-            if(s==true){ fine=fine-fine*0.5; }
-            if(age>=60){ fine=fine-fine*0.2; }
-            if(fine>50000){ fine=50000; }
+package MyApp;
+import java.util.*;
+
+public class gradebook {
+  public double PASS = 3.0;
+
+  public String process(List<Double> g){
+    double s=0; int c=0;
+    for(int i=0;i<g.size();i++){ s=s+g.get(i); c=c+1; }
+    double avg=s/c;
+    String res;
+    if(avg>=4.5){ res="EXCELLENT"; }
+    else{
+      if(avg>=3.0){ res="PASS"; }
+      else{ res="FAIL"; }
+    }
+    return "AVG="+avg+" ("+res+")";
+  }
+}
+```
+
+### Behavior you must preserve
+
+- The average is the arithmetic mean of the grades.
+- Classification: `avg >= 4.5` → `EXCELLENT`; `avg >= 3.0` → `PASS`; otherwise
+  `FAIL`.
+- The returned string format is `AVG=<average> (<classification>)`.
+
+---
+
+## 2. Requirements
+
+1. **Write a test safety net first.** Create JUnit 5 tests that lock down the
+   current behavior for at least these cases:
+   - a passing average (e.g., `[3.0, 4.0]` → contains `PASS`),
+   - an excellent average (e.g., `[5.0, 4.5]` → contains `EXCELLENT`),
+   - a failing average (e.g., `[2.0, 2.5]` → contains `FAIL`).
+   These tests must be **green before you refactor**.
+
+2. **Run static analysis.** Run **Checkstyle** (with `google_checks.xml`) and/or
+   **SonarLint** on the starting code. Save the initial report/screenshot as
+   evidence of the *before* state.
+
+3. **Refactor** the code applying **at least five named refactorings**, which
+   must include:
+   - **Rename** (class, method, variables → intention-revealing names),
+   - **Replace Magic Number with Constant** (`4.5`, `3.0`),
+   - **Extract Method** (e.g., `average(...)` and `classify(...)`),
+   - **Guard Clauses / Decompose Conditional** (flatten the nested `if`),
+   - fix **package/class naming and formatting** to comply with the style guide.
+
+4. **Preserve behavior.** All tests must remain **green** after refactoring. Do
+   **not** add new features.
+
+5. **Re-run static analysis.** Save the *after* report and confirm the violation
+   count dropped (ideally to zero style violations for the class).
+
+6. **Document your work** in the repository `README.md` (see deliverables).
+
+---
+
+## 3. Expected deliverable
+
+A **GitHub repository** containing:
+
+```
+gradebook-refactor/
+├── README.md                # your report (see below)
+├── src/
+│   ├── main/java/...        # the refactored GradeBook
+│   └── test/java/...        # your JUnit 5 tests
+├── analysis/
+│   ├── before.txt (or .png) # static-analysis report BEFORE
+│   └── after.txt  (or .png) # static-analysis report AFTER
+└── (optional) pom.xml or build.gradle with Checkstyle configured
+```
+
+Your repository `README.md` must include:
+
+- A **refactoring log**: a table mapping each smell → refactoring applied →
+  tests result (green).
+- The **before/after** violation counts.
+- A short paragraph (4–6 sentences) explaining **why** the refactored version is
+  more readable and maintainable, and an explicit statement that **behavior was
+  preserved** (evidenced by the passing tests).
+
+---
+
+## 4. How to submit (via GitHub, not Moodle)
+
+1. Create a **public** GitHub repository named `gradebook-refactor`.
+2. Commit in **small, meaningful steps** — each commit ideally one refactoring
+   (e.g., `refactor: extract average() method`). A clean commit history is part
+   of the grade.
+3. Make sure the repo includes the source, the tests, and the `analysis/`
+   evidence.
+4. **Submit the repository URL** to the instructor through the agreed channel
+   (course roster / GitHub Classroom link / email as directed in class).
+   **Do not** upload a ZIP to Moodle — the deliverable is the **repository
+   link**.
+
+> **Tip:** Add a `.gitignore` for Java (ignore `target/`, `build/`, `*.class`,
+> IDE files). Commit the *code and evidence*, not build artifacts.
+
+---
+
+## 5. Assessment criteria / rubric (100 points)
+
+| Criterion | Excellent (full) | Acceptable (partial) | Insufficient (0) | Weight |
+|-----------|------------------|----------------------|------------------|--------|
+| **Behavior preserved (tests)** | ≥3 characterization tests, all green before & after; behavior provably unchanged | Tests exist but incomplete or added after refactoring | No tests / behavior changed | **30** |
+| **Refactorings applied** | ≥5 correct, well-named refactorings including all required ones | 3–4 refactorings, some required ones missing | ≤2 or misapplied | **25** |
+| **Standards & static analysis** | Style/naming fully compliant; before/after reports show violations removed | Partial compliance; some evidence | No tool use / no compliance | **20** |
+| **Readability & justification** | Clear names, small methods, no smells; convincing written justification | Mostly readable; weak justification | Still smelly / no justification | **15** |
+| **Git hygiene & documentation** | Small meaningful commits; complete README with refactoring log | Few large commits; partial README | Single dump commit / no README | **10** |
+
+**Bonus (+5):** wire Checkstyle into the build (`mvn checkstyle:check` or the
+Gradle equivalent) so quality is enforced automatically.
+
+---
+
+## 6. Reference solution shape (do not copy — for self-check only)
+
+After refactoring, your code should read roughly like this in *structure*
+(names and details will vary):
+
+```java
+package myapp;
+
+import java.util.List;
+
+/** Computes and classifies a student's grade average. */
+public class GradeBook {
+
+    private static final double EXCELLENT_THRESHOLD = 4.5;
+    private static final double PASS_THRESHOLD = 3.0;
+
+    public String process(List<Double> grades) {
+        double average = average(grades);
+        return String.format("AVG=%s (%s)", average, classify(average));
+    }
+
+    private double average(List<Double> grades) {
+        double sum = 0.0;
+        for (double grade : grades) {
+            sum += grade;
         }
-        return fine;
+        return sum / grades.size();
+    }
+
+    private String classify(double average) {
+        if (average >= EXCELLENT_THRESHOLD) return "EXCELLENT";
+        if (average >= PASS_THRESHOLD) return "PASS";
+        return "FAIL";
     }
 }
 ```
 
-Behavior to preserve (read carefully — these are the rules the code already
-implements):
-- Fine accrues only when days late `d > 0`.
-- Daily rate depends on item type: `BOOK` 500, `DVD` 1000, `MAGAZINE` 300,
-  anything else 500 (default).
-- More than 30 days late adds a flat 10,000 surcharge.
-- Students (`s == true`) get 50% off; patrons aged 60+ get an extra 20% off.
-  (Discounts are applied in that order: student first, then senior.)
-- The fine is capped at 50,000.
+Notice: same behavior, but named constants, extracted methods, guard clauses,
+proper casing, and no magic numbers. **Your tests should pass against both the
+old and the new version** — that is the whole point.
 
 ---
 
-## 3. Requirements
+## 7. Objectives reinforced
 
-You **must**:
-
-1. **Set up tooling.** Add or configure **Checkstyle** (`google_checks.xml`) and
-   **SonarLint** on the project. Capture a **"before" report** (violation count
-   and/or screenshot).
-2. **Write characterization tests first.** Before refactoring, write **JUnit 5**
-   tests that pin down the current behavior across the branches (at minimum:
-   a book, a DVD, a magazine, an unknown type, `d = 0`, `d > 30`, a student, a
-   senior, and a case that hits the 50,000 cap). All tests must be **green
-   against the original code** (rename the method if needed but do not change
-   its logic).
-3. **Refactor** applying **at least five distinct techniques** from the catalog,
-   for example:
-   - Rename (class, method, parameters, locals).
-   - Replace Magic Numbers with named constants.
-   - Extract Method (e.g., `baseRateFor(type)`, `applyDiscounts(...)`,
-     `capFine(...)`).
-   - Guard Clause (return early when `d <= 0`).
-   - Replace the type `if/else` chain with a cleaner construct (e.g., a
-     `switch` expression or an enum + map). *(Judgement call — justify it.)*
-   - Simplify booleans (`s == true` → `isStudent`).
-4. **Keep every test green** after each step. Behavior must be identical.
-5. **Capture an "after" report** showing reduced violations.
-6. **Document** the work in the repository `README.md` (see deliverable).
-
-You **must NOT**:
-- Change any computed fine for any input (no behavior change).
-- Suppress warnings (`// NOSONAR`, `@SuppressWarnings`) to fake a clean score.
-- Squash everything into one giant commit (small, reviewable steps expected).
-
----
-
-## 4. Expected deliverable
-
-A **public (or instructor-invited) GitHub repository** named
-`ooad-week14-refactoring-<yourname>` containing:
-
-```
-ooad-week14-refactoring-<yourname>/
-├─ README.md                     # your report (see below)
-├─ src/main/java/.../LibraryFineCalculator.java   # refactored class
-├─ src/test/java/.../LibraryFineCalculatorTest.java # characterization tests
-├─ config/checkstyle/google_checks.xml            # (or Maven/Gradle config)
-├─ docs/before-report.(png|txt)                   # tooling BEFORE
-└─ docs/after-report.(png|txt)                    # tooling AFTER
-```
-
-Your repository `README.md` must include:
-- A short intro (what the class does).
-- **Before/after** static-analysis numbers (Checkstyle violations; SonarLint
-  issues by severity).
-- A **table of refactorings applied**, each with a one-line justification
-  (readability/maintainability).
-- Evidence the tests are **green** (output snippet or CI badge).
-- One paragraph: *what behavior did you deliberately preserve, and how do you
-  know it is unchanged?*
-
----
-
-## 5. How to submit via GitHub (step by step)
-
-> Do **not** submit in Moodle. Submission = your repository link.
-
-```bash
-# 1. Create the repo on github.com (e.g., ooad-week14-refactoring-jdoe), then:
-git init
-git add .
-git commit -m "chore: add legacy LibraryFineCalculator + characterization tests"
-
-# 2. Refactor in small steps, committing after EACH green test run, e.g.:
-git commit -m "refactor: replace magic numbers with named constants"
-git commit -m "refactor: extract baseRateFor(type) and applyDiscounts(...)"
-git commit -m "refactor: add guard clause for non-positive days late"
-
-# 3. Connect and push:
-git remote add origin https://github.com/<user>/ooad-week14-refactoring-<yourname>.git
-git branch -M main
-git push -u origin main
-```
-
-**What to hand in:** paste the repository **URL** in the channel your instructor
-designated (course forum / direct message). Ensure the repo is **public** or that
-the instructor's GitHub user has been **invited as a collaborator**.
-
-**Commit-message convention (recommended):** Conventional Commits —
-`refactor:`, `test:`, `chore:`, `docs:`. Each commit should keep the tests
-green; the history itself is evidence of disciplined, behavior-preserving work.
-
----
-
-## 6. Assessment criteria / rubric (100 points)
-
-| Criterion | Excellent (full) | Acceptable (partial) | Missing (0) | Pts |
-|-----------|------------------|----------------------|-------------|-----|
-| **Behavior preserved** | All characterization tests pass; no computed fine changed; edge cases covered. | Tests pass but coverage of branches is thin. | Behavior changed or no tests. | **25** |
-| **Refactorings applied** | ≥5 distinct, well-chosen techniques, each justified. | 3–4 techniques, thin justification. | ≤2 or superficial. | **20** |
-| **Static analysis used** | Before/after reports for both tools; clear reduction; issues interpreted. | One tool, or before/after without interpretation. | No tool evidence. | **20** |
-| **Naming & style** | Fully complies with Java conventions; passes Checkstyle cleanly. | Minor residual violations. | Pervasive violations. | **15** |
-| **Git process** | Small, meaningful commits; conventional messages; tests green throughout history. | Few large commits. | Single dump commit / no history. | **10** |
-| **Report quality** | README clearly explains before/after, choices, and behavior preservation. | README present but shallow. | No/《placeholder》 README. | **10** |
-
-**Passing threshold:** 60/100. **Bonus** toward Corte 3 at the instructor's
-discretion for repositories scoring 85+.
-
----
-
-## 7. Hints (don't over-think it)
-
-- Write the tests **first** and capture the "golden" outputs from the original
-  method — that is your proof of behavior preservation.
-- Do **one** refactoring, run tests, commit. Repeat. Small steps make failures
-  obvious and easy to undo.
-- Introduce an `ItemType` enum (or a `Map<String, Integer>` of rates) to kill the
-  `if/else` type chain — but keep the *default = 500* rule intact.
-- Watch the **discount order** (student then senior) and the **50,000 cap** —
-  reordering or removing the cap changes results and would no longer be a
-  refactoring.
-- If a change makes a test go red, you changed behavior. Undo and try a smaller
-  step.
-
----
-
-### Reminder
-This activity is **optional** and reinforces RAA `90_82759`. The mandatory graded
-evidence for Week 14 (Corte 3) remains the **quiz**. Bring questions from this
-activity to Session 2.
+- Apply Java naming conventions and style guidelines.
+- Use Checkstyle / SonarLint to detect and then confirm removal of issues.
+- Refactor to improve readability/maintainability **without changing behavior**.
+- Practice professional Git workflow and clear technical documentation.

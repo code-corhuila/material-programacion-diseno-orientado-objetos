@@ -1,134 +1,112 @@
-# Week 08 - Materials and Downloads
+# Week 08 - Reading & resource area (PDF download)
 
-**Course:** Object-Oriented Programming and Design (2026-B)
+**Subject:** Object-Oriented Programming and Design | **Unit 2** | **Corte 2**
 **Topic:** Abstract classes and interfaces
-**Purpose of this folder:** a **download area** for the week's consolidated study
-material (a PDF) plus a curated, annotated index of readings and resources.
 
-> **Note.** This is a **download area**, not a Moodle submission box. Use the resources
-> here to study; there is nothing to *submit* from this folder. The optional practice you
-> may hand in lives in [`../optional-activity/README.md`](../optional-activity/README.md)
-> and is submitted via **GitHub**, not Moodle.
+> This folder is a **download area**. The consolidated Week 08 reading is provided here as a **PDF**
+> for you to download and study offline. This is **not** a Moodle submission box — nothing is turned
+> in here. Deliverables for the week go to the **optional activity** (GitHub) and the in-class
+> workshop, as described in [`../optional-activity/README.md`](../optional-activity/README.md).
 
 ---
 
-## 1. Downloadable PDF
+## 1. How to use this folder
 
-- **`week08-abstract-classes-and-interfaces.pdf`** *(place the file in this folder)*
-  A single consolidated PDF combining the theory notes, worked examples, UML diagrams,
-  and the decision framework from both sessions, formatted for offline reading and
-  printing. Download it, read before class, and bring your annotations.
+1. Download the Week 08 PDF placed in this folder by the instructor (file name pattern:
+   `week08-abstract-classes-and-interfaces.pdf`).
+2. Read it **before Session 2** — Sections 1-3 map to Session 1, Sections 4-6 to Session 2.
+3. Use the annotated references below to go deeper on any point you found difficult.
+4. Bring questions to class; the workshop assumes you have read the core material.
 
-  Suggested table of contents for the PDF:
-  1. Abstraction: what and why
-  2. Abstract classes and abstract methods (Session 1)
-  3. Interfaces and contracts (Session 2)
-  4. Abstract class vs. interface - decision framework
-  5. Combining all three building blocks
-  6. Worked examples with expected output
-  7. Glossary and self-check checklist
-
-*(If the PDF is not yet present, the two session READMEs contain the full text content
-that the PDF is built from.)*
+If the PDF is not yet available at the start of the week, the two session `README.md` files contain
+the same substantive content and are sufficient to prepare.
 
 ---
 
-## 2. Curated readings (annotated)
+## 2. Core reading (contents of the PDF)
 
-### 2.1 Primary references
+The downloadable PDF consolidates the two session notes into a single study document with the
+following structure:
 
-1. **Oracle - *The Java Tutorials*: "Interfaces and Inheritance".**
-   The official, free, and authoritative walkthrough of `abstract`, `interface`,
-   `extends`, and `implements`.
-   *Why read it:* concise definitions and canonical syntax; the "Abstract Methods and
-   Classes" and "Interfaces" pages map one-to-one onto our two sessions.
-   *Focus on:* the difference between an abstract class and an interface, and default
-   methods.
-
-2. **Bloch, J. - *Effective Java* (3rd ed.), items "Prefer interfaces to abstract
-   classes" and "Design interfaces for posterity".**
-   The most cited practical advice on this exact decision.
-   *Why read it:* it explains *why* interfaces are usually the more flexible default, and
-   when a "skeletal implementation" (abstract class implementing an interface) is the best
-   of both worlds - exactly our combined pattern.
-   *Focus on:* the skeletal-implementation (`Abstract*`) idiom.
-
-3. **Gamma, Helm, Johnson, Vlissides - *Design Patterns*, "Template Method".**
-   *Why read it:* our `Shape.describe()` and `AbstractNotifier.send()` are Template
-   Methods; this is the classic description of the pattern that abstract classes enable.
-   *Focus on:* the idea of a fixed algorithm skeleton with variable steps.
-
-4. **Martin, R. C. - *Agile Software Development, Principles, Patterns, and Practices*,
-   chapters on abstraction and the Dependency Inversion Principle (DIP).**
-   *Why read it:* connects "program to an interface" to a formal design principle you will
-   study later in Unit 2.
-   *Focus on:* why high-level code should depend on abstractions, not concretions.
-
-### 2.2 Supporting / cross-language references
-
-5. **Microsoft - *C# documentation*: "Interfaces" and "abstract" keyword.**
-   Useful if you also work in C#; the concepts are nearly identical, with `abstract`
-   classes and `interface` types behaving like Java's.
-
-6. **Python docs - `abc` module (`ABC`, `abstractmethod`) and `typing.Protocol`.**
-   Shows how the same ideas appear in a duck-typed language: `ABC` is the abstract-class
-   analogue; `Protocol` is the structural-interface analogue.
-
-7. **TypeScript handbook - "Interfaces" and "Abstract Classes".**
-   A clear, modern take for students who also do web development.
+1. **Motivation** - why concrete-only hierarchies become rigid; the Open/Closed Principle.
+2. **Abstract classes** - declaration, abstract methods, shared state, the no-instantiation rule.
+3. **Template Method** - abstract classes fixing an algorithm skeleton.
+4. **Interfaces** - contracts, multiple implementation, default/static methods, marker interfaces.
+5. **Choosing between them** - the "is-a" vs. "can-do" decision rule and a comparison table.
+6. **Combined design** - abstract base + interfaces + concrete classes (the notification workshop).
+7. **Worked examples with expected output** - `Shape`, `Employee`, `Payable/Printable`, `Notifier`.
+8. **Self-check questions and answers.**
 
 ---
 
-## 3. Short summary notes (quick reference)
+## 3. Curated external references (annotated)
 
-### Abstract class - in three lines
-- Partially implemented base type; **cannot be instantiated**.
-- Can hold **state (fields), constructors, and concrete methods** plus **abstract methods**.
-- Models an **"is-a" family**; a class may extend **only one**.
+### Books
 
-### Interface - in three lines
-- Pure **contract**: method signatures, constants, optional default/static methods; **no
-  instance state**.
-- Models a **capability ("can-do")**; a class may implement **many**.
-- The primary tool for **decoupling** callers from implementations.
+- **Bloch, J. (2018). *Effective Java* (3rd ed.). Addison-Wesley.**
+  - *Item 20 - Prefer interfaces to abstract classes.* Explains why interfaces are the more flexible
+    choice for public contracts and introduces the "skeletal implementation" (`AbstractXxx`) pattern
+    that pairs an interface with a helper abstract class. This is the professional-practice
+    justification for the combined design in Session 2.
+  - *Item 21 - Design interfaces for posterity.* On default methods and evolving interfaces safely.
+  - *Item 22 - Use interfaces only to define types.* Warns against the "constant interface" antipattern.
 
-### Decision cheat-sheet
-| If you need... | Use |
-|---|---|
-| shared fields / constructor / substantial shared code | abstract class |
-| a contract many unrelated classes can fulfil | interface |
-| a type to belong to several abstractions | interfaces |
-| a public contract **and** a shared skeleton | interface **+** abstract class |
+- **Gamma, E., Helm, R., Johnson, R., & Vlissides, J. (1994). *Design Patterns*. Addison-Wesley.**
+  - *Template Method* - the pattern behind an abstract class with a fixed algorithm and abstract
+    steps (our `Shape.describe()` / `Employee.payslip()` / `Notification`).
+  - *Strategy* - the pattern behind selecting behavior through an interface at runtime (our `Channel`).
 
-### Keywords at a glance
-| Keyword | Meaning |
-|---|---|
-| `abstract` (class) | class cannot be instantiated; may have abstract methods |
-| `abstract` (method) | declared without a body; subclasses must implement |
-| `interface` | declares a contract |
-| `extends` | inherit from one class (or interface-to-interface) |
-| `implements` | a class realizes one or more interfaces |
-| `default` | interface method with a body |
-| `@Override` | compiler-checked annotation confirming an override |
+- **Martin, R. C. (2002). *Agile Software Development: Principles, Patterns, and Practices*. Prentice Hall.**
+  - Chapters on the **Open/Closed Principle (OCP)** and **Dependency Inversion Principle (DIP)** -
+    the design principles that abstraction serves. "Depend on abstractions, not on concretions" is
+    the one-line summary of why interfaces matter.
+
+### Official documentation
+
+- **Oracle. *The Java Tutorials - Abstract Methods and Classes.***
+  `https://docs.oracle.com/javase/tutorial/java/IandI/abstract.html`
+  Canonical reference for the `abstract` keyword, abstract methods, and instantiation rules.
+
+- **Oracle. *The Java Tutorials - Interfaces.***
+  `https://docs.oracle.com/javase/tutorial/java/IandI/createinterface.html`
+  Covers interface declaration, `implements`, default methods, and static methods.
+
+- **Oracle. *The Java Language Specification* (JLS), sections 8.1.1.1 (abstract classes), 9 (interfaces).**
+  The authoritative rules, for when you need the exact language behavior.
+
+### Cross-language notes
+
+- **C#:** same concepts; `abstract class` / `interface`; since C# 8, interfaces can have default
+  implementations, mirroring Java.
+- **Kotlin:** `abstract class` and `interface`; interfaces may contain state-free properties and
+  default method bodies.
+- **TypeScript:** `abstract class` and `interface`; interfaces are structural (duck-typed) contracts.
+- **Python:** no `interface` keyword; use `abc.ABC` with `@abstractmethod` for abstract classes, and
+  `typing.Protocol` for interface-like structural contracts.
+- **PHP:** `abstract class` and `interface`; a class may `implements` several interfaces.
 
 ---
 
-## 4. How to use these materials
+## 4. Quick summary notes (one-screen review)
 
-1. **Before Session 1:** skim reference 1 (Oracle - Abstract Methods and Classes) and the
-   "Abstract class" summary above.
-2. **Before Session 2:** skim reference 1 (Oracle - Interfaces) and reference 2 (Bloch)
-   and the decision cheat-sheet.
-3. **While doing the optional activity:** keep the decision cheat-sheet and the combined
-   pattern from Session 2 open as a checklist.
-4. **Before the corte 2 assessment:** re-read the summary notes and complete the
-   self-check checklist in the [week guide](../README.md#7-achievement--self-check-checklist).
+- **Abstract class**: cannot be instantiated; mixes concrete + abstract members; holds shared state;
+  models **"is-a"**; a class extends **one**.
+- **Abstract method**: signature, no body; concrete subclasses must implement it or stay abstract.
+- **Interface**: pure contract of method signatures (+ constants, default/static methods); models
+  **"can-do"**; a class implements **many**.
+- **Default method**: interface method with a body (Java 8+); lets interfaces share behavior and
+  evolve without breaking implementers.
+- **Decision rule**: shared state/behavior + single family → abstract class; capability across
+  unrelated types or multiple roles → interface; need both → extend one abstract base and implement
+  several interfaces.
+- **Why it matters**: enables **Open/Closed Principle** (extend without modifying), lowers
+  **coupling** (callers depend on contracts), and enables **testability** (substitute fakes).
 
 ---
 
-## 5. Related course files
+## 5. Practice-before-you-arrive checklist
 
-- [Week guide](../README.md)
-- [Session 1 - Abstract classes](../01-session/README.md)
-- [Session 2 - Interfaces and combining abstractions](../02-session/README.md)
-- [Optional activity (GitHub submission)](../optional-activity/README.md)
+- [ ] JDK 11+ installed (`java -version` works).
+- [ ] IDE ready (IntelliJ IDEA / Eclipse / VS Code + Java extension).
+- [ ] Read the PDF sections 1-3 before Session 1, 4-6 before Session 2.
+- [ ] Able to compile and run the `Shape` example from Session 1 on your own machine.

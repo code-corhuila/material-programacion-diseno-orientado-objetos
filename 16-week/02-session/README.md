@@ -1,167 +1,153 @@
-# Week 16 - Session 2: Reflective assessment & portfolio compilation
+# Week 16 - Session 2: Reflective assessment and portfolio
 
-**Subject:** Object-Oriented Programming and Design - 2026-B
-**Unit 3:** Practical application of OOP in Java · **Corte 3**
-**RAA:** 90_82759
-**Duration:** 2 hours (120 min)
+> **Subject:** Object-Oriented Programming and Design - 2026-B
+> **Unit 3:** Practical application of OOP in Java
+> **Assessment period:** Corte 3
+> **RAA:** 90_82759
 
 ---
 
 ## 1. Session objective
 
-Students **reflect** on their learning across the three units and **compile a learning portfolio** that traces every major deliverable to RAA 90_82759. By the end of the session each student will have (a) a 500-700 word reflective essay and (b) a portfolio with a completed traceability matrix.
+Turn the completed project and the co-evaluation feedback into two closing artifacts: a **reflective self-assessment** and a **traceability portfolio** that maps every deliverable of the course to the learning outcome (RAA 90_82759).
 
-This maps to weekly objectives **3 and 4** and to the metacognitive and evaluative dimensions of RAA 90_82759.
+By the end of the session the student will be able to:
+- Write a structured reflection (350-500 words) connecting personal learning across the three units to the RAA.
+- Turn feedback received into a concrete improvement plan.
+- Build a portfolio index table that traces each deliverable to the RAA and to at least one OOP pillar or good practice, with working links.
 
 ---
 
-## 2. Timed agenda
+## 2. Timed agenda (110 minutes)
 
-| Time | Block | Activity |
-|------|-------|----------|
-| 0:00-0:10 | Framing | What a learning portfolio is and why professionals keep one |
-| 0:10-0:30 | Reflection workshop | Guided prompts + worked example of a strong reflection |
-| 0:30-1:10 | Portfolio assembly | Build the deliverable list and the traceability matrix |
-| 1:10-1:40 | Peer walkthrough | Pairs review each other's portfolios against the checklist |
-| 1:40-2:00 | Course closure | Synthesis, forward look, final exit ticket |
+| Time | Activity |
+|---|---|
+| 0:00-0:08 | Recap of Session 1; remaining defenses (if any). |
+| 0:08-0:25 | **Theory:** reflection and metacognition; the reflection framework. |
+| 0:25-0:35 | **Theory:** what a traceability portfolio is; the RAA-to-evidence mapping. |
+| 0:35-0:55 | **Worked example:** a model reflection + a model portfolio table. |
+| 0:55-1:25 | **Guided practice:** each student drafts their reflection and portfolio table. |
+| 1:25-1:40 | Consolidate co-evaluation feedback into a 3-point improvement plan. |
+| 1:40-1:48 | Course wrap-up; final self-check checklist. |
+| 1:48-1:50 | Exit ticket. |
 
 ---
 
 ## 3. Theory notes
 
-### 3.1 Reflective practice: what and why
+### 3.1 Reflection and metacognition
 
-Reflection is the deliberate act of examining an experience to extract learning from it. In programming education it matters because much of the important learning is **tacit** — you can write a working `equals()` method long before you can explain *why* it belongs with `hashCode()`. Writing forces the tacit to become explicit, which is what makes knowledge transferable to the next problem.
+**Reflection** is structured thinking about your own learning; **metacognition** is "thinking about your thinking." Neither is a diary entry — both are evidence of learning and are graded on *specificity* and *honesty*, not on sounding positive.
 
-A useful, lightweight structure is the **What? / So what? / Now what?** cycle:
-
-```
-   WHAT?            SO WHAT?                 NOW WHAT?
- (description)  -> (interpretation)     ->  (action / transfer)
- "I refactored     "I learned that a         "Next time I will
-  a 200-line        God-class hides           design responsibilities
-  class into 4      responsibilities and      before writing code,
-  classes."         makes testing hard."      not after."
-```
-
-Weak reflection stops at *What?* ("I did the project, it was hard, I finished"). Strong reflection reaches *Now what?* — it names a change in how you will work.
-
-### 3.2 Evidence-based self-assessment
-
-Reflection is credible only when anchored to **evidence**. Instead of "I understand polymorphism now," a strong reflection says: "In `Checkout.process` I iterate over `PaymentMethod` references; this is where I finally understood that the *reference type* decides what compiles and the *object type* decides what runs." The evidence is a named artefact.
-
-### 3.3 The learning portfolio and traceability
-
-A **learning portfolio** is a curated, purposeful collection of work chosen to demonstrate achievement against outcomes. It is not a dump of every file; it is a *selected* and *annotated* set of evidence. The organising device is the **traceability matrix**, which answers one question for an external reader: *"Show me, deliverable by deliverable, that you achieved RAA 90_82759."*
+A useful, well-known scaffold is Gibbs' reflective cycle, adapted here for a programming course:
 
 ```
-   DELIVERABLE  --- evidences --->  RAA 90_82759
-   (artefact)      (justification)   (learning outcome)
+   Description  ->  what did I build / do?
+        |
+   Feelings     ->  where was I confident vs. stuck?
+        |
+   Evaluation   ->  what went well / badly? (use evidence)
+        |
+   Analysis     ->  WHY? which concept explains it?
+        |
+   Conclusion   ->  what did I actually learn?
+        |
+   Action plan  ->  what will I do differently next time?
 ```
 
-Traceability is a genuine professional skill: it mirrors how requirements are traced to code and tests in industry, and how competencies are evidenced in accreditation.
+The two most valuable stages for grading are **Analysis** ("*why* did my inheritance design cause duplication? because it was really a 'has-a', not an 'is-a'") and **Action plan** ("*next time I will prefer composition and write the class diagram before coding*").
 
-### 3.4 Anatomy of RAA 90_82759 (so students can map to it)
+### 3.2 The traceability portfolio
 
-The outcome has four assessable strands. A good portfolio shows evidence for each:
+A **portfolio** here is not a folder of files — it is a **mapping** that makes your achievement of the RAA *visible and checkable*. Each row links one deliverable to:
+- the **RAA** it contributes to (always 90_82759 in this course),
+- the **pillar(s)/practice(s)** it evidences,
+- a **working link/path** to the artifact.
 
-| Strand of RAA 90_82759 | What evidences it |
-|------------------------|-------------------|
-| Designs object-oriented solutions | Class diagrams, design notes, responsibility decisions |
-| Implements in Java with the four pillars | Working code where each pillar is located |
-| Applies good design practices | Refactorings, naming, cohesion/coupling, error handling |
-| Communicates and evaluates solutions | Presentation, README, peer reviews given/received |
+```
+   Deliverable  --evidences-->  Pillar / Good practice  --contributes to-->  RAA 90_82759
+       |                                                                        ^
+       +--------------------------- link / file path --------------------------+
+```
+
+Traceability is the same discipline used in professional software (requirements ↔ code ↔ tests). Doing it here trains a habit and, practically, makes your final grade easy to justify.
+
+### 3.3 Turning feedback into action
+
+Feedback only has value if it changes something. Convert the co-evaluation you received into an **improvement plan** using three columns: *what was observed → what I will change → done?* Keep it small (three items) and concrete.
 
 ---
 
-## 4. Fully worked example
+## 4. Worked example
 
-### 4.1 A strong reflective paragraph (annotated)
+### 4.1 Model reflection (excerpt, ~180 words shown)
 
-> "Early in Unit 2 I wrote an `Employee` class that held payroll logic, report formatting, and database access all at once **[What]**. During the project I split it into `Employee`, `PayrollCalculator`, and `EmployeeRepository`. Watching the tests become trivial to write once each class had a single responsibility taught me that *high cohesion is what makes code testable*, not a stylistic nicety **[So what]**. From now on I will sketch responsibilities before writing methods, and I will treat 'this class is hard to test' as a design smell rather than a testing problem **[Now what]**. Evidence: commit history of `payroll/` and the `PayrollCalculatorTest` class in my repository."
+> **Across the three units I moved from writing procedural code to designing with objects.** In Unit 1 the pillars were abstract to me; I could define encapsulation but still wrote public fields. The turning point was my final project's `Order` class: a co-evaluator pointed out that a public `total` field let any code corrupt the order. I made the field private and computed the total from the items, which enforced the invariant. That single change taught me *why* encapsulation exists — it is not a rule, it protects correctness.
+>
+> **My weakest area was inheritance.** I first made `PdfReport extends Report` and `CsvReport extends Report` but duplicated formatting logic. Analyzing it, I realized formatting was a "has-a", so I extracted a `Formatter` interface and used composition and polymorphism instead. This removed an `instanceof` chain in my export code.
+>
+> **Next semester I will** (1) draw the class diagram before coding, (2) write one unit test per class as I go, and (3) commit in smaller steps so my Git history tells the design story.
 
-Why it scores well: it is specific, names artefacts, reaches *Now what?*, and connects a concrete experience to a design principle.
+Why this scores well: it is specific (names classes), analytical (explains *why*), honest about weakness, and ends with a concrete action plan tied to good practices — all traceable to RAA 90_82759.
 
-### 4.2 A completed traceability matrix (model)
+### 4.2 Model portfolio index
 
-| # | Deliverable | Unit | Where (link/path) | Maps to RAA 90_82759 because... |
-|---|-------------|------|-------------------|--------------------------------|
-| 1 | Bank-account exercise | U1 | `/u1/bank/` | Shows encapsulation: private balance guarded by deposit/withdraw invariants. |
-| 2 | Shape hierarchy | U1 | `/u1/shapes/` | Shows abstraction + polymorphism via `abstract Shape.area()` and a mixed list. |
-| 3 | Library-system assignment | U2 | `/u2/library/` | Shows inheritance and interface-based design (`Loanable`) with low coupling. |
-| 4 | Refactoring lab | U2 | commit `a1b2c3d` | Shows good practice: God-class split into cohesive classes; tests added. |
-| 5 | Final project (code) | U3 | `github.com/.../final` | Shows all four pillars in one working system; documented README. |
-| 6 | Final presentation | U3 | `/portfolio/slides.pdf` | Communicates and defends the solution to a technical audience. |
-| 7 | Peer reviews given | U3 | `/portfolio/reviews/` | Evidences evaluative competence: rubric-based critique of two projects. |
-| 8 | Reflective essay | U3 | `/portfolio/reflection.md` | Metacognitive evidence of appropriation across the course. |
+| # | Deliverable | Unit | Evidence of (pillar / practice) | Contributes to RAA | Link / path |
+|---|---|---|---|---|---|
+| 1 | Classes & objects exercise | 1 | Encapsulation; naming | 90_82759 | `../../08-week/optional-activity/` (repo) |
+| 2 | UML class diagram of final project | 2 | Abstraction; low coupling | 90_82759 | `docs/uml/class-diagram.png` |
+| 3 | `Payable`/`Employee` hierarchy | 3 | Inheritance; polymorphism | 90_82759 | `src/main/java/payroll/` |
+| 4 | Unit test suite | 3 | Testing (good practice) | 90_82759 | `src/test/java/payroll/` |
+| 5 | Final project defense slides | 3 | Communication of design | 90_82759 | `docs/defense.pdf` |
+| 6 | This reflection | 3 | Metacognition | 90_82759 | `docs/reflection.md` |
+| 7 | Git history | 1-3 | Version control (good practice) | 90_82759 | repository commit log |
 
-### 4.3 Recommended portfolio structure
-
-```
-portfolio/
-├── README.md              # index + one-paragraph course summary
-├── traceability.md        # the matrix above
-├── reflection.md          # 500-700 word essay
-├── deliverables/          # or links to repos, per unit
-│   ├── u1/ u2/ u3/
-├── reviews/               # peer reviews you WROTE
-└── slides.pdf             # final presentation
-```
+Every row answers the examiner's implicit question: *"show me where you achieved the outcome."*
 
 ---
 
 ## 5. Guided in-class practice
 
-**Part A — Reflection workshop (0:10-0:30).** Students draft their essay from these prompts (aim 500-700 words total):
+**Step 1 — Reflection draft (20 min).** Using the Gibbs scaffold in §3.1, write 350-500 words. Requirements:
+- Reference **all three units**.
+- Name at least **three concrete learnings** (each anchored to a class/decision in your code).
+- State at least **two areas for future improvement** as actions, not wishes.
 
-1. **Across the three units, name three OOP concepts you appropriated.** For each, give one artefact where you can see it and one sentence on how your understanding changed.
-2. **Name one persistent difficulty.** What still feels shaky, and what specific step will you take to close the gap (a book chapter, an exercise, a mentor)?
-3. **What transfers?** Name one habit or idea from this course you will carry into another course or a job.
-4. **Feedback loop.** What did giving/receiving peer review in Session 1 teach you about your own work?
+**Step 2 — Portfolio table (15 min).** Build your own version of the table in §4.2. Requirements:
+- One row per graded deliverable of the course.
+- Every row cites at least one pillar or good practice and the RAA.
+- Every link/path must actually open the artifact (test them).
 
-**Part B — Portfolio assembly (0:30-1:10).** Students build the folder structure, fill the traceability matrix (one row per deliverable, min. 6 rows spanning all three units), and write the portfolio `README.md` index.
+**Step 3 — Improvement plan (10 min).** From the feedback you received in Session 1:
 
-**Part C — Peer walkthrough (1:10-1:40).** In pairs, each student opens their portfolio and their partner checks it against the checklist in section 6, giving one strength and one fix. Then swap.
-
-**Facilitation tips:**
-- Circulate and challenge vague reflections ("hard" -> *hard how?*).
-- Insist every matrix row has a *because* clause; a link without justification is not traceability.
-- Verify links open for someone who is not the author (a common failure).
-
----
-
-## 6. Portfolio & reflection checklist (assessment instrument)
-
-**Portfolio**
-- [ ] Index README with a one-paragraph course summary.
-- [ ] Traceability matrix with >= 6 rows spanning Units 1-3.
-- [ ] Every row maps to RAA 90_82759 with a one-sentence justification.
-- [ ] All links/paths open for an external reader.
-- [ ] At least one artefact per OOP pillar is represented somewhere in the matrix.
-
-**Reflective essay**
-- [ ] 500-700 words.
-- [ ] Names >= 3 appropriated concepts, each anchored to an artefact.
-- [ ] Names >= 1 persistent difficulty with a concrete plan.
-- [ ] Reaches "Now what?" — states a change in practice, not only description.
-
-**Reflective-writing quality rubric (4/3/2/1):**
-
-| Criterion | 4 Excellent | 3 Proficient | 2 Developing | 1 Beginning |
-|-----------|-------------|--------------|--------------|-------------|
-| Depth | Reaches "Now what?"; insight + transfer | Reaches "So what?"; some transfer | Mostly description | Description only |
-| Evidence | Every claim tied to a named artefact | Most claims evidenced | Few claims evidenced | No evidence |
-| Honesty | Names real difficulty + plan | Names difficulty | Vague difficulty | None |
+| Observation received | Change I will make | Done? |
+|---|---|---|
+| e.g. "public fields in `Order`" | make fields private; validate in constructor | [ ] |
+| | | |
+| | | |
 
 ---
 
-## 7. Course closure & final exit ticket
+## 6. Course wrap-up and final self-check
 
-**Synthesis (5 min):** Return to the four pillars and the design vocabulary; recap the arc from Unit 1 (single objects and encapsulation) through Unit 2 (relationships, inheritance, interfaces) to Unit 3 (applying it all in a real project). Emphasise that the durable outcome is the *reasoning habit*, not the syntax.
+**Wrap-up:** You began with syntax and objects; you end able to design, build, test, defend and reflect on an object-oriented system in Java. The four pillars are now tools you reach for because they make software easier to change and harder to break — that is the whole point of RAA 90_82759.
 
-**Forward look:** Point to where these skills go next (data structures, design patterns, frameworks) and note that the portfolio is a living document they can keep extending.
+**Final self-check (all boxes before final submission):**
+- [ ] Project runs from a clean checkout; demo rehearsed.
+- [ ] Four pillars located in code; three+ good practices present.
+- [ ] Co-evaluation completed for peers and feedback received consolidated.
+- [ ] Reflection (350-500 words) written and honest.
+- [ ] Portfolio index complete; every link opens.
+- [ ] Improvement plan has three concrete items.
 
-**Final exit ticket (submit to close the course):**
-1. In one sentence, how would you now define "good object-oriented design" to a first-year student?
-2. Which single deliverable in your portfolio best evidences RAA 90_82759, and why?
-3. What is your next concrete step to keep improving as a developer?
+---
+
+## 7. Exit ticket
+
+1. In one sentence, state the single most important thing you learned in this course and the RAA it maps to.
+2. List the **three deliverables** in your portfolio you are most proud of and the pillar each evidences.
+3. Write the **first action** from your improvement plan and when you will do it.
+
+---
+
+*End of Week 16 sessions. See `material/README.md` for readings and the downloadable PDF, and `optional-activity/README.md` for extra practice.*

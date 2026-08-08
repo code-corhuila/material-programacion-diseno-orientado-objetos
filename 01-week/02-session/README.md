@@ -1,266 +1,295 @@
-# Week 01 · Session 2 — Standing up the Java environment
+# Session 02 — The Java Development Environment and Your First Package-Organized Program
 
-**Unit 1 — Fundamentals of OOP** · Corte 1 · Duration: **90 minutes**
-Modality: theoretical-practical (live coding + guided setup)
+**Course:** Object-Oriented Programming and Design · **Week:** 01 · **Unit:** 1 — Fundamentals of OOP
+**Assessment period:** Corte 1 · **RAA:** 90_82759
+**Estimated duration:** 2 hours (120 minutes)
 
 ---
 
 ## 1. Session objective
 
-**Install and configure a Java development environment** (a JDK with its JVM and one IDE), then **compile and run a first Java program organized into a coherent package structure** — from both the command line and the IDE. By the end, every student has a *verified, reproducible* toolchain and a running `HelloOOP` program that prints to the console, plus the ability to explain the JDK → bytecode → JVM pipeline.
+Install and configure a working Java development environment (JDK/JVM plus an IDE), explain the roles of the JDK, JRE, JVM, and bytecode, and compile and run a first Java program organized into a coherent package structure — from both the command line and the IDE.
 
 ---
 
-## 2. Timed agenda (90 min)
+## 2. Timed agenda (120 min)
 
-| Time | Segment | What happens |
-|---|---|---|
-| 0:00–0:10 | **Recap & exit-ticket answers** | Address the "most-needed clarification" items from Session 1. |
-| 0:10–0:30 | **Theory — Platform anatomy** | JDK vs JRE vs JVM; bytecode; the compile-and-run pipeline; "write once, run anywhere". |
-| 0:30–0:45 | **Guided install & verify** | Install/confirm the JDK; `JAVA_HOME` / `PATH`; verify with `java -version`, `javac -version`. |
-| 0:45–0:55 | **Theory — Packages** | Why packages exist; naming convention; directory ↔ package mapping. |
-| 0:55–1:15 | **Worked example (live coding)** | Create `HelloOOP` inside a package; compile & run from the **command line**. |
-| 1:15–1:25 | **Guided practice** | Reproduce and extend in the **IDE**; add a second class in a subpackage. |
-| 1:25–1:30 | **Wrap-up & exit ticket** | Verification checklist; troubleshooting pointers; finish the forum. |
+| Time | Segment | Activity |
+|------|---------|----------|
+| 0:00 – 0:10 | Warm-up | Recap of Session 01; today's goal: a running Java program. |
+| 0:10 – 0:35 | Theory I | The Java platform: JDK vs. JRE vs. JVM; bytecode; the WORA principle. |
+| 0:35 – 0:55 | Theory II | Packages: what/why, naming conventions, folder mapping. |
+| 0:55 – 1:20 | Live demo | Install & verify the JDK; configure the IDE; anatomy of a Java file. |
+| 1:20 – 1:30 | Break / Q&A | — |
+| 1:30 – 1:55 | Guided practice | Each student compiles & runs a package-organized program (CLI + IDE). |
+| 1:55 – 2:00 | Wrap-up | Exit ticket + environment-evidence reminder. |
 
 ---
 
 ## 3. Theory notes
 
-### 3.1 Platform anatomy: JDK, JRE, JVM
+### 3.1 The Java platform: JDK, JRE, JVM
 
-Beginners routinely confuse these three. Keep the containment relationship in mind:
-
-```
-┌──────────────────────────── JDK (Java Development Kit) ────────────────────────────┐
-│  Tools to DEVELOP:  javac (compiler) · jar · javadoc · jshell · debugger · ...      │
-│                                                                                     │
-│   ┌──────────────────────── JRE (Java Runtime Environment) ───────────────────┐    │
-│   │  Everything needed to RUN Java: core class libraries (java.lang, ...) +    │    │
-│   │                                                                            │    │
-│   │      ┌──────────────── JVM (Java Virtual Machine) ────────────────┐        │    │
-│   │      │  Loads and EXECUTES bytecode (.class). The portability      │        │    │
-│   │      │  layer: one JVM build per OS, same bytecode everywhere.      │        │    │
-│   │      └─────────────────────────────────────────────────────────────┘        │    │
-│   └────────────────────────────────────────────────────────────────────────────┘    │
-└─────────────────────────────────────────────────────────────────────────────────────┘
-```
-
-- **JDK** — what a *developer* installs. It contains the compiler `javac` and the runtime.
-- **JRE** — the subset needed only to *run* Java. (From Java 11 on, Oracle no longer ships a separate standalone JRE; installing the JDK gives you the runtime too. The concept still matters.)
-- **JVM** — the abstract machine that actually executes your program's **bytecode**. There is a different JVM implementation for Windows, macOS, and Linux, but they all execute the *same* bytecode — that is the mechanism behind **"write once, run anywhere."**
-
-> **Rule of thumb:** *If you only run Java apps, you need the JRE/JVM. If you write Java, you need the JDK.* This course needs the **JDK**.
-
-### 3.2 The compile-and-run pipeline
-
-Java is **compiled to bytecode, then interpreted/JIT-compiled by the JVM** — a two-step model that gives both portability and speed:
+These three acronyms are the source of most early confusion. Here is the clean mental model.
 
 ```
-  Hello.java  ──(javac: compile)──▶  Hello.class  ──(java: JVM loads & runs)──▶  output
-  human-readable                     bytecode                    native execution on
-  source code                        (portable)                  THIS operating system
++-------------------------------------------------------------+
+|                          JDK                                |
+|  (everything you need to DEVELOP Java programs)             |
+|                                                             |
+|   javac (compiler)   javadoc   jar   jshell   debugger ...  |
+|                                                             |
+|   +-----------------------------------------------------+   |
+|   |                      JRE                            |   |
+|   |  (everything you need to RUN Java programs)         |   |
+|   |                                                     |   |
+|   |    +-------------------------+   core libraries     |   |
+|   |    |          JVM            |   (java.lang, ...)   |   |
+|   |    | executes bytecode,      |                     |   |
+|   |    | manages memory (GC)     |                     |   |
+|   |    +-------------------------+                     |   |
+|   +-----------------------------------------------------+   |
++-------------------------------------------------------------+
 ```
 
-1. You write source in a `.java` file.
-2. `javac` (the compiler, part of the JDK) turns it into **`.class` bytecode** — portable, not tied to any OS.
-3. `java` launches the **JVM**, which loads the `.class`, verifies it, and executes it (with Just-In-Time compilation to native code for hot paths).
+- **JVM (Java Virtual Machine):** the abstract "computer" that actually executes your compiled program. It reads **bytecode**, translates it to native machine instructions for the current OS/CPU, and manages memory automatically (garbage collection). The JVM is what makes Java portable.
+- **JRE (Java Runtime Environment):** the JVM plus the standard class libraries. It is enough to *run* a Java program but not to *compile* one. (In modern Java the JRE is delivered as part of the JDK rather than as a separate download.)
+- **JDK (Java Development Kit):** the JRE plus development tools — most importantly the compiler `javac`. **This is what you install as a developer.**
 
-Choose a **Long-Term Support (LTS)** JDK for the course (e.g., Java 17 or Java 21). LTS releases get long maintenance and are what most workplaces use.
+> Rule of thumb: **To run** Java you need a JRE/JVM. **To develop** Java you install the **JDK** (which contains the rest).
 
-### 3.3 Installing and verifying the JDK
+### 3.2 What is bytecode, and why does it exist?
 
-1. **Install** a JDK build (e.g., Eclipse Temurin / Adoptium, Oracle JDK, or Amazon Corretto — any LTS is fine).
-2. **`JAVA_HOME`** — set this environment variable to the JDK's install folder. Many tools locate the JDK through it.
-3. **`PATH`** — ensure the JDK's `bin` directory is on `PATH` so the shell finds `java` and `javac`.
-4. **Verify** in a fresh terminal:
+When you write Java source (`.java`), the compiler `javac` does **not** produce a native `.exe`. Instead it produces **bytecode** in `.class` files: a compact, platform-independent instruction set that the JVM understands.
+
+```
+   Hello.java   --[ javac (compile) ]-->   Hello.class   --[ java (JVM runs) ]-->  output
+   (source)                                (bytecode)                              (behavior)
+```
+
+This two-step model (compile to bytecode, then run on a JVM) is the key to Java's portability.
+
+### 3.3 "Write once, run anywhere" (WORA)
+
+Because compiled bytecode targets the *JVM* — not a specific operating system or processor — the same `.class` file runs unchanged on Windows, macOS, or Linux, as long as each has a compatible JVM.
+
+```
+                       Hello.class  (one compiled artifact)
+                              |
+        +---------------------+---------------------+
+        |                     |                     |
+   JVM on Windows        JVM on macOS          JVM on Linux
+        |                     |                     |
+     runs OK               runs OK               runs OK
+```
+
+Contrast this with a language compiled straight to native code, where you typically recompile (or maintain separate builds) for each platform. WORA is why Java became dominant in enterprise, Android, and cross-platform back-ends.
+
+### 3.4 Installing and verifying the JDK
+
+**Recommended:** a Long-Term Support (LTS) release — **JDK 17** or **JDK 21**. LTS versions are stable and supported for years.
+
+**Where to get it:**
+- Eclipse Adoptium (Temurin OpenJDK) — https://adoptium.net/ (free, open source, cross-platform), or
+- Oracle JDK — https://www.oracle.com/java/technologies/downloads/
+
+**Install steps (high level):**
+1. Download the installer for your OS and architecture (Windows x64, macOS arm64/x64, Linux).
+2. Run the installer. On Windows, accept the option to set `JAVA_HOME` and add Java to `PATH` if offered.
+3. Open a **new** terminal (so the updated `PATH` is loaded).
+
+**Verify — this is mandatory evidence for Corte 1:**
 
 ```bash
-java -version      # runtime version, e.g. openjdk version "21.0.x"
-javac -version     # compiler version, e.g. javac 21.0.x
+java -version
+javac -version
 ```
 
-If **both** commands print a version, your toolchain works. If `javac` is missing but `java` works, you likely installed only a runtime, not the full JDK — reinstall the JDK. *(A screenshot of these two lines is this session's environment evidence.)*
+Expected output resembles (versions will vary):
 
-### 3.4 Choosing and configuring an IDE
+```
+openjdk version "21.0.3" 2024-04-16 LTS
+OpenJDK Runtime Environment Temurin-21.0.3+9 (build 21.0.3+9-LTS)
+OpenJDK 64-Bit Server VM Temurin-21.0.3+9 (build 21.0.3+9-LTS, mixed mode)
 
-Any of the four course-approved IDEs is acceptable; pick one and configure it to use your installed JDK:
+javac 21.0.3
+```
 
-| IDE | Good fit for | Note |
-|---|---|---|
-| **IntelliJ IDEA** (Community) | Most students; excellent Java support out of the box | Recommended default; strong refactoring/inspection. |
-| **Eclipse** | Traditional Java courses; plugin ecosystem | Set the JDK under *Preferences → Java → Installed JREs*. |
-| **NetBeans** | All-in-one, Maven-friendly | Bundles many Java tools. |
-| **VS Code** | Lightweight; multi-language users | Install the *Extension Pack for Java*; point it to your JDK. |
+> Troubleshooting: if `javac` is "not recognized," you installed a JRE-only package or `PATH`/`JAVA_HOME` is not set. Reinstall the **JDK** and ensure its `bin` directory is on your `PATH`. On Windows, check `System Properties → Environment Variables`; on macOS/Linux, check your shell profile (`~/.zshrc`, `~/.bashrc`).
 
-The IDE does **not** replace understanding the CLI — it *wraps* `javac`/`java`. We compile from the command line first precisely so the IDE stops being a black box.
+### 3.5 Choosing and configuring an IDE
 
-### 3.5 Packages — organizing classes
+Any of the following is acceptable for this course. Pick one and learn it well.
 
-A **package** is a **namespace** that groups related classes and prevents name clashes. It is declared as the first statement of a file:
+| IDE | Notes |
+|-----|-------|
+| **IntelliJ IDEA** (Community) | Excellent Java support out of the box; recommended for beginners and pros. https://www.jetbrains.com/idea/ |
+| **Eclipse** | Free, mature, widely used in academia. https://www.eclipseide.org/ |
+| **NetBeans** | Apache project, beginner-friendly, strong for Java SE. https://netbeans.apache.org/ |
+| **VS Code** | Lightweight; install the "Extension Pack for Java." Requires a separately installed JDK. https://code.visualstudio.com/docs/languages/java |
+
+**Minimum configuration checklist inside your IDE:**
+1. Point the IDE to your installed **JDK** (Project SDK / Java runtime).
+2. Create a new **Java project**.
+3. Confirm the IDE can create packages and run a `main` method (a green "Run" arrow).
+
+### 3.6 Packages: what they are and why they exist
+
+A **package** is a *namespace* that groups related classes. Packages solve three problems:
+
+1. **Name collisions.** Two libraries can both define a `Date` class if each lives in its own package (`java.util.Date` vs. `java.sql.Date`).
+2. **Organization.** Related classes live together (e.g., all "model" classes in one package, all "services" in another).
+3. **Access control.** Packages participate in Java's visibility rules (package-private members are visible only within the same package).
+
+**The critical rule for beginners:** in Java, **a package maps to a directory structure**. If a class declares `package co.edu.corhuila.oop.week01;`, its `.java` file must live in the folders `co/edu/corhuila/oop/week01/`.
+
+```
+Package name:  co.edu.corhuila.oop.week01
+Folder path:   co/edu/corhuila/oop/week01/HelloOOP.java
+                 └── dots become directory separators
+```
+
+**Naming conventions (industry standard):**
+- All lowercase (`co.edu.corhuila.oop`, never `Co.Edu.Corhuila`).
+- Use a reversed internet domain as the prefix to guarantee global uniqueness. CORHUILA's domain is `corhuila.edu.co`, so the reversed prefix is `co.edu.corhuila`.
+- Add project/module segments after the prefix (`.oop.week01`).
+
+### 3.7 Anatomy of a Java source file
 
 ```java
-package co.edu.corhuila.oop.week01;
-```
+package co.edu.corhuila.oop.week01;   // 1) package declaration — MUST be the first statement
 
-**Two rules that trip up beginners:**
+public class HelloOOP {               // 2) class; file name MUST be HelloOOP.java
 
-1. **Directory ↔ package mapping.** The package name must match the folder path. A class in package `co.edu.corhuila.oop.week01` must live in `.../co/edu/corhuila/oop/week01/`.
-2. **Naming convention.** Package names are **all lowercase**, using a reverse-domain style (`co.edu.corhuila...`) to guarantee global uniqueness. Class names use **PascalCase** (`BankAccount`); methods and variables use **camelCase** (`getBalance`).
-
-```
-project-root/
-└── src/
-    └── co/edu/corhuila/oop/week01/
-        ├── HelloOOP.java        →  package co.edu.corhuila.oop.week01;
-        └── model/
-            └── Course.java      →  package co.edu.corhuila.oop.week01.model;
-```
-
-Packages are the first, simplest tool of *modularity* — a theme that runs through the whole course.
-
----
-
-## 4. Worked example — `HelloOOP` in a package (live coding)
-
-We build a minimal but *correctly structured* program and run it from the command line, then the IDE.
-
-### 4.1 The source file
-
-Create `src/co/edu/corhuila/oop/week01/HelloOOP.java`:
-
-```java
-package co.edu.corhuila.oop.week01;
-
-/**
- * First Java program of the course, organized inside a package.
- * Demonstrates the compile-and-run pipeline and basic OOP structure.
- */
-public class HelloOOP {
-
-    public static void main(String[] args) {
-        // 'System.out' is an object; 'println' is a message (method call) sent to it.
-        System.out.println("Hello, Object-Oriented World!");
-        System.out.println("Compiled by javac, executed by the JVM.");
+    public static void main(String[] args) {   // 3) program entry point
+        System.out.println("Hello, OOP! Environment is working.");  // 4) print to console
     }
 }
 ```
 
-Note two OOP ideas already present: `System.out` is an **object**, and `println(...)` is a **message** sent to it. Even "hello world" is object interaction.
-
-### 4.2 Compile and run from the command line
-
-From the **project root** (the folder that contains `src/`):
-
-```bash
-# 1) Compile: -d out puts .class files in an 'out' folder, mirroring the package path
-javac -d out src/co/edu/corhuila/oop/week01/HelloOOP.java
-
-# 2) Run: -cp out sets the classpath; then the FULLY-QUALIFIED class name
-java -cp out co.edu.corhuila.oop.week01.HelloOOP
-```
-
-**Expected output:**
-
-```
-Hello, Object-Oriented World!
-Compiled by javac, executed by the JVM.
-```
-
-**What each part means:**
-
-- `javac -d out ...` → compile, sending bytecode into `out/co/edu/corhuila/oop/week01/HelloOOP.class`.
-- `java -cp out ...` → start the JVM, look for classes under `out`, and run the class **by its fully-qualified name** (package + class). You do **not** write `.class` or a file path here — you name the class.
-
-**Common first errors (and the fix):**
-
-| Symptom | Cause | Fix |
-|---|---|---|
-| `error: Could not find or load main class HelloOOP` | Ran with the short name, ignoring the package | Use the **fully-qualified** name: `co.edu.corhuila.oop.week01.HelloOOP`. |
-| `'javac' is not recognized` | JDK `bin` not on `PATH` | Fix `PATH`/`JAVA_HOME`, open a new terminal. |
-| `class ... is public, should be declared in a file named ...` | File name ≠ public class name | Name the file exactly `HelloOOP.java`. |
-| Package/`.class` not found at run time | Classpath doesn't point at `out` | Include `-cp out`. |
-
-### 4.3 The same program in the IDE
-
-1. Create a new Java project; set the project SDK to your installed JDK.
-2. Recreate the package `co.edu.corhuila.oop.week01` (the IDE builds the folders for you).
-3. Add `HelloOOP` and press **Run**. The IDE runs the same `javac`/`java` steps under the hood and shows the console output.
-
-Seeing identical output from CLI and IDE proves the IDE is *only automating* the pipeline you already understand.
+Line-by-line:
+1. **`package …;`** declares the namespace and must be the first non-comment line.
+2. **`public class HelloOOP`** — a public class must live in a file of the *exact same name* (`HelloOOP.java`), case-sensitive.
+3. **`public static void main(String[] args)`** is the entry point the JVM calls to start the program. Memorize this signature.
+4. **`System.out.println(...)`** prints a line to standard output.
 
 ---
 
-## 5. Guided in-class practice (10–15 min)
+## 4. Worked example — `Hello, OOP!` inside a package, compiled and run two ways
 
-Starting from `HelloOOP`:
+We will build the file above and run it from **both** the command line and the IDE.
 
-1. **Add a second class in a subpackage.** Create `src/co/edu/corhuila/oop/week01/model/Course.java`:
+### 4.1 Create the folder structure and file
 
-   ```java
-   package co.edu.corhuila.oop.week01.model;
+Create this layout (the folder path must match the package name):
 
-   public class Course {
-       private String name;
+```
+week01-demo/
+└── src/
+    └── co/
+        └── edu/
+            └── corhuila/
+                └── oop/
+                    └── week01/
+                        └── HelloOOP.java
+```
 
-       public Course(String name) {
-           this.name = name;
-       }
+Put the exact source from §3.7 into `HelloOOP.java`.
 
-       public String describe() {
-           return "Course: " + name;
-       }
-   }
-   ```
+### 4.2 Compile and run from the command line
 
-2. **Use it from `HelloOOP`** by importing it and creating an object:
+Open a terminal **in the `week01-demo` directory**.
 
-   ```java
-   import co.edu.corhuila.oop.week01.model.Course;
-   // inside main:
-   Course c = new Course("Object-Oriented Programming and Design");
-   System.out.println(c.describe());
-   ```
+**Compile** (the `-d` flag tells `javac` where to place the compiled `.class` files, recreating the package folders under `out/`):
 
-3. **Recompile both files and run.** Compile every source at once, then run the main class:
+```bash
+javac -d out src/co/edu/corhuila/oop/week01/HelloOOP.java
+```
 
-   ```bash
-   javac -d out src/co/edu/corhuila/oop/week01/HelloOOP.java \
-                src/co/edu/corhuila/oop/week01/model/Course.java
-   java -cp out co.edu.corhuila.oop.week01.HelloOOP
-   ```
+This produces:
 
-   Expected additional line:
+```
+out/
+└── co/edu/corhuila/oop/week01/HelloOOP.class
+```
 
-   ```
-   Course: Object-Oriented Programming and Design
-   ```
+**Run** (use the **fully qualified class name**, with dots — *not* the file path, and *not* `.class`):
 
-4. **Checkpoint questions:** Which line *creates an object*? Which line *sends a message*? Which folder holds `Course.class`, and why must its path match its package?
+```bash
+java -cp out co.edu.corhuila.oop.week01.HelloOOP
+```
 
-*Expected outcome:* a two-class, two-package program compiled and run successfully, reinforcing the directory ↔ package mapping and the object/message vocabulary from Session 1.
+Expected output:
+
+```
+Hello, OOP! Environment is working.
+```
+
+**Common mistakes and their fixes:**
+
+| Symptom | Cause | Fix |
+|---------|-------|-----|
+| `error: Could not find or load main class HelloOOP` | You ran with the file path or omitted the package. | Use the fully qualified name: `co.edu.corhuila.oop.week01.HelloOOP`. |
+| `class HelloOOP is public, should be declared in a file named HelloOOP.java` | File name ≠ public class name. | Rename the file to match exactly (case-sensitive). |
+| `package co.edu... does not match` / class not found | Folder structure doesn't match the `package` line. | Make the directories mirror the package name. |
+| `NoClassDefFoundError` with wrong package | Missing/wrong `-cp` (classpath). | Point `-cp` at the root of the compiled tree (`out`). |
+
+### 4.3 Compile and run from the IDE
+
+Using IntelliJ IDEA as the example (the flow is analogous in Eclipse/NetBeans/VS Code):
+
+1. **File → New → Project → Java**, select your installed JDK as the Project SDK, and finish.
+2. In the `src` folder, **right-click → New → Package** and type `co.edu.corhuila.oop.week01`. The IDE creates the nested folders for you.
+3. **Right-click the package → New → Java Class**, name it `HelloOOP`, and paste the `main` method body.
+4. Click the green **Run** arrow next to `main` (or press the run shortcut).
+5. The **Run** tool window shows: `Hello, OOP! Environment is working.`
+
+Notice that the IDE performs the same two steps under the hood — it calls the compiler and then launches the JVM — but hides the `javac`/`java` commands behind a button. Understanding the manual steps (§4.2) is what lets you debug when the button "just doesn't work."
+
+---
+
+## 5. Guided in-class practice — build, compile, and run your own
+
+**Format:** individual, 25 minutes. This is Corte 1 evidence.
+
+**Task:** Create a program that prints a short "about me + environment" banner, organized in your own package.
+
+1. Choose a package name using CORHUILA's reversed-domain convention plus your identifier, e.g. `co.edu.corhuila.oop.week01.<yourlastname>`.
+2. Create a class named `Environment` with a `main` method that prints, on separate lines:
+   - Your full name.
+   - The JDK version you installed (copy the string from `java -version`).
+   - The IDE you chose.
+   - One sentence: "The JVM runs bytecode, which is why Java is write-once-run-anywhere."
+3. Create the matching folder structure by hand (do **not** let the IDE do it this first time — you must see the mapping).
+4. **Compile and run from the command line** using `javac -d out ...` and `java -cp out <fully.qualified.Name>`.
+5. **Then** open the same project in your IDE and run it there.
+
+**Expected deliverable (evidence):**
+- The `Environment.java` source.
+- A screenshot of the terminal showing your compile + run and the correct output.
+- A screenshot of the IDE running the same program.
+- A screenshot of `java -version` and `javac -version`.
+
+**Stretch goal (optional):** add a second class `Greeter` in the *same* package with a method `String greeting(String name)`, create a `Greeter` object in `main`, and print its result. This is your first taste of using objects — the whole point of the course.
 
 ---
 
 ## 6. Wrap-up and exit ticket
 
-**Three takeaways**
+### Summary
+- The **JDK** is what you install to develop; it contains the compiler and a **JRE**, which contains the **JVM**.
+- `javac` compiles source to **bytecode** (`.class`); the **JVM** runs bytecode.
+- **WORA:** one compiled artifact runs on any platform with a compatible JVM.
+- A **package** is a namespace that maps to a folder structure; use CORHUILA's reversed domain `co.edu.corhuila` as the prefix.
+- You can compile and run from the command line (`javac -d`, `java -cp`) and from the IDE — both do the same two steps.
 
-1. The pipeline is **`.java` → (javac) → `.class` bytecode → (JVM) → output**; the **JDK** gives you `javac`, the **JVM** runs the bytecode, and the same bytecode runs on any OS.
-2. A **package** is a namespace whose name **must mirror the directory path**; lowercase package names, PascalCase classes, camelCase methods.
-3. The **IDE automates** the exact `javac`/`java` steps you ran by hand — it is a convenience, not magic.
+### Exit ticket (submit before leaving)
+1. In one sentence each, define JDK, JVM, and bytecode.
+2. If a class declares `package co.edu.corhuila.oop.week01;`, in what folder must its file live?
+3. What command runs a compiled class `App` in package `co.edu.corhuila.oop.week01` from an `out` directory? Write it exactly.
 
-**Environment verification checklist (must all pass):**
+### Environment-evidence reminder (Corte 1)
+Upload the four screenshots from §5 to the LMS as proof your environment works. Keep the project — you will extend it next week.
 
-- [ ] `java -version` and `javac -version` both print a version.
-- [ ] `HelloOOP` compiles with `javac -d out ...` and runs with `java -cp out <fully.qualified.Name>`.
-- [ ] The same program runs from my IDE with identical output.
-- [ ] `Course` lives in the `.../model/` folder matching its package, and `HelloOOP` uses it.
-
-**Exit ticket (post before you leave):**
-
-1. Paste your `java -version` / `javac -version` output (or a screenshot) as environment evidence.
-2. In one sentence, explain what `javac` produces and what `java` does with it.
-3. State one thing that broke during setup and how you fixed it (or "nothing broke").
-
-**Autonomous work (this week):** finish any pending install so every checkbox in the [week checklist](../README.md#7-achievement--self-check-checklist) is ticked; complete the **opening forum** (initial post + one reply); optionally attempt the [optional GitHub activity](../optional-activity/README.md).
+### Looking ahead
+Week 02 introduces classes and objects in real Java code: constructors, fields, methods, and the `new` keyword. Reinforce this week with the [optional GitHub activity](../optional-activity/README.md) and the readings in [`../material/README.md`](../material/README.md).

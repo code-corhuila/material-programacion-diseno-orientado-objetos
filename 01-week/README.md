@@ -1,153 +1,166 @@
-# Week 01 — Introduction to OOP and the Java development environment (JDK, JVM, packages, IDE setup)
+# Week 01 — Introduction to OOP and the Java Development Environment (JDK, JVM, packages, IDE setup)
 
-**Object-Oriented Programming and Design** · Course code **82759** · Semester **2026-B**
-**Unit 1 — Fundamentals of Object-Oriented Programming**
-**Assessment period: Corte 1 (weeks 1–5)** · Accompanied time this week: **3 h** (2 sessions) · Autonomous time: **6 h**
-
----
-
-## 1. Where this week sits
-
-This is the **opening week of the course and of Unit 1**. Its job is to build the two foundations everything else rests on:
-
-1. **A mental model** — what the object-oriented paradigm *is*, how it differs from the procedural style most students already know, and why it matters across the software life cycle.
-2. **A working toolchain** — a correctly installed and configured Java environment (JDK + JVM + an IDE) in which the student can compile, run, and organize a first program into packages.
-
-By the end of the week each student should be able to open their machine, write a small Java program in a coherent package structure, compile it, run it, and explain — in the opening forum — *why* the object-oriented way of thinking changes how we build software. Nothing here is throwaway: the environment configured this week is the same one used for all 16 weeks, and the paradigm vocabulary introduced now (object, class, message, state, behavior) is reused in every later unit.
+**Program:** Software Engineering / Systems Engineering
+**Course:** Object-Oriented Programming and Design
+**Academic period:** 2026-B
+**Unit:** Unit 1 — Fundamentals of Object-Oriented Programming
+**Week:** 01 (of the semester)
+**Assessment period:** Corte 1 (First cut / First partial evaluation)
+**Learning outcome (RAA):** 90_82759
 
 ---
 
-## 2. Subject Learning Outcome (RAA) and competencies addressed
+## 1. Overview
 
-| Code | Statement | How Week 01 contributes |
-|---|---|---|
-| **90_82759** (reported as **90_82759_01**, Corte 1) | The student **builds software solutions applying the principles of OOP**, using contemporary techniques, tools, and good practices, with criteria of quality, integration, and maintainability. | Week 01 establishes the *entry conditions* for the RAA: the conceptual frame of the paradigm and a reproducible development environment. Without a running toolchain and a correct mental model, none of the later "builds software solutions" evidence is possible. |
+Welcome to the first week of **Object-Oriented Programming and Design**. This course teaches you to think, model, and build software using the object-oriented paradigm — the dominant approach in modern professional software engineering (Java, C#, Kotlin, C++, Python, Swift, and many others).
 
-**Competencies exercised this week**
+Before we can write a single object, we need two things:
 
-- **Conceptual (know):** distinguish the procedural and object-oriented paradigms; locate OOP in the software life cycle; define the core vocabulary of objects and classes.
-- **Procedural (know-how):** install and configure a JDK and an IDE; create a package structure; compile and run a Java program from both the command line and the IDE.
-- **Attitudinal (know-how-to-be):** argue a technical position with evidence in a forum; adopt from day one the habit of organized, reproducible project setup.
+1. A **mental model**: understanding *why* object orientation exists, *what problem* it solves compared to procedural programming, and *where* it fits in the software life cycle.
+2. A **working toolchain**: a correctly installed Java Development Kit (JDK), an understanding of how the Java Virtual Machine (JVM) runs our code, and an IDE configured to compile, run, and organize programs into packages.
+
+By the end of this week you will have a functioning Java environment, you will have compiled and executed your first package-organized Java program from both the command line and an IDE, and you will be able to argue clearly how OOP changes the way we design software.
 
 ---
 
-## 3. Weekly objectives (measurable)
+## 2. Learning outcome (RAA) and competencies addressed
 
-By the end of Week 01 the student will be able to:
+### RAA 90_82759
+The student **applies the fundamentals of the object-oriented paradigm and configures a professional development environment** to design, implement, and execute basic programs organized into a coherent structure, distinguishing object orientation from procedural programming within the software life cycle.
 
-1. **Explain** how the object-oriented paradigm differs from procedural programming and describe its role across the software life cycle (analysis, design, implementation, maintenance), using at least three concrete points of contrast.
-2. **Install and configure** a Java development environment — a JDK (with its JVM) and one IDE among IntelliJ IDEA, Eclipse, NetBeans, or VS Code — and verify it with `java -version` and `javac -version`.
-3. **Compile and run** a first Java program organized into a coherent package structure, from both the command line (`javac` / `java`) and the IDE, producing the expected console output.
-4. **Distinguish** JDK, JRE, JVM, bytecode, and the *"write once, run anywhere"* execution model, and explain the role of each in turning `.java` source into a running process.
-5. **Participate** in the opening forum with a reasoned, evidence-based argument on how OOP transforms the way we program, and respond substantively to at least one peer.
+### Competencies addressed this week
+- **Disciplinary (technical):** Understands the conceptual foundations of OOP and the execution model of the Java platform (JDK, JVM, bytecode, packages).
+- **Instrumental:** Installs, configures, and verifies a professional Java toolchain (JDK + IDE) and uses it to compile and run programs.
+- **Communicative / argumentative:** Constructs and defends a reasoned position about the value of OOP in an academic forum.
+- **Self-management:** Follows a reproducible setup procedure, verifies results, and documents evidence of a working environment.
+
+---
+
+## 3. Objectives (measurable)
+
+By the end of Week 01, the student will be able to:
+
+1. **Explain** at least three concrete differences between the object-oriented and procedural paradigms, and locate OOP within the phases of the software life cycle (correctly identifying analysis, design, implementation, testing, and maintenance).
+2. **Install and verify** a working Java environment, demonstrating that `java -version` and `javac -version` return a valid JDK (version 17 LTS or newer) and that an IDE (IntelliJ IDEA, Eclipse, NetBeans, or VS Code) runs a program successfully.
+3. **Compile and run** a first Java program organized into a coherent package structure, from both the command line (`javac` / `java`) and the chosen IDE, producing correct console output.
+4. **Describe** the roles of the JDK, JRE, JVM, and bytecode, and explain the "write once, run anywhere" (WORA) principle in their own words.
+5. **Participate** in the opening forum with a substantive, evidence-based argument (minimum one original post plus one reply to a peer) about how OOP transforms the way we program.
 
 ---
 
 ## 4. Contents outline
 
-```
-Unit 1 · Week 01
-│
-├── Block A — The object-oriented mindset  (Session 1)
-│   ├── Programming paradigms: imperative → procedural → object-oriented
-│   ├── Procedural vs OOP: data + functions   vs   objects (state + behavior)
-│   ├── Core vocabulary: object, class, attribute, method, message, state, identity
-│   ├── The four pillars (preview): abstraction, encapsulation, inheritance, polymorphism
-│   └── OOP across the software life cycle and why it aids maintainability
-│
-└── Block B — The Java toolchain  (Session 2)
-    ├── Platform anatomy: JDK vs JRE vs JVM; bytecode; "write once, run anywhere"
-    ├── Installing the JDK; PATH / JAVA_HOME; verifying the install
-    ├── Choosing and configuring an IDE (IntelliJ / Eclipse / NetBeans / VS Code)
-    ├── Packages: purpose, naming convention, directory ↔ package mapping
-    └── First program: compile & run from CLI and IDE inside a package
-```
+| # | Topic | Where it is covered |
+|---|-------|---------------------|
+| 4.1 | What is a programming paradigm? Procedural vs. object-oriented | Session 01 |
+| 4.2 | Core intuition of OOP: objects, classes, state, and behavior | Session 01 |
+| 4.3 | The four pillars of OOP (preview): encapsulation, abstraction, inheritance, polymorphism | Session 01 |
+| 4.4 | OOP and the software life cycle | Session 01 |
+| 4.5 | The Java platform: JDK, JRE, JVM, and bytecode | Session 02 |
+| 4.6 | "Write once, run anywhere" (WORA) and the compilation model | Session 02 |
+| 4.7 | Installing and verifying the JDK; choosing and configuring an IDE | Session 02 |
+| 4.8 | Packages: purpose, naming conventions, and directory structure | Session 02 |
+| 4.9 | Compiling and running a first package-organized program (CLI + IDE) | Session 02 |
 
 ---
 
 ## 5. Session-by-session agenda
 
-| Session | Duration | Focus | Deliverable / evidence |
-|---|---|---|---|
-| **[Session 1](01-session/README.md)** | 90 min | **From procedures to objects.** The paradigm shift, the vocabulary, the four pillars at a glance, and OOP in the life cycle. Opening forum launched. | Completed comparison table (procedural vs OOP); initial forum post drafted. |
-| **[Session 2](02-session/README.md)** | 90 min | **Standing up the Java environment.** JDK/JVM anatomy, install & verify, IDE setup, packages, and a first compile-and-run of `HelloOOP` inside a package. | A verified environment (`java -version` screenshot) and a running packaged `HelloOOP`. |
+### Session 01 — The object-oriented paradigm and its role in the software life cycle
+- The idea of a paradigm; procedural code and its limits at scale.
+- Objects as units of *state + behavior*; the class-object relationship.
+- Preview of the four pillars of OOP.
+- Where OOP lives in the software life cycle.
+- Worked example: modeling the same problem procedurally vs. with objects (pseudocode).
+- Guided practice: identify objects, attributes, and responsibilities in a real-world scenario.
+- Exit ticket.
 
-> Total accompanied time: **3 hours**. The **6 hours of autonomous work** are spent finishing the environment install if needed, completing the forum (initial post + one reply), and — optionally — the [optional GitHub activity](optional-activity/README.md).
+> Detailed plan: [`01-session/README.md`](01-session/README.md)
+
+### Session 02 — The Java development environment and your first package-organized program
+- The Java platform: JDK vs. JRE vs. JVM; what bytecode is and why it matters.
+- WORA and the compile-then-run model.
+- Installing the JDK; verifying the installation; configuring an IDE.
+- Packages: what they are, why they exist, naming conventions, and how they map to folders.
+- Worked example: `Hello, OOP!` inside a package, compiled and run from the command line and the IDE.
+- Guided practice: create, compile, and run your own package-organized program.
+- Exit ticket.
+
+> Detailed plan: [`02-session/README.md`](02-session/README.md)
 
 ---
 
 ## 6. Key-concepts glossary
 
 | Term | Definition |
-|---|---|
-| **Paradigm** | A style of organizing a program and reasoning about computation (e.g., procedural, object-oriented, functional). |
-| **Procedural programming** | Style in which a program is a sequence of procedures/functions operating on separately declared data. |
-| **Object-Oriented Programming (OOP)** | Style in which a program is a set of interacting **objects** that bundle **state** (data) and **behavior** (operations). |
-| **Object** | A runtime entity with **identity**, **state** (attribute values), and **behavior** (methods it can perform). |
-| **Class** | The blueprint/template from which objects are created; defines the attributes and methods its objects will have. |
-| **Attribute (field)** | A named data element that holds part of an object's state. |
-| **Method** | A named operation (behavior) an object can perform, possibly changing its state or returning a value. |
-| **Message** | A request for an object to perform one of its methods (in Java, a method call). |
-| **Encapsulation** | Bundling state with the behavior that operates on it and hiding internal details behind a controlled interface. |
-| **Abstraction** | Modeling only the features of a thing that matter for the problem, ignoring the rest. |
-| **Inheritance** | Deriving a new class from an existing one, reusing and specializing its members. |
-| **Polymorphism** | The ability for the same message to produce behavior appropriate to the receiving object's actual type. |
-| **JDK** (Java Development Kit) | The full toolset to *develop* Java: compiler (`javac`), tools, and a bundled JRE. |
-| **JRE** (Java Runtime Environment) | What is needed to *run* Java: the JVM plus core libraries. (Modern JDKs ship the runtime; a standalone JRE is no longer distributed separately from Java 11 onward.) |
-| **JVM** (Java Virtual Machine) | The abstract machine that executes Java **bytecode**; the layer that makes Java portable across operating systems. |
-| **Bytecode** | The intermediate, platform-independent instructions produced by `javac` (stored in `.class` files) and executed by the JVM. |
-| **Package** | A namespace that groups related classes and maps to a directory path; declared with `package ...;` at the top of a file. |
-| **Classpath** | The list of locations where the JVM/compiler looks for `.class` files and libraries. |
-| **`PATH` / `JAVA_HOME`** | OS environment variables that let the shell find the JDK executables and let tools locate the JDK. |
-| **"Write once, run anywhere"** | Java's portability promise: the same compiled bytecode runs on any platform that has a compatible JVM. |
+|------|------------|
+| **Paradigm** | A style or way of structuring and reasoning about a program (e.g., procedural, object-oriented, functional). |
+| **Procedural programming** | A paradigm that organizes a program as a sequence of procedures/functions operating on shared data. |
+| **Object-oriented programming (OOP)** | A paradigm that organizes a program as a collection of interacting objects, each bundling data (state) and the operations on it (behavior). |
+| **Object** | A concrete entity in a program that has state (attributes) and behavior (methods); a runtime instance of a class. |
+| **Class** | A blueprint or template that defines the attributes and methods shared by all objects of a given type. |
+| **State** | The current data held by an object (the values of its attributes). |
+| **Behavior** | What an object can do — the methods it exposes. |
+| **Encapsulation** | Bundling data and the code that operates on it, and restricting direct access to internal state. |
+| **Abstraction** | Exposing only the essential features of an entity while hiding unnecessary detail. |
+| **Inheritance** | A mechanism by which a class acquires attributes and behavior from another class. |
+| **Polymorphism** | The ability for the same operation to behave differently depending on the object it acts on. |
+| **JDK (Java Development Kit)** | The full toolkit for developing Java programs: compiler (`javac`), tools, libraries, and a JRE. |
+| **JRE (Java Runtime Environment)** | The part needed to *run* Java programs: the JVM plus core libraries (bundled inside the JDK). |
+| **JVM (Java Virtual Machine)** | The abstract machine that executes Java bytecode, isolating programs from the underlying hardware/OS. |
+| **Bytecode** | Platform-independent intermediate instructions (`.class` files) produced by the Java compiler and executed by the JVM. |
+| **WORA** | "Write once, run anywhere": compiled bytecode runs on any platform with a compatible JVM. |
+| **Package** | A namespace that groups related classes, maps to a directory structure, and prevents naming collisions. |
+| **IDE** | Integrated Development Environment: an application that combines editor, compiler integration, debugger, and project tools. |
+| **LTS** | Long-Term Support: a JDK release supported for an extended period (e.g., Java 17, Java 21), recommended for learning and production. |
 
 ---
 
 ## 7. Achievement / self-check checklist
 
-Tick each item once you can do it **without help**:
+Use this checklist to confirm you have met the week's objectives. You should be able to tick **every** box before Week 02.
 
-- [ ] I can name at least **three concrete differences** between procedural and object-oriented programming.
-- [ ] I can define, in my own words, **object, class, attribute, method, and message**.
-- [ ] I can name the **four pillars** of OOP and give a one-line description of each.
-- [ ] I can explain **why OOP tends to improve maintainability** across the software life cycle.
-- [ ] I have a **working JDK**: `java -version` and `javac -version` both print a version.
-- [ ] I can explain the difference between **JDK, JRE, and JVM**, and what **bytecode** is.
-- [ ] I have an **IDE installed and configured** to use my JDK.
-- [ ] I created a class inside a **package** and understand the **directory ↔ package** mapping.
-- [ ] I **compiled and ran** a Java program from the **command line** and got the expected output.
-- [ ] I **compiled and ran** the same program from the **IDE**.
-- [ ] I posted my **initial forum argument** and **replied to at least one peer**.
-
-> If any box is unchecked after Session 2, resolve it during autonomous time before Week 02 — later weeks assume a working environment.
+- [ ] I can state, in my own words, what a programming paradigm is.
+- [ ] I can list at least three differences between procedural and object-oriented programming.
+- [ ] I can identify objects, their attributes, and their responsibilities in a described scenario.
+- [ ] I can name the four pillars of OOP and give a one-line description of each.
+- [ ] I can explain where OOP contributes across the software life cycle phases.
+- [ ] The command `java -version` returns a JDK 17+ (LTS) on my machine.
+- [ ] The command `javac -version` returns a matching compiler version.
+- [ ] I have installed and opened an IDE (IntelliJ IDEA / Eclipse / NetBeans / VS Code).
+- [ ] I can explain the difference between the JDK, the JRE, and the JVM.
+- [ ] I can explain what bytecode is and what "write once, run anywhere" means.
+- [ ] I created a Java program inside a named package with a correct folder structure.
+- [ ] I compiled and ran that program from the command line (`javac` + `java`).
+- [ ] I compiled and ran that program from my IDE.
+- [ ] I posted my opening-forum argument and replied to at least one classmate.
 
 ---
 
 ## 8. Resources index
 
-| Resource | Location | Purpose |
-|---|---|---|
-| Session 1 guide | [`01-session/README.md`](01-session/README.md) | Theory, worked example, and in-class practice for the OOP mindset. |
-| Session 2 guide | [`02-session/README.md`](02-session/README.md) | Environment setup, packages, and first compile-and-run. |
-| Readings & downloads | [`material/README.md`](material/README.md) | Curated reference index with short summaries; **download area for the week PDF**. |
-| Optional activity | [`optional-activity/README.md`](optional-activity/README.md) | Extra practice delivered **via GitHub** (not Moodle), with rubric. |
-| Interactive OVA (SCORM) | `00-pedagogical-agreements/ova-programacion-orientada-objetos/` | Interactive learning object embedded in Moodle. |
-| Course overview | [`../00-course/README.md`](../00-course/README.md) | RAA, methodology, assessment plan, and base rubrics for the whole course. |
+- **Session 01 plan and theory:** [`01-session/README.md`](01-session/README.md)
+- **Session 02 plan and theory:** [`02-session/README.md`](02-session/README.md)
+- **Curated readings and downloadable material (PDF area):** [`material/README.md`](material/README.md)
+- **Optional practice (submitted via GitHub):** [`optional-activity/README.md`](optional-activity/README.md)
+
+### External references (open, authoritative)
+- Oracle, *The Java™ Tutorials* — "Getting Started" and "Learning the Java Language." https://docs.oracle.com/javase/tutorial/
+- Oracle, *Java Platform, Standard Edition Documentation* (current LTS). https://docs.oracle.com/en/java/javase/
+- Eclipse Adoptium — Temurin OpenJDK downloads. https://adoptium.net/
+- JetBrains IntelliJ IDEA documentation. https://www.jetbrains.com/help/idea/
+- Horstmann, C. *Core Java, Volume I — Fundamentals* (latest edition), Pearson.
+- Bloch, J. *Effective Java* (3rd ed.), Addison-Wesley (reference for later weeks).
 
 ---
 
-## 9. Bibliography for the week
+## 9. How this week is assessed (Corte 1 context)
 
-**Core (internal, CORHUILA)**
-- Sommerville, I. (2011). *Software Engineering* (9th ed.). Pearson. — Ch. 1–2 (software processes and the life cycle) frame *where* design activity like OOP sits.
+This week belongs to **Corte 1**. Evidence gathered this week that feeds the first-cut grade:
 
-**Complementary (external)**
-- Deitel, P., & Deitel, H. *Java: How to Program.* — Introductory chapters on the Java platform, the JDK/JVM, and a first program.
-- Oracle. *The Java™ Tutorials — Getting Started* and *Learning the Java Language: Object-Oriented Programming Concepts.* (official, free)
-- Bloch, J. *Effective Java* (3rd ed.). — Consulted progressively; this week only as orientation to what "good Java" looks like.
+- **Environment verification** (screenshots of `java -version`, `javac -version`, and your program running in the IDE).
+- **Opening-forum participation** (argumentation quality — see the forum rubric in the LMS).
+- **In-class practice deliverables** from Sessions 01 and 02.
+- The **optional activity** (extra credit / reinforcement) is submitted through GitHub — see [`optional-activity/README.md`](optional-activity/README.md).
 
-*(Full annotations and links are in [`material/README.md`](material/README.md).)*
-
----
-
-*Week 01 guide, Unit 1. Topic, RAA, objectives, and assessment period taken from the official CORHUILA syllabus (code 82759, 2026-B).*
+> Note: the `material/` folder is a **download area for a course PDF**, not a submission box. Assignments that must be turned in are described in each activity's README and, where indicated, submitted via GitHub rather than Moodle.

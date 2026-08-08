@@ -1,144 +1,94 @@
 # Week 07 - Polymorphism and Method Overriding (Dynamic Dispatch)
 
-**Course:** Object-Oriented Programming and Design
-**Program:** 2026-B
+**Program:** Object-Oriented Programming and Design
+**Term:** 2026-B
 **Unit:** Unit 2 - Design principles and modularity
-**Weekly topic:** Polymorphism and method overriding (dynamic dispatch)
-**Assessment period:** Corte 2
+**Assessment period:** Corte 2 (second grading cut)
 **Learning outcome (RAA):** 90_82759
 
 ---
 
 ## 1. Overview
 
-This week we study **polymorphism**, one of the four pillars of object-oriented
-programming (alongside abstraction, encapsulation, and inheritance) and arguably
-the pillar that makes object-oriented *design* worthwhile. Inheritance lets us
-say *"a `Circle` is a `Shape`"*; polymorphism is what lets us **write code that
-works with any `Shape` and lets each concrete shape decide, at runtime, how it
-behaves**.
+Week 07 is the conceptual center of Unit 2. Having built inheritance hierarchies in
+previous weeks, we now study the mechanism that gives those hierarchies their real
+power: **polymorphism**. When a program holds a reference of a *parent* type but the
+object it points to is actually an *instance of a subclass*, the language must decide,
+**at run time**, which version of an overridden method to execute. That decision
+mechanism is called **dynamic dispatch** (also *late binding* or *virtual dispatch*).
 
-The central mechanism is **dynamic dispatch** (also called *late binding* or
-*virtual method invocation*): when you call a method through a reference of a
-parent type, the runtime — not the compiler — selects the implementation that
-belongs to the object's *actual* class. This one idea is what allows a single
-loop such as
+Mastering this topic changes how you design software. Instead of writing long
+`if/else` or `switch` ladders that test an object's type, you write code against an
+abstraction and let each subclass supply its own behavior. New behavior is added by
+writing a new class, not by editing existing code. This is the foundation of the
+Open/Closed Principle and of nearly every design pattern you will meet later.
 
-```java
-for (Shape s : shapes) {
-    total += s.area();
-}
-```
-
-to correctly compute the area of circles, rectangles, and triangles without a
-single `if` or `switch` checking the type. Learning to *design for* this
-behavior — rather than fighting it with type checks — is the skill that
-separates procedural code dressed up in classes from genuinely object-oriented
-code.
-
-By the end of the week you will be able to override inherited methods to
-specialize behavior, invoke methods polymorphically through parent-type
-references, explain how the runtime resolves which method runs, and build a
-routine that processes a heterogeneous collection of objects uniformly.
-
-> **Language note.** Examples are given primarily in **Java** because it makes
-> the compile-time type / run-time type distinction explicit and enforces
-> `@Override`. Where a concept differs meaningfully in **Python** or **C#** we
-> point it out, because the *design idea* is language-independent.
+> Working language of all deliverables and discussion this week: **English**.
 
 ---
 
-## 2. Learning outcome and competencies addressed
+## 2. RAA and competencies addressed
 
-### Learning outcome (RAA 90_82759)
+| Code | Description |
+|------|-------------|
+| **RAA 90_82759** | The student applies design principles and modularity mechanisms of the object-oriented paradigm to build extensible, maintainable software. |
 
-> The student designs and implements modular object-oriented solutions that
-> apply polymorphism and dynamic dispatch to achieve extensible, loosely
-> coupled behavior, and explains how method resolution occurs at runtime.
+**Competencies developed this week**
 
-### Competencies
-
-| Type | Competency |
-|------|------------|
-| **Disciplinary** | Applies inheritance and polymorphism to model families of related types and to eliminate type-based conditional logic. |
-| **Disciplinary** | Distinguishes overriding from overloading and from hiding, and predicts which method executes for a given call. |
-| **Cognitive** | Explains the mechanics of dynamic dispatch (virtual method tables / method resolution order) and its cost/benefit trade-offs. |
-| **Procedural** | Implements and tests routines that process polymorphic collections. |
-| **Attitudinal / transversal** | Values open-closed, extensible design; writes code that new subclasses can extend without modification of existing code. |
+- **Cognitive:** Explains the difference between compile-time type and run-time type, and how dynamic dispatch resolves method calls.
+- **Procedural:** Overrides inherited methods correctly and processes heterogeneous collections through a common supertype.
+- **Attitudinal:** Values extensibility and low coupling as quality attributes, and justifies design choices with technical arguments.
 
 ---
 
-## 3. Weekly objectives (measurable)
+## 3. Learning objectives (measurable)
 
-By the end of Week 07 the student will be able to:
+By the end of Week 07, the student will be able to:
 
-1. **Override** at least three inherited methods in subclasses to provide
-   specialized behavior, correctly using the language's override mechanism
-   (`@Override` in Java) and honoring the parent method's contract.
-2. **Invoke** methods **polymorphically** through parent-type references and
-   predict, before running the program, which implementation executes.
-3. **Explain** in precise terms how **dynamic dispatch** selects the method
-   implementation at runtime, including the roles of the *declared
-   (compile-time) type* and the *actual (run-time) type*, and contrast this with
-   static binding.
-4. **Implement** a routine that iterates over a **collection of objects of
-   different concrete types** and processes each one polymorphically, with **no
-   `instanceof` / type-switch** driving the core logic.
-5. **Differentiate** overriding from overloading and field/`static` hiding, and
-   justify when substitutability (Liskov) is preserved or broken.
+1. **Override** at least one inherited method in a subclass to provide specialized behavior, using the correct syntax and the `@Override` annotation (or the language equivalent).
+2. **Invoke** methods polymorphically through a parent-type reference and predict which implementation runs.
+3. **Explain**, in writing and with a diagram, how dynamic dispatch selects a method implementation at run time, distinguishing static (declared) type from dynamic (actual) type.
+4. **Implement** a routine that iterates over a collection of objects of different subclasses and processes each one uniformly through a common supertype.
+5. **Distinguish** overriding from overloading and from field hiding, and identify at least three common overriding pitfalls.
+
+Each objective is written to be observable and assessable through the in-class practices, the exit tickets, and the optional GitHub activity.
 
 ---
 
 ## 4. Contents outline
 
 1. **From inheritance to polymorphism**
-   - Recap: `is-a`, subtype, and the substitution principle.
-   - Subtype polymorphism vs. ad-hoc polymorphism (overloading) vs. parametric
-     polymorphism (generics) — naming the landscape.
+   - Subtype polymorphism ("an object of type S can be used where a T is expected").
+   - The "is-a" relationship and the Liskov Substitution intuition.
 2. **Method overriding**
-   - Rules: same signature, covariant return types, access widening,
-     exceptions.
-   - `@Override`, calling `super.method()`, and the `final` brake.
-   - Overriding vs. overloading vs. hiding (static methods, fields).
-3. **Dynamic dispatch (the runtime engine)**
-   - Declared type vs. actual type.
-   - Virtual method tables (vtables) in Java/C++; Method Resolution Order (MRO)
-     in Python.
-   - Static binding cases: `static`, `private`, `final`, constructors, fields.
-4. **Designing with polymorphism**
-   - Replacing `switch`/`instanceof` with polymorphic dispatch.
-   - Abstract methods and the "template of behavior" idea.
-   - Open-Closed Principle and the Liskov Substitution Principle in practice.
-5. **Processing polymorphic collections**
-   - Uniform iteration over heterogeneous objects.
-   - Pitfalls: casting, `NullPointerException`, broken contracts.
+   - Rules: same signature, compatible return type (covariance), access not narrowed.
+   - The `@Override` annotation and why it prevents silent bugs.
+   - `super.method()` to extend rather than replace inherited behavior.
+3. **Dynamic dispatch (late binding)**
+   - Static type vs. dynamic type.
+   - The conceptual virtual method table (vtable).
+   - What is resolved at compile time and what is deferred to run time.
+4. **Overriding vs. overloading vs. hiding**
+   - Overloading = same name, different parameters, resolved at compile time.
+   - Hiding of `static` methods and of fields (no polymorphism).
+5. **Polymorphic processing of collections**
+   - One loop, many behaviors: the canonical `for each shape: shape.area()` pattern.
+   - Removing `instanceof`/`switch` type ladders.
+6. **Pitfalls and good practice**
+   - Calling overridable methods from a constructor.
+   - Breaking substitutability; equals/hashCode consistency; covariant returns.
 
 ---
 
 ## 5. Session-by-session agenda
 
-### Session 1 - Overriding and the mechanics of dynamic dispatch (2 h)
+| Session | Focus | Key deliverable |
+|---------|-------|-----------------|
+| **Session 1** | Method overriding and the mechanics of dynamic dispatch. Static vs. dynamic type, `@Override`, `super`, the vtable model. Worked example: a `Payment` hierarchy. | Exit ticket: predict-the-output quiz. |
+| **Session 2** | Polymorphic processing of collections; overriding vs. overloading vs. hiding; design pitfalls. Worked example: a renderer that draws a `List<Shape>`. | Exit ticket: refactor an `instanceof` ladder into polymorphic code. |
 
-| Time | Activity |
-|------|----------|
-| 0:00-0:15 | Warm-up: predict-the-output quiz on a small inheritance hierarchy. |
-| 0:15-0:55 | Theory: overriding rules, `@Override`, `super`, overriding vs. overloading vs. hiding. |
-| 0:55-1:20 | Worked example: `Employee` payroll hierarchy with overridden `monthlySalary()`. |
-| 1:20-1:50 | Guided practice: students override methods in a `Notification` hierarchy. |
-| 1:50-2:00 | Wrap-up + exit ticket. |
-
-### Session 2 - Polymorphic references and processing collections (2 h)
-
-| Time | Activity |
-|------|----------|
-| 0:00-0:10 | Recap of Session 1; connect to dynamic dispatch internals. |
-| 0:10-0:45 | Theory: declared vs. actual type, vtables/MRO, static binding exceptions. |
-| 0:45-1:15 | Worked example: `Shape` renderer that processes a `List<Shape>` polymorphically. |
-| 1:15-1:50 | Guided practice: `PaymentMethod` processor over a mixed collection; remove an `instanceof` chain. |
-| 1:50-2:00 | Wrap-up, self-check, exit ticket, preview of optional activity. |
-
-Detailed plans: [`01-session/README.md`](01-session/README.md) and
-[`02-session/README.md`](02-session/README.md).
+A detailed, timed agenda lives inside each session's `README.md`
+(`01-session/`, `02-session/`).
 
 ---
 
@@ -146,47 +96,39 @@ Detailed plans: [`01-session/README.md`](01-session/README.md) and
 
 | Term | Definition |
 |------|------------|
-| **Polymorphism** | The ability of a single interface (a method call through a supertype) to operate on values of many types, each responding in its own way. Literally "many forms." |
-| **Subtype polymorphism** | Polymorphism achieved through inheritance/interfaces: a variable of type `T` may hold an instance of any subtype of `T`. The focus of this week. |
-| **Method overriding** | Providing, in a subclass, a new implementation of a method already defined in a superclass, keeping the same signature so it *replaces* the inherited one for instances of the subclass. |
-| **Method overloading** | Defining multiple methods with the *same name but different parameter lists* in the same scope. Resolved by the **compiler** (static). Not polymorphism in the runtime sense. |
-| **Dynamic dispatch / late binding** | The runtime mechanism that selects the method implementation based on the **actual** class of the object, not the declared type of the reference. |
-| **Static binding / early binding** | Method selection fixed at **compile time**. Applies to `static`, `private`, `final` methods, and field access. |
-| **Declared (compile-time) type** | The type written in the variable's declaration. Determines *which methods are callable* and is checked by the compiler. |
-| **Actual (run-time) type** | The class of the object the reference actually points to. Determines *which overridden implementation runs*. |
-| **Virtual method** | A method eligible for dynamic dispatch. In Java, instance methods are virtual by default; in C++/C# you opt in with `virtual`. |
-| **vtable (virtual method table)** | A per-class table of pointers to method implementations; each object carries a pointer to its class's vtable, enabling O(1) dispatch. |
-| **MRO (Method Resolution Order)** | Python's linearized ordering of a class and its ancestors (C3 linearization) used to resolve which method runs. |
-| **Abstract method** | A method declared without a body; forces subclasses to provide an implementation. Enables designing against behavior that must exist but has no default. |
-| **`super`** | Keyword to invoke the superclass's version of a method from within an override (e.g., extend rather than fully replace behavior). |
+| **Polymorphism** | The ability of a single interface (a method call on a supertype reference) to invoke different implementations depending on the actual object. |
+| **Subtype polymorphism** | The specific form used here: a subclass instance is usable wherever the superclass type is expected. |
+| **Method overriding** | Providing, in a subclass, a new implementation of an instance method inherited from a superclass, with the same signature. |
+| **Dynamic dispatch / late binding** | The run-time process of selecting which overridden method implementation to execute, based on the object's actual (dynamic) type. |
+| **Static type (declared type)** | The type written in the variable declaration; known at compile time; determines *which methods can be called*. |
+| **Dynamic type (run-time type)** | The class the object was actually instantiated from; determines *which overriding implementation runs*. |
+| **`super`** | Keyword to invoke the superclass version of a method or its constructor, letting a subclass extend rather than fully replace inherited behavior. |
+| **`@Override`** | An annotation that asks the compiler to verify a method really overrides a supertype method; catches typos and signature mismatches. |
+| **Virtual method table (vtable)** | The conceptual per-class table of function pointers the runtime consults to resolve a virtual call. |
+| **Overloading** | Multiple methods with the same name but different parameter lists in the same scope; resolved at compile time (not polymorphism). |
 | **Covariant return type** | An override may return a subtype of the type returned by the overridden method. |
-| **Upcasting** | Treating a subclass instance through a superclass reference (always safe, implicit). This is what enables polymorphic calls. |
-| **Downcasting** | Converting a supertype reference back to a subtype (explicit, may fail at runtime with `ClassCastException`). A design smell when overused. |
-| **Liskov Substitution Principle (LSP)** | Subtypes must be usable anywhere their supertype is expected without breaking correctness. The contract polymorphism relies on. |
-| **Open-Closed Principle (OCP)** | Software entities should be open for extension but closed for modification; polymorphism is the primary tool for achieving it. |
+| **Upcasting** | Treating a subclass reference as its superclass type; always safe and implicit. |
+| **Downcasting** | Treating a superclass reference as a subclass type; must be explicit and can fail at run time. |
+| **Liskov Substitution Principle (LSP)** | A subtype must be usable anywhere its supertype is expected without breaking correctness. |
 
 ---
 
 ## 7. Achievement / self-check checklist
 
-Mark each item once you can do it **without looking at notes**:
+Tick each item once you can do it **without notes**:
 
-- [ ] I can state the difference between the **declared type** and the **actual
-  type** of a reference and say which one determines the method that runs.
-- [ ] I can write a subclass that **overrides** a method and correctly use
-  `@Override` and `super`.
-- [ ] I can explain **why** overriding a `static` method does *not* give dynamic
-  dispatch (it is *hiding*, not overriding).
-- [ ] Given a short program, I can **predict the exact output** of polymorphic
-  calls before running it.
-- [ ] I can rewrite an `if (x instanceof A) ... else if (x instanceof B) ...`
-  chain as **polymorphic dispatch**.
-- [ ] I can write a loop that processes a **`List` of mixed subtypes**
-  uniformly.
-- [ ] I can explain what a **vtable** is at a conceptual level and why dispatch
-  is roughly constant-time.
-- [ ] I can identify an **LSP violation** and explain how it breaks polymorphic
-  code.
+- [ ] I can override an inherited method and mark it with `@Override`.
+- [ ] I can explain the difference between the static type and the dynamic type of a reference.
+- [ ] I can predict which method runs for a given supertype reference pointing to a subclass instance.
+- [ ] I can use `super.method()` to reuse and extend inherited behavior.
+- [ ] I can write a single loop that processes a collection of mixed subtypes polymorphically.
+- [ ] I can explain why dynamic dispatch enables the Open/Closed Principle.
+- [ ] I can distinguish overriding from overloading and from field/`static` hiding.
+- [ ] I can name at least three overriding pitfalls and how to avoid them.
+- [ ] I can refactor an `instanceof`/`switch` type ladder into polymorphic code.
+
+If any box is unchecked, revisit the corresponding section in the session notes or the
+readings in `material/README.md`.
 
 ---
 
@@ -194,27 +136,19 @@ Mark each item once you can do it **without looking at notes**:
 
 | Resource | Location | Purpose |
 |----------|----------|---------|
-| Session 1 plan | [`01-session/README.md`](01-session/README.md) | Overriding + dispatch mechanics. |
-| Session 2 plan | [`02-session/README.md`](02-session/README.md) | Polymorphic references + collections. |
-| Reading & download area | [`material/README.md`](material/README.md) | Curated readings, summaries, PDF download. |
-| Optional activity | [`optional-activity/README.md`](optional-activity/README.md) | GitHub-submitted practice + rubric. |
-
-### External references (for the curious)
-
-- Bloch, J. *Effective Java*, 3rd ed. — Items 40 (`@Override`), 52 (overloading
-  vs. overriding), 20-22 (interfaces & abstract classes).
-- Gamma et al. *Design Patterns* — Strategy and Template Method patterns as
-  applied polymorphism.
-- Martin, R. C. *Agile Software Development, Principles, Patterns, and
-  Practices* — OCP and LSP chapters.
-- Oracle Java Tutorials — "Polymorphism" and "Overriding and Hiding Methods."
+| Session 1 notes | [`01-session/README.md`](01-session/README.md) | Theory + worked example + guided practice on overriding & dispatch. |
+| Session 2 notes | [`02-session/README.md`](02-session/README.md) | Polymorphic collections + overriding vs. overloading + pitfalls. |
+| Readings & downloads | [`material/README.md`](material/README.md) | Curated readings with summaries; PDF download area. |
+| Optional activity | [`optional-activity/README.md`](optional-activity/README.md) | Extra practice submitted via GitHub, with rubric. |
 
 ---
 
 ## 9. How this week connects
 
-- **Looks back to** Week 06 (inheritance and abstract classes): polymorphism is
-  the *payoff* of inheritance.
-- **Looks forward to** design patterns (Strategy, Template Method, State,
-  Visitor) and to interface-based design, all of which are polymorphism applied
-  systematically.
+- **Looks back to:** Week 05-06 (inheritance, `extends`, `super`, abstract classes) — polymorphism only makes sense on top of an inheritance hierarchy.
+- **Looks forward to:** Interfaces and abstract types (Week 08), and design patterns such as *Strategy*, *Template Method*, and *State*, all of which are dynamic dispatch put to work.
+
+> **Code convention this week:** Examples are shown primarily in **Java** because its
+> keyword set (`extends`, `@Override`, `super`) makes the mechanics explicit. The same
+> ideas transfer directly to C#, C++ (`virtual`), Python, and Kotlin; language notes are
+> given where the behavior differs.

@@ -1,486 +1,356 @@
 # Week 07 - Session 2
 
-## Polymorphic References and Processing Collections
+## Polymorphic Processing of Collections, Overriding vs. Overloading, and Design Pitfalls
 
-**Course:** Object-Oriented Programming and Design (2026-B)
-**Unit 2:** Design principles and modularity
-**Assessment period:** Corte 2 · **RAA:** 90_82759
-**Duration:** 2 hours
+**Unit 2 - Design principles and modularity | Corte 2 | RAA 90_82759**
 
 ---
 
 ## 1. Session objective
 
-By the end of this session the student will be able to **invoke methods
-polymorphically through parent-type references**, **explain how dynamic dispatch
-selects the implementation at runtime**, and **implement a routine that processes
-a collection of heterogeneous objects polymorphically** — with no type-switch
-driving the logic.
-
-This session targets weekly objectives **2, 3, and 4**.
+By the end of this session the student will be able to **implement a routine that
+processes a collection of objects polymorphically** through a common supertype,
+**distinguish overriding from overloading and from hiding**, and **recognize and avoid the
+most common overriding pitfalls**.
 
 ---
 
-## 2. Timed agenda
+## 2. Timed agenda (110 minutes)
 
-| Time | Segment | Activity |
-|------|---------|----------|
-| 0:00-0:10 | Recap | Connect Session 1's overriding to today's dispatch internals (§3). |
-| 0:10-0:45 | Theory | Declared vs. actual type; vtables & MRO; static-binding exceptions (§4). |
-| 0:45-1:15 | Worked example | `Shape` renderer over a `List<Shape>` (§5). |
-| 1:15-1:50 | Guided practice | `PaymentMethod` processor; kill an `instanceof` chain (§6). |
-| 1:50-2:00 | Wrap-up | Self-check, exit ticket, optional-activity preview (§7). |
-
----
-
-## 3. Recap (10 min)
-
-In Session 1 we established:
-
-- **Overriding** replaces an inherited instance method.
-- The **actual (runtime) type** of the object — not the **declared type** of the
-  reference — decides which override runs.
-- `static`, `private`, `final`, fields, and constructors are the exceptions
-  (statically bound).
-
-Today's question: *how* does the runtime actually find the right method, and how
-do we exploit this to write a single routine that handles many types?
+| Time | Activity |
+|------|----------|
+| 0:00 - 0:10 | Recap of Session 1; quick re-check of the exit-ticket answer. |
+| 0:10 - 0:30 | Theory block 1: polymorphic processing of collections. |
+| 0:30 - 0:50 | Theory block 2: overriding vs. overloading vs. hiding. |
+| 0:50 - 1:05 | Theory block 3: overriding pitfalls and good practice. |
+| 1:05 - 1:30 | Worked example: a `Shape` renderer over a `List<Shape>`. |
+| 1:30 - 1:50 | Guided practice: refactor an `instanceof` ladder into polymorphic code. |
+| 1:50 - 1:55 | Wrap-up and exit ticket. |
 
 ---
 
-## 4. Theory notes (35 min)
+## 3. Theory notes
 
-### 4.1 Two types for every reference
+### 3.1 Polymorphic processing of collections
 
-Every reference expression has **two** types that matter:
-
-```
-        Shape s = new Circle();
-        ^^^^^     ^^^^^^^^^^^^
-   declared type    the object whose
-   (compile time)   actual type is Circle
-                    (run time)
-```
-
-- **Declared type (`Shape`)** — decided by the compiler. It answers *"which
-  methods am I even allowed to call?"* You can call `s.area()` only because
-  `Shape` declares `area()`. You cannot call `s.radius()` even if the object is a
-  `Circle`, because `Shape` has no `radius()`.
-- **Actual type (`Circle`)** — known only at run time. It answers *"which
-  implementation of a callable, overridable method actually executes?"*
-
-> **The master rule:**
-> The **declared type** decides *what you may call* (visibility / compile-time
-> checking). The **actual type** decides *which overridden version runs*
-> (dynamic dispatch).
-
-### 4.2 Upcasting is what makes polymorphism possible
-
-Assigning a subtype instance to a supertype reference is **upcasting**, and it is
-always safe and implicit:
+The everyday payoff of dynamic dispatch: hold a collection typed by the **supertype**, and
+call an overridden method on each element. The runtime dispatches every call to the right
+subclass automatically.
 
 ```java
-Shape s = new Circle(3.0);   // upcast: a Circle IS-A Shape
-```
+List<Shape> shapes = List.of(new Circle(2), new Rectangle(3, 4), new Triangle(6, 2));
 
-Now `s` can be passed to *any* code that expects a `Shape`. That code calls
-`s.area()` and gets the circle's area — without knowing or caring that it is a
-circle. **This is the entire point:** we write code once, against the general
-type, and it works for every present and future subtype.
-
-Going the other way — **downcasting** — is explicit and can fail:
-
-```java
-Shape s = new Circle(3.0);
-Circle c = (Circle) s;       // OK at runtime: s really is a Circle
-Rectangle r = (Rectangle) s; // compiles, but throws ClassCastException at runtime
-```
-
-Frequent downcasting (usually guarded by `instanceof`) is a **design smell**: it
-usually means you should have added a polymorphic method instead (see §6).
-
-### 4.3 How dynamic dispatch works: the vtable
-
-Conceptually, dispatch is a table lookup, not a search.
-
-When a class with virtual (overridable) methods is loaded, the runtime builds a
-**virtual method table (vtable)**: an array where slot *k* holds a pointer to the
-implementation of the *k*-th method for that class. Every object carries a hidden
-pointer to its class's vtable.
-
-```
-   Shape vtable                Circle vtable              Rectangle vtable
-  +----------------+          +--------------------+     +----------------------+
-  | area()  -> Shape| slot 0  | area() -> Circle    |    | area() -> Rectangle  |
-  | name()  -> Shape| slot 1  | name() -> Shape*    |    | name() -> Shape*     |
-  +----------------+          +--------------------+     +----------------------+
-                              (*inherited, not overridden -> points to Shape's)
-
-   Object on heap:  [ vptr | radius=3.0 ]
-                       |
-                       +--> Circle vtable
-```
-
-A call `s.area()` compiles to roughly: *"read the object's vptr, jump to slot 0,
-call whatever is there."* Because the object of actual type `Circle` points to
-the `Circle` vtable, slot 0 is `Circle.area()`. The declared type `Shape` only
-determined *which slot number* (the offset) to use — the object determined *which
-table*. This is **O(1)**: one indirection, no type comparisons.
-
-- If a subclass **overrides** a method, its vtable slot points to the new code.
-- If it **inherits** unchanged, the slot points to the ancestor's code.
-- `static`/`private`/`final` methods are **not** in the virtual dispatch path —
-  the compiler emits a direct call, which is why they cannot be overridden.
-
-### 4.4 The same idea in Python: MRO
-
-Python has no vtables but achieves the same result with the **Method Resolution
-Order (MRO)** — a linearized list of a class and its ancestors computed by the
-**C3 linearization** algorithm. A method call walks the MRO and uses the first
-class that defines the attribute.
-
-```python
-class Shape:
-    def area(self): raise NotImplementedError
-
-class Circle(Shape):
-    def __init__(self, r): self.r = r
-    def area(self): return 3.14159 * self.r ** 2
-
-c = Circle(3)
-print(type(c).__mro__)   # (Circle, Shape, object)
-print(c.area())          # 28.27...  -> found in Circle first
-```
-
-Python is *dynamically typed*: there is no "declared type" enforced by a
-compiler, but the **actual object still decides** which method runs — the same
-polymorphic behavior, resolved by MRO instead of a vtable.
-
-### 4.5 Static binding recap (the exceptions)
-
-To predict output correctly, remember what is **NOT** dynamically dispatched:
-
-| Case | Resolved by |
-|------|-------------|
-| `static` method call | declared type (compile time) — this is *hiding* |
-| field access (`obj.field`) | declared type (compile time) |
-| `private` method | the class that defines it |
-| `final` method | its single implementation |
-| overloaded method choice | declared types of the **arguments** (compile time) |
-
-A subtle combined trap:
-
-```java
-class A { int x = 1; int get() { return x; } }
-class B extends A { int x = 2; int get() { return x; } }
-
-A ref = new B();
-System.out.println(ref.x);      // 1  -> field access uses DECLARED type A
-System.out.println(ref.get());  // 2  -> method is overridden -> ACTUAL type B
-```
-
-Fields are hidden (declared type wins); methods are overridden (actual type
-wins). Mixing them is a favorite exam question.
-
-### 4.6 The contract: LSP and OCP made concrete
-
-Polymorphic code trusts that every subtype honors the supertype's promises —
-the **Liskov Substitution Principle**. A classic violation:
-
-```java
-class Rectangle {
-    protected int w, h;
-    void setW(int w) { this.w = w; }
-    void setH(int h) { this.h = h; }
-    int area() { return w * h; }
-}
-class Square extends Rectangle {   // "a square is-a rectangle"? mathematically yes...
-    @Override void setW(int w) { this.w = this.h = w; }  // forces both equal
-    @Override void setH(int h) { this.w = this.h = h; }
+double totalArea = 0;
+for (Shape s : shapes) {      // s is a Shape (static type)
+    totalArea += s.area();    // dispatched to Circle/Rectangle/Triangle.area()
 }
 ```
 
-Code that reasonably expects `setW(5); setH(4); area() == 20` **breaks** for a
-`Square` (it returns 16). The subtype is *not* substitutable, so polymorphic code
-becomes unreliable. Lesson: overriding must preserve the *behavioral* contract,
-not just the signatures.
+One loop, three (or three hundred) behaviors. The loop expresses the *policy* ("sum the
+areas"); each class supplies the *mechanism* ("here is how I compute my area"). This is the
+canonical shape of polymorphic code:
 
-When subtypes are well-behaved, you get the **Open-Closed Principle**: the
-processing routine (`for (Shape s : shapes) total += s.area();`) is **closed for
-modification** yet **open for extension** — new shapes plug in without touching
-it.
+```
+for each element typed as SUPERTYPE:
+    element.overriddenMethod()   // runtime picks the right body
+```
+
+The same pattern powers rendering pipelines, report generators, event handlers, plugin
+systems, and the *Strategy* / *Visitor* / *Composite* patterns you will study later.
+
+#### The mental contrast
+
+```
+TYPE-LADDER STYLE                    POLYMORPHIC STYLE
+(one method knows all types)         (each type knows itself)
+
+double area(Shape s) {               for (Shape s : shapes)
+  if (s instanceof Circle) ...          total += s.area();
+  else if (s instanceof Rect) ...
+  else if (s instanceof Tri) ...     // add a new Shape subclass:
+}                                     //  -> loop unchanged
+// add a new shape:                   //  -> ladder untouched
+//  -> must edit this method
+//  -> and every similar ladder
+```
+
+### 3.2 Overriding vs. overloading vs. hiding
+
+These three are constantly confused. Only **overriding** is polymorphic.
+
+| Feature | Overriding | Overloading | Hiding |
+|---------|-----------|-------------|--------|
+| What varies | Same signature, different class (subclass) | Same name, **different parameters**, same scope | `static` methods / fields with same name in subclass |
+| Resolved | **Run time** (dynamic type) | **Compile time** (static types of arguments) | **Compile time** (static type of reference) |
+| Polymorphic? | **Yes** | No | No |
+| Keyword hint | `@Override` | none | none (accidental!) |
+
+#### Overloading (compile-time, by argument types)
+
+```java
+class Printer {
+    void print(int i)    { System.out.println("int: " + i); }
+    void print(String s) { System.out.println("str: " + s); }
+    void print(double d) { System.out.println("dbl: " + d); }
+}
+```
+
+The compiler picks the method from the **static types of the arguments**. No object's
+run-time type is involved. `print(5)` binds to `print(int)` forever, decided when you
+compile.
+
+#### Hiding — the trap (no polymorphism)
+
+```java
+class Base {
+    static String who() { return "Base"; }   // static
+    String name = "base-field";               // field
+}
+class Sub extends Base {
+    static String who() { return "Sub"; }     // HIDES, does not override
+    String name = "sub-field";                // HIDES the field
+}
+
+Base b = new Sub();
+System.out.println(b.who());   // "Base"  <- resolved by STATIC type, not dispatched
+System.out.println(b.name);    // "base-field" <- fields are NEVER dispatched
+System.out.println(((Sub) b).who());  // "Sub" <- different static type -> different pick
+```
+
+> **Takeaway:** Only **non-static, non-final, non-private instance methods** participate in
+> dynamic dispatch. Fields and `static` methods are bound to the *declared* type. If you
+> ever see behavior "not overriding," check for `static`, a field, or a signature mismatch.
+
+### 3.3 Overriding pitfalls and good practice
+
+1. **Silent non-override (signature typo).** Forgetting `@Override` and mistyping the name
+   or parameters creates a new method that dispatch never calls. **Fix:** always annotate.
+
+2. **Calling an overridable method from a constructor.** When a superclass constructor runs,
+   the subclass part is not initialized yet, but dispatch still calls the *subclass* override
+   — which may read `null`/`0` fields.
+
+   ```java
+   class Base {
+       Base() { init(); }              // calls overridable method during construction
+       void init() { }
+   }
+   class Sub extends Base {
+       private String value = "ready";
+       @Override void init() {
+           System.out.println(value);  // prints null! field not yet assigned
+       }
+   }
+   ```
+   **Fix:** don't call overridable methods from constructors; make such methods `final` or
+   `private`, or use a factory/`init()` called after construction.
+
+3. **Breaking the Liskov Substitution Principle.** An override that strengthens
+   preconditions or weakens postconditions (e.g., throws where the parent promised not to,
+   or returns invalid results) makes the subtype an unsafe substitute. **Fix:** honor the
+   parent's contract.
+
+4. **Inconsistent `equals`/`hashCode`.** Overriding `equals` without `hashCode` (or vice
+   versa) breaks hash-based collections. **Fix:** override both together and keep them
+   consistent.
+
+5. **Narrowing access or broadening checked exceptions.** The compiler forbids this, but the
+   intent (making a subtype *less* capable) usually signals a design smell.
+
+6. **Overusing inheritance where composition fits.** If you only want to reuse code, not to
+   be substitutable, prefer composition. Override to *specialize a type*, not merely to
+   borrow methods.
 
 ---
 
-## 5. Worked example (30 min) - A polymorphic shape renderer
+## 4. Worked example: a `Shape` renderer over a collection
 
-**Problem.** Build a drawing report that, given a mixed list of shapes, prints
-each shape's description, computes total area, and finds the largest shape —
-**without any `instanceof` or type switch**.
+**Goal:** compute and render a mixed list of shapes with a single polymorphic routine, and
+add a new shape without touching that routine.
 
-### 5.1 The type hierarchy
+### 4.1 The hierarchy
 
 ```java
-import java.util.*;
-
 abstract class Shape {
-    private final String label;
+    abstract double area();          // no default: every shape must define it
+    abstract double perimeter();
 
-    protected Shape(String label) { this.label = label; }
-    public String label() { return label; }
-
-    public abstract double area();
-    public abstract double perimeter();
-
-    /** Uses the two abstract methods polymorphically. */
-    public String render() {
-        return String.format("%-10s area=%8.2f  perimeter=%8.2f",
-                             label, area(), perimeter());
+    // Template method using the two abstract hooks polymorphically.
+    String summary() {
+        return String.format("%-10s area=%7.2f perimeter=%7.2f",
+                getClass().getSimpleName(), area(), perimeter());
     }
 }
 
 class Circle extends Shape {
     private final double r;
-    public Circle(double r) { super("Circle"); this.r = r; }
-    @Override public double area()      { return Math.PI * r * r; }
-    @Override public double perimeter() { return 2 * Math.PI * r; }
+    Circle(double r) { this.r = r; }
+    @Override double area()      { return Math.PI * r * r; }
+    @Override double perimeter() { return 2 * Math.PI * r; }
 }
 
 class Rectangle extends Shape {
     private final double w, h;
-    public Rectangle(double w, double h) { super("Rectangle"); this.w = w; this.h = h; }
-    @Override public double area()      { return w * h; }
-    @Override public double perimeter() { return 2 * (w + h); }
+    Rectangle(double w, double h) { this.w = w; this.h = h; }
+    @Override double area()      { return w * h; }
+    @Override double perimeter() { return 2 * (w + h); }
 }
 
-class Triangle extends Shape {   // equilateral, side s
-    private final double s;
-    public Triangle(double s) { super("Triangle"); this.s = s; }
-    @Override public double area()      { return (Math.sqrt(3) / 4) * s * s; }
-    @Override public double perimeter() { return 3 * s; }
+class Triangle extends Shape {       // right triangle with legs a, b
+    private final double a, b;
+    Triangle(double a, double b) { this.a = a; this.b = b; }
+    @Override double area()      { return 0.5 * a * b; }
+    @Override double perimeter() { return a + b + Math.hypot(a, b); }
 }
 ```
 
-### 5.2 The polymorphic routine (the heart of the lesson)
+### 4.2 The polymorphic routine
 
 ```java
-public class Drawing {
+import java.util.List;
 
-    /** Processes ANY collection of shapes, uniformly. */
-    static void report(List<Shape> shapes) {
-        double total = 0;
-        Shape largest = null;
+public class ShapeReport {
 
-        for (Shape s : shapes) {          // s: declared type Shape
-            System.out.println(s.render());  // dynamic dispatch per element
-            total += s.area();               // dynamic dispatch again
-
-            if (largest == null || s.area() > largest.area()) {
-                largest = s;
-            }
+    // Processes ANY collection of Shapes uniformly. Knows nothing about subtypes.
+    static double totalArea(List<Shape> shapes) {
+        double sum = 0;
+        for (Shape s : shapes) {     // dispatch on each element
+            sum += s.area();
         }
+        return sum;
+    }
 
-        System.out.printf("%nTotal area: %.2f%n", total);
-        System.out.printf("Largest:    %s (%.2f)%n",
-                          largest.label(), largest.area());
+    static void printReport(List<Shape> shapes) {
+        for (Shape s : shapes) {
+            System.out.println(s.summary());
+        }
+        System.out.printf("TOTAL AREA = %.2f%n", totalArea(shapes));
     }
 
     public static void main(String[] args) {
         List<Shape> shapes = List.of(
-            new Circle(3),
-            new Rectangle(4, 5),
-            new Triangle(6),
-            new Circle(1.5)
+            new Circle(2),
+            new Rectangle(3, 4),
+            new Triangle(6, 2)
         );
-        report(shapes);
+        printReport(shapes);
     }
 }
 ```
 
-### 5.3 Sample output
+**Output**
 
 ```
-Circle     area=   28.27  perimeter=   18.85
-Rectangle  area=   20.00  perimeter=   18.00
-Triangle   area=   15.59  perimeter=   18.00
-Circle     area=    7.07  perimeter=    9.42
-
-Total area: 70.93
-Largest:    Circle (28.27)
+Circle     area=  12.57 perimeter=  12.57
+Rectangle  area=  12.00 perimeter=  14.00
+Triangle   area=   6.00 perimeter=  14.32
+TOTAL AREA = 30.57
 ```
 
-### 5.4 Why this is good design
+### 4.3 Proving Open/Closed
 
-- `report(...)` mentions **only `Shape`**. It never names `Circle`, `Rectangle`,
-  or `Triangle`. It cannot go stale.
-- Every `s.area()` / `s.render()` is a **vtable dispatch** to the element's
-  actual class.
-- To support a new `Pentagon`, you write **one class** and add it to the list.
-  `report(...)` is untouched — **Open-Closed Principle** in action.
-- Compare with the anti-pattern that this replaces:
+Add a new shape — **no change** to `totalArea`, `printReport`, or `Shape`:
 
 ```java
-// ANTI-PATTERN: do NOT do this.
-double area(Shape s) {
-    if (s instanceof Circle)         return Math.PI * ((Circle) s).r * ((Circle) s).r;
-    else if (s instanceof Rectangle) return ((Rectangle) s).w * ((Rectangle) s).h;
-    else if (s instanceof Triangle)  return /* ... */ 0;
-    throw new IllegalArgumentException("unknown shape");
+class Square extends Shape {
+    private final double side;
+    Square(double side) { this.side = side; }
+    @Override double area()      { return side * side; }
+    @Override double perimeter() { return 4 * side; }
 }
+// Just add `new Square(5)` to the list. Everything else works unchanged.
 ```
 
-Every new shape forces you to **find and edit every such chain** across the
-codebase, and forgetting one causes silent bugs. Polymorphism moves the
-"which behavior?" decision **into the objects**, where it belongs.
+That is the entire promise of polymorphism made concrete: **new behavior arrives as a new
+class, not as edits to existing, tested code.**
 
 ---
 
-## 6. Guided in-class practice (35 min) - Payment processor
+## 5. Guided in-class practice: refactor an `instanceof` ladder
 
-Work in pairs. Start from a deliberately bad version and refactor it into
-polymorphic code, then process a mixed collection.
+Work in pairs. **Estimated 20 minutes.**
 
-### 6.1 The starting point (smelly code)
-
-```java
-class Payment {
-    String type;    // "CASH", "CARD", "TRANSFER"
-    double amount;
-    // ... fields for each type mixed together ...
-}
-
-// Fee calculation via type-switch - the thing we will eliminate.
-double fee(Payment p) {
-    if (p.type.equals("CASH"))          return 0;
-    else if (p.type.equals("CARD"))     return p.amount * 0.03;   // 3%
-    else if (p.type.equals("TRANSFER")) return 1500;              // flat
-    throw new IllegalArgumentException("unknown: " + p.type);
-}
-```
-
-### 6.2 Task A - Design the hierarchy
-
-Create an abstract base and three subclasses:
+**Starting code (the smell).** A payroll routine computes monthly pay for a mixed staff
+using a type ladder:
 
 ```java
-abstract class PaymentMethod {
-    protected final double amount;
-    protected PaymentMethod(double amount) { this.amount = amount; }
+class Employee {
+    String name;
+    double baseSalary;
+    Employee(String name, double baseSalary) { this.name = name; this.baseSalary = baseSalary; }
+}
+class Manager  extends Employee { double bonus;      Manager(String n, double s, double b)  { super(n, s); bonus = b; } }
+class Salesperson extends Employee { double commission; Salesperson(String n, double s, double c) { super(n, s); commission = c; } }
+class Contractor extends Employee { int hours; double rate; Contractor(String n, int h, double r) { super(n, 0); hours = h; rate = r; } }
 
-    public abstract double fee();          // specialized per method
-    public double total() { return amount + fee(); }   // reused by all
-
-    public String receipt() {
-        return String.format("%-10s amount=%.2f fee=%.2f total=%.2f",
-                             getClass().getSimpleName(), amount, fee(), total());
+class Payroll {
+    // SMELL: must be edited every time a new employee type is introduced.
+    static double monthlyPay(Employee e) {
+        if (e instanceof Manager m)       return e.baseSalary + m.bonus;
+        if (e instanceof Salesperson s)   return e.baseSalary + s.commission;
+        if (e instanceof Contractor c)    return c.hours * c.rate;
+        return e.baseSalary;
     }
 }
 ```
 
-- `CashPayment` -> `fee()` returns `0`.
-- `CardPayment` (extra field: `cardBrand`) -> `fee()` returns `3%` of `amount`.
-- `BankTransfer` -> `fee()` returns a flat `1500`.
+### Your task
 
-### 6.3 Task B - Write the polymorphic processor
+1. Add an **overridable** method `double monthlyPay()` to `Employee` with a sensible default
+   (`return baseSalary;`).
+2. **Override** it in `Manager`, `Salesperson`, and `Contractor`, each moving its own formula
+   from the ladder into the class. Use `@Override`.
+3. Delete `Payroll.monthlyPay(Employee)` and replace all callers with `e.monthlyPay()`.
+4. Write a routine `double totalPayroll(List<Employee> staff)` that sums `monthlyPay()` over
+   the list in **one loop with no `instanceof`**.
+5. Add a new type `Intern extends Employee` (fixed stipend) and confirm `totalPayroll` needs
+   **zero changes**.
 
-Implement:
+### Checkpoints (self-verify)
 
-```java
-static void checkout(List<PaymentMethod> payments) {
-    double grandTotal = 0;
-    for (PaymentMethod p : payments) {
-        System.out.println(p.receipt());   // dynamic dispatch
-        grandTotal += p.total();
-    }
-    System.out.printf("Grand total (incl. fees): %.2f%n", grandTotal);
-}
-```
+- [ ] No `instanceof` or `switch` on type remains anywhere.
+- [ ] Each pay formula lives in exactly one class.
+- [ ] `totalPayroll` compiled and ran unchanged after adding `Intern`.
+- [ ] Every override carries `@Override` and the code still compiles (proving the signatures match).
 
-Then in `main`, build a **mixed** list and call `checkout`:
+### Discussion prompt
 
-```java
-List<PaymentMethod> payments = List.of(
-    new CashPayment(50_000),
-    new CardPayment(120_000, "VISA"),
-    new BankTransfer(200_000),
-    new CardPayment(30_000, "MASTERCARD")
-);
-checkout(payments);
-```
-
-### 6.4 Task C - Prove the design is open-closed
-
-Add a **fourth** payment type — `CryptoPayment` with a `fee()` of `1.5%` — and
-verify that:
-
-- You **did not modify** `checkout`, `PaymentMethod`, or any existing subclass.
-- The new type appears correctly in the report just by adding it to the list.
-
-### 6.5 Expected result (sanity check)
-
-Your output should resemble:
-
-```
-CashPayment  amount=50000.00 fee=0.00     total=50000.00
-CardPayment  amount=120000.00 fee=3600.00 total=123600.00
-BankTransfer amount=200000.00 fee=1500.00 total=201500.00
-CardPayment  amount=30000.00 fee=900.00   total=30900.00
-Grand total (incl. fees): 406000.00
-```
-
-### 6.6 Discussion prompts
-
-- Where did the `if/else` on `type` go? (Into the vtable — each class holds its
-  own `fee()`.)
-- What would break if `CardPayment.fee()` returned a **negative** number? (LSP:
-  it would silently corrupt `total()` for everyone using the base type.)
+Which SOLID principles did this refactor improve, and how? (Expected: Open/Closed — extend
+by adding classes; Single Responsibility — each class owns its own pay rule; and it removes
+the shotgun-surgery risk of scattered ladders.)
 
 ---
 
-## 7. Wrap-up (10 min)
+## 6. Wrap-up and exit ticket
 
-### 7.1 Key takeaways
+### Summary
 
-- A reference has a **declared type** (what you may call) and an **actual type**
-  (which override runs). Dynamic dispatch keys off the **actual type**.
-- **Upcasting** enables polymorphism; heavy **downcasting**/`instanceof` is a
-  smell that usually should be a polymorphic method.
-- Dispatch is a **vtable lookup** (Java/C++) or **MRO walk** (Python) — roughly
-  O(1), no type comparisons.
-- A polymorphic routine names **only the supertype**, so new subtypes extend the
-  system **without modifying** it (Open-Closed), provided subtypes honor the
-  contract (Liskov).
+- Polymorphic processing = hold the **supertype**, call an **overridden** method, let
+  dispatch do the routing. One loop, many behaviors.
+- **Overriding** (run time) is polymorphic; **overloading** (compile time, by args) and
+  **hiding** (`static`/fields, by static type) are not.
+- Avoid the classic pitfalls: silent non-overrides, calling overridable methods in
+  constructors, breaking substitutability, and inconsistent `equals`/`hashCode`.
+- Replacing `instanceof` ladders with polymorphism advances Open/Closed and Single
+  Responsibility.
 
-### 7.2 Self-check
+### Exit ticket (hand in before leaving — 5 minutes)
 
-- [ ] I can explain, for `A ref = new B();`, why `ref.field` and `ref.method()`
-  can disagree about which class they come from.
-- [ ] I can sketch a vtable and trace a dispatched call through it.
-- [ ] I wrote a loop over a `List<Supertype>` that behaves correctly for every
-  subtype and needs no edits when a new subtype is added.
-- [ ] I can name one LSP violation and explain how it breaks polymorphic code.
-
-### 7.3 Exit ticket (submit before leaving)
-
-1. Predict the output and justify each line:
+1. **Refactor snippet.** Rewrite the following so the type test disappears; write only the
+   changed/added code (the new method(s) and the new loop body):
 
    ```java
-   class A { int id = 1; String tag() { return "A"; } }
-   class B extends A { int id = 2; String tag() { return "B"; } }
-   A x = new B();
-   System.out.println(x.id + " " + x.tag());
+   double sound(Animal a) {
+       if (a instanceof Dog)  return 1;   // barks
+       if (a instanceof Cat)  return 2;   // meows
+       return 0;
+   }
    ```
 
-2. In two sentences, explain why replacing an `instanceof` chain with
-   polymorphism supports the Open-Closed Principle.
-3. Give one situation where a **downcast** is genuinely justified.
+2. **One-liner.** State one concrete reason the polymorphic version is easier to maintain
+   than the `instanceof` version.
 
-*(Answer to Q1: prints `1 B` — field `id` uses the declared type `A`; `tag()` is
-overridden, so the actual type `B` wins.)*
-
-### 7.4 Preview of the optional activity
-
-Apply everything to a small **"Media Library"** system: a hierarchy of media
-items (`Book`, `Movie`, `Podcast`) processed by a single polymorphic catalog
-routine, submitted via **GitHub**. See
-[`../optional-activity/README.md`](../optional-activity/README.md).
+*(Answer key for the instructor: add an overridable `int sound()` to `Animal` returning `0`,
+override it in `Dog` (`return 1;`) and `Cat` (`return 2;`), then call `a.sound()`. Maintenance
+reason: a new animal is a new class with its own override — no existing method must be edited,
+so there is no risk of forgetting a branch.)*

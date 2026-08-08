@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Programación y Diseño Orientado a Objetos · Semana 1 · Entorno de desarrollo en Java | CORHUILA</title>
+<link rel="stylesheet" href="css/style.css">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+</head>
+<body>
+<div id="readingBar"></div>
+<header class="main-header">
+  <div class="top-bar"><div class="container">
+    <div class="brand-badge">UH</div>
+    <div class="brand-text"><span class="brand-course">Programación y Diseño Orientado a Objetos</span><span class="brand-topic">Semana 1 · Sesión 2 · Entorno de desarrollo en Java</span></div>
+    <div class="brand-meta">CORHUILA<br>Ingeniería de Sistemas · 2026-B</div>
+  </div></div>
+  <nav class="main-nav"><div class="container"><ul><li><a href="#introduccion" class="active">Inicio</a></li><li><a href="#1-las-herramientas-jdk-e-ide">Las herramientas: JDK e IDE</a></li><li><a href="#2-estructura-minima-de-un-programa-java">Estructura mínima de un programa Java</a></li><li><a href="#3-compilar-y-ejecutar">Compilar y ejecutar</a></li><li><a href="#4-un-primer-objeto-adelanto">Un primer objeto (adelanto)</a></li><li><a href="#autoevaluacion">Autoevaluación</a></li><li><a href="#actividad-de-la-semana-formativa">Actividad de la semana (formativa)</a></li></ul></div></nav>
+</header>
+<main class="container main-content">
+  <section id="introduccion" class="hero-section">
+    <span class="eyebrow">Unidad 1 · Fundamentos · Corte 1</span>
+    <h1>Entorno de desarrollo en Java</h1>
+    <p class="lead">Para programar en Java necesitas tres cosas: el JDK, un editor y saber compilar y ejecutar. En esta sesión montas tu entorno y escribes tu primer programa con una clase, para llegar listo a crear objetos la próxima semana.</p>
+    <div class="objectives-grid"><div class="objective-card"><span class="num">1</span><p>Instalar y reconocer el rol del JDK y un IDE.</p></div><div class="objective-card"><span class="num">2</span><p>Identificar la estructura mínima de un programa Java.</p></div><div class="objective-card"><span class="num">3</span><p>Compilar y ejecutar un programa desde cero.</p></div><div class="objective-card"><span class="num">4</span><p>Escribir tu primera clase con el método main.</p></div></div>
+  </section>
+  <section id="1-las-herramientas-jdk-e-ide"><h2>1. Las herramientas: JDK e IDE</h2><ul><li><strong>JDK (Java Development Kit):</strong> incluye el compilador (<code>javac</code>) y la máquina virtual (<code>java</code>) para ejecutar. Sin JDK no puedes compilar.</li><li><strong>IDE (entorno de desarrollo):</strong> editor con ayudas (IntelliJ IDEA, Eclipse o VS Code + extensión de Java). Acelera escribir, compilar y depurar.</li></ul><div class="callout info"><h4>Nota</h4><p>El <strong>JDK</strong> es obligatorio; el <strong>IDE</strong> es comodidad. Se puede programar con un editor simple + terminal, pero un IDE te ahorra mucho tiempo.</p></div></section><section id="2-estructura-minima-de-un-programa-java"><h2>2. Estructura mínima de un programa Java</h2><p>Todo programa Java vive dentro de una <strong>clase</strong>. La ejecución empieza en el método <code>main</code>.</p><pre class="code"><span class="kw">public</span> <span class="kw">class</span> HolaMundo {
+    <span class="kw">public</span> <span class="kw">static</span> <span class="kw">void</span> main(String[] args) {
+        <span class="kw">System</span>.out.<span class="kw">println</span>("¡Hola, mundo POO!");
+    }
+}</pre><p>Reglas clave:</p><ul><li>El <strong>archivo</strong> debe llamarse igual que la clase pública: <code>HolaMundo.java</code>.</li><li>El punto de entrada es siempre <code>public static void main(String[] args)</code>.</li><li>Cada instrucción termina en <code>;</code> y los bloques van entre <code>{ }</code>.</li></ul></section><section id="3-compilar-y-ejecutar"><h2>3. Compilar y ejecutar</h2><p>Desde la terminal, en la carpeta del archivo:</p><pre class="ascii">// tab: Terminal
+javac HolaMundo.java     # compila -&gt; genera HolaMundo.class
+java HolaMundo           # ejecuta (sin .class ni .java)</pre><pre class="ascii">HolaMundo.java  --(javac)--&gt;  HolaMundo.class  --(java)--&gt;  salida en pantalla
+   (código)                     (bytecode)                   ¡Hola, mundo POO!</pre><div class="callout warn"><h4>Cuidado</h4><p>Error típico: ejecutar <code>java HolaMundo.java</code> o <code>java HolaMundo.class</code>. Lo correcto es <code>java HolaMundo</code> (solo el nombre de la clase).</p></div></section><section id="4-un-primer-objeto-adelanto"><h2>4. Un primer objeto (adelanto)</h2><p>Aún sin profundizar, así se ve crear un objeto — lo formalizamos en la Semana 2:</p><pre class="code"><span class="kw">public</span> <span class="kw">class</span> Main {
+    <span class="kw">public</span> <span class="kw">static</span> <span class="kw">void</span> main(String[] args) {
+        String saludo = <span class="kw">new</span> String("Hola");   <span class="cm">// 'saludo' es un objeto String</span>
+        <span class="kw">System</span>.out.<span class="kw">println</span>(saludo.length());   <span class="cm">// método del objeto -&gt; 4</span>
+    }
+}</pre><div class="callout tip"><h4>Tip</h4><p>En Java casi todo son objetos. Incluso el texto (<code>String</code>) es un objeto con métodos como <code>length()</code> o <code>toUpperCase()</code>.</p></div></section><section id="autoevaluacion"><h2>Autoevaluación</h2><div class="quiz" id="quiz"><div class="quiz-progress"><span id="quizAnswered">0</span> de 4 respondidas</div><div class="q" data-correct="0" data-exp="El JDK incluye javac (compilador) y java (ejecución). El IDE es solo comodidad."><div class="stem"><span class="n">Pregunta 1.</span> ¿Qué herramienta contiene el compilador de Java?</div><button class="opt">El JDK</button><button class="opt">El IDE</button><button class="opt">El navegador</button><div class="feedback"></div></div><div class="q" data-correct="0" data-exp="La ejecución siempre empieza en el método main."><div class="stem"><span class="n">Pregunta 2.</span> ¿Cuál es el punto de entrada de un programa Java?</div><button class="opt">El método public static void main(String[] args)</button><button class="opt">El primer método que aparezca</button><button class="opt">El constructor de la clase</button><div class="feedback"></div></div><div class="q" data-correct="0" data-exp="Se ejecuta con &quot;java&quot; seguido del nombre de la clase, sin extensión."><div class="stem"><span class="n">Pregunta 3.</span> ¿Cómo se ejecuta la clase HolaMundo ya compilada?</div><button class="opt">java HolaMundo</button><button class="opt">java HolaMundo.class</button><button class="opt">javac HolaMundo</button><div class="feedback"></div></div><div class="q" data-correct="0" data-exp="El archivo debe coincidir exactamente con el nombre de la clase pública."><div class="stem"><span class="n">Pregunta 4.</span> ¿Cómo debe llamarse el archivo de una clase pública HolaMundo?</div><button class="opt">HolaMundo.java</button><button class="opt">holamundo.java</button><button class="opt">Main.java</button><div class="feedback"></div></div><div class="quiz-result" id="quizResult"><div>Tu puntaje</div><div class="score" id="quizScore">0/4</div><div id="quizMsg"></div></div></div></section><section id="actividad-de-la-semana-formativa" class="activity-section"><h2>Actividad de la semana (formativa)</h2><p>Opcional y no evaluable. Versión ampliada con rúbrica en <strong>optional-activity</strong> (entrega por GitHub).</p><ul><li>Instala el JDK y un IDE, y ejecuta tu primer <code>HolaMundo</code>.</li><li>Modifícalo para que imprima tu nombre y tu programa favorito.</li></ul></section>
+</main>
+<footer class="main-footer"><div class="container">
+  <p><strong>Programación y Diseño Orientado a Objetos</strong> <span class="sep">·</span> Semana 1 · Sesión 2 · Entorno de desarrollo en Java</p>
+  <p>Ingeniería de Sistemas <span class="sep">·</span> Facultad de Ingeniería <span class="sep">·</span> © 2026 CORHUILA</p>
+</div></footer>
+<button id="scrollTopBtn" title="Volver arriba" aria-label="Volver arriba">↑</button>
+<script src="js/script.js"></script>
+</body>
+</html>
