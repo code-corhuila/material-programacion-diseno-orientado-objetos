@@ -6,7 +6,7 @@
   <organizations default="ORG-OVA">
     <organization identifier="ORG-OVA">
       <title>Programación y Diseño Orientado a Objetos · Semana 3 · Sesión 1 · CORHUILA</title>
-      <item identifier="ITEM-OVA" identifierref="RES-OVA"><title>Clase encapsulada con validación</title></item>
+      <item identifier="ITEM-OVA" identifierref="RES-OVA"><title>Clase encapsulada que protege su invariante</title></item>
     </organization>
   </organizations>
   <resources>

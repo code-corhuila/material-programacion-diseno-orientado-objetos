@@ -6,7 +6,7 @@
   <organizations default="ORG-OVA">
     <organization identifier="ORG-OVA">
       <title>Programación y Diseño Orientado a Objetos · Semana 3 · Sesión 2 · CORHUILA</title>
-      <item identifier="ITEM-OVA" identifierref="RES-OVA"><title>Getters, setters y validación</title></item>
+      <item identifier="ITEM-OVA" identifierref="RES-OVA"><title>Getters, setters, validación e inmutabilidad</title></item>
     </organization>
   </organizations>
   <resources>
