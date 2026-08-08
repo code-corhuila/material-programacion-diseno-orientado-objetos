@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Programación y Diseño Orientado a Objetos · Semana 6 · super y jerarquías de clases | CORHUILA</title>
+<link rel="stylesheet" href="css/style.css">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+</head>
+<body>
+<div id="readingBar"></div>
+<header class="main-header">
+  <div class="top-bar"><div class="container">
+    <div class="brand-badge">UH</div>
+    <div class="brand-text"><span class="brand-course">Programación y Diseño Orientado a Objetos</span><span class="brand-topic">Semana 6 · Sesión 2 · super y jerarquías de clases</span></div>
+    <div class="brand-meta">CORHUILA<br>Ingeniería de Sistemas · 2026-B</div>
+  </div></div>
+  <nav class="main-nav"><div class="container"><ul><li><a href="#introduccion" class="active">Inicio</a></li><li><a href="#1-super-en-el-constructor">super en el constructor</a></li><li><a href="#2-super-para-reutilizar-metodos">super para reutilizar métodos</a></li><li><a href="#3-jerarquias-de-varios-niveles">Jerarquías de varios niveles</a></li><li><a href="#4-object-la-raiz-de-todo">Object: la raíz de todo</a></li><li><a href="#autoevaluacion">Autoevaluación</a></li><li><a href="#actividad-de-la-semana-formativa">Actividad de la semana (formativa)</a></li></ul></div></nav>
+</header>
+<main class="container main-content">
+  <section id="introduccion" class="hero-section">
+    <span class="eyebrow">Unidad 2 · Herencia y polimorfismo · Corte 2</span>
+    <h1>super y jerarquías de clases</h1>
+    <p class="lead">Al heredar, la subclase suele necesitar apoyarse en la superclase: reutilizar su constructor y sus métodos. La palabra clave super hace justo eso, y con ella construimos jerarquías bien formadas.</p>
+    <div class="objectives-grid"><div class="objective-card"><span class="num">1</span><p>Usar super(...) para invocar el constructor de la superclase.</p></div><div class="objective-card"><span class="num">2</span><p>Usar super.metodo() para reutilizar comportamiento del padre.</p></div><div class="objective-card"><span class="num">3</span><p>Construir una jerarquía de varios niveles.</p></div></div>
+  </section>
+  <section id="1-super-en-el-constructor"><h2>1. super en el constructor</h2><p>Cuando creas una subclase, primero debe inicializarse la parte heredada. <code>super(...)</code> llama al <strong>constructor de la superclase</strong> y debe ir en la <strong>primera línea</strong>.</p><pre class="code"><span class="kw">public</span> <span class="kw">class</span> Animal {
+    <span class="kw">protected</span> String nombre;
+    <span class="kw">public</span> Animal(String nombre) { this.nombre = nombre; }
+}
+<span class="kw">public</span> <span class="kw">class</span> Perro extends Animal {
+    <span class="kw">private</span> String raza;
+    <span class="kw">public</span> Perro(String nombre, String raza) {
+        super(nombre);        <span class="cm">// inicializa la parte Animal</span>
+        this.raza = raza;     <span class="cm">// luego lo propio</span>
+    }
+}</pre><div class="callout warn"><h4>Cuidado</h4><p>Si la superclase solo tiene constructor con parámetros, la subclase <strong>debe</strong> llamar <code>super(...)</code>. Olvidarlo es un error de compilación frecuente.</p></div></section><section id="2-super-para-reutilizar-metodos"><h2>2. super para reutilizar métodos</h2><p><code>super.metodo()</code> ejecuta la versión del <strong>padre</strong>, útil cuando la subclase amplía (no reemplaza del todo) el comportamiento.</p><pre class="code"><span class="kw">public</span> <span class="kw">class</span> Empleado {
+    <span class="kw">public</span> String datos() { <span class="kw">return</span> "Empleado"; }
+}
+<span class="kw">public</span> <span class="kw">class</span> Gerente extends Empleado {
+    @Override <span class="kw">public</span> String datos() {
+        <span class="kw">return</span> super.datos() + " (Gerente)";   <span class="cm">// reutiliza y amplía</span>
+    }
+}</pre></section><section id="3-jerarquias-de-varios-niveles"><h2>3. Jerarquías de varios niveles</h2><p>La herencia puede encadenarse: <code>Vehiculo</code> → <code>Automovil</code> → <code>AutoElectrico</code>. Cada nivel añade especialización.</p><pre class="ascii">Vehiculo
+   |
+Automovil
+   |
+AutoElectrico</pre><div class="callout tip"><h4>Tip</h4><p>Mantén las jerarquías <strong>poco profundas</strong> (2–3 niveles). Cadenas muy largas se vuelven difíciles de entender y mantener.</p></div></section><section id="4-object-la-raiz-de-todo"><h2>4. Object: la raíz de todo</h2><p>En Java, toda clase hereda (implícitamente) de <strong>Object</strong>. Por eso todo objeto tiene <code>toString()</code>, <code>equals()</code> y <code>hashCode()</code> — que ya aprendiste a sobrescribir.</p></section><section id="autoevaluacion"><h2>Autoevaluación</h2><div class="quiz" id="quiz"><div class="quiz-progress"><span id="quizAnswered">0</span> de 3 respondidas</div><div class="q" data-correct="0" data-exp="super(...) invoca el constructor del padre; debe ir en la primera línea."><div class="stem"><span class="n">Pregunta 1.</span> ¿Qué hace super(...) en un constructor?</div><button class="opt">Llama al constructor de la superclase</button><button class="opt">Crea un objeto nuevo</button><button class="opt">Llama al método main</button><div class="feedback"></div></div><div class="q" data-correct="0" data-exp="super.metodo() reutiliza el comportamiento del padre desde la subclase."><div class="stem"><span class="n">Pregunta 2.</span> ¿Para qué sirve super.metodo()?</div><button class="opt">Ejecutar la versión del método definida en la superclase</button><button class="opt">Borrar el método</button><button class="opt">Crear un método nuevo</button><div class="feedback"></div></div><div class="q" data-correct="0" data-exp="Toda clase hereda de Object, que aporta toString, equals y hashCode."><div class="stem"><span class="n">Pregunta 3.</span> ¿De qué clase heredan implícitamente todas las clases en Java?</div><button class="opt">Object</button><button class="opt">Main</button><button class="opt">System</button><div class="feedback"></div></div><div class="quiz-result" id="quizResult"><div>Tu puntaje</div><div class="score" id="quizScore">0/3</div><div id="quizMsg"></div></div></div></section><section id="actividad-de-la-semana-formativa" class="activity-section"><h2>Actividad de la semana (formativa)</h2><p>Opcional y no evaluable. Versión ampliada con rúbrica en <strong>optional-activity</strong> (entrega por GitHub).</p><ul><li>Agrega constructores con <code>super(...)</code> a tu jerarquía Animal/Perro/Gato.</li></ul></section>
+</main>
+<footer class="main-footer"><div class="container">
+  <p><strong>Programación y Diseño Orientado a Objetos</strong> <span class="sep">·</span> Semana 6 · Sesión 2 · super y jerarquías de clases</p>
+  <p>Ingeniería de Sistemas <span class="sep">·</span> Facultad de Ingeniería <span class="sep">·</span> © 2026 CORHUILA</p>
+</div></footer>
+<button id="scrollTopBtn" title="Volver arriba" aria-label="Volver arriba">↑</button>
+<script src="js/script.js"></script>
+</body>
+</html>
