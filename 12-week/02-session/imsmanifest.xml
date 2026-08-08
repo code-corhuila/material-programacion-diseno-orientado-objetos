@@ -6,7 +6,7 @@
   <organizations default="ORG-OVA">
     <organization identifier="ORG-OVA">
       <title>Programación y Diseño Orientado a Objetos · Semana 12 · Sesión 2 · CORHUILA</title>
-      <item identifier="ITEM-OVA" identifierref="RES-OVA"><title>Mapas (HashMap) y genéricos</title></item>
+      <item identifier="ITEM-OVA" identifierref="RES-OVA"><title>Conjuntos y mapas (Set, HashMap)</title></item>
     </organization>
   </organizations>
   <resources>

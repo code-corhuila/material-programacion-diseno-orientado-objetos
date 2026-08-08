@@ -5,27 +5,29 @@ term: 2026-B
 week: 12
 corte: 3
 unit: Unidad 3 · Robustez y bibliotecas
-topic: Gestión con colecciones
+topic: Gestión de datos con colecciones
 eyebrow: Actividad opcional · Formativa · Entrega por GitHub
-lead: Aplica List y Map a un pequeño gestor de datos. Actividad opcional de refuerzo sobre colecciones.
+lead: Aplica List y Map a un pequeño gestor de datos y justifica la colección según la operación dominante. Actividad opcional de refuerzo.
 objectives:
   - Usar List y Map con objetos propios.
-  - Aplicar operaciones de agregar, buscar y recorrer.
-  - Elegir la colección según la operación dominante.
+  - Aplicar agregar, buscar por clave y recorrer.
+  - Justificar la elección de la colección.
 ---
 
 ## 1. Enunciado
 
-1. Crea la clase `Estudiante` (código, nombre, promedio).
+1. Crea la clase `Estudiante` (código, nombre, promedio) con `equals`/`hashCode` por `codigo`.
 2. Guarda estudiantes en un `Map<String, Estudiante>` (clave = código).
-3. Implementa: agregar, buscar por código, listar todos y calcular el promedio general.
-4. En el README, explica por qué usaste un Map (búsqueda por código) en lugar de una List.
+3. Implementa: agregar, **buscar por código**, listar todos y calcular el **promedio general**.
+4. Usa un `Set<String>` para registrar los códigos de estudiantes en “lista de honor” (promedio ≥ 4.5), sin duplicados.
+5. En el README, explica **por qué** usaste `Map` (búsqueda por código) en lugar de `List`, y por qué `Set` para la lista de honor.
 
 ## 2. Requisitos
 
-- Uso de `Map` (y `List` si lo necesitas).
+- Uso correcto de `Map` y `Set` (y `List` si aplica).
+- `equals`/`hashCode` coherentes en `Estudiante`.
 - Búsqueda por clave y recorrido.
-- Justificación de la colección elegida.
+- Justificación de las colecciones elegidas.
 
 ## 3. Cómo entregar
 
@@ -33,24 +35,24 @@ Entrega **por GitHub**. Repositorio: `poo-s12-colecciones`.
 
 ```
 poo-s12-colecciones/
-  README.md   -> justificacion + salida
+  README.md   -> justificacion de colecciones + salida
   src/         -> Estudiante.java, Main.java
 ```
 
-1. Crea el repo público con ese nombre.
+1. Crea el repositorio público con ese nombre.
 2. Sube el código y el README.
-3. Comparte el enlace por el canal indicado.
+3. Comparte el enlace por el canal indicado por el docente.
 
 ## 4. Rúbrica de evaluación
 
-| Criterio | Excelente | Aceptable | Por mejorar | Pts |
+| Criterio | Excelente (100%) | Aceptable (60%) | Por mejorar (0%) | Pts |
 |---|---|---|---|---|
-| Uso correcto de Map | Correcto | Con detalles | Falla | 35 |
-| Operaciones (agregar/buscar/listar) | Todas | Algunas | Fallan | 30 |
-| Justificación de la colección | Clara | Básica | Ausente | 20 |
-| README y repositorio | Ordenado | Aceptable | Deficiente | 15 |
+| Uso correcto de Map | Correcto | Con detalles | Falla | 30 |
+| Uso de Set (lista de honor) | Correcto (sin duplicados) | Parcial | Ausente | 20 |
+| equals/hashCode por codigo | Coherentes | Uno | Incorrectos | 20 |
+| Operaciones + justificación (README) | Completas y claras | Aceptables | Deficientes | 30 |
 
-> Nota: actividad formativa y opcional (sin nota en Moodle). La guía unificada de entrega estará en el Manual de Entrega de Actividades Opcionales (próximamente).
+> Nota: actividad formativa y opcional (sin nota en Moodle). La guía unificada para entregar todas las actividades opcionales, válida para todas las materias, estará en el Manual de Entrega de Actividades Opcionales (próximamente).
 
 ## Descargar
 
