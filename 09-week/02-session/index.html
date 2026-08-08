@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Programación y Diseño Orientado a Objetos · Semana 9 · Modularización del código | CORHUILA</title>
-<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/style.css?v=9a435c87">
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -24,8 +24,8 @@
     <p class="lead">Un proyecto real tiene decenas de clases. Organizarlas en paquetes y buscar alta cohesión con bajo acoplamiento es lo que mantiene el código entendible y fácil de cambiar.</p>
     <div class="objectives-grid"><div class="objective-card"><span class="num">1</span><p>Organizar clases en paquetes (package/import).</p></div><div class="objective-card"><span class="num">2</span><p>Explicar cohesión y acoplamiento.</p></div><div class="objective-card"><span class="num">3</span><p>Aplicar responsabilidad única a las clases.</p></div></div>
   </section>
-  <section id="s-1-paquetes-packages"><h2>1. Paquetes (packages)</h2><p>Un <strong>paquete</strong> agrupa clases relacionadas, como carpetas. Evita choques de nombres y ordena el proyecto.</p><div class="tabs"><div class="tab-btns"><button class="tab-btn active" data-tab="tab-72320-0">package e import</button><button class="tab-btn" data-tab="tab-72320-1">usar otra clase</button></div><div class="tab-panel active" id="tab-72320-0"><pre class="code"><span class="kw">package</span> modelo;                 <span class="cm">// declara el paquete (1ra línea)</span>
-<span class="kw">public</span> <span class="kw">class</span> Producto { /* ... */ }</pre></div><div class="tab-panel" id="tab-72320-1"><pre class="code"><span class="kw">package</span> app;
+  <section id="s-1-paquetes-packages"><h2>1. Paquetes (packages)</h2><p>Un <strong>paquete</strong> agrupa clases relacionadas, como carpetas. Evita choques de nombres y ordena el proyecto.</p><div class="tabs"><div class="tab-btns"><button class="tab-btn active" data-tab="tab-56928-0">package e import</button><button class="tab-btn" data-tab="tab-56928-1">usar otra clase</button></div><div class="tab-panel active" id="tab-56928-0"><pre class="code"><span class="kw">package</span> modelo;                 <span class="cm">// declara el paquete (1ra línea)</span>
+<span class="kw">public</span> <span class="kw">class</span> Producto { /* ... */ }</pre></div><div class="tab-panel" id="tab-56928-1"><pre class="code"><span class="kw">package</span> app;
 <span class="kw">import</span> modelo.Producto;         <span class="cm">// importa la clase de otro paquete</span>
 <span class="kw">public</span> <span class="kw">class</span> Main { /* usa Producto */ }</pre></div></div><pre class="ascii">src/
  ├── modelo/    -&gt; Producto.java, Pedido.java
@@ -38,6 +38,6 @@ Después: Pedido (datos) · PedidoService (lógica) · PedidoReporte (salida)</p
   <p>Ingeniería de Sistemas <span class="sep">·</span> Facultad de Ingeniería <span class="sep">·</span> © 2026 CORHUILA</p>
 </div></footer>
 <button id="scrollTopBtn" title="Volver arriba" aria-label="Volver arriba">↑</button>
-<script src="js/script.js"></script>
+<script src="js/script.js?v=9a435c87"></script>
 </body>
 </html>
