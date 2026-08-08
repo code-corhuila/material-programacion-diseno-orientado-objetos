@@ -7,25 +7,27 @@ corte: 2
 unit: Unidad 2 · Herencia y polimorfismo
 topic: Diseño con composición y paquetes
 eyebrow: Actividad opcional · Formativa · Entrega por GitHub
-lead: Aplica composición y organización en paquetes en un mini-diseño. Actividad opcional de refuerzo.
+lead: Aplica composición (tiene-un), delegación y organización en paquetes en un mini-diseño con alta cohesión y bajo acoplamiento. Actividad opcional de refuerzo.
 objectives:
-  - Modelar una relación "tiene-un" con composición.
-  - Organizar las clases en paquetes.
-  - Delegar comportamiento entre objetos.
+  - Modelar una relación "tiene-un" con composición y delegación.
+  - Organizar las clases en paquetes por responsabilidad.
+  - Justificar la elección composición vs herencia.
 ---
 
 ## 1. Enunciado
 
-1. Modela un `Pedido` que **tiene** una lista de `Producto` (composición).
-2. Implementa `agregar(Producto)` y `total()` (delega en los productos).
-3. Organiza las clases en paquetes: `modelo` (Producto, Pedido) y `app` (Main).
-4. En `main`, crea un pedido con 3 productos y muestra el total.
+1. Modela un `Pedido` que **tiene** una lista de `Producto` (composición) en el paquete `modelo`.
+2. Implementa `agregar(Producto)` y `total()` **delegando** el precio a cada `Producto`.
+3. Crea `PedidoService` (paquete `servicio`) que aplique un descuento y calcule el total final (lógica de negocio separada del modelo).
+4. `Main` (paquete `app`) crea un pedido con 3 productos y usa el servicio.
+5. En el README: justifica por qué usaste **composición** (no herencia) y dónde lograste **alta cohesión / bajo acoplamiento**.
 
 ## 2. Requisitos
 
-- Composición (Pedido contiene Productos).
-- Uso de `package` e `import`.
-- Cálculo correcto del total.
+- Composición (Pedido contiene Productos) + delegación.
+- Organización en paquetes `modelo`, `servicio`, `app`.
+- Separación de responsabilidades (modelo vs lógica).
+- Justificación de diseño en el README.
 
 ## 3. Cómo entregar
 
@@ -33,25 +35,26 @@ Entrega **por GitHub**. Repositorio: `poo-s09-composicion`.
 
 ```
 poo-s09-composicion/
-  README.md   -> estructura de paquetes + salida
-  src/modelo/  -> Producto.java, Pedido.java
-  src/app/     -> Main.java
+  README.md          -> justificacion (composicion, cohesion, acoplamiento)
+  src/modelo/        -> Producto.java, Pedido.java
+  src/servicio/      -> PedidoService.java
+  src/app/           -> Main.java
 ```
 
-1. Crea el repo público con ese nombre.
+1. Crea el repositorio público con ese nombre.
 2. Sube el código y el README.
-3. Comparte el enlace por el canal indicado.
+3. Comparte el enlace por el canal indicado por el docente.
 
 ## 4. Rúbrica de evaluación
 
-| Criterio | Excelente | Aceptable | Por mejorar | Pts |
+| Criterio | Excelente (100%) | Aceptable (60%) | Por mejorar (0%) | Pts |
 |---|---|---|---|---|
-| Composición (Pedido↔Producto) | Correcta | Con detalles | Falla | 35 |
-| Organización en paquetes | Correcta | Parcial | Ausente | 30 |
-| total() (delegación) | Correcto | Con detalles | Falla | 20 |
-| README y repositorio | Ordenado | Aceptable | Deficiente | 15 |
+| Composición + delegación | Correctas | Con detalles | Fallan | 30 |
+| Organización en paquetes | Correcta y coherente | Parcial | Ausente | 25 |
+| Cohesión / acoplamiento (separación) | Bien lograda y explicada | Parcial | Ausente | 25 |
+| total() con descuento + README | Correcto y claro | Aceptable | Deficiente | 20 |
 
-> Nota: actividad formativa y opcional (sin nota en Moodle). La guía unificada de entrega estará en el Manual de Entrega de Actividades Opcionales (próximamente).
+> Nota: actividad formativa y opcional (sin nota en Moodle). La guía unificada para entregar todas las actividades opcionales, válida para todas las materias, estará en el Manual de Entrega de Actividades Opcionales (próximamente).
 
 ## Descargar
 
