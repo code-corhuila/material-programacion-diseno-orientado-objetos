@@ -6,7 +6,7 @@
   <organizations default="ORG-OVA">
     <organization identifier="ORG-OVA">
       <title>Programación y Diseño Orientado a Objetos · Semana 13 · Sesión 1 · CORHUILA</title>
-      <item identifier="ITEM-OVA" identifierref="RES-OVA"><title>Persistencia con archivos</title></item>
+      <item identifier="ITEM-OVA" identifierref="RES-OVA"><title>Persistencia de objetos con archivos</title></item>
     </organization>
   </organizations>
   <resources>

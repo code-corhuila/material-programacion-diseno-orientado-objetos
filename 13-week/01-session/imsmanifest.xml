@@ -6,7 +6,7 @@
   <organizations default="ORG-OVA">
     <organization identifier="ORG-OVA">
       <title>Programación y Diseño Orientado a Objetos · Semana 13 · Sesión 1 · CORHUILA</title>
-      <item identifier="ITEM-OVA" identifierref="RES-OVA"><title>Lectura de archivos en Java</title></item>
+      <item identifier="ITEM-OVA" identifierref="RES-OVA"><title>Lectura de archivos y flujos de E/S</title></item>
     </organization>
   </organizations>
   <resources>
