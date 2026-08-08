@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Programación y Diseño Orientado a Objetos · Semana 5 · Repaso del Corte 1 | CORHUILA</title>
+<title>Programación y Diseño Orientado a Objetos · Semana 5 · Síntesis integradora del Corte 1 | CORHUILA</title>
 <link rel="stylesheet" href="css/style.css?v=9a435c87">
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
 </head>
@@ -12,41 +12,55 @@
 <header class="main-header">
   <div class="top-bar"><div class="container">
     <div class="brand-badge">UH</div>
-    <div class="brand-text"><span class="brand-course">Programación y Diseño Orientado a Objetos</span><span class="brand-topic">Semana 5 · Sesión 1 · Repaso del Corte 1</span></div>
+    <div class="brand-text"><span class="brand-course">Programación y Diseño Orientado a Objetos</span><span class="brand-topic">Semana 5 · Sesión 1 · Síntesis integradora del Corte 1</span></div>
     <div class="brand-meta">CORHUILA<br>Ingeniería de Sistemas · 2026-B</div>
   </div></div>
-  <nav class="main-nav"><div class="container"><button class="nav-toggle" aria-label="Mostrar secciones" aria-expanded="false">☰ Secciones</button><ul><li><a href="#introduccion" class="active">Inicio</a></li><li><a href="#s-1-mapa-del-corte-1">Mapa del Corte 1</a></li><li><a href="#s-2-repaso-expres">Repaso exprés</a></li><li><a href="#s-3-clase-modelo-todo-junto">Clase modelo (todo junto)</a></li><li><a href="#s-4-errores-comunes-a-evitar">Errores comunes a evitar</a></li><li><a href="#autoevaluacion">Autoevaluación</a></li><li><a href="#actividad-de-la-semana-formativa">Actividad de la semana (formativa)</a></li></ul></div></nav>
+  <nav class="main-nav"><div class="container"><button class="nav-toggle" aria-label="Mostrar secciones" aria-expanded="false">☰ Secciones</button><ul><li><a href="#introduccion" class="active">Inicio</a></li><li><a href="#s-1-mapa-conceptual-del-corte-1">Mapa conceptual del Corte 1</a></li><li><a href="#s-2-repaso-conectado">Repaso conectado</a></li><li><a href="#s-3-clase-modelo-integradora">Clase modelo integradora</a></li><li><a href="#s-4-errores-tipicos-diagnostico">Errores típicos (diagnóstico)</a></li><li><a href="#autoevaluacion">Autoevaluación</a></li><li><a href="#actividad-de-la-semana-formativa">Actividad de la semana (formativa)</a></li></ul></div></nav>
 </header>
 <main class="container main-content">
   <section id="introduccion" class="hero-section">
     <span class="eyebrow">Unidad 1 · Cierre de Corte 1</span>
-    <h1>Repaso del Corte 1</h1>
-    <p class="lead">Cerramos el primer corte consolidando los fundamentos de la POO en Java: clases, objetos, encapsulamiento y constructores. Repaso guiado para llegar seguro al parcial.</p>
-    <div class="objectives-grid"><div class="objective-card"><span class="num">1</span><p>Repasar los conceptos clave del Corte 1.</p></div><div class="objective-card"><span class="num">2</span><p>Integrar clase, encapsulamiento, constructores y toString.</p></div><div class="objective-card"><span class="num">3</span><p>Detectar errores comunes.</p></div></div>
+    <h1>Síntesis integradora del Corte 1</h1>
+    <p class="lead">Cerramos el primer corte integrando todo en una sola clase bien diseñada. Repasamos con rigor clases y objetos, encapsulamiento e invariantes, constructores y representación e igualdad, viendo cómo cada concepto se conecta con el siguiente hacia un diseño robusto.</p>
+    <div class="objectives-grid"><div class="objective-card"><span class="num">1</span><p>Integrar los conceptos del Corte 1 en una clase completa.</p></div><div class="objective-card"><span class="num">2</span><p>Relacionar encapsulamiento, invariantes, constructores e igualdad.</p></div><div class="objective-card"><span class="num">3</span><p>Diagnosticar y corregir errores típicos de diseño.</p></div></div>
   </section>
-  <section id="s-1-mapa-del-corte-1"><h2>1. Mapa del Corte 1</h2><pre class="ascii">Semana 1  Introduccion a POO + entorno Java
-Semana 2  Clases y objetos (new, this)
-Semana 3  Encapsulamiento (private, getters/setters, validacion)
-Semana 4  Constructores + toString/equals
-Semana 5  Repaso + Parcial</pre></section><section id="s-2-repaso-expres"><h2>2. Repaso exprés</h2><ul><li><strong>Clase vs objeto:</strong> la clase es el molde; el objeto, la instancia (<code>new</code>).</li><li><strong>Pilares vistos:</strong> abstracción y <strong>encapsulamiento</strong> (atributos <code>private</code> + métodos públicos).</li><li><strong>Constructores:</strong> inicializan el objeto; se pueden sobrecargar y reutilizar con <code>this()</code>.</li><li><strong>Representación:</strong> <code>toString()</code> para texto legible; <code>equals()</code> para comparar por contenido; <code>==</code> compara referencias.</li></ul></section><section id="s-3-clase-modelo-todo-junto"><h2>3. Clase modelo (todo junto)</h2><pre class="code"><span class="kw">public</span> <span class="kw">class</span> Persona {
-    <span class="kw">private</span> String nombre;
-    <span class="kw">private</span> <span class="kw">int</span> edad;
+  <section id="s-1-mapa-conceptual-del-corte-1"><h2>1. Mapa conceptual del Corte 1</h2><pre class="ascii">Clase (molde)  --new--&gt;  Objeto (identidad + estado + comportamiento)
+     |                         |
+ encapsulamiento         constructor inicializa en estado VÁLIDO
+ (private + invariantes)       |
+     |                    toString (representar) + equals/hashCode (comparar)
+     └──────────── todo protege las reglas del objeto ───────────┘</pre></section><section id="s-2-repaso-conectado"><h2>2. Repaso conectado</h2><div class="table-responsive"><table class="styled-table"><thead><tr><th>Concepto</th><th>Idea clave</th><th>Semana</th></tr></thead><tbody><tr><td>Clase / objeto</td><td>Molde vs. instancia (identidad, estado, comportamiento)</td><td>1–2</td></tr><tr><td><code>this</code></td><td>Referencia al objeto actual; resuelve ambigüedad</td><td>2</td></tr><tr><td>Referencias / aliasing</td><td>La variable guarda la dirección; <code>y=x</code> son alias</td><td>2</td></tr><tr><td>Encapsulamiento</td><td><code>private</code> + interfaz controlada; protege <strong>invariantes</strong></td><td>3</td></tr><tr><td>Constructores</td><td>Inicializan en estado válido; <code>this()</code>; validan</td><td>4</td></tr><tr><td>toString / equals / hashCode</td><td>Representar y comparar por contenido (con contrato)</td><td>4</td></tr></tbody></table></div></section><section id="s-3-clase-modelo-integradora"><h2>3. Clase modelo integradora</h2><p>Reúne todo lo del corte en una clase bien diseñada:</p><div class="tabs"><div class="tab-btns"><button class="tab-btn active" data-tab="tab-40672-0">CuentaBancaria.java</button><button class="tab-btn" data-tab="tab-40672-1">Representación e igualdad</button></div><div class="tab-panel active" id="tab-40672-0"><pre class="code"><span class="kw">import</span> java.util.Objects;
 
-    <span class="kw">public</span> Persona() { this("Sin nombre", 0); }
-    <span class="kw">public</span> Persona(String nombre, <span class="kw">int</span> edad) {
-        this.nombre = nombre; setEdad(edad);
-    }
-    <span class="kw">public</span> String getNombre() { <span class="kw">return</span> nombre; }
-    <span class="kw">public</span> <span class="kw">int</span> getEdad() { <span class="kw">return</span> edad; }
-    <span class="kw">public</span> <span class="kw">void</span> setEdad(<span class="kw">int</span> edad) { <span class="kw">if</span> (edad &gt;= 0 &amp;&amp; edad &lt;= 120) this.edad = edad; }
+<span class="kw">public</span> <span class="kw">class</span> CuentaBancaria {
+    <span class="kw">private</span> final String numero;   <span class="cm">// solo lectura (identidad de negocio)</span>
+    <span class="kw">private</span> <span class="kw">double</span> saldo;          <span class="cm">// invariante: saldo &gt;= 0</span>
 
-    @Override <span class="kw">public</span> String toString() {
-        <span class="kw">return</span> "Persona{nombre=" + nombre + ", edad=" + edad + "}";
+    <span class="kw">public</span> CuentaBancaria(String numero) { this(numero, 0); }
+    <span class="kw">public</span> CuentaBancaria(String numero, <span class="kw">double</span> saldoInicial) {
+        this.numero = numero;
+        <span class="kw">if</span> (saldoInicial &gt; 0) this.saldo = saldoInicial;   <span class="cm">// valida</span>
     }
-}</pre></section><section id="s-4-errores-comunes-a-evitar"><h2>4. Errores comunes a evitar</h2><ul><li>Atributos <code>public</code> en vez de <code>private</code>.</li><li>Olvidar <code>this</code> cuando el parámetro se llama igual que el atributo.</li><li>Definir constructor parametrizado y usar <code>new Clase()</code> sin declarar el vacío.</li><li>Comparar String con <code>==</code> en lugar de <code>.equals()</code>.</li></ul><div class="callout warn"><h4>Cuidado</h4><p>En el parcial se evalúa el diseño de la clase (encapsulamiento, constructores, validación), no solo que "compile".</p></div></section><section id="autoevaluacion"><h2>Autoevaluación</h2><div class="quiz" id="quiz"><div class="quiz-progress"><span id="quizAnswered">0</span> de 3 respondidas</div><div class="q" data-correct="0" data-exp="Encapsular = atributos private + acceso por métodos."><div class="stem"><span class="n">Pregunta 1.</span> ¿Qué modificador deben tener los atributos para estar encapsulados?</div><button class="opt">private</button><button class="opt">public</button><button class="opt">static</button><div class="feedback"></div></div><div class="q" data-correct="0" data-exp="this(...) reutiliza otro constructor de la clase para no repetir código."><div class="stem"><span class="n">Pregunta 2.</span> ¿Qué hace this() dentro de un constructor?</div><button class="opt">Llama a otro constructor de la misma clase</button><button class="opt">Crea un nuevo objeto</button><button class="opt">Imprime el objeto</button><div class="feedback"></div></div><div class="q" data-correct="0" data-exp="equals() compara contenido (si se sobrescribe); == compara referencias."><div class="stem"><span class="n">Pregunta 3.</span> Para comparar dos objetos por su contenido se usa...</div><button class="opt">equals()</button><button class="opt">==</button><button class="opt">toString()</button><div class="feedback"></div></div><div class="quiz-result" id="quizResult"><div>Tu puntaje</div><div class="score" id="quizScore">0/3</div><div id="quizMsg"></div></div></div></section><section id="actividad-de-la-semana-formativa" class="activity-section"><h2>Actividad de la semana (formativa)</h2><p>Opcional y no evaluable. Versión ampliada con rúbrica en <strong>optional-activity</strong> (entrega por GitHub).</p><ul><li>Repasa creando una clase completa (encapsulada, con constructores y toString) del dominio que prefieras.</li></ul></section>
+
+    <span class="kw">public</span> <span class="kw">double</span> getSaldo() { <span class="kw">return</span> saldo; }
+    <span class="kw">public</span> String getNumero() { <span class="kw">return</span> numero; }
+
+    <span class="kw">public</span> <span class="kw">void</span> consignar(<span class="kw">double</span> m) { <span class="kw">if</span> (m &gt; 0) saldo += m; }
+    <span class="kw">public</span> <span class="kw">boolean</span> retirar(<span class="kw">double</span> m) {
+        <span class="kw">if</span> (m &gt; 0 &amp;&amp; m &lt;= saldo) { saldo -= m; <span class="kw">return</span> <span class="kw">true</span>; }
+        <span class="kw">return</span> <span class="kw">false</span>;
+    }
+}</pre></div><div class="tab-panel" id="tab-40672-1"><pre class="code">    @Override <span class="kw">public</span> String toString() {
+        <span class="kw">return</span> "Cuenta{numero='" + numero + "', saldo=" + saldo + "}";
+    }
+    @Override <span class="kw">public</span> <span class="kw">boolean</span> equals(Object o) {
+        <span class="kw">if</span> (this == o) <span class="kw">return</span> <span class="kw">true</span>;
+        <span class="kw">if</span> (o == <span class="kw">null</span> || getClass() != o.getClass()) <span class="kw">return</span> <span class="kw">false</span>;
+        <span class="kw">return</span> Objects.equals(numero, ((CuentaBancaria) o).numero);  <span class="cm">// igualdad por número</span>
+    }
+    @Override <span class="kw">public</span> <span class="kw">int</span> hashCode() { <span class="kw">return</span> Objects.hash(numero); }</pre></div></div><p>Observa cómo <strong>cada pieza del corte</strong> aparece: encapsulamiento (private), invariante (saldo≥0), constructores con <code>this()</code> y validación, solo-lectura (<code>final</code>), representación e igualdad por contenido.</p></section><section id="s-4-errores-tipicos-diagnostico"><h2>4. Errores típicos (diagnóstico)</h2><div class="table-responsive"><table class="styled-table"><thead><tr><th>Síntoma</th><th>Causa</th><th>Corrección</th></tr></thead><tbody><tr><td>El atributo no cambia en el setter</td><td>Falta <code>this.</code></td><td><code>this.x = x;</code></td></tr><tr><td><code>new Clase()</code> no compila</td><td>Se definió solo el constructor parametrizado</td><td>Declarar también el vacío</td></tr><tr><td>Dos objetos "iguales" no lo son</td><td>No se sobrescribió <code>equals</code></td><td>Implementar <code>equals</code> (+<code>hashCode</code>)</td></tr><tr><td>Objeto en estado inválido</td><td>Atributo <code>public</code> o setter sin validar</td><td>Encapsular + validar</td></tr><tr><td>Se pierden datos al "copiar"</td><td>Aliasing (<code>y = x</code>)</td><td>Crear <code>new</code> y copiar campos</td></tr></tbody></table></div></section><section id="autoevaluacion"><h2>Autoevaluación</h2><div class="quiz" id="quiz"><div class="quiz-progress"><span id="quizAnswered">0</span> de 5 respondidas</div><div class="q" data-correct="0" data-exp="Al ser saldo privado y modificarse solo por operaciones validadas, la invariante se garantiza."><div class="stem"><span class="n">Pregunta 1.</span> ¿Qué protege el encapsulamiento en la clase modelo?</div><button class="opt">La invariante saldo &gt;= 0 (nadie puede dejarla negativa desde afuera)</button><button class="opt">La velocidad del programa</button><button class="opt">El nombre de la clase</button><div class="feedback"></div></div><div class="q" data-correct="0" data-exp="final lo hace de solo lectura; se fija en el constructor y no cambia."><div class="stem"><span class="n">Pregunta 2.</span> En la clase modelo, ¿por qué numero es final?</div><button class="opt">Es la identidad de negocio: no debe cambiar tras crearse (solo lectura)</button><button class="opt">Para que sea más rápido</button><button class="opt">Para poder heredarlo</button><div class="feedback"></div></div><div class="q" data-correct="0" data-exp="this(...) encadena al otro constructor de la misma clase."><div class="stem"><span class="n">Pregunta 3.</span> ¿Qué hace this(numero, 0) en el constructor de un argumento?</div><button class="opt">Delega en el constructor completo para no duplicar inicialización</button><button class="opt">Crea otra cuenta</button><button class="opt">Llama a la superclase</button><div class="feedback"></div></div><div class="q" data-correct="0" data-exp="equals se sobrescribió por 'numero', así que igual número ⇒ equals true."><div class="stem"><span class="n">Pregunta 4.</span> Dos cuentas con el mismo número, ¿son equals?</div><button class="opt">Sí, porque equals se definió por número</button><button class="opt">No, nunca</button><button class="opt">Solo si son el mismo objeto (==)</button><div class="feedback"></div></div><div class="q" data-correct="0" data-exp="Sin this., el parámetro se asigna a sí mismo; el atributo no cambia."><div class="stem"><span class="n">Pregunta 5.</span> El atributo no cambia dentro de setNombre(String nombre). ¿Causa probable?</div><button class="opt">Falta this.: nombre = nombre se asigna a sí mismo</button><button class="opt">La clase es abstracta</button><button class="opt">Falta el main</button><div class="feedback"></div></div><div class="quiz-result" id="quizResult"><div>Tu puntaje</div><div class="score" id="quizScore">0/5</div><div id="quizMsg"></div></div></div></section><section id="actividad-de-la-semana-formativa" class="activity-section"><h2>Actividad de la semana (formativa)</h2><p>Opcional y no evaluable. Versión ampliada con rúbrica en <strong>optional-activity</strong> (entrega por GitHub).</p><ul><li>Diseña una clase completa del dominio que prefieras que integre TODO el corte: encapsulamiento con invariante, dos constructores con <code>this()</code> y validación, un atributo <code>final</code> de solo lectura, y <code>toString</code>/<code>equals</code>/<code>hashCode</code>.</li></ul></section>
 </main>
 <footer class="main-footer"><div class="container">
-  <p><strong>Programación y Diseño Orientado a Objetos</strong> <span class="sep">·</span> Semana 5 · Sesión 1 · Repaso del Corte 1</p>
+  <p><strong>Programación y Diseño Orientado a Objetos</strong> <span class="sep">·</span> Semana 5 · Sesión 1 · Síntesis integradora del Corte 1</p>
   <p>Ingeniería de Sistemas <span class="sep">·</span> Facultad de Ingeniería <span class="sep">·</span> © 2026 CORHUILA</p>
 </div></footer>
 <button id="scrollTopBtn" title="Volver arriba" aria-label="Volver arriba">↑</button>

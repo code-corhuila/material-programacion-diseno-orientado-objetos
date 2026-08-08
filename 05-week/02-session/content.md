@@ -6,94 +6,125 @@ week: 5
 session: 2
 corte: 1
 unit: Unidad 1 · Fundamentos de la POO
-topic: Práctica guiada tipo parcial
+topic: Práctica guiada tipo parcial (Corte 1)
 eyebrow: Unidad 1 · Cierre de Corte 1
-lead: Segunda sesión del cierre: resolvemos juntos un ejercicio con el formato del parcial, para que llegues con la técnica clara y confianza.
+lead: Resolvemos, paso a paso y con el formato del parcial, un problema de diseño de clases que integra todo el Corte 1. La meta es que interiorices un método de trabajo: leer, modelar, encapsular, construir y verificar.
 objectives:
-  - Resolver un ejercicio integrador con el formato del parcial.
-  - Aplicar encapsulamiento, constructores y validación en un caso.
-  - Autoevaluar la preparación.
+  - Aplicar un método sistemático para resolver un ejercicio de diseño.
+  - Integrar encapsulamiento, constructores y validación en un caso.
+  - Reconocer y evitar los errores más penalizados en el parcial.
 ---
 
-## 1. Ejercicio guiado
+## 1. Método de trabajo (para cualquier ejercicio de POO)
 
-**Enunciado:** modela una clase `CuentaBancaria` encapsulada, con constructor, consignar/retirar validados y `toString()`.
+1. **Lee y subraya** los sustantivos (candidatos a clases/atributos) y verbos (candidatos a métodos).
+2. **Define la clase**: atributos privados + invariantes.
+3. **Escribe el/los constructor(es)** que dejen el objeto válido (valida).
+4. **Agrega el comportamiento** (métodos de dominio).
+5. **Representa e iguala** si aplica (`toString`, `equals`).
+6. **Verifica** con casos límite.
 
-**Paso 1 — atributos y constructor:**
+## 2. Enunciado guiado
 
-```java
-// tab: Paso 1
-public class CuentaBancaria {
-    private String titular;
-    private double saldo;
-    public CuentaBancaria(String titular) {
-        this.titular = titular;
-        this.saldo = 0;
-    }
-}
-```
+> **Enunciado.** Modela un `Termostato` con una temperatura objetivo que debe mantenerse entre **15 y 30 °C**. Debe permitir subir/bajar de a 1 °C sin salirse del rango, y reportar su estado.
 
-**Paso 2 — operaciones con validación:**
+**Paso 2 — clase + invariante:**
 
 ```java
 // tab: Paso 2
-public void consignar(double m) { if (m > 0) saldo += m; }
-public boolean retirar(double m) {
-    if (m > 0 && m <= saldo) { saldo -= m; return true; }
-    return false;
+public class Termostato {
+    private int objetivo;              // invariante: 15 <= objetivo <= 30
 }
-public double getSaldo() { return saldo; }
 ```
 
-**Paso 3 — representación:**
+**Paso 3 — constructor con validación:**
 
 ```java
 // tab: Paso 3
-@Override public String toString() {
-    return titular + " -> saldo: " + saldo;
+public Termostato(int inicial) {
+    objetivo = (inicial >= 15 && inicial <= 30) ? inicial : 20;  // valor seguro
 }
 ```
 
-## 2. Lista de verificación del ejercicio
+**Paso 4 — comportamiento de dominio (protege la invariante):**
 
-- [ ] Atributos privados.
-- [ ] Constructor que inicializa el estado.
-- [ ] Validación en consignar y retirar.
-- [ ] `toString()` legible.
-- [ ] Casos de prueba (válidos e inválidos).
+```java
+// tab: Paso 4
+public void subir() { if (objetivo < 30) objetivo++; }
+public void bajar() { if (objetivo > 15) objetivo--; }
+public int getObjetivo() { return objetivo; }
+```
 
-## 3. Recomendaciones para el parcial
+**Paso 5 — representación:**
 
-- Lee el enunciado y **identifica la clase, sus atributos y su comportamiento** antes de codificar.
-- Encapsula desde el inicio; valida en los métodos que cambian el estado.
-- Prueba con casos límite (monto negativo, retiro mayor al saldo).
+```java
+// tab: Paso 5
+@Override public String toString() { return "Termostato a " + objetivo + "°C"; }
+```
 
-> tip: Un diseño limpio (privado + validado + toString) suele valer más puntos que muchas líneas sin estructura.
+**Paso 6 — verificación (casos límite):**
+
+```java
+// tab: Paso 6
+Termostato t = new Termostato(30);
+t.subir();                    // sigue en 30 (no se pasa)
+System.out.println(t);        // Termostato a 30°C
+Termostato malo = new Termostato(99);  // fuera de rango -> queda en 20
+```
+
+## 3. Errores más penalizados en el parcial
+
+- Atributos `public` o setters que permiten violar la invariante (ej. `setObjetivo(99)`).
+- Constructor que no valida → objeto en estado inválido.
+- Olvidar `this` cuando parámetro y atributo coinciden.
+- No probar los **casos límite** (15, 30, y fuera de rango).
+
+> tip: Un diseño limpio (encapsulado + validado + probado en los límites) suele valer más que muchas líneas: demuestra que entiendes el porqué, no solo la sintaxis.
+
+## 4. Lista de verificación del parcial
+
+- [ ] Identifiqué clase, atributos (con invariante) y comportamiento.
+- [ ] Atributos privados; sin setters que rompan la invariante.
+- [ ] Constructor(es) que validan y dejan el objeto válido.
+- [ ] `toString`/`equals` cuando corresponde.
+- [ ] Probé casos límite.
 
 ## Autoevaluación
 
 ```quiz
-Q: En retirar(m), ¿qué condición evita dejar el saldo negativo?
-* m > 0 && m <= saldo
-- m > saldo
-- m != 0
-E: Solo se retira si el monto es positivo y no supera el saldo disponible.
+Q: ¿Cuál es el primer paso recomendado ante un enunciado de diseño?
+* Leer y subrayar sustantivos (clases/atributos) y verbos (métodos)
+- Escribir el main de una vez
+- Copiar una clase anterior
+E: Identificar sustantivos y verbos guía el modelado antes de codificar.
 
-Q: ¿Qué conviene hacer antes de codificar en el parcial?
-* Identificar la clase, sus atributos y su comportamiento
-- Escribir el main primero sin pensar
-- Copiar código al azar
-E: Diseñar primero (clase, estado, comportamiento) guía una solución limpia.
+Q: En el Termostato, ¿por qué subir() lleva if (objetivo < 30)?
+* Para no violar la invariante (máximo 30 °C)
+- Para que sea más rápido
+- Por estética
+E: La guarda protege la invariante 15..30 al subir la temperatura.
 
-Q: ¿Qué caso límite deberías probar en una cuenta?
-* Retirar más que el saldo
-- Solo consignaciones válidas
-- Nada, si compila basta
-E: Los casos límite (retiro > saldo, monto negativo) validan la robustez.
+Q: Un constructor que NO valida su parámetro puede dejar...
+* Un objeto en estado inválido (rompe la invariante desde el nacimiento)
+- Un objeto más rápido
+- La clase sin compilar
+E: Sin validar, el objeto puede nacer inválido; por eso se valida en el constructor.
+
+Q: ¿Qué casos conviene probar en el Termostato?
+* Los límites 15 y 30, y un valor fuera de rango
+- Solo un valor intermedio
+- Ninguno si compila
+E: Los casos límite (bordes y fuera de rango) verifican la robustez.
+
+Q: ¿Por qué evitar setObjetivo(int) público en este diseño?
+* Permitiría fijar cualquier temperatura y violar la invariante
+- Haría el código más corto
+- Es obligatorio tenerlo
+E: Un setter genérico rompería la regla; se exponen operaciones de dominio (subir/bajar).
 ```
 
 ## Actividad de la semana (formativa)
 
 Opcional y no evaluable. Versión ampliada con rúbrica en **optional-activity** (entrega por GitHub).
 
-- Resuelve el ejercicio de `CuentaBancaria` completo y agrega casos de prueba.
+- Resuelve el `Termostato` completo aplicando el método de 6 pasos y agrega pruebas de todos los casos límite.

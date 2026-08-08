@@ -6,7 +6,7 @@
   <organizations default="ORG-OVA">
     <organization identifier="ORG-OVA">
       <title>Programación y Diseño Orientado a Objetos · Semana 5 · Sesión 2 · CORHUILA</title>
-      <item identifier="ITEM-OVA" identifierref="RES-OVA"><title>Práctica guiada tipo parcial</title></item>
+      <item identifier="ITEM-OVA" identifierref="RES-OVA"><title>Práctica guiada tipo parcial (Corte 1)</title></item>
     </organization>
   </organizations>
   <resources>
