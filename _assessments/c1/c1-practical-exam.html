@@ -1,0 +1,26 @@
+<h4>Parcial práctico · Corte 1</h4>
+<p><strong>Semana 5 del corte.</strong> Evaluación individual, en clase o por <strong>GitHub</strong> (en tu <strong>fork del repositorio de la clase</strong>). Valor: <strong>5.0</strong>. Se evalúa el razonamiento y el diseño, no solo que compile. Temas del corte (encapsulamiento, constructores, identidad).</p>
+
+<h5>Problema 1 — Clase encapsulada con invariante (2.0)</h5>
+<p>Implementa <code>Temperatura</code> (grados Celsius) que <strong>nunca</strong> permita un valor por debajo de −273.15 (cero absoluto). Usa atributo privado, validación en constructor y en el setter (o hazla inmutable). Incluye 2 pruebas que demuestren el rechazo de valores inválidos.</p>
+
+<h5>Problema 2 — Identidad (equals/hashCode) (2.0)</h5>
+<p>Implementa <code>Producto</code> (código, nombre) con <code>equals()</code> y <code>hashCode()</code> basados en el <strong>código</strong>. Demuestra que dos productos con el mismo código son <code>equals</code> y funcionan como clave en un <code>HashSet</code> (no se duplican).</p>
+
+<h5>Problema 3 — Referencias y aliasing (1.0)</h5>
+<p>Escribe un fragmento donde dos variables apunten al mismo objeto y muestra el efecto del <strong>aliasing</strong>. Explica en comentarios cómo evitarlo (copia defensiva o inmutabilidad).</p>
+
+<h5>English requirement (20%)</h5>
+<p>For <strong>Problem 2</strong>, write 2–3 sentences <strong>in English</strong> explaining the <em>equals/hashCode contract</em> (equal objects must have the same hash code).</p>
+
+<h5>Cómo entregar</h5>
+<p>Entrega en tu <strong>fork del repositorio de la clase</strong>, dentro de la carpeta de la semana correspondiente. Sigue el <strong>Manual de Entrega por GitHub</strong> (Información importante): fork &rarr; clonar &rarr; agregar tu trabajo &rarr; <code>git add/commit/push</code>. Ten tu <strong>repo de perfil</strong> con el bloque <strong>CONFIG</strong> (FULL_NAME + GITHUB_USER).</p>
+
+<h5>Rúbrica</h5>
+<table border="1" cellpadding="6" cellspacing="0">
+  <tr><th>Criterio</th><th>Excelente</th><th>Aceptable</th><th>Por mejorar</th><th>Pts</th></tr>
+  <tr><td>P1 encapsulamiento + invariante</td><td>Rechaza inválidos, con pruebas</td><td>Parcial</td><td>Falla</td><td>2.0</td></tr>
+  <tr><td>P2 equals/hashCode + HashSet</td><td>Correcto y demostrado</td><td>Con detalles</td><td>Falla</td><td>2.0</td></tr>
+  <tr><td>P3 aliasing + solución (EN)</td><td>Claro, con copia/inmutabilidad</td><td>Parcial</td><td>Falla</td><td>1.0</td></tr>
+</table>
+<p><strong>Total: 5.0.</strong></p>

@@ -1,0 +1,26 @@
+<h4>Actividad calificable · Corte 1 — Clase encapsulada en Java</h4>
+<p><strong>Semana 4 del corte.</strong> Entrega individual por <strong>GitHub</strong>. Entrega en tu <strong>fork del repositorio de la clase</strong>. Valor: <strong>5.0</strong>.</p>
+
+<h5>Enunciado</h5>
+<ol>
+  <li>Implementa una clase <code>CuentaBancaria</code> con atributos <strong>privados</strong> (titular, saldo) e <strong>invariante</strong> saldo ≥ 0.</li>
+  <li>Añade <strong>constructores</strong> (uno completo y otro que use <code>this(...)</code>) y métodos <code>depositar</code>/<code>retirar</code> que <strong>validen</strong> (no permitir saldo negativo ni montos ≤ 0).</li>
+  <li>Sobrescribe <code>toString()</code>, y <code>equals()</code> + <code>hashCode()</code> de forma coherente (p. ej. por número de cuenta).</li>
+  <li>En el <code>main</code>, demuestra la validación y que <code>equals</code> funciona.</li>
+</ol>
+
+<h5>Requisito en inglés (20%)</h5>
+<p>Sección del README <strong><em>"Design decisions"</em></strong> (mínimo 5 oraciones, en inglés): explica encapsulation, invariants y el contrato equals/hashCode.</p>
+
+<h5>Cómo entregar</h5>
+<p>Entrega en tu <strong>fork del repositorio de la clase</strong>, dentro de la carpeta de la semana correspondiente. Sigue el <strong>Manual de Entrega por GitHub</strong> (Información importante): fork &rarr; clonar &rarr; agregar tu trabajo &rarr; <code>git add/commit/push</code> &rarr; Pull Request si el docente lo pide. Ten tu <strong>repo de perfil</strong> con el bloque <strong>CONFIG</strong> (FULL_NAME + GITHUB_USER).</p>
+
+<h5>Rúbrica</h5>
+<table border="1" cellpadding="6" cellspacing="0">
+  <tr><th>Criterio</th><th>Excelente</th><th>Aceptable</th><th>Por mejorar</th><th>Pts</th></tr>
+  <tr><td>Encapsulamiento + invariante</td><td>Privados y saldo≥0 garantizado</td><td>Parcial</td><td>Falla</td><td>1.5</td></tr>
+  <tr><td>Constructores (this) + validación</td><td>Correctos y validan</td><td>Con detalles</td><td>Falla</td><td>1.5</td></tr>
+  <tr><td>toString + equals/hashCode</td><td>Coherentes</td><td>Uno falta</td><td>Fallan</td><td>1.5</td></tr>
+  <tr><td>"Design decisions" (EN)</td><td>Claro y técnico</td><td>Breve</td><td>Ausente</td><td>0.5</td></tr>
+</table>
+<p><strong>Total: 5.0.</strong></p>
