@@ -32,25 +32,14 @@ Construye una **aplicación de consola en Java** para un problema de gestión (b
 - Diseño por capas (modelo / servicio / persistencia / app).
 - README completo y commits incrementales.
 
-## 3. Cómo entregar
+## 3. Cómo entregar (por GitHub)
 
-Entrega **por GitHub**. Repositorio: `poo-proyecto-final`.
+Las entregas se realizan en **tu fork del repositorio de la clase**, dentro de la carpeta de esta semana. Si nunca has usado GitHub, sigue el **[Manual de Entrega por GitHub](https://code-corhuila.github.io/ova-web/manuales/Manual-Entrega-GitHub.pdf)** paso a paso.
 
-```
-poo-proyecto-final/
-  README.md    -> problema, diseño (clases/relaciones), instrucciones, capturas
-  src/
-    modelo/       -> entidades del dominio
-    servicio/     -> logica de negocio (CRUD, reglas)
-    persistencia/ -> repositorio (guardar/cargar)
-    app/          -> Main (consola)
-  datos/         -> archivos de datos (ej. datos.csv)
-```
-
-1. Crea el repositorio público con ese nombre.
-2. Sube el código organizado por capas y el README.
-3. Realiza commits incrementales y claros durante el desarrollo.
-4. Comparte el enlace por el canal indicado por el docente.
+1. Haz **fork** del repositorio de la clase (enlace dado por el docente) y **clónalo**.
+2. Coloca tu entrega en la carpeta **`15-week/`** correspondiente a esta semana.
+3. Sube los cambios: `git add .` · `git commit -m "Entrega semana 15"` · `git push` (abre un *Pull Request* si el docente lo pide).
+4. Verifica que tienes tu **repo de perfil** con el bloque **CONFIG** (`FULL_NAME` + `GITHUB_USER`); sin él, tus entregas no se detectan.
 
 ## 4. Rúbrica de evaluación
 

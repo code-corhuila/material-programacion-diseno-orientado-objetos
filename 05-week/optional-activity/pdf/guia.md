@@ -31,19 +31,14 @@ Diseña e implementa **una** clase a tu elección (p. ej. `CuentaBancaria`, `Ter
 - Casos límite cubiertos.
 - README con: la invariante, decisiones de diseño y la salida de las pruebas.
 
-## 3. Cómo entregar
+## 3. Cómo entregar (por GitHub)
 
-Entrega **por GitHub**. Repositorio: `poo-s05-integrador`.
+Las entregas se realizan en **tu fork del repositorio de la clase**, dentro de la carpeta de esta semana. Si nunca has usado GitHub, sigue el **[Manual de Entrega por GitHub](https://code-corhuila.github.io/ova-web/manuales/Manual-Entrega-GitHub.pdf)** paso a paso.
 
-```
-poo-s05-integrador/
-  README.md   -> invariante + decisiones + salida de pruebas
-  src/         -> tu clase + Main.java
-```
-
-1. Crea el repositorio público con ese nombre.
-2. Sube el código y el README.
-3. Comparte el enlace por el canal indicado por el docente.
+1. Haz **fork** del repositorio de la clase (enlace dado por el docente) y **clónalo**.
+2. Coloca tu entrega en la carpeta **`05-week/`** correspondiente a esta semana.
+3. Sube los cambios: `git add .` · `git commit -m "Entrega semana 05"` · `git push` (abre un *Pull Request* si el docente lo pide).
+4. Verifica que tienes tu **repo de perfil** con el bloque **CONFIG** (`FULL_NAME` + `GITHUB_USER`); sin él, tus entregas no se detectan.
 
 ## 4. Rúbrica de evaluación
 

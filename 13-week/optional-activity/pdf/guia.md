@@ -28,20 +28,14 @@
 - try-with-resources + manejo de IOException.
 - Persistencia separada en `ContactoRepositorio` (no en `Contacto` ni en `Main`).
 
-## 3. Cómo entregar
+## 3. Cómo entregar (por GitHub)
 
-Entrega **por GitHub**. Repositorio: `poo-s13-archivos`.
+Las entregas se realizan en **tu fork del repositorio de la clase**, dentro de la carpeta de esta semana. Si nunca has usado GitHub, sigue el **[Manual de Entrega por GitHub](https://code-corhuila.github.io/ova-web/manuales/Manual-Entrega-GitHub.pdf)** paso a paso.
 
-```
-poo-s13-archivos/
-  README.md   -> como ejecutar + ejemplo del CSV + evidencia del round-trip
-  src/         -> Contacto.java, ContactoRepositorio.java, Main.java
-  data/        -> contactos.csv (ejemplo)
-```
-
-1. Crea el repositorio público con ese nombre.
-2. Sube el código, el README y un CSV de ejemplo.
-3. Comparte el enlace por el canal indicado por el docente.
+1. Haz **fork** del repositorio de la clase (enlace dado por el docente) y **clónalo**.
+2. Coloca tu entrega en la carpeta **`13-week/`** correspondiente a esta semana.
+3. Sube los cambios: `git add .` · `git commit -m "Entrega semana 13"` · `git push` (abre un *Pull Request* si el docente lo pide).
+4. Verifica que tienes tu **repo de perfil** con el bloque **CONFIG** (`FULL_NAME` + `GITHUB_USER`); sin él, tus entregas no se detectan.
 
 ## 4. Rúbrica de evaluación
 
