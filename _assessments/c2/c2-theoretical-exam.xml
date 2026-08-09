@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- POO · Corte 2 · Parcial teorico (sem 10). 20 x 0.25 = 5.0. 4/8/8. 4 EN (T7,T10,T14,T17). Java. Temas: herencia, polimorfismo, abstractas/interfaces, composicion/SRP. -->
+<quiz>
+  <question type="category">
+    <category><text>$course$/top/CORHUILA/POO/C2-Teorico</text></category>
+  </question>
+
+  <!-- BASICA (4) -->
+  <question type="multichoice">
+    <name><text>P2T01 - extends es-un</text></name>
+    <questiontext format="html"><text><![CDATA[<p><code>extends</code> modela una relación...</p>]]></text></questiontext>
+    <generalfeedback format="html"><text><![CDATA[<p>"es-un" (herencia).</p>]]></text></generalfeedback>
+    <defaultgrade>0.2500000</defaultgrade><penalty>0.3333333</penalty><hidden>0</hidden><single>true</single><shuffleanswers>true</shuffleanswers><answernumbering>abc</answernumbering>
+    <answer fraction="100" format="html"><text><![CDATA["es-un"]]></text><feedback format="html"><text><![CDATA[Correcto.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA["tiene-un"]]></text><feedback format="html"><text><![CDATA[Eso es composición.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA["depende-de"]]></text><feedback format="html"><text><![CDATA[Eso es una dependencia.]]></text></feedback></answer>
+  </question>
+
+  <question type="multichoice">
+    <name><text>P2T02 - Abstracta no instancia</text></name>
+    <questiontext format="html"><text><![CDATA[<p>Una clase abstracta...</p>]]></text></questiontext>
+    <generalfeedback format="html"><text><![CDATA[<p>No se puede instanciar directamente con new.</p>]]></text></generalfeedback>
+    <defaultgrade>0.2500000</defaultgrade><penalty>0.3333333</penalty><hidden>0</hidden><single>true</single><shuffleanswers>true</shuffleanswers><answernumbering>abc</answernumbering>
+    <answer fraction="100" format="html"><text><![CDATA[No se puede instanciar directamente]]></text><feedback format="html"><text><![CDATA[Correcto.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA[Se instancia igual que una normal]]></text><feedback format="html"><text><![CDATA[No: es abstracta.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA[No admite subclases]]></text><feedback format="html"><text><![CDATA[Precisamente se extiende.]]></text></feedback></answer>
+  </question>
+
+  <question type="multichoice">
+    <name><text>P2T03 - Interfaz contrato</text></name>
+    <questiontext format="html"><text><![CDATA[<p>Una interfaz define principalmente...</p>]]></text></questiontext>
+    <generalfeedback format="html"><text><![CDATA[<p>Un contrato: qué operaciones debe ofrecer quien la implementa.</p>]]></text></generalfeedback>
+    <defaultgrade>0.2500000</defaultgrade><penalty>0.3333333</penalty><hidden>0</hidden><single>true</single><shuffleanswers>true</shuffleanswers><answernumbering>abc</answernumbering>
+    <answer fraction="100" format="html"><text><![CDATA[Un contrato de operaciones a implementar]]></text><feedback format="html"><text><![CDATA[Correcto.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA[El estado interno de un objeto]]></text><feedback format="html"><text><![CDATA[Las interfaces no guardan estado.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA[Una copia de una clase]]></text><feedback format="html"><text><![CDATA[No es una copia.]]></text></feedback></answer>
+  </question>
+
+  <question type="multichoice">
+    <name><text>P2T04 - Composicion tiene-un</text></name>
+    <questiontext format="html"><text><![CDATA[<p>La composición modela una relación...</p>]]></text></questiontext>
+    <generalfeedback format="html"><text><![CDATA[<p>"tiene-un": un objeto contiene a otro como atributo.</p>]]></text></generalfeedback>
+    <defaultgrade>0.2500000</defaultgrade><penalty>0.3333333</penalty><hidden>0</hidden><single>true</single><shuffleanswers>true</shuffleanswers><answernumbering>abc</answernumbering>
+    <answer fraction="100" format="html"><text><![CDATA["tiene-un"]]></text><feedback format="html"><text><![CDATA[Correcto.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA["es-un"]]></text><feedback format="html"><text><![CDATA[Eso es herencia.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA["es-igual-a"]]></text><feedback format="html"><text><![CDATA[No es una relación de modelado OO.]]></text></feedback></answer>
+  </question>
+
+  <!-- MEDIA (8) -->
+  <question type="multichoice">
+    <name><text>P2T05 - Dynamic dispatch</text></name>
+    <questiontext format="html"><text><![CDATA[<p>¿Qué imprime, si Gato sobrescribe sonido()?</p><pre>Animal a = new Gato();
+a.sonido();  // Gato imprime "miau"</pre>]]></text></questiontext>
+    <generalfeedback format="html"><text><![CDATA[<p>El del tipo real (Gato): "miau".</p>]]></text></generalfeedback>
+    <defaultgrade>0.2500000</defaultgrade><penalty>0.3333333</penalty><hidden>0</hidden><single>true</single><shuffleanswers>true</shuffleanswers><answernumbering>abc</answernumbering>
+    <answer fraction="100" format="html"><text><![CDATA[miau (el de Gato)]]></text><feedback format="html"><text><![CDATA[Correcto.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA[El de Animal]]></text><feedback format="html"><text><![CDATA[Manda el tipo real, no el declarado.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA[Nada, no compila]]></text><feedback format="html"><text><![CDATA[Compila: Gato es Animal.]]></text></feedback></answer>
+  </question>
+
+  <question type="multichoice">
+    <name><text>P2T06 - super()</text></name>
+    <questiontext format="html"><text><![CDATA[<p><code>super(...)</code> en un constructor sirve para...</p>]]></text></questiontext>
+    <generalfeedback format="html"><text><![CDATA[<p>Invocar el constructor de la superclase (primera instrucción).</p>]]></text></generalfeedback>
+    <defaultgrade>0.2500000</defaultgrade><penalty>0.3333333</penalty><hidden>0</hidden><single>true</single><shuffleanswers>true</shuffleanswers><answernumbering>abc</answernumbering>
+    <answer fraction="100" format="html"><text><![CDATA[Llamar al constructor de la superclase]]></text><feedback format="html"><text><![CDATA[Correcto.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA[Llamar a otro constructor de la misma clase]]></text><feedback format="html"><text><![CDATA[Eso es this(...).]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA[Destruir el objeto padre]]></text><feedback format="html"><text><![CDATA[No hace eso.]]></text></feedback></answer>
+  </question>
+
+  <question type="multichoice">
+    <name><text>P2T07 - EN override vs overload</text></name>
+    <questiontext format="html"><text><![CDATA[<p><em>(English)</em> What is the difference between <strong>overriding</strong> and <strong>overloading</strong>?</p>]]></text></questiontext>
+    <generalfeedback format="html"><text><![CDATA[<p>Overriding redefines a parent method (same signature) in a subclass; overloading is same name, different parameters in the same class.</p>]]></text></generalfeedback>
+    <defaultgrade>0.2500000</defaultgrade><penalty>0.3333333</penalty><hidden>0</hidden><single>true</single><shuffleanswers>true</shuffleanswers><answernumbering>abc</answernumbering>
+    <answer fraction="100" format="html"><text><![CDATA[Overriding redefines a parent method; overloading is same name with different parameters]]></text><feedback format="html"><text><![CDATA[Correct.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA[They are two names for the same thing]]></text><feedback format="html"><text><![CDATA[They are different concepts.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA[Overloading needs inheritance; overriding does not]]></text><feedback format="html"><text><![CDATA[It is the opposite: overriding needs inheritance.]]></text></feedback></answer>
+  </question>
+
+  <question type="multichoice">
+    <name><text>P2T08 - Orden constructores</text></name>
+    <questiontext format="html"><text><![CDATA[<p>¿Qué imprime?</p><pre>class Vehiculo { Vehiculo(){ System.out.print("V"); } }
+class Auto extends Vehiculo { Auto(){ System.out.print("A"); } }
+new Auto();</pre>]]></text></questiontext>
+    <generalfeedback format="html"><text><![CDATA[<p>El padre primero: "VA".</p>]]></text></generalfeedback>
+    <defaultgrade>0.2500000</defaultgrade><penalty>0.3333333</penalty><hidden>0</hidden><single>true</single><shuffleanswers>true</shuffleanswers><answernumbering>abc</answernumbering>
+    <answer fraction="100" format="html"><text><![CDATA[VA]]></text><feedback format="html"><text><![CDATA[Correcto.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA[AV]]></text><feedback format="html"><text><![CDATA[El constructor del padre corre primero.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA[A]]></text><feedback format="html"><text><![CDATA[También corre el de Vehiculo.]]></text></feedback></answer>
+  </question>
+
+  <question type="multichoice">
+    <name><text>P2T09 - instanceof</text></name>
+    <questiontext format="html"><text><![CDATA[<p>Para hacer un <em>downcast</em> seguro conviene verificar antes con...</p>]]></text></questiontext>
+    <generalfeedback format="html"><text><![CDATA[<p><code>instanceof</code>, para no lanzar ClassCastException.</p>]]></text></generalfeedback>
+    <defaultgrade>0.2500000</defaultgrade><penalty>0.3333333</penalty><hidden>0</hidden><single>true</single><shuffleanswers>true</shuffleanswers><answernumbering>abc</answernumbering>
+    <answer fraction="100" format="html"><text><![CDATA[instanceof]]></text><feedback format="html"><text><![CDATA[Correcto.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA[toString()]]></text><feedback format="html"><text><![CDATA[No verifica el tipo.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA[hashCode()]]></text><feedback format="html"><text><![CDATA[No verifica el tipo.]]></text></feedback></answer>
+  </question>
+
+  <question type="multichoice">
+    <name><text>P2T10 - EN interface no state</text></name>
+    <questiontext format="html"><text><![CDATA[<p><em>(English)</em> Compared with an abstract class, a (classic) interface...</p>]]></text></questiontext>
+    <generalfeedback format="html"><text><![CDATA[<p>Cannot hold instance state (mutable fields); it defines behavior a class must implement, and a class can implement several.</p>]]></text></generalfeedback>
+    <defaultgrade>0.2500000</defaultgrade><penalty>0.3333333</penalty><hidden>0</hidden><single>true</single><shuffleanswers>true</shuffleanswers><answernumbering>abc</answernumbering>
+    <answer fraction="100" format="html"><text><![CDATA[Cannot hold instance state, and a class can implement several]]></text><feedback format="html"><text><![CDATA[Correct.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA[Can hold mutable instance fields like a class]]></text><feedback format="html"><text><![CDATA[Interfaces do not hold instance state.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA[Can be instantiated with new]]></text><feedback format="html"><text><![CDATA[Interfaces are not instantiated directly.]]></text></feedback></answer>
+  </question>
+
+  <question type="multichoice">
+    <name><text>P2T11 - Metodo abstracto</text></name>
+    <questiontext format="html"><text><![CDATA[<p>Una subclase <strong>concreta</strong> de una clase abstracta...</p>]]></text></questiontext>
+    <generalfeedback format="html"><text><![CDATA[<p>Debe implementar todos los métodos abstractos heredados.</p>]]></text></generalfeedback>
+    <defaultgrade>0.2500000</defaultgrade><penalty>0.3333333</penalty><hidden>0</hidden><single>true</single><shuffleanswers>true</shuffleanswers><answernumbering>abc</answernumbering>
+    <answer fraction="100" format="html"><text><![CDATA[Debe implementar los métodos abstractos heredados]]></text><feedback format="html"><text><![CDATA[Correcto.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA[Puede dejarlos sin implementar]]></text><feedback format="html"><text><![CDATA[Entonces también sería abstracta.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA[No puede añadir métodos propios]]></text><feedback format="html"><text><![CDATA[Sí puede añadir sus propios métodos.]]></text></feedback></answer>
+  </question>
+
+  <question type="multichoice">
+    <name><text>P2T12 - Upcasting</text></name>
+    <questiontext format="html"><text><![CDATA[<p>Asignar <code>Animal a = new Perro();</code> (upcasting) es...</p>]]></text></questiontext>
+    <generalfeedback format="html"><text><![CDATA[<p>Implícito y seguro: un Perro siempre es un Animal.</p>]]></text></generalfeedback>
+    <defaultgrade>0.2500000</defaultgrade><penalty>0.3333333</penalty><hidden>0</hidden><single>true</single><shuffleanswers>true</shuffleanswers><answernumbering>abc</answernumbering>
+    <answer fraction="100" format="html"><text><![CDATA[Implícito y seguro]]></text><feedback format="html"><text><![CDATA[Correcto.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA[Requiere cast explícito y puede fallar]]></text><feedback format="html"><text><![CDATA[Eso es el downcasting.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA[No compila]]></text><feedback format="html"><text><![CDATA[Compila sin problema.]]></text></feedback></answer>
+  </question>
+
+  <!-- ALTA (8) -->
+  <question type="multichoice">
+    <name><text>P2T13 - Polimorfismo coleccion</text></name>
+    <questiontext format="html"><text><![CDATA[<p>Recorrer una lista de <code>Empleado</code> y llamar <code>calcularSueldo()</code>, con subclases que lo sobrescriben, ejecuta...</p>]]></text></questiontext>
+    <generalfeedback format="html"><text><![CDATA[<p>La versión de cada tipo real (polimorfismo): el código no cambia al añadir un nuevo tipo (OCP).</p>]]></text></generalfeedback>
+    <defaultgrade>0.2500000</defaultgrade><penalty>0.3333333</penalty><hidden>0</hidden><single>true</single><shuffleanswers>true</shuffleanswers><answernumbering>abc</answernumbering>
+    <answer fraction="100" format="html"><text><![CDATA[El cálculo propio de cada subclase (tipo real)]]></text><feedback format="html"><text><![CDATA[Correcto.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA[Siempre el de la clase Empleado base]]></text><feedback format="html"><text><![CDATA[El enlace dinámico usa el tipo real.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA[Un método elegido al azar]]></text><feedback format="html"><text><![CDATA[No hay azar; manda el tipo real.]]></text></feedback></answer>
+  </question>
+
+  <question type="multichoice">
+    <name><text>P2T14 - EN Liskov</text></name>
+    <questiontext format="html"><text><![CDATA[<p><em>(English)</em> Liskov Substitution Principle: a subclass...</p>]]></text></questiontext>
+    <generalfeedback format="html"><text><![CDATA[<p>Must be usable wherever its superclass is expected, without breaking expected behavior.</p>]]></text></generalfeedback>
+    <defaultgrade>0.2500000</defaultgrade><penalty>0.3333333</penalty><hidden>0</hidden><single>true</single><shuffleanswers>true</shuffleanswers><answernumbering>abc</answernumbering>
+    <answer fraction="100" format="html"><text><![CDATA[Must be substitutable for its superclass without breaking behavior]]></text><feedback format="html"><text><![CDATA[Correct.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA[Must override every method]]></text><feedback format="html"><text><![CDATA[Not required by LSP.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA[Must be abstract]]></text><feedback format="html"><text><![CDATA[Unrelated to LSP.]]></text></feedback></answer>
+  </question>
+
+  <question type="multichoice">
+    <name><text>P2T15 - Preferir composicion</text></name>
+    <questiontext format="html"><text><![CDATA[<p>¿Por qué suele preferirse composición sobre herencia?</p>]]></text></questiontext>
+    <generalfeedback format="html"><text><![CDATA[<p>Es más flexible y acopla menos: se cambia el comportamiento cambiando el componente, sin atarse a una jerarquía rígida.</p>]]></text></generalfeedback>
+    <defaultgrade>0.2500000</defaultgrade><penalty>0.3333333</penalty><hidden>0</hidden><single>true</single><shuffleanswers>true</shuffleanswers><answernumbering>abc</answernumbering>
+    <answer fraction="100" format="html"><text><![CDATA[Es más flexible y genera menos acoplamiento]]></text><feedback format="html"><text><![CDATA[Correcto.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA[Siempre usa menos memoria]]></text><feedback format="html"><text><![CDATA[No es una cuestión de memoria.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA[Evita escribir métodos]]></text><feedback format="html"><text><![CDATA[No se trata de eso.]]></text></feedback></answer>
+  </question>
+
+  <question type="multichoice">
+    <name><text>P2T16 - SRP</text></name>
+    <questiontext format="html"><text><![CDATA[<p>El principio de responsabilidad única (SRP) dice que una clase debe...</p>]]></text></questiontext>
+    <generalfeedback format="html"><text><![CDATA[<p>Tener una sola razón para cambiar (una responsabilidad).</p>]]></text></generalfeedback>
+    <defaultgrade>0.2500000</defaultgrade><penalty>0.3333333</penalty><hidden>0</hidden><single>true</single><shuffleanswers>true</shuffleanswers><answernumbering>abc</answernumbering>
+    <answer fraction="100" format="html"><text><![CDATA[Tener una sola responsabilidad (una razón para cambiar)]]></text><feedback format="html"><text><![CDATA[Correcto.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA[Tener el mayor número de métodos posible]]></text><feedback format="html"><text><![CDATA[Al contrario, eso baja la cohesión.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA[Heredar de varias clases]]></text><feedback format="html"><text><![CDATA[No tiene que ver con SRP.]]></text></feedback></answer>
+  </question>
+
+  <question type="multichoice">
+    <name><text>P2T17 - EN dynamic dispatch</text></name>
+    <questiontext format="html"><text><![CDATA[<p><em>(English)</em> "Dynamic dispatch" (late binding) means the method that runs is chosen...</p>]]></text></questiontext>
+    <generalfeedback format="html"><text><![CDATA[<p>At runtime, based on the object's actual type.</p>]]></text></generalfeedback>
+    <defaultgrade>0.2500000</defaultgrade><penalty>0.3333333</penalty><hidden>0</hidden><single>true</single><shuffleanswers>true</shuffleanswers><answernumbering>abc</answernumbering>
+    <answer fraction="100" format="html"><text><![CDATA[At runtime, based on the object's real type]]></text><feedback format="html"><text><![CDATA[Correct.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA[At compile time, based on the declared type]]></text><feedback format="html"><text><![CDATA[That would be static binding.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA[Randomly at each call]]></text><feedback format="html"><text><![CDATA[There is nothing random about it.]]></text></feedback></answer>
+  </question>
+
+  <question type="multichoice">
+    <name><text>P2T18 - ClassCastException</text></name>
+    <questiontext format="html"><text><![CDATA[<p>¿Qué ocurre?</p><pre>Animal a = new Gato();
+Perro p = (Perro) a;</pre>]]></text></questiontext>
+    <generalfeedback format="html"><text><![CDATA[<p>El objeto real es un Gato, no un Perro → ClassCastException en ejecución.</p>]]></text></generalfeedback>
+    <defaultgrade>0.2500000</defaultgrade><penalty>0.3333333</penalty><hidden>0</hidden><single>true</single><shuffleanswers>true</shuffleanswers><answernumbering>abc</answernumbering>
+    <answer fraction="100" format="html"><text><![CDATA[Lanza ClassCastException en tiempo de ejecución]]></text><feedback format="html"><text><![CDATA[Correcto.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA[Convierte el Gato en Perro]]></text><feedback format="html"><text><![CDATA[El casting no transforma el objeto.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA[No compila]]></text><feedback format="html"><text><![CDATA[Compila; falla en ejecución.]]></text></feedback></answer>
+  </question>
+
+  <question type="multichoice">
+    <name><text>P2T19 - Clase abstracta contenido</text></name>
+    <questiontext format="html"><text><![CDATA[<p>Una clase abstracta puede contener...</p>]]></text></questiontext>
+    <generalfeedback format="html"><text><![CDATA[<p>Métodos abstractos (sin cuerpo) y también métodos concretos y atributos.</p>]]></text></generalfeedback>
+    <defaultgrade>0.2500000</defaultgrade><penalty>0.3333333</penalty><hidden>0</hidden><single>true</single><shuffleanswers>true</shuffleanswers><answernumbering>abc</answernumbering>
+    <answer fraction="100" format="html"><text><![CDATA[Métodos abstractos y también métodos concretos y atributos]]></text><feedback format="html"><text><![CDATA[Correcto.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA[Solo métodos abstractos]]></text><feedback format="html"><text><![CDATA[También admite métodos concretos.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA[Nada, está vacía por definición]]></text><feedback format="html"><text><![CDATA[Puede tener bastante contenido.]]></text></feedback></answer>
+  </question>
+
+  <question type="multichoice">
+    <name><text>P2T20 - Cohesion/acoplamiento</text></name>
+    <questiontext format="html"><text><![CDATA[<p>Un buen diseño OO busca...</p>]]></text></questiontext>
+    <generalfeedback format="html"><text><![CDATA[<p>Alta cohesión (cada clase enfocada) y bajo acoplamiento (poca dependencia entre clases).</p>]]></text></generalfeedback>
+    <defaultgrade>0.2500000</defaultgrade><penalty>0.3333333</penalty><hidden>0</hidden><single>true</single><shuffleanswers>true</shuffleanswers><answernumbering>abc</answernumbering>
+    <answer fraction="100" format="html"><text><![CDATA[Alta cohesión y bajo acoplamiento]]></text><feedback format="html"><text><![CDATA[Correcto.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA[Baja cohesión y alto acoplamiento]]></text><feedback format="html"><text><![CDATA[Es justo lo contrario de lo deseable.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA[Muchas variables globales]]></text><feedback format="html"><text><![CDATA[Aumentan el acoplamiento.]]></text></feedback></answer>
+  </question>
+</quiz>

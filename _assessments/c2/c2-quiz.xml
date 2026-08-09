@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- POO · Corte 2 · Quiz (sem 9). 10 x 0.5 = 5.0. 20/40/40. 2 EN (Q5,Q8). Java. Temas: herencia, sobrescritura/polimorfismo, abstractas/interfaces, composicion. -->
+<quiz>
+  <question type="category">
+    <category><text>$course$/top/CORHUILA/POO/C2-Quiz</text></category>
+  </question>
+
+  <!-- BASICA (2) -->
+  <question type="multichoice">
+    <name><text>P2Q01 - Herencia es-un</text></name>
+    <questiontext format="html"><text><![CDATA[<p>En Java, <code>class Perro extends Animal</code> expresa una relación...</p>]]></text></questiontext>
+    <generalfeedback format="html"><text><![CDATA[<p>Herencia = relación "es-un" (un Perro es un Animal).</p>]]></text></generalfeedback>
+    <defaultgrade>0.5000000</defaultgrade><penalty>0.3333333</penalty><hidden>0</hidden><single>true</single><shuffleanswers>true</shuffleanswers><answernumbering>abc</answernumbering>
+    <answer fraction="100" format="html"><text><![CDATA["es-un" (un Perro es un Animal)]]></text><feedback format="html"><text><![CDATA[Correcto.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA["tiene-un" (composición)]]></text><feedback format="html"><text><![CDATA[Eso es composición, no herencia.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA["usa-un" temporal]]></text><feedback format="html"><text><![CDATA[Eso es una dependencia, no herencia.]]></text></feedback></answer>
+  </question>
+
+  <question type="multichoice">
+    <name><text>P2Q02 - Override</text></name>
+    <questiontext format="html"><text><![CDATA[<p>¿Para qué sirve la anotación <code>@Override</code>?</p>]]></text></questiontext>
+    <generalfeedback format="html"><text><![CDATA[<p>Indica que el método sobrescribe uno del padre; el compilador verifica que la firma coincida.</p>]]></text></generalfeedback>
+    <defaultgrade>0.5000000</defaultgrade><penalty>0.3333333</penalty><hidden>0</hidden><single>true</single><shuffleanswers>true</shuffleanswers><answernumbering>abc</answernumbering>
+    <answer fraction="100" format="html"><text><![CDATA[Verificar que el método realmente sobrescribe al del padre]]></text><feedback format="html"><text><![CDATA[Correcto.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA[Crear un método nuevo sin relación con el padre]]></text><feedback format="html"><text><![CDATA[Eso no requeriría @Override.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA[Sobrecargar el método]]></text><feedback format="html"><text><![CDATA[Sobrecarga y sobrescritura son distintas.]]></text></feedback></answer>
+  </question>
+
+  <!-- MEDIA (4) -->
+  <question type="multichoice">
+    <name><text>P2Q03 - Dynamic dispatch</text></name>
+    <questiontext format="html"><text><![CDATA[<p>Si <code>Perro</code> sobrescribe <code>sonido()</code>, ¿qué imprime?</p><pre>Animal a = new Perro();
+a.sonido();</pre>]]></text></questiontext>
+    <generalfeedback format="html"><text><![CDATA[<p>Enlace dinámico: se ejecuta el método del <strong>tipo real</strong> (Perro), no del declarado (Animal).</p>]]></text></generalfeedback>
+    <defaultgrade>0.5000000</defaultgrade><penalty>0.3333333</penalty><hidden>0</hidden><single>true</single><shuffleanswers>true</shuffleanswers><answernumbering>abc</answernumbering>
+    <answer fraction="100" format="html"><text><![CDATA[El sonido() de Perro (tipo real)]]></text><feedback format="html"><text><![CDATA[Correcto.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA[El sonido() de Animal (tipo declarado)]]></text><feedback format="html"><text><![CDATA[El enlace es dinámico: manda el tipo real.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA[Error de compilación]]></text><feedback format="html"><text><![CDATA[Compila: Perro ES un Animal.]]></text></feedback></answer>
+  </question>
+
+  <question type="multichoice">
+    <name><text>P2Q04 - super() orden</text></name>
+    <questiontext format="html"><text><![CDATA[<p>¿Qué imprime?</p><pre>class A { A(){ System.out.print("A"); } }
+class B extends A { B(){ System.out.print("B"); } }
+new B();</pre>]]></text></questiontext>
+    <generalfeedback format="html"><text><![CDATA[<p>El constructor del padre se ejecuta primero (super() implícito): imprime "AB".</p>]]></text></generalfeedback>
+    <defaultgrade>0.5000000</defaultgrade><penalty>0.3333333</penalty><hidden>0</hidden><single>true</single><shuffleanswers>true</shuffleanswers><answernumbering>abc</answernumbering>
+    <answer fraction="100" format="html"><text><![CDATA[AB]]></text><feedback format="html"><text><![CDATA[Correcto: primero el padre, luego el hijo.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA[BA]]></text><feedback format="html"><text><![CDATA[El constructor del padre corre primero.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA[B]]></text><feedback format="html"><text><![CDATA[También corre el constructor de A.]]></text></feedback></answer>
+  </question>
+
+  <question type="multichoice">
+    <name><text>P2Q05 - EN interface multiple</text></name>
+    <questiontext format="html"><text><![CDATA[<p><em>(English)</em> A Java class can <strong>implement several</strong> of these, but <strong>extend only one</strong> of the other. Which can it implement several of?</p>]]></text></questiontext>
+    <generalfeedback format="html"><text><![CDATA[<p>A class can implement many <strong>interfaces</strong> but extend only one class.</p>]]></text></generalfeedback>
+    <defaultgrade>0.5000000</defaultgrade><penalty>0.3333333</penalty><hidden>0</hidden><single>true</single><shuffleanswers>true</shuffleanswers><answernumbering>abc</answernumbering>
+    <answer fraction="100" format="html"><text><![CDATA[Interfaces]]></text><feedback format="html"><text><![CDATA[Correct: many interfaces, one superclass.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA[Classes]]></text><feedback format="html"><text><![CDATA[Java has single class inheritance.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA[Constructors]]></text><feedback format="html"><text><![CDATA[Constructors are not implemented/extended.]]></text></feedback></answer>
+  </question>
+
+  <question type="multichoice">
+    <name><text>P2Q06 - instanceof/casting</text></name>
+    <questiontext format="html"><text><![CDATA[<p>Antes de hacer un <em>downcast</em> <code>(Perro) a</code>, conviene verificar...</p>]]></text></questiontext>
+    <generalfeedback format="html"><text><![CDATA[<p>Con <code>a instanceof Perro</code>, para evitar <code>ClassCastException</code>.</p>]]></text></generalfeedback>
+    <defaultgrade>0.5000000</defaultgrade><penalty>0.3333333</penalty><hidden>0</hidden><single>true</single><shuffleanswers>true</shuffleanswers><answernumbering>abc</answernumbering>
+    <answer fraction="100" format="html"><text><![CDATA[a instanceof Perro]]></text><feedback format="html"><text><![CDATA[Correcto: evita ClassCastException.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA[a == null solamente]]></text><feedback format="html"><text><![CDATA[No basta; puede no ser un Perro.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA[Nada, el cast siempre funciona]]></text><feedback format="html"><text><![CDATA[Puede lanzar ClassCastException.]]></text></feedback></answer>
+  </question>
+
+  <!-- ALTA (4) -->
+  <question type="multichoice">
+    <name><text>P2Q07 - Polimorfismo en coleccion</text></name>
+    <questiontext format="html"><text><![CDATA[<p>Con <code>Figura</code> como supertipo y <code>area()</code> sobrescrito en cada subclase:</p><pre>Figura[] fs = { new Circulo(), new Cuadrado() };
+for (Figura f : fs) System.out.println(f.area());</pre><p>¿Qué <code>area()</code> se ejecuta en cada iteración?</p>]]></text></questiontext>
+    <generalfeedback format="html"><text><![CDATA[<p>El de su <strong>tipo real</strong> (Circulo y Cuadrado): polimorfismo.</p>]]></text></generalfeedback>
+    <defaultgrade>0.5000000</defaultgrade><penalty>0.3333333</penalty><hidden>0</hidden><single>true</single><shuffleanswers>true</shuffleanswers><answernumbering>abc</answernumbering>
+    <answer fraction="100" format="html"><text><![CDATA[El area() propio de Circulo y de Cuadrado]]></text><feedback format="html"><text><![CDATA[Correcto.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA[Siempre el area() de Figura]]></text><feedback format="html"><text><![CDATA[El enlace dinámico usa el tipo real.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA[Ninguno; no compila]]></text><feedback format="html"><text><![CDATA[Compila: ambos son Figura.]]></text></feedback></answer>
+  </question>
+
+  <question type="multichoice">
+    <name><text>P2Q08 - EN Liskov</text></name>
+    <questiontext format="html"><text><![CDATA[<p><em>(English)</em> The Liskov Substitution Principle says that...</p>]]></text></questiontext>
+    <generalfeedback format="html"><text><![CDATA[<p>A subclass object must be usable anywhere its superclass is expected, without breaking behavior.</p>]]></text></generalfeedback>
+    <defaultgrade>0.5000000</defaultgrade><penalty>0.3333333</penalty><hidden>0</hidden><single>true</single><shuffleanswers>true</shuffleanswers><answernumbering>abc</answernumbering>
+    <answer fraction="100" format="html"><text><![CDATA[A subclass must be usable wherever its superclass is expected]]></text><feedback format="html"><text><![CDATA[Correct.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA[A subclass must have more attributes than its parent]]></text><feedback format="html"><text><![CDATA[Not what LSP states.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA[A class can inherit from many classes]]></text><feedback format="html"><text><![CDATA[Unrelated (and false in Java).]]></text></feedback></answer>
+  </question>
+
+  <question type="multichoice">
+    <name><text>P2Q09 - Composicion vs herencia</text></name>
+    <questiontext format="html"><text><![CDATA[<p>"Un <code>Carro</code> tiene un <code>Motor</code>" se modela mejor con...</p>]]></text></questiontext>
+    <generalfeedback format="html"><text><![CDATA[<p>Composición (tiene-un): el Carro contiene un Motor como atributo.</p>]]></text></generalfeedback>
+    <defaultgrade>0.5000000</defaultgrade><penalty>0.3333333</penalty><hidden>0</hidden><single>true</single><shuffleanswers>true</shuffleanswers><answernumbering>abc</answernumbering>
+    <answer fraction="100" format="html"><text><![CDATA[Composición (el Carro tiene un Motor como atributo)]]></text><feedback format="html"><text><![CDATA[Correcto.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA[Herencia (Carro extends Motor)]]></text><feedback format="html"><text><![CDATA[Un carro NO es un motor.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA[Una interfaz vacía]]></text><feedback format="html"><text><![CDATA[No modela la relación tiene-un.]]></text></feedback></answer>
+  </question>
+
+  <question type="multichoice">
+    <name><text>P2Q10 - Clase abstracta</text></name>
+    <questiontext format="html"><text><![CDATA[<p>¿Qué es cierto de una <strong>clase abstracta</strong>?</p>]]></text></questiontext>
+    <generalfeedback format="html"><text><![CDATA[<p>No se puede instanciar directamente; sus subclases concretas implementan los métodos abstractos.</p>]]></text></generalfeedback>
+    <defaultgrade>0.5000000</defaultgrade><penalty>0.3333333</penalty><hidden>0</hidden><single>true</single><shuffleanswers>true</shuffleanswers><answernumbering>abc</answernumbering>
+    <answer fraction="100" format="html"><text><![CDATA[No se puede instanciar directamente]]></text><feedback format="html"><text><![CDATA[Correcto.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA[Se instancia con new como cualquier clase]]></text><feedback format="html"><text><![CDATA[No: es abstracta.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA[No puede tener atributos ni métodos concretos]]></text><feedback format="html"><text><![CDATA[Sí puede tener estado y métodos concretos.]]></text></feedback></answer>
+  </question>
+</quiz>
