@@ -1,0 +1,26 @@
+<h4>Parcial práctico · Corte 3</h4>
+<p><strong>Semana 15 del corte.</strong> Evaluación individual, en clase o por <strong>GitHub</strong> (en tu <strong>fork del repositorio de la clase</strong>). Valor: <strong>5.0</strong>. Temas del corte: excepciones, colecciones, archivos, buenas prácticas.</p>
+
+<h5>Problema 1 — Excepciones (2.0)</h5>
+<p>Implementa una <code>Cuenta</code> con <code>retirar(double)</code> que lance una excepción propia <code>SaldoInsuficienteException</code> si el monto supera el saldo. Maneja la excepción con <code>try-catch</code> y muestra un mensaje claro. Incluye 2 pruebas (caso válido e inválido).</p>
+
+<h5>Problema 2 — Colecciones (1.5)</h5>
+<p>Con un <code>Map&lt;String, Integer&gt;</code>, cuenta cuántas veces aparece cada palabra en una frase. Recorre el resultado con <code>entrySet()</code> e imprímelo. Explica por qué un Map encaja mejor que una List aquí.</p>
+
+<h5>Problema 3 — Archivos (1.5)</h5>
+<p>Guarda una lista de objetos en un archivo CSV y vuelve a cargarla (round-trip), aislando la lógica en un <code>Repositorio</code> y manejando <code>IOException</code>. Verifica que lo cargado coincide con lo guardado.</p>
+
+<h5>English requirement (20%)</h5>
+<p>For <strong>Problem 1</strong>, write 2–3 sentences <strong>in English</strong> explaining the difference between <em>throw</em> and <em>throws</em>, and when to create a custom exception.</p>
+
+<h5>Cómo entregar</h5>
+<p>Entrega en tu <strong>fork del repositorio de la clase</strong>, dentro de la carpeta de la semana correspondiente. Sigue el <strong>Manual de Entrega por GitHub</strong> (Información importante): fork &rarr; clonar &rarr; agregar tu trabajo &rarr; <code>git add/commit/push</code>. Ten tu <strong>repo de perfil</strong> con el bloque <strong>CONFIG</strong> (FULL_NAME + GITHUB_USER).</p>
+
+<h5>Rúbrica</h5>
+<table border="1" cellpadding="6" cellspacing="0">
+  <tr><th>Criterio</th><th>Excelente</th><th>Aceptable</th><th>Por mejorar</th><th>Pts</th></tr>
+  <tr><td>P1 excepción propia + manejo (EN)</td><td>Correcto y probado</td><td>Con detalles</td><td>Falla</td><td>2.0</td></tr>
+  <tr><td>P2 Map + entrySet + justificación</td><td>Correcto</td><td>Parcial</td><td>Falla</td><td>1.5</td></tr>
+  <tr><td>P3 CSV round-trip en Repositorio</td><td>Correcto, coincide</td><td>Parcial</td><td>Falla</td><td>1.5</td></tr>
+</table>
+<p><strong>Total: 5.0.</strong></p>

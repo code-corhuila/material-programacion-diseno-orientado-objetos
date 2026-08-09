@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- POO · Corte 3 · Quiz (sem 14). 10 x 0.5 = 5.0. 20/40/40. 2 EN (Q5,Q8). Java. Temas: excepciones, colecciones (List/Set/Map), archivos, SOLID/refactor. -->
+<quiz>
+  <question type="category">
+    <category><text>$course$/top/CORHUILA/POO/C3-Quiz</text></category>
+  </question>
+
+  <!-- BASICA (2) -->
+  <question type="multichoice">
+    <name><text>P3Q01 - try-catch</text></name>
+    <questiontext format="html"><text><![CDATA[<p>¿Para qué sirve un bloque <code>try-catch</code>?</p>]]></text></questiontext>
+    <generalfeedback format="html"><text><![CDATA[<p>Manejar (capturar) excepciones para que el programa no se detenga abruptamente.</p>]]></text></generalfeedback>
+    <defaultgrade>0.5000000</defaultgrade><penalty>0.3333333</penalty><hidden>0</hidden><single>true</single><shuffleanswers>true</shuffleanswers><answernumbering>abc</answernumbering>
+    <answer fraction="100" format="html"><text><![CDATA[Capturar y manejar excepciones]]></text><feedback format="html"><text><![CDATA[Correcto.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA[Declarar variables globales]]></text><feedback format="html"><text><![CDATA[No es su función.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA[Acelerar el programa]]></text><feedback format="html"><text><![CDATA[No tiene que ver con velocidad.]]></text></feedback></answer>
+  </question>
+
+  <question type="multichoice">
+    <name><text>P3Q02 - Map clave-valor</text></name>
+    <questiontext format="html"><text><![CDATA[<p>¿Qué colección asocia <strong>claves únicas</strong> a valores?</p>]]></text></questiontext>
+    <generalfeedback format="html"><text><![CDATA[<p>Map (p. ej. HashMap): clave → valor, con claves únicas.</p>]]></text></generalfeedback>
+    <defaultgrade>0.5000000</defaultgrade><penalty>0.3333333</penalty><hidden>0</hidden><single>true</single><shuffleanswers>true</shuffleanswers><answernumbering>abc</answernumbering>
+    <answer fraction="100" format="html"><text><![CDATA[Map]]></text><feedback format="html"><text><![CDATA[Correcto.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA[List]]></text><feedback format="html"><text><![CDATA[List es una secuencia indexada, no clave-valor.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA[Stack]]></text><feedback format="html"><text><![CDATA[Es LIFO, no clave-valor.]]></text></feedback></answer>
+  </question>
+
+  <!-- MEDIA (4) -->
+  <question type="multichoice">
+    <name><text>P3Q03 - finally</text></name>
+    <questiontext format="html"><text><![CDATA[<p>El bloque <code>finally</code> se ejecuta...</p>]]></text></questiontext>
+    <generalfeedback format="html"><text><![CDATA[<p>Siempre (haya o no excepción); ideal para liberar recursos.</p>]]></text></generalfeedback>
+    <defaultgrade>0.5000000</defaultgrade><penalty>0.3333333</penalty><hidden>0</hidden><single>true</single><shuffleanswers>true</shuffleanswers><answernumbering>abc</answernumbering>
+    <answer fraction="100" format="html"><text><![CDATA[Siempre, haya o no excepción]]></text><feedback format="html"><text><![CDATA[Correcto.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA[Solo si hubo excepción]]></text><feedback format="html"><text><![CDATA[También corre sin excepción.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA[Solo si NO hubo excepción]]></text><feedback format="html"><text><![CDATA[Corre en ambos casos.]]></text></feedback></answer>
+  </question>
+
+  <question type="multichoice">
+    <name><text>P3Q04 - Set duplicados</text></name>
+    <questiontext format="html"><text><![CDATA[<p>¿Qué imprime?</p><pre>Set&lt;Integer&gt; s = new HashSet&lt;&gt;();
+s.add(1); s.add(2); s.add(1);
+System.out.println(s.size());</pre>]]></text></questiontext>
+    <generalfeedback format="html"><text><![CDATA[<p>Un Set no admite duplicados: el segundo 1 no se agrega. Tamaño = 2.</p>]]></text></generalfeedback>
+    <defaultgrade>0.5000000</defaultgrade><penalty>0.3333333</penalty><hidden>0</hidden><single>true</single><shuffleanswers>true</shuffleanswers><answernumbering>abc</answernumbering>
+    <answer fraction="100" format="html"><text><![CDATA[2]]></text><feedback format="html"><text><![CDATA[Correcto: sin duplicados.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA[3]]></text><feedback format="html"><text><![CDATA[El 1 repetido no se agrega.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA[1]]></text><feedback format="html"><text><![CDATA[Hay dos elementos distintos: 1 y 2.]]></text></feedback></answer>
+  </question>
+
+  <question type="multichoice">
+    <name><text>P3Q05 - EN checked exception</text></name>
+    <questiontext format="html"><text><![CDATA[<p><em>(English)</em> A method that reads a file may throw <code>IOException</code>. To compile, you must...</p>]]></text></questiontext>
+    <generalfeedback format="html"><text><![CDATA[<p>Handle it with try-catch or declare it with <code>throws</code> (checked exception).</p>]]></text></generalfeedback>
+    <defaultgrade>0.5000000</defaultgrade><penalty>0.3333333</penalty><hidden>0</hidden><single>true</single><shuffleanswers>true</shuffleanswers><answernumbering>abc</answernumbering>
+    <answer fraction="100" format="html"><text><![CDATA[Catch it (try-catch) or declare it with throws]]></text><feedback format="html"><text><![CDATA[Correct.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA[Nothing; it is optional]]></text><feedback format="html"><text><![CDATA[IOException is checked; it must be handled or declared.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA[Delete the method]]></text><feedback format="html"><text><![CDATA[Not a solution.]]></text></feedback></answer>
+  </question>
+
+  <question type="multichoice">
+    <name><text>P3Q06 - List acceso</text></name>
+    <questiontext format="html"><text><![CDATA[<p>¿Qué imprime?</p><pre>List&lt;String&gt; l = new ArrayList&lt;&gt;();
+l.add("a"); l.add("b"); l.add("c");
+System.out.println(l.get(1));</pre>]]></text></questiontext>
+    <generalfeedback format="html"><text><![CDATA[<p><code>get(1)</code> devuelve el segundo elemento (índice base 0): "b".</p>]]></text></generalfeedback>
+    <defaultgrade>0.5000000</defaultgrade><penalty>0.3333333</penalty><hidden>0</hidden><single>true</single><shuffleanswers>true</shuffleanswers><answernumbering>abc</answernumbering>
+    <answer fraction="100" format="html"><text><![CDATA[b]]></text><feedback format="html"><text><![CDATA[Correcto.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA[a]]></text><feedback format="html"><text><![CDATA[a está en el índice 0.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA[c]]></text><feedback format="html"><text><![CDATA[c está en el índice 2.]]></text></feedback></answer>
+  </question>
+
+  <!-- ALTA (4) -->
+  <question type="multichoice">
+    <name><text>P3Q07 - Repositorio/persistencia</text></name>
+    <questiontext format="html"><text><![CDATA[<p>Separar la lógica de guardar/cargar en archivos dentro de una clase <code>Repositorio</code> favorece...</p>]]></text></questiontext>
+    <generalfeedback format="html"><text><![CDATA[<p>La responsabilidad única: el modelo no se mezcla con la persistencia (bajo acoplamiento).</p>]]></text></generalfeedback>
+    <defaultgrade>0.5000000</defaultgrade><penalty>0.3333333</penalty><hidden>0</hidden><single>true</single><shuffleanswers>true</shuffleanswers><answernumbering>abc</answernumbering>
+    <answer fraction="100" format="html"><text><![CDATA[La responsabilidad única (separar modelo de persistencia)]]></text><feedback format="html"><text><![CDATA[Correcto.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA[Que el programa use menos memoria]]></text><feedback format="html"><text><![CDATA[No es el objetivo.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA[Eliminar la necesidad de clases de modelo]]></text><feedback format="html"><text><![CDATA[El modelo sigue existiendo.]]></text></feedback></answer>
+  </question>
+
+  <question type="multichoice">
+    <name><text>P3Q08 - EN switch by type smell</text></name>
+    <questiontext format="html"><text><![CDATA[<p><em>(English)</em> A big <code>switch</code> on an object's type is a code smell best replaced by...</p>]]></text></questiontext>
+    <generalfeedback format="html"><text><![CDATA[<p>Polymorphism: each type implements its own method, removing the switch.</p>]]></text></generalfeedback>
+    <defaultgrade>0.5000000</defaultgrade><penalty>0.3333333</penalty><hidden>0</hidden><single>true</single><shuffleanswers>true</shuffleanswers><answernumbering>abc</answernumbering>
+    <answer fraction="100" format="html"><text><![CDATA[Polymorphism]]></text><feedback format="html"><text><![CDATA[Correct.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA[More switch cases]]></text><feedback format="html"><text><![CDATA[That worsens the smell.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA[Global variables]]></text><feedback format="html"><text><![CDATA[Unrelated and harmful.]]></text></feedback></answer>
+  </question>
+
+  <question type="multichoice">
+    <name><text>P3Q09 - Excepcion propia</text></name>
+    <questiontext format="html"><text><![CDATA[<p>Para señalar un error de dominio (p. ej. saldo insuficiente) lo más expresivo es...</p>]]></text></questiontext>
+    <generalfeedback format="html"><text><![CDATA[<p>Crear y lanzar una excepción propia (p. ej. <code>SaldoInsuficienteException</code>) con <code>throw</code>.</p>]]></text></generalfeedback>
+    <defaultgrade>0.5000000</defaultgrade><penalty>0.3333333</penalty><hidden>0</hidden><single>true</single><shuffleanswers>true</shuffleanswers><answernumbering>abc</answernumbering>
+    <answer fraction="100" format="html"><text><![CDATA[Lanzar una excepción propia con throw]]></text><feedback format="html"><text><![CDATA[Correcto.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA[Imprimir un mensaje y continuar como si nada]]></text><feedback format="html"><text><![CDATA[Oculta el error; poco robusto.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA[Devolver -1 siempre]]></text><feedback format="html"><text><![CDATA[Menos expresivo y propenso a errores.]]></text></feedback></answer>
+  </question>
+
+  <question type="multichoice">
+    <name><text>P3Q10 - Refactor DRY</text></name>
+    <questiontext format="html"><text><![CDATA[<p>Ver el mismo bloque de código repetido en varias clases sugiere refactorizar con...</p>]]></text></questiontext>
+    <generalfeedback format="html"><text><![CDATA[<p>Extraer el método/clase común (DRY): una sola representación del conocimiento.</p>]]></text></generalfeedback>
+    <defaultgrade>0.5000000</defaultgrade><penalty>0.3333333</penalty><hidden>0</hidden><single>true</single><shuffleanswers>true</shuffleanswers><answernumbering>abc</answernumbering>
+    <answer fraction="100" format="html"><text><![CDATA[Extraer el código común (DRY)]]></text><feedback format="html"><text><![CDATA[Correcto.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA[Copiarlo a más clases]]></text><feedback format="html"><text><![CDATA[Aumenta la duplicación.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA[Dejarlo, si funciona]]></text><feedback format="html"><text><![CDATA[La duplicación complica el mantenimiento.]]></text></feedback></answer>
+  </question>
+</quiz>

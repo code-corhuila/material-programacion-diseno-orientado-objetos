@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- POO · Corte 3 · Parcial teorico (sem 15). 20 x 0.25 = 5.0. 4/8/8. 4 EN (T7,T10,T14,T17). Java. Temas: excepciones, colecciones, archivos, SOLID/refactor. -->
+<quiz>
+  <question type="category">
+    <category><text>$course$/top/CORHUILA/POO/C3-Teorico</text></category>
+  </question>
+
+  <!-- BASICA (4) -->
+  <question type="multichoice">
+    <name><text>P3T01 - Excepcion</text></name>
+    <questiontext format="html"><text><![CDATA[<p>Una <strong>excepción</strong> representa...</p>]]></text></questiontext>
+    <generalfeedback format="html"><text><![CDATA[<p>Una situación anómala en ejecución que interrumpe el flujo normal y se puede manejar.</p>]]></text></generalfeedback>
+    <defaultgrade>0.2500000</defaultgrade><penalty>0.3333333</penalty><hidden>0</hidden><single>true</single><shuffleanswers>true</shuffleanswers><answernumbering>abc</answernumbering>
+    <answer fraction="100" format="html"><text><![CDATA[Un evento anómalo en ejecución que se puede capturar y manejar]]></text><feedback format="html"><text><![CDATA[Correcto.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA[Un error de ortografía en el código]]></text><feedback format="html"><text><![CDATA[Eso sería un error de compilación.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA[Un comentario especial]]></text><feedback format="html"><text><![CDATA[No.]]></text></feedback></answer>
+  </question>
+
+  <question type="multichoice">
+    <name><text>P3T02 - List</text></name>
+    <questiontext format="html"><text><![CDATA[<p>Un <code>List</code> (p. ej. ArrayList)...</p>]]></text></questiontext>
+    <generalfeedback format="html"><text><![CDATA[<p>Es una secuencia indexada que admite duplicados y conserva el orden de inserción.</p>]]></text></generalfeedback>
+    <defaultgrade>0.2500000</defaultgrade><penalty>0.3333333</penalty><hidden>0</hidden><single>true</single><shuffleanswers>true</shuffleanswers><answernumbering>abc</answernumbering>
+    <answer fraction="100" format="html"><text><![CDATA[Es indexado y admite duplicados]]></text><feedback format="html"><text><![CDATA[Correcto.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA[No admite elementos repetidos]]></text><feedback format="html"><text><![CDATA[Eso es un Set.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA[Asocia claves a valores]]></text><feedback format="html"><text><![CDATA[Eso es un Map.]]></text></feedback></answer>
+  </question>
+
+  <question type="multichoice">
+    <name><text>P3T03 - Set</text></name>
+    <questiontext format="html"><text><![CDATA[<p>La característica principal de un <code>Set</code> es que...</p>]]></text></questiontext>
+    <generalfeedback format="html"><text><![CDATA[<p>No admite elementos duplicados.</p>]]></text></generalfeedback>
+    <defaultgrade>0.2500000</defaultgrade><penalty>0.3333333</penalty><hidden>0</hidden><single>true</single><shuffleanswers>true</shuffleanswers><answernumbering>abc</answernumbering>
+    <answer fraction="100" format="html"><text><![CDATA[No admite duplicados]]></text><feedback format="html"><text><![CDATA[Correcto.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA[Permite acceso por índice numérico]]></text><feedback format="html"><text><![CDATA[Eso es un List.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA[Guarda pares clave-valor]]></text><feedback format="html"><text><![CDATA[Eso es un Map.]]></text></feedback></answer>
+  </question>
+
+  <question type="multichoice">
+    <name><text>P3T04 - Map</text></name>
+    <questiontext format="html"><text><![CDATA[<p>Un <code>Map</code> almacena...</p>]]></text></questiontext>
+    <generalfeedback format="html"><text><![CDATA[<p>Pares clave-valor con claves únicas.</p>]]></text></generalfeedback>
+    <defaultgrade>0.2500000</defaultgrade><penalty>0.3333333</penalty><hidden>0</hidden><single>true</single><shuffleanswers>true</shuffleanswers><answernumbering>abc</answernumbering>
+    <answer fraction="100" format="html"><text><![CDATA[Pares clave-valor con claves únicas]]></text><feedback format="html"><text><![CDATA[Correcto.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA[Solo valores, sin claves]]></text><feedback format="html"><text><![CDATA[Eso es List/Set.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA[Elementos en orden LIFO]]></text><feedback format="html"><text><![CDATA[Eso es una pila.]]></text></feedback></answer>
+  </question>
+
+  <!-- MEDIA (8) -->
+  <question type="multichoice">
+    <name><text>P3T05 - finally</text></name>
+    <questiontext format="html"><text><![CDATA[<p>El bloque <code>finally</code>...</p>]]></text></questiontext>
+    <generalfeedback format="html"><text><![CDATA[<p>Se ejecuta siempre; sirve para liberar recursos.</p>]]></text></generalfeedback>
+    <defaultgrade>0.2500000</defaultgrade><penalty>0.3333333</penalty><hidden>0</hidden><single>true</single><shuffleanswers>true</shuffleanswers><answernumbering>abc</answernumbering>
+    <answer fraction="100" format="html"><text><![CDATA[Se ejecuta siempre, haya o no excepción]]></text><feedback format="html"><text><![CDATA[Correcto.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA[Solo cuando hay excepción]]></text><feedback format="html"><text><![CDATA[También sin excepción.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA[Nunca, es opcional]]></text><feedback format="html"><text><![CDATA[Si está, se ejecuta.]]></text></feedback></answer>
+  </question>
+
+  <question type="multichoice">
+    <name><text>P3T06 - Map put replace</text></name>
+    <questiontext format="html"><text><![CDATA[<p>¿Qué imprime?</p><pre>Map&lt;String,Integer&gt; m = new HashMap&lt;&gt;();
+m.put("a", 1);
+m.put("a", 2);
+System.out.println(m.get("a"));</pre>]]></text></questiontext>
+    <generalfeedback format="html"><text><![CDATA[<p>La clave es única; el segundo put reemplaza el valor. Imprime 2.</p>]]></text></generalfeedback>
+    <defaultgrade>0.2500000</defaultgrade><penalty>0.3333333</penalty><hidden>0</hidden><single>true</single><shuffleanswers>true</shuffleanswers><answernumbering>abc</answernumbering>
+    <answer fraction="100" format="html"><text><![CDATA[2]]></text><feedback format="html"><text><![CDATA[Correcto.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA[1]]></text><feedback format="html"><text><![CDATA[El put reemplaza el valor anterior.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA[Lanza excepción por clave repetida]]></text><feedback format="html"><text><![CDATA[No: sobrescribe.]]></text></feedback></answer>
+  </question>
+
+  <question type="multichoice">
+    <name><text>P3T07 - EN checked</text></name>
+    <questiontext format="html"><text><![CDATA[<p><em>(English)</em> A <strong>checked</strong> exception (e.g. IOException) must be...</p>]]></text></questiontext>
+    <generalfeedback format="html"><text><![CDATA[<p>Either caught (try-catch) or declared with <code>throws</code>; the compiler enforces it.</p>]]></text></generalfeedback>
+    <defaultgrade>0.2500000</defaultgrade><penalty>0.3333333</penalty><hidden>0</hidden><single>true</single><shuffleanswers>true</shuffleanswers><answernumbering>abc</answernumbering>
+    <answer fraction="100" format="html"><text><![CDATA[Caught or declared with throws]]></text><feedback format="html"><text><![CDATA[Correct.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA[Ignored freely]]></text><feedback format="html"><text><![CDATA[The compiler forces handling.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA[Thrown only by the JVM]]></text><feedback format="html"><text><![CDATA[Your code can throw it too.]]></text></feedback></answer>
+  </question>
+
+  <question type="multichoice">
+    <name><text>P3T08 - throw vs throws</text></name>
+    <questiontext format="html"><text><![CDATA[<p>¿Diferencia entre <code>throw</code> y <code>throws</code>?</p>]]></text></questiontext>
+    <generalfeedback format="html"><text><![CDATA[<p><code>throw</code> lanza una excepción; <code>throws</code> declara en la firma que el método puede lanzarla.</p>]]></text></generalfeedback>
+    <defaultgrade>0.2500000</defaultgrade><penalty>0.3333333</penalty><hidden>0</hidden><single>true</single><shuffleanswers>true</shuffleanswers><answernumbering>abc</answernumbering>
+    <answer fraction="100" format="html"><text><![CDATA[throw lanza; throws declara en la firma]]></text><feedback format="html"><text><![CDATA[Correcto.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA[Son sinónimos]]></text><feedback format="html"><text><![CDATA[No lo son.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA[throws lanza; throw declara]]></text><feedback format="html"><text><![CDATA[Está invertido.]]></text></feedback></answer>
+  </question>
+
+  <question type="multichoice">
+    <name><text>P3T09 - NPE unchecked</text></name>
+    <questiontext format="html"><text><![CDATA[<p><code>NullPointerException</code> es una excepción...</p>]]></text></questiontext>
+    <generalfeedback format="html"><text><![CDATA[<p>No verificada (unchecked / RuntimeException): no obliga a try-catch ni throws.</p>]]></text></generalfeedback>
+    <defaultgrade>0.2500000</defaultgrade><penalty>0.3333333</penalty><hidden>0</hidden><single>true</single><shuffleanswers>true</shuffleanswers><answernumbering>abc</answernumbering>
+    <answer fraction="100" format="html"><text><![CDATA[No verificada (unchecked / en tiempo de ejecución)]]></text><feedback format="html"><text><![CDATA[Correcto.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA[Verificada (obliga a throws)]]></text><feedback format="html"><text><![CDATA[Es unchecked; no obliga.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA[Un error de compilación]]></text><feedback format="html"><text><![CDATA[Ocurre en ejecución.]]></text></feedback></answer>
+  </question>
+
+  <question type="multichoice">
+    <name><text>P3T10 - EN try-with-resources</text></name>
+    <questiontext format="html"><text><![CDATA[<p><em>(English)</em> The main benefit of <code>try-with-resources</code> when reading a file is that it...</p>]]></text></questiontext>
+    <generalfeedback format="html"><text><![CDATA[<p>Automatically closes the resource (e.g., the reader), even if an exception occurs.</p>]]></text></generalfeedback>
+    <defaultgrade>0.2500000</defaultgrade><penalty>0.3333333</penalty><hidden>0</hidden><single>true</single><shuffleanswers>true</shuffleanswers><answernumbering>abc</answernumbering>
+    <answer fraction="100" format="html"><text><![CDATA[Automatically closes the resource]]></text><feedback format="html"><text><![CDATA[Correct.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA[Makes the file read faster]]></text><feedback format="html"><text><![CDATA[It is about safe closing, not speed.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA[Avoids importing any class]]></text><feedback format="html"><text><![CDATA[Unrelated.]]></text></feedback></answer>
+  </question>
+
+  <question type="multichoice">
+    <name><text>P3T11 - List get</text></name>
+    <questiontext format="html"><text><![CDATA[<p>¿Qué imprime?</p><pre>List&lt;String&gt; l = new ArrayList&lt;&gt;();
+l.add("x"); l.add("y"); l.add("z");
+System.out.println(l.get(2));</pre>]]></text></questiontext>
+    <generalfeedback format="html"><text><![CDATA[<p>Índice 2 = tercer elemento: "z".</p>]]></text></generalfeedback>
+    <defaultgrade>0.2500000</defaultgrade><penalty>0.3333333</penalty><hidden>0</hidden><single>true</single><shuffleanswers>true</shuffleanswers><answernumbering>abc</answernumbering>
+    <answer fraction="100" format="html"><text><![CDATA[z]]></text><feedback format="html"><text><![CDATA[Correcto.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA[y]]></text><feedback format="html"><text><![CDATA[y está en el índice 1.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA[x]]></text><feedback format="html"><text><![CDATA[x está en el índice 0.]]></text></feedback></answer>
+  </question>
+
+  <question type="multichoice">
+    <name><text>P3T12 - CSV split</text></name>
+    <questiontext format="html"><text><![CDATA[<p>Para leer una línea CSV <code>"101,Ana,4.5"</code> y separar sus campos se usa...</p>]]></text></questiontext>
+    <generalfeedback format="html"><text><![CDATA[<p><code>linea.split(",")</code> devuelve un arreglo con los campos.</p>]]></text></generalfeedback>
+    <defaultgrade>0.2500000</defaultgrade><penalty>0.3333333</penalty><hidden>0</hidden><single>true</single><shuffleanswers>true</shuffleanswers><answernumbering>abc</answernumbering>
+    <answer fraction="100" format="html"><text><![CDATA[split(",")]]></text><feedback format="html"><text><![CDATA[Correcto.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA[toUpperCase()]]></text><feedback format="html"><text><![CDATA[No separa campos.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA[length()]]></text><feedback format="html"><text><![CDATA[Devuelve la longitud, no los campos.]]></text></feedback></answer>
+  </question>
+
+  <!-- ALTA (8) -->
+  <question type="multichoice">
+    <name><text>P3T13 - Excepcion propia</text></name>
+    <questiontext format="html"><text><![CDATA[<p>Para crear una excepción propia de dominio se suele...</p>]]></text></questiontext>
+    <generalfeedback format="html"><text><![CDATA[<p>Definir una clase que <code>extends Exception</code> (o RuntimeException) y lanzarla con throw.</p>]]></text></generalfeedback>
+    <defaultgrade>0.2500000</defaultgrade><penalty>0.3333333</penalty><hidden>0</hidden><single>true</single><shuffleanswers>true</shuffleanswers><answernumbering>abc</answernumbering>
+    <answer fraction="100" format="html"><text><![CDATA[Crear una clase que extends Exception y lanzarla con throw]]></text><feedback format="html"><text><![CDATA[Correcto.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA[Modificar la clase System]]></text><feedback format="html"><text><![CDATA[No se hace eso.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA[Usar un comentario especial]]></text><feedback format="html"><text><![CDATA[No es una excepción.]]></text></feedback></answer>
+  </question>
+
+  <question type="multichoice">
+    <name><text>P3T14 - EN SRP</text></name>
+    <questiontext format="html"><text><![CDATA[<p><em>(English)</em> The Single Responsibility Principle (SRP) states that a class should have...</p>]]></text></questiontext>
+    <generalfeedback format="html"><text><![CDATA[<p>Only one reason to change (one responsibility).</p>]]></text></generalfeedback>
+    <defaultgrade>0.2500000</defaultgrade><penalty>0.3333333</penalty><hidden>0</hidden><single>true</single><shuffleanswers>true</shuffleanswers><answernumbering>abc</answernumbering>
+    <answer fraction="100" format="html"><text><![CDATA[Only one reason to change]]></text><feedback format="html"><text><![CDATA[Correct.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA[As many responsibilities as possible]]></text><feedback format="html"><text><![CDATA[That lowers cohesion.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA[No methods at all]]></text><feedback format="html"><text><![CDATA[Not what SRP means.]]></text></feedback></answer>
+  </question>
+
+  <question type="multichoice">
+    <name><text>P3T15 - Elegir coleccion</text></name>
+    <questiontext format="html"><text><![CDATA[<p>Necesitas buscar clientes por su cédula muy a menudo. ¿Qué colección conviene?</p>]]></text></questiontext>
+    <generalfeedback format="html"><text><![CDATA[<p>Un Map (cédula → cliente): búsqueda por clave O(1) promedio.</p>]]></text></generalfeedback>
+    <defaultgrade>0.2500000</defaultgrade><penalty>0.3333333</penalty><hidden>0</hidden><single>true</single><shuffleanswers>true</shuffleanswers><answernumbering>abc</answernumbering>
+    <answer fraction="100" format="html"><text><![CDATA[Un Map (clave cédula → cliente)]]></text><feedback format="html"><text><![CDATA[Correcto.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA[Un List recorrido completo cada vez]]></text><feedback format="html"><text><![CDATA[Sería O(n) por búsqueda.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA[Una pila]]></text><feedback format="html"><text><![CDATA[No busca por clave.]]></text></feedback></answer>
+  </question>
+
+  <question type="multichoice">
+    <name><text>P3T16 - Repositorio SRP</text></name>
+    <questiontext format="html"><text><![CDATA[<p>Poner la lectura/escritura de archivos en una clase <code>Repositorio</code> aparte del modelo mejora...</p>]]></text></questiontext>
+    <generalfeedback format="html"><text><![CDATA[<p>La cohesión y separa responsabilidades: el modelo no depende de cómo se persiste.</p>]]></text></generalfeedback>
+    <defaultgrade>0.2500000</defaultgrade><penalty>0.3333333</penalty><hidden>0</hidden><single>true</single><shuffleanswers>true</shuffleanswers><answernumbering>abc</answernumbering>
+    <answer fraction="100" format="html"><text><![CDATA[La separación de responsabilidades (modelo vs persistencia)]]></text><feedback format="html"><text><![CDATA[Correcto.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA[La velocidad del disco]]></text><feedback format="html"><text><![CDATA[No es el punto.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA[El tamaño del archivo]]></text><feedback format="html"><text><![CDATA[No influye.]]></text></feedback></answer>
+  </question>
+
+  <question type="multichoice">
+    <name><text>P3T17 - EN OCP polymorphism</text></name>
+    <questiontext format="html"><text><![CDATA[<p><em>(English)</em> Replacing a type-based <code>switch</code> with polymorphism supports which principle?</p>]]></text></questiontext>
+    <generalfeedback format="html"><text><![CDATA[<p>Open/Closed: you add new types without modifying existing code.</p>]]></text></generalfeedback>
+    <defaultgrade>0.2500000</defaultgrade><penalty>0.3333333</penalty><hidden>0</hidden><single>true</single><shuffleanswers>true</shuffleanswers><answernumbering>abc</answernumbering>
+    <answer fraction="100" format="html"><text><![CDATA[Open/Closed Principle]]></text><feedback format="html"><text><![CDATA[Correct.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA[It violates all principles]]></text><feedback format="html"><text><![CDATA[No; it improves the design.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA[It has no effect on design]]></text><feedback format="html"><text><![CDATA[It removes a common smell.]]></text></feedback></answer>
+  </question>
+
+  <question type="multichoice">
+    <name><text>P3T18 - Metodo largo</text></name>
+    <questiontext format="html"><text><![CDATA[<p>Un método de 80 líneas que "valida, calcula e imprime" se mejora con...</p>]]></text></questiontext>
+    <generalfeedback format="html"><text><![CDATA[<p>Extraer método: dividirlo en métodos cortos con una sola responsabilidad.</p>]]></text></generalfeedback>
+    <defaultgrade>0.2500000</defaultgrade><penalty>0.3333333</penalty><hidden>0</hidden><single>true</single><shuffleanswers>true</shuffleanswers><answernumbering>abc</answernumbering>
+    <answer fraction="100" format="html"><text><![CDATA[Extraer método (dividir en métodos cortos)]]></text><feedback format="html"><text><![CDATA[Correcto.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA[Agregarle más comentarios y dejarlo igual]]></text><feedback format="html"><text><![CDATA[No resuelve el olor.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA[Hacerlo aún más largo]]></text><feedback format="html"><text><![CDATA[Empeora el problema.]]></text></feedback></answer>
+  </question>
+
+  <question type="multichoice">
+    <name><text>P3T19 - Refactor seguro</text></name>
+    <questiontext format="html"><text><![CDATA[<p>Refactorizar de forma segura implica...</p>]]></text></questiontext>
+    <generalfeedback format="html"><text><![CDATA[<p>Cambiar la estructura interna sin alterar el comportamiento, idealmente con pruebas que lo confirmen.</p>]]></text></generalfeedback>
+    <defaultgrade>0.2500000</defaultgrade><penalty>0.3333333</penalty><hidden>0</hidden><single>true</single><shuffleanswers>true</shuffleanswers><answernumbering>abc</answernumbering>
+    <answer fraction="100" format="html"><text><![CDATA[Mejorar la estructura sin cambiar el comportamiento (con pruebas)]]></text><feedback format="html"><text><![CDATA[Correcto.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA[Agregar funcionalidades nuevas de paso]]></text><feedback format="html"><text><![CDATA[Eso ya no es refactor.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA[Reescribir todo sin verificar nada]]></text><feedback format="html"><text><![CDATA[Es arriesgado y no es refactor disciplinado.]]></text></feedback></answer>
+  </question>
+
+  <question type="multichoice">
+    <name><text>P3T20 - Iterar Map</text></name>
+    <questiontext format="html"><text><![CDATA[<p>Para recorrer todas las parejas de un <code>Map</code> se itera sobre...</p>]]></text></questiontext>
+    <generalfeedback format="html"><text><![CDATA[<p>Su <code>entrySet()</code> (o keySet), obteniendo clave y valor.</p>]]></text></generalfeedback>
+    <defaultgrade>0.2500000</defaultgrade><penalty>0.3333333</penalty><hidden>0</hidden><single>true</single><shuffleanswers>true</shuffleanswers><answernumbering>abc</answernumbering>
+    <answer fraction="100" format="html"><text><![CDATA[entrySet() (o keySet)]]></text><feedback format="html"><text><![CDATA[Correcto.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA[get(0), get(1), ...]]></text><feedback format="html"><text><![CDATA[Un Map no se indexa por posición.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA[push() y pop()]]></text><feedback format="html"><text><![CDATA[Eso es una pila.]]></text></feedback></answer>
+  </question>
+</quiz>
