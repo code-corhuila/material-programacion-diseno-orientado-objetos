@@ -77,24 +77,32 @@ document.addEventListener('DOMContentLoaded', () => {
         };
         questions.forEach(q => {
             const opts = Array.from(q.querySelectorAll('.opt'));
-            const ci = parseInt(q.dataset.correct, 10);
             const fb = q.querySelector('.feedback');
             const exp = q.dataset.exp || '';
-            opts.forEach((opt, oi) => {
+            // Shuffle option order on load (Fisher-Yates) so the correct answer
+            // is not always first. Correctness travels with each option (data-c).
+            for (let i = opts.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                const tmp = opts[i]; opts[i] = opts[j]; opts[j] = tmp;
+            }
+            opts.forEach(o => q.insertBefore(o, fb));   // re-place in shuffled order
+            const correctOpt = () => q.querySelector('.opt[data-c="1"]');
+            opts.forEach(opt => {
                 opt.addEventListener('click', () => {
                     if (q.dataset.done) return;
                     q.dataset.done = '1'; answered++;
                     if (answeredEl) answeredEl.textContent = answered;
                     opts.forEach(o => o.disabled = true);
-                    if (opts[ci]) opts[ci].classList.add('correct');
-                    if (oi === ci) {
+                    const ok = correctOpt();
+                    if (ok) ok.classList.add('correct');
+                    if (opt.dataset.c === '1') {
                         correct++;
                         opt.insertAdjacentHTML('beforeend', '<span class="mark">✓</span>');
                         if (fb) { fb.className = 'feedback ok show'; fb.textContent = '¡Correcto! ' + exp; }
                     } else {
                         opt.classList.add('wrong');
                         opt.insertAdjacentHTML('beforeend', '<span class="mark">✕</span>');
-                        if (opts[ci]) opts[ci].insertAdjacentHTML('beforeend', '<span class="mark">✓</span>');
+                        if (ok) ok.insertAdjacentHTML('beforeend', '<span class="mark">✓</span>');
                         if (fb) { fb.className = 'feedback no show'; fb.textContent = 'Revisa: ' + exp; }
                     }
                     if (answered === questions.length) showResult();

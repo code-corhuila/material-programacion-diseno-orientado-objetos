@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- POO · Corte 1 · Quiz (sem 4). 10 x 0.5 = 5.0. 20/40/40. 2 EN (Q5,Q8). Temas: POO/paradigmas, JVM/JDK, clases/objetos, encapsulamiento, constructores/equals/hashCode. Java. -->
+<quiz>
+  <question type="category">
+    <category><text>$course$/top/CORHUILA/POO/C1-Quiz</text></category>
+  </question>
+
+  <!-- BASICA (2) -->
+  <question type="multichoice">
+    <name><text>P1Q01 - Clase vs objeto (basica)</text></name>
+    <questiontext format="html"><text><![CDATA[<p>¿Cuál es la relación entre <strong>clase</strong> y <strong>objeto</strong>?</p>]]></text></questiontext>
+    <generalfeedback format="html"><text><![CDATA[<p>La clase es el molde; el objeto es una instancia concreta con estado propio.</p>]]></text></generalfeedback>
+    <defaultgrade>0.5000000</defaultgrade><penalty>0.3333333</penalty><hidden>0</hidden><single>true</single><shuffleanswers>true</shuffleanswers><answernumbering>abc</answernumbering>
+    <answer fraction="100" format="html"><text><![CDATA[La clase es el molde; el objeto, una instancia con estado propio]]></text><feedback format="html"><text><![CDATA[Correcto.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA[Son sinónimos]]></text><feedback format="html"><text><![CDATA[No: una define, el otro instancia.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA[El objeto es el molde de la clase]]></text><feedback format="html"><text><![CDATA[Está invertido.]]></text></feedback></answer>
+  </question>
+
+  <question type="multichoice">
+    <name><text>P1Q02 - JVM (basica)</text></name>
+    <questiontext format="html"><text><![CDATA[<p>¿Qué ejecuta el <strong>bytecode</strong> de Java?</p>]]></text></questiontext>
+    <generalfeedback format="html"><text><![CDATA[<p>La JVM (Java Virtual Machine) ejecuta el bytecode; por eso Java es portable.</p>]]></text></generalfeedback>
+    <defaultgrade>0.5000000</defaultgrade><penalty>0.3333333</penalty><hidden>0</hidden><single>true</single><shuffleanswers>true</shuffleanswers><answernumbering>abc</answernumbering>
+    <answer fraction="100" format="html"><text><![CDATA[La JVM (máquina virtual de Java)]]></text><feedback format="html"><text><![CDATA[Correcto.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA[El procesador directamente]]></text><feedback format="html"><text><![CDATA[El bytecode lo interpreta/compila la JVM.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA[El compilador javac]]></text><feedback format="html"><text><![CDATA[javac produce el bytecode, no lo ejecuta.]]></text></feedback></answer>
+  </question>
+
+  <!-- MEDIA / APLICADA (4) -->
+  <question type="multichoice">
+    <name><text>P1Q03 - Sobrecarga (aplicada)</text></name>
+    <questiontext format="html"><text><![CDATA[<p>¿Cuáles métodos son una <strong>sobrecarga</strong> válida?</p><pre>void f(int x)
+void f(int x, int y)
+void f(double x)</pre>]]></text></questiontext>
+    <generalfeedback format="html"><text><![CDATA[<p>La sobrecarga cambia la lista de parámetros (número o tipo). Los tres son válidos entre sí.</p>]]></text></generalfeedback>
+    <defaultgrade>0.5000000</defaultgrade><penalty>0.3333333</penalty><hidden>0</hidden><single>true</single><shuffleanswers>true</shuffleanswers><answernumbering>abc</answernumbering>
+    <answer fraction="100" format="html"><text><![CDATA[Los tres: difieren en número o tipo de parámetros]]></text><feedback format="html"><text><![CDATA[Correcto.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA[Ninguno: tienen el mismo nombre]]></text><feedback format="html"><text><![CDATA[La sobrecarga precisamente reutiliza el nombre.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA[Solo si cambian el tipo de retorno]]></text><feedback format="html"><text><![CDATA[El retorno no distingue una sobrecarga.]]></text></feedback></answer>
+  </question>
+
+  <question type="multichoice">
+    <name><text>P1Q04 - NPE aliasing (aplicada)</text></name>
+    <questiontext format="html"><text><![CDATA[<p>¿Qué imprime o qué ocurre?</p><pre>String s = null;
+System.out.println(s.length());</pre>]]></text></questiontext>
+    <generalfeedback format="html"><text><![CDATA[<p>Invocar un método sobre una referencia null lanza <code>NullPointerException</code>.</p>]]></text></generalfeedback>
+    <defaultgrade>0.5000000</defaultgrade><penalty>0.3333333</penalty><hidden>0</hidden><single>true</single><shuffleanswers>true</shuffleanswers><answernumbering>abc</answernumbering>
+    <answer fraction="100" format="html"><text><![CDATA[Lanza NullPointerException]]></text><feedback format="html"><text><![CDATA[Correcto.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA[Imprime 0]]></text><feedback format="html"><text><![CDATA[No hay objeto sobre el que medir longitud.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA[Imprime null]]></text><feedback format="html"><text><![CDATA[Falla antes de imprimir.]]></text></feedback></answer>
+  </question>
+
+  <question type="multichoice">
+    <name><text>P1Q05 - EN encapsulation (aplicada)</text></name>
+    <questiontext format="html"><text><![CDATA[<p><em>(English)</em> What is the main purpose of <strong>encapsulation</strong>?</p>]]></text></questiontext>
+    <generalfeedback format="html"><text><![CDATA[<p>To protect the object's state behind a controlled interface, preserving its invariants.</p>]]></text></generalfeedback>
+    <defaultgrade>0.5000000</defaultgrade><penalty>0.3333333</penalty><hidden>0</hidden><single>true</single><shuffleanswers>true</shuffleanswers><answernumbering>abc</answernumbering>
+    <answer fraction="100" format="html"><text><![CDATA[To protect the internal state and keep its invariants valid]]></text><feedback format="html"><text><![CDATA[Correct.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA[To make every field public]]></text><feedback format="html"><text><![CDATA[That breaks encapsulation.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA[To run the program faster]]></text><feedback format="html"><text><![CDATA[It is about design, not speed.]]></text></feedback></answer>
+  </question>
+
+  <question type="multichoice">
+    <name><text>P1Q06 - Getters/setters (aplicada)</text></name>
+    <questiontext format="html"><text><![CDATA[<p>¿Por qué se usan <code>getters</code> y <code>setters</code> en vez de atributos públicos?</p>]]></text></questiontext>
+    <generalfeedback format="html"><text><![CDATA[<p>Permiten validar y controlar el acceso, preservando las invariantes del objeto.</p>]]></text></generalfeedback>
+    <defaultgrade>0.5000000</defaultgrade><penalty>0.3333333</penalty><hidden>0</hidden><single>true</single><shuffleanswers>true</shuffleanswers><answernumbering>abc</answernumbering>
+    <answer fraction="100" format="html"><text><![CDATA[Permiten validar el acceso y proteger las invariantes]]></text><feedback format="html"><text><![CDATA[Correcto.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA[Hacen el código más corto]]></text><feedback format="html"><text><![CDATA[Suelen añadir código, no quitarlo.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA[Son obligatorios en todo atributo]]></text><feedback format="html"><text><![CDATA[No son obligatorios; se usan con criterio.]]></text></feedback></answer>
+  </question>
+
+  <!-- ALTA (4) -->
+  <question type="multichoice">
+    <name><text>P1Q07 - Constructor this() (alta)</text></name>
+    <questiontext format="html"><text><![CDATA[<p>Dentro de un constructor, <code>this(...)</code> sirve para...</p>]]></text></questiontext>
+    <generalfeedback format="html"><text><![CDATA[<p>Invocar a otro constructor de la misma clase (debe ser la primera instrucción).</p>]]></text></generalfeedback>
+    <defaultgrade>0.5000000</defaultgrade><penalty>0.3333333</penalty><hidden>0</hidden><single>true</single><shuffleanswers>true</shuffleanswers><answernumbering>abc</answernumbering>
+    <answer fraction="100" format="html"><text><![CDATA[Llamar a otro constructor de la misma clase]]></text><feedback format="html"><text><![CDATA[Correcto.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA[Llamar al constructor de la superclase]]></text><feedback format="html"><text><![CDATA[Eso es super(...).]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA[Crear un objeto nuevo dentro del constructor]]></text><feedback format="html"><text><![CDATA[No crea otra instancia; reutiliza inicialización.]]></text></feedback></answer>
+  </question>
+
+  <question type="multichoice">
+    <name><text>P1Q08 - EN equals/hashCode (alta)</text></name>
+    <questiontext format="html"><text><![CDATA[<p><em>(English)</em> If you override <code>equals()</code>, what else must you override?</p>]]></text></questiontext>
+    <generalfeedback format="html"><text><![CDATA[<p><code>hashCode()</code>: the contract requires equal objects to have equal hash codes.</p>]]></text></generalfeedback>
+    <defaultgrade>0.5000000</defaultgrade><penalty>0.3333333</penalty><hidden>0</hidden><single>true</single><shuffleanswers>true</shuffleanswers><answernumbering>abc</answernumbering>
+    <answer fraction="100" format="html"><text><![CDATA[hashCode()]]></text><feedback format="html"><text><![CDATA[Correct.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA[toString()]]></text><feedback format="html"><text><![CDATA[Useful, but not required by the contract.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA[Nothing else]]></text><feedback format="html"><text><![CDATA[The equals/hashCode contract must hold.]]></text></feedback></answer>
+  </question>
+
+  <question type="multichoice">
+    <name><text>P1Q09 - == vs equals (alta)</text></name>
+    <questiontext format="html"><text><![CDATA[<p>¿Qué imprime?</p><pre>String a = new String("hola");
+String b = new String("hola");
+System.out.println(a == b);
+System.out.println(a.equals(b));</pre>]]></text></questiontext>
+    <generalfeedback format="html"><text><![CDATA[<p><code>==</code> compara referencias (false para dos objetos distintos); <code>equals</code> compara contenido (true).</p>]]></text></generalfeedback>
+    <defaultgrade>0.5000000</defaultgrade><penalty>0.3333333</penalty><hidden>0</hidden><single>true</single><shuffleanswers>true</shuffleanswers><answernumbering>abc</answernumbering>
+    <answer fraction="100" format="html"><text><![CDATA[false y luego true]]></text><feedback format="html"><text><![CDATA[Correcto.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA[true y luego true]]></text><feedback format="html"><text><![CDATA[== compara referencias, no contenido.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA[false y luego false]]></text><feedback format="html"><text><![CDATA[equals compara contenido: true.]]></text></feedback></answer>
+  </question>
+
+  <question type="multichoice">
+    <name><text>P1Q10 - Inmutabilidad (alta)</text></name>
+    <questiontext format="html"><text><![CDATA[<p>Para hacer una clase <strong>inmutable</strong>, ¿qué es correcto?</p>]]></text></questiontext>
+    <generalfeedback format="html"><text><![CDATA[<p>Atributos privados y final, sin setters, e inicializados en el constructor.</p>]]></text></generalfeedback>
+    <defaultgrade>0.5000000</defaultgrade><penalty>0.3333333</penalty><hidden>0</hidden><single>true</single><shuffleanswers>true</shuffleanswers><answernumbering>abc</answernumbering>
+    <answer fraction="100" format="html"><text><![CDATA[Atributos private final, sin setters, fijados en el constructor]]></text><feedback format="html"><text><![CDATA[Correcto.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA[Atributos públicos y con setters]]></text><feedback format="html"><text><![CDATA[Eso permite modificar el estado.]]></text></feedback></answer>
+    <answer fraction="0" format="html"><text><![CDATA[Un setter que valida antes de cambiar]]></text><feedback format="html"><text><![CDATA[Sigue siendo mutable.]]></text></feedback></answer>
+  </question>
+</quiz>
